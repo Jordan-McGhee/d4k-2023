@@ -1,0 +1,31 @@
+/* .card {
+    margin: .75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border-radius: 6px;
+    padding: 1rem;
+    overflow: hidden;
+    background: white;
+    text-align: left;
+} */
+
+/*
+.card header {
+    border-bottom: 1px solid black;
+    margin-bottom: .75rem;
+    padding-bottom: .75rem;
+} */
+
+/*
+.card footer {
+    border-top: 1px solid black;
+    margin-top: .75rem;
+    padding-top: .75rem;
+} */
+
+/* .nestedCard {
+    margin: .75rem 0rem;
+}
+
+.nestedCard:hover {
+    transform: scale(1.01);
+} */

@@ -1,0 +1,18 @@
+[
+    {
+        "id": 101,
+        "name": "nice shot",
+        "ingredients": ["peppermint schnapps", "butterfly tea-infused vodka"],
+        "description": "One for the angels and role-model citizens.",
+        "imageUrl": "/images/drinks/nice.jpg",
+        "price": "3"
+    },
+    {
+        "id": 100,
+        "name": "naughty shot",
+        "ingredients": ["ancho reyes", "coal"],
+        "description": " One for the heathens.<br>Full proof and burns like hell - you're getting coal for Christmas",
+        "imageUrl": "/images/drinks/naughty.jpg",
+        "price": "4"
+    }
+]

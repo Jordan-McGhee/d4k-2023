@@ -1,0 +1,18 @@
+[
+    {
+        "id": 8,
+        "name": "Mulled Cider",
+        "ingredients": ["Rum or Whiskey", "Mulled Cider", "Winter Spices"],
+        "description": "Hot or cold, yes or no, in or out",
+        "imageUrl": "/images/drinks/mulled.jpg",
+        "price": "7"
+    },
+    {
+        "id": 9,
+        "name": "Boozy Nog",
+        "ingredients": ["Homemade eggnog", "bourbon", "rum", "cognac", "vanilla", "nutmeg"],
+        "description": "A dairy-free take on Alton Brown's aged recipe. It's eggsquisite. Use your noggin and get it while it lasts",
+        "imageUrl": "/images/drinks/eggnog.jpg",
+        "price": "9"
+    }
+]
