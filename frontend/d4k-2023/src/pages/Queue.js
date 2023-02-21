@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"
 import QueueList from "../components/queue/QueueList";
 import { useFetch } from "../hooks/useFetch";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner"
@@ -37,6 +38,9 @@ const Queue = () => {
 
     }, [ sendRequest ])
 
+    // useNavigate hook to refresh page when "REFRESH" is clicked
+    const navigate = useNavigate()
+
     return (
         <React.Fragment>
 
@@ -49,7 +53,7 @@ const Queue = () => {
                 {/* div for title & refresh */}
                 <div className="flex justify-between items-center">
                     <p className="text-white text-4xl font-bold">Queue</p>
-                    <p className="text-white text-lg">REFRESH</p>
+                    <p className="text-white text-lg" onClick = { () => navigate(0) }>REFRESH</p>
                 </div>
 
                 <p className="text-white text-lg text-center my-5">All open drink orders will show here. Refresh to check your spot in the queue!</p>

@@ -7,8 +7,9 @@ const QueueList = (props) => {
         <QueueItem
             id = { order.order_id }
             key = { order.order_id }
-            name = { order.username }
+            username = { order.username }
             drink = { order.drink }
+            quantity = { order.quantity }
             spotInQueue = { props.queue.indexOf(order) + 1 }
         />
     ))
