@@ -12,7 +12,7 @@ const QueueItem = (props) => {
     ))
     
     return (
-        <li>
+        <li id={ props.key }>
             <Card className = "flex flex-col p-6 rounded-lg border border-gray-2 bg-white w-full shadow-lg my-5" >
 
                 {/* container div for whole card */}
@@ -33,6 +33,7 @@ const QueueItem = (props) => {
 
                             <img
                                 src="../images/drop-down-arrow.png"
+                                alt="Drop down arrow"
                                 onClick= { () => { setShowMore(!showMore)} }
                             />
                         </div>

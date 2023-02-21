@@ -1,40 +1,40 @@
-import React, {useState, useEffect} from "react";
-import AdminTable from "../components/admin/AdminTable";
-import { useFetch } from "../hooks/useFetch";
+// import React, {useState, useEffect} from "react";
+// import AdminTable from "../components/admin/AdminTable";
+// import { useFetch } from "../hooks/useFetch";
 
 // dummy
 //import data from "../DUMMY/DUMMY_DATA"
 
 const Admin = () => {
-    const [ orderData, setOrderData ] = useState({orderData: []})
-    const { isLoading, hasError, sendRequest, clearError } = useFetch()
+    // const [ orderData, setOrderData ] = useState({orderData: []})
+    // const { isLoading, hasError, sendRequest, clearError } = useFetch()
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const getOrders = async () => {
+    //     const getOrders = async () => {
 
-            try {
-                const responseData = await sendRequest(
-                    // URL
-                    `${process.env.REACT_APP_BACKEND_URL}/admin/view`,
-                    // METHOD
-                    'GET',
-                    // HEADERS
-                    {
-                        Accept: 'application/json',
-                    },
-                )
-                setOrderData(responseData)
-                console.log(responseData)
+    //         try {
+    //             const responseData = await sendRequest(
+    //                 // URL
+    //                 `${process.env.REACT_APP_BACKEND_URL}/admin/view`,
+    //                 // METHOD
+    //                 'GET',
+    //                 // HEADERS
+    //                 {
+    //                     Accept: 'application/json',
+    //                 },
+    //             )
+    //             setOrderData(responseData)
+    //             console.log(responseData)
 
-            } catch(err) {
-                console.log(err)
-            }
-        }
+    //         } catch(err) {
+    //             console.log(err)
+    //         }
+    //     }
 
-        getOrders()
+    //     getOrders()
 
-    }, [ sendRequest ])
+    // }, [ sendRequest ])
 
     return (
         <div>asdf</div>

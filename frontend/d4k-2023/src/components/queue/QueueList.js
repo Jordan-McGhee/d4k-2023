@@ -5,10 +5,10 @@ const QueueList = (props) => {
 
     let items = props.queue.map((order) => (
         <QueueItem
-            id = { order.id }
-            key = { order.id }
-            name = { order.name }
-            drinks = { order.drinks }
+            id = { order.order_id }
+            key = { order.order_id }
+            name = { order.username }
+            drink = { order.drink }
             spotInQueue = { props.queue.indexOf(order) + 1 }
         />
     ))

@@ -15,9 +15,6 @@ const PORT = process.env.DATABASE_PORT || 5000
 // this converts all incoming json data into regular javascript
 app.use(bodyParser.json())
 
-// ROUTE VARIABLES
-app.use("/order", orderRoutes)
-
 // middleware to work around CORS errors since our front and backend are on separate servers
 // attaches headers on its responses to prevent the browser from blocking the response
 app.use((req, res, next) => {
@@ -33,6 +30,10 @@ app.use((req, res, next) => {
     
     next()
 })
+
+// ROUTE VARIABLES
+app.use("/order", orderRoutes)
+
 
 // TEST ROUTE
 app.use('/', async (req, res) => {

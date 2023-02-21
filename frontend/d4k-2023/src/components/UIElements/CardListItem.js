@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+// import React, { useState } from "react"
 
 const CardListItem = (props) => {
 
-    const [ showingMore, setShowingMore ] = useState(false)
+    // const [ showingMore, setShowingMore ] = useState(false)
 
     return (
         <li className="mt-4">

@@ -53,9 +53,13 @@ const getOrders = async (req, res, next) => {
         )
     }
 
-    const results = { 'results': response ? response.rows : null } 
+    // const results = { 'results': response ? response.rows : null } 
 
-    res.status(200).json({message: "Retreived orders!", results: results})
+    const message = "Retreived orders!"
+
+    console.log(message)
+
+    res.status(200).json({message: message, results: response.rows})
 }
 
 const updatePaid = async (req, res, next) => {
