@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import Card from "../UIElements/Card";
 
 const QueueItem = (props) => {
     
-    const [ showMore, setShowMore ] = useState(false)
+    // const [ showMore, setShowMore ] = useState(false)
 
     // let allDrinks = props.drinks.map((drink) => (
     //     <li className="list-disc ml-5">
