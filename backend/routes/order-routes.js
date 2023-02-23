@@ -23,4 +23,6 @@ router.get("/grouped", orderControllers.getOrdersGrouped)
 
 router.post("/:username/closeTab", orderControllers.closeTab)
 
+router.delete("/:order_id", orderControllers.deleteOrder)
+
 module.exports = router

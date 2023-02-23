@@ -15,7 +15,8 @@ const Order = () => {
 
     let navigate = useNavigate()
 
-    // STATES TO KEEP UP WITH DRINK PRICE, QUANTITY SELECTED, and ORDER TOTAL
+    // STATES TO KEEP UP WITH CHOSEN DRINK, DRINK PRICE, QUANTITY SELECTED, and ORDER TOTAL
+    const [ chosenDrink, setChosenDrink ] = useState(null)
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
@@ -52,16 +53,23 @@ const Order = () => {
         <option key = "disabled7" disabled>———</option>,
         <option key = "disabled8" disabled>SHOTS</option>,
         <option key = "disabled9" disabled>———</option>,
-        shotsMapped
+        shotsMapped,
+        <option key = "disabled10" disabled>———</option>,
+        <option key = "disabled11" disabled>SOMETHING ELSE</option>,
+        <option key = "disabled12" disabled>———</option>,
+        <option key = "custom">Custom Drink — $10</option>
     ]
 
     // HANDLER FUNCTIONS FOR FORM
 
     // GRABS THE PRICE OF THE SELECTED DRINK TO CALCULATE ESTIMATED TOTAL BEFORE USER SUBMITS
+    // ALSO UPDATES THE CHOSEN DRINK OPTION - ALLOWS US TO CHECK IF USER CHOSE CUSTOM DRINK AND ADD EXTRA FORM INPUT LATER
+
     const drinkSelectorHandler = (event) => {
         const price = event.target.value.split("$")[1]
         console.log(`Price ${price}`)
         
+        setChosenDrink(event.target.value.split("—")[0].trim())
         setDrinkPrice(price)
         setOrderTotal(price * drinkQuantity)
     }
@@ -99,19 +107,35 @@ const Order = () => {
 
         let errors = false
 
-        const formData = {
-            username: event.target[0].value.length,
-            drinkTitle: event.target[1].value.split("—")[0].trim(),
-            drinkCost: event.target[1].value.split("$")[1],
-            quantity: parseInt(event.target[2].value),
-            comments: event.target[3].value ? event.target[3].value : null
+        let formData
+
+        // UPDATE FORM DATA CONDITIONALLY IF USER CHOSE CUSTOM DRINK OR NOT
+        if (chosenDrink === "Custom Drink") {
+            formData = {
+                username: event.target[0].value,
+                drinkTitle: `CUSTOM DRINK: ${event.target[2].value.trim()}`,
+                drinkCost: 10,
+                quantity: parseInt(event.target[3].value),
+                comments: event.target[4].value ? event.target[4].value : null
+            }
+        } else {
+            formData = {
+                username: event.target[0].value,
+                drinkTitle: event.target[1].value.split("—")[0].trim(),
+                drinkCost: parseInt(event.target[1].value.split("$")[1]),
+                quantity: parseInt(event.target[2].value),
+                comments: event.target[3].value ? event.target[3].value : null
+            }
         }
+
+        // ADD USERNAME TO LOCAL STORAGE FOR FUTURE ORDERS
+        localStorage.setItem('storedUsername', formData.username )
 
         console.log(formData)
 
         // ERROR CODE
 
-        if (formData.username === 0 || formData.username.length < 1 || formData.drinkTitle.length<2 || formData.quantity.isNaN()) {
+        if (formData.username === 0 || formData.username.length < 1 || formData.drinkTitle.length<2 || formData.quantity < 1 || formData.quantity > 5) {
             errors = true
         }
 
@@ -145,6 +169,9 @@ const Order = () => {
 
     }
 
+    // retreive username from localStorage if there
+    let localStorageUsername = localStorage.getItem('storedUsername')
+
     return (
         <React.Fragment>
 
@@ -161,6 +188,7 @@ const Order = () => {
                         type="text"
                         placeholder="Buddy the Elf?"
                         label="Your Name"
+                        value = { localStorageUsername ? localStorageUsername : null }
                     />
 
                     <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label>
@@ -175,6 +203,18 @@ const Order = () => {
                     </select>
 
                     {
+                        // CONDITIONAL INPUT FOR IF USER CHOSE CUSTOM DRINK FROM DROP DOWN
+                        chosenDrink === "Custom Drink" &&
+                        <Input
+                            id = "customDrinkInput"
+                            type = "text"
+                            placeholder = "Tell us what you want"
+                            label = "Custom Drink Name"
+                        />
+                    }
+
+                    {
+                        // DOESN'T ALLOW USER TO SELECT QUANTITY UNLESS THEY'VE ALREADY CHOSEN A DRINK
                         drinkPrice !== 0 &&
 
                         <div>

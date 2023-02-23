@@ -174,6 +174,28 @@ const closeTab = async (req, res, next) => {
     res.status(201).json({ message: `Set ${ username }'s ${ response.rowCount } orders to paid`, response: response.rows })
 }
 
+const deleteOrder = async (req, res, next) => {
+    const { order_id } = req.params
+
+    let text = "DELETE FROM orders WHERE order_id = $1"
+
+    let response
+
+    try {
+        response = await pool.query(text, [ order_id ])
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                `Error deleting order #${order_id}`, 500
+            )
+        )
+    }
+
+    res.status(200).json({ message: `Deleted order #${order_id}`, response: response})
+}
+
 exports.createOrder = createOrder
 exports.getOrders = getOrders
 exports.updatePaid = updatePaid
@@ -181,3 +203,4 @@ exports.updateCompleted = updateCompleted
 exports.getOrdersAdmin = getOrdersAdmin
 exports.getOrdersGrouped = getOrdersGrouped
 exports.closeTab = closeTab
+exports.deleteOrder = deleteOrder

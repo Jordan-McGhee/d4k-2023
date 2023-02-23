@@ -8,5 +8,6 @@
 
 - ORDER
     - make it where form can't be submitted if any inputs are blank DONE
-    - add option to enter in own drink
-    - Save username to local storage 
+    - add option to enter in own drink DONE
+    - Save username to local storage DONE
+    - add pop up if user tries to change name that's saved in localStorage
