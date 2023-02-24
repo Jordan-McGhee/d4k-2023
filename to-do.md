@@ -11,3 +11,6 @@
     - add option to enter in own drink DONE
     - Save username to local storage DONE
     - add pop up if user tries to change name that's saved in localStorage
+
+- MENU
+    - make it where clicking "Add to Order" populates form in Order page
