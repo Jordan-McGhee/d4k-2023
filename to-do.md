@@ -13,4 +13,4 @@
     - add pop up if user tries to change name that's saved in localStorage
 
 - MENU
-    - make it where clicking "Add to Order" populates form in Order page
+    - make it where clicking "Add to Order" populates form in Order page 
