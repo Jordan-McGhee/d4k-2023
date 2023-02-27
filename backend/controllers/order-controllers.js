@@ -70,7 +70,7 @@ const updatePaid = async (req, res, next) => {
     // use paidStatus to determine what to switch the DB value to
     // if paidStatus is currently FALSE in DB, we assign it to TRUE here to switch and vice versa
     const paidStatus = isPaid ? false : true
-    let text = "UPDATE orders SET is_paid = $1 WHERE order_id = $2 RETURNING *"
+    let text = "UPDATE orders SET is_paid = $1, updated_at = NOW () WHERE order_id = $2 RETURNING *"
 
     let response
     try {
@@ -94,7 +94,7 @@ const updateCompleted = async (req, res, next) => {
     const { isCompleted } = req.body
 
     const completedStatus = isCompleted ? false : true
-    let text = "UPDATE orders SET is_completed = $1 WHERE order_id = $2 RETURNING *"
+    let text = "UPDATE orders SET is_completed = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *"
 
     let response
     try {
@@ -156,7 +156,7 @@ const closeTab = async (req, res, next) => {
     // grab username from params and run query to close all upaid
     const { username } = req.params
 
-    let text = "UPDATE orders SET is_paid = TRUE WHERE UPPER(username) = UPPER($1) RETURNING *"
+    let text = "UPDATE orders SET is_paid = TRUE, updated_at = NOW() WHERE UPPER(username) = UPPER($1) RETURNING *"
 
     let response
     try {
