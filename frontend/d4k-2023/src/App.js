@@ -31,7 +31,7 @@ function App() {
     <div className="App bg-local" style={{backgroundImage: `url(${backgroundImage2})`}}>
       <MainNav />
       <div className="min-h-screen bg-red-900/75">
-        <div className="main-container max-w-lg m-auto p-5">
+        <div className="main-container m-auto p-5">
           { routes }
         </div>
       </div>

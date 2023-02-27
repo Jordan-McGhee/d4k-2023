@@ -2,7 +2,14 @@
 - double check isPaid and updatePaid logic with frontend code
 
 <!-- FRONTEND -->
-- go through and update routes/paths from old frontend
+- go through and update routes/paths from old frontend DONE
+- APP.js
+    - make admin page not adhere to same width settings
+    - update mainNav to be same width
+
+- ADMIN
+    - figure out how to load all orders and filter accordingly
+
 - QUEUE:
     - Go through queue, queueList, queueItem and update to match what is returned from database DONE
 

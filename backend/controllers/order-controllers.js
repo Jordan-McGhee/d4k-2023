@@ -128,8 +128,6 @@ const getOrdersAdmin = async (req, res, next) => {
         )
     }
 
-    const results = { 'results': response ? response.rows : null } 
-
     res.status(200).json({message: "Retreived orders!", response: response.rows})
 }
 

@@ -4,9 +4,10 @@ import Button from "../FormElements/Button";
 const AdminTable = props => {
 
     let items = props.data.map((order) => (
-        <tr key = { props.id }>
-            <td>{ order.name }</td>
-            <td>Drinks</td>
+        <tr key = { order.order_id }>
+            <td>{ order.username }</td>
+            <td>{ order.drink }</td>
+            <td>{ order.quantity }</td>
             <td>{ order.total }</td>
             <td>TODAY</td>
             <td>
@@ -25,9 +26,10 @@ const AdminTable = props => {
 
                 <tr>
                     <th>NAME</th>
-                    <th>ORDER</th>
-                    <th>PRICE</th>
-                    <th>DATE</th>
+                    <th>DRINK</th>
+                    <th>QUANTITY</th>
+                    <th>AMOUNT</th>
+                    <th>TIME</th>
                     <th>PAID</th>
                     <th>STATUS</th>
                 </tr>
