@@ -8,7 +8,8 @@ import { useFetch } from "../hooks/useFetch";
 //import data from "../DUMMY/DUMMY_DATA"
 
 const Admin = () => {
-    const [ orders, setOrders ] = useState([])
+    const [ incompleteOrders, setIncompleteOrders ] = useState([])
+    const [ completedOrders, setCompletedOrders ] = useState([])
     const { isLoading, hasError, sendRequest, clearError } = useFetch()
 
     useEffect(() => {
@@ -26,9 +27,10 @@ const Admin = () => {
                         Accept: 'application/json',
                     },
                 )
-                console.log(responseData.response)
+                console.log(responseData)
 
-                setOrders(responseData.response)
+                setIncompleteOrders(responseData.incompleteOrders)
+                setCompletedOrders(responseData.completedOrders)
 
             } catch(err) {
                 console.log(err)
@@ -42,22 +44,23 @@ const Admin = () => {
     return (
         // <div>asdf</div>
         <React.Fragment>
-            <ErrorModal error = { hasError } onClear = { clearError } />
+            <div className="max-w-3xl m-auto">
+                <ErrorModal error = { hasError } onClear = { clearError } />
 
-            { isLoading && <LoadingSpinner />}
+                { isLoading && <LoadingSpinner />}
 
-            {/* IN PROGRESS DIV */}
-            <div>
-                <p className="my-5 text-4xl font-bold uppercase text-green-600">WORKING ON IT</p>
-                <AdminTable data = { [orders] }/>
+                {/* IN PROGRESS DIV */}
+                <div>
+                    <p className="my-5 text-4xl font-bold uppercase text-green-600">WORKING ON IT</p>
+                    <AdminTable data = { incompleteOrders }/>
+                </div>
+
+                {/* completed DIV */}
+                <div>
+                    <p className="my-5 text-4xl font-bold uppercase text-green-600">Completed</p>
+                    <AdminTable data = { completedOrders }/>
+                </div>
             </div>
-
-            {/* completed DIV */}
-            <div>
-                <p className="my-5 text-4xl font-bold uppercase text-green-600">Completed</p>
-                <AdminTable data = { [] }/>
-            </div>
-
         </React.Fragment>
     )
 }

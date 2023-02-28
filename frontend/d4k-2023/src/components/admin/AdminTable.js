@@ -20,7 +20,7 @@ const AdminTable = props => {
     ))
 
     return (
-        <table className="table-auto">
+        <table className="table table-auto">
 
             <thead>
 

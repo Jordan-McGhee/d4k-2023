@@ -113,22 +113,39 @@ const updateCompleted = async (req, res, next) => {
 }
 
 const getOrdersAdmin = async (req, res, next) => {
-    let text = "SELECT * FROM orders ORDER BY created_at ASC"
-    let response
+    let incompleteQuery = "SELECT * FROM orders WHERE is_completed = FALSE ORDER BY created_at ASC"
 
+    let completedQuery = "SELECT * FROM orders WHERE is_completed = TRUE ORDER BY created_at ASC"
+
+    let incompleteResponse, completeResponse
+
+    // INCOMPLETE TRY/CATCH
     try {
-        response = await pool.query(text)
+        incompleteResponse = await pool.query(incompleteQuery)
     } catch (error) {
         console.log(error)
 
         return next(
             new HttpError(
-                "Error getting orders", 500
+                "Error getting incomplete orders", 500
             )
         )
     }
 
-    res.status(200).json({message: "Retreived orders!", response: response.rows})
+    // COMPLETED TRY/CATCH
+    try {
+        completeResponse = await pool.query(completedQuery)
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                "Error getting completed orders", 500
+            )
+        )
+    }
+
+    res.status(200).json({ message: "Retreived orders!", incompleteOrders: incompleteResponse.rows, completedOrders: completeResponse.rows })
 }
 
 const getOrdersGrouped = async (req, res, next) => {
