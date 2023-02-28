@@ -8,7 +8,8 @@
     - update mainNav to be same width
 
 - ADMIN
-    - figure out how to load all orders and filter accordingly
+    - figure out how to load all orders and filter accordingly DONE
+    - add functionality to update paid/completed/delete
 
 - QUEUE:
     - Go through queue, queueList, queueItem and update to match what is returned from database DONE

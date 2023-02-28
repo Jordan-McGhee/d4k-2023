@@ -44,20 +44,20 @@ const Admin = () => {
     return (
         // <div>asdf</div>
         <React.Fragment>
-            <div className="max-w-3xl m-auto">
+            <div className="w-full m-auto">
                 <ErrorModal error = { hasError } onClear = { clearError } />
 
                 { isLoading && <LoadingSpinner />}
 
                 {/* IN PROGRESS DIV */}
                 <div>
-                    <p className="my-5 text-4xl font-bold uppercase text-green-600">WORKING ON IT</p>
+                    <p className="my-5 text-4xl font-bold uppercase text-white">WORKING ON IT</p>
                     <AdminTable data = { incompleteOrders }/>
                 </div>
 
                 {/* completed DIV */}
                 <div>
-                    <p className="my-5 text-4xl font-bold uppercase text-green-600">Completed</p>
+                    <p className="my-5 text-4xl font-bold uppercase text-white">Completed</p>
                     <AdminTable data = { completedOrders }/>
                 </div>
             </div>
