@@ -10,6 +10,7 @@
 - ADMIN
     - figure out how to load all orders and filter accordingly DONE
     - add functionality to update paid/completed/delete
+    - add comments into rows that have them
 
 - QUEUE:
     - Go through queue, queueList, queueItem and update to match what is returned from database DONE

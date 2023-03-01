@@ -36,7 +36,7 @@ function App() {
         </div>
       </div>
 
-      <img alt="xmas town" src="https://christmashq.imgix.net/assets/images/christmas-hq.png?fit=crop&amp;q=50&amp;w=1280&amp;h=320&amp;auto=format" className="absolute bottom-0 sticky"/>
+      {/* <img alt="xmas town" src="https://christmashq.imgix.net/assets/images/christmas-hq.png?fit=crop&amp;q=50&amp;w=1280&amp;h=320&amp;auto=format" className="absolute bottom-0 sticky"/> */}
       
     </div>
   );
