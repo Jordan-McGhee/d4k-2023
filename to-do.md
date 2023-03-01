@@ -11,6 +11,7 @@
     - figure out how to load all orders and filter accordingly DONE
     - add functionality to update paid/completed/delete
     - add comments into rows that have them
+    - Add recently updated identifier based on last update
 
 - QUEUE:
     - Go through queue, queueList, queueItem and update to match what is returned from database DONE
