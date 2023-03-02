@@ -12,6 +12,7 @@
     <!-- - figure out how to load all orders and filter accordingly DONE
     - add functionality to update paid/completed/delete DONE
     - add comments into rows that have them DONE -->
+    - Add in ability to close tables with dropdown
     - Add recently updated identifier based on last update
     - Remove navigate from AdminTableRow and use something better to re-render tables
 

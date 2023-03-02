@@ -9,22 +9,23 @@ const MenuItem = props => {
             <Card
                 className = "flex px-4 py-2 justify-between rounded-lg border border-gray-2 bg-white w-full overflow-hidden shadow-lg mt-5"
             >
-                <image src = { `../../${props.image}` } className = "border border-black h-full w-4/12" />
+                <img src = { props.image } className = "border border-black h-5/6 w-1/3 my-auto" />
 
                 {/* div for full list item */}
                 <div className="w-7/12 flex flex-col justify-center">
 
                     {/* div for title/description/ingredients */}
                     <div className="">
-                        <p className="uppercase text-green-600 font-bold text-lg">{ props.name}</p>
-                        <p className="text-sm">{ props.description}</p>
-                        <p className="uppercase font-light text-xs my-2">{ props.ingredients.join(" * ")}</p>
+                        <p className="uppercase text-green-600 font-bold text-sm">{ props.name}</p>
+                        <p className="text-xs">{ props.description}</p>
+                        <p className="uppercase font-light text-[10px] my-2">{ props.ingredients.join(" * ")}</p>
                     </div>
 
                     {/* div for order button and price */}
                     <div className="flex items-center justify-between">
                         <Button
-                            text = "ADD TO ORDER"
+                            text = "ORDER"
+                            className = "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"
                         />
 
                         <p>{ props.price }</p>
