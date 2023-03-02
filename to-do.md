@@ -12,6 +12,7 @@
     - add functionality to update paid/completed/delete
     - add comments into rows that have them
     - Add recently updated identifier based on last update
+    - Remove navigate from AdminTableRow and use something better to re-render tables
 
 - QUEUE:
     - Go through queue, queueList, queueItem and update to match what is returned from database DONE

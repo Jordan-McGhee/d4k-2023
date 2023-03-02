@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import Button from "../FormElements/Button";
 import { useFetch } from "../../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
+import DeleteModal from "./DeleteModal";
 
 const AdminTableRow = props => {
 
+    // SHITTY WAY TO RE-RENDER TABLES
+    const navigate = useNavigate()
+
+    // STATES FOR PAID, COMPLETED, and SHOW DELETE MODAL
     const [ paidStatus, setPaidStatus ] = useState(props.order.is_paid)
     const [ completedStatus, setCompletedStatus ] = useState(props.order.is_completed)
+    const [ showModal, setShowModal ] = useState([false, null])
 
     const { sendRequest } = useFetch()
 
@@ -74,66 +81,101 @@ const AdminTableRow = props => {
 
         setCompletedStatus(response.newValue)
 
+        navigate(0)
+
     }
 
     // STARTS PROCESS OF DELETING SPECIFIC ORDER
     // WILL PROMPT FOR CONFIRMATION
-    const deleteOrderHandler = event => {
+
+    const showDeleteModalHandler = (id) => {
+        setShowModal([true, id])
+    }
+
+    const closeDeleteModalHandler = () => {
+        setShowModal([false, null])
+    }
+
+    const submitDeleteHandler = event => {
         event.preventDefault()
+
+        console.log(event.target[0].value)
+        const id = event.target[0].value
+        setShowModal([ true, id ])
     }
 
     return (
-        <tr className = { props.className }>
-            <td className="px-6 py-3 font-bold">{ props.order.username }</td>
-            <td className="px-6 py-3">{ props.order.drink }</td>
-            <td className="px-6 py-3">{ props.order.quantity }</td>
-            {/* <td>{ order.total }</td> */}
-            <td className="px-6 py-3">{ props.order.created_at }</td>
+        <React.Fragment>
 
-            {/* PAID STATUS */}
-            <td className="px-6 py-3 text-center">
-                <form onSubmit={ updatePaidHandler }>
+            {
+                showModal[0] &&
+                <DeleteModal
+                    order_id = { showModal[1] }
+                    show = { showModal[0] }
+                    onCancel = { closeDeleteModalHandler }
+                />
+            }
 
-                    <input
-                        hidden
-                        readOnly
-                        value = { props.order.order_id }
-                    />
+            <tr className = { props.className }>
+                <td className="px-6 py-3 font-bold">{ props.order.username }</td>
+                <td className="px-6 py-3">{ props.order.drink }</td>
+                <td className="px-6 py-3">{ props.order.quantity }</td>
+                {/* <td>{ order.total }</td> */}
+                <td className="px-6 py-3">{ props.order.created_at }</td>
 
-                    <Button
-                        text = { paidStatus ? "YES" : "NO"}
-                        className = { paidStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
-                        type = "SUBMIT"
-                    />
-                </form>
-            </td>
+                {/* PAID STATUS */}
+                <td className="px-6 py-3 text-center">
+                    <form onSubmit={ updatePaidHandler }>
 
-            {/* COMPLETED STATUS */}
-            <td className="px-6 py-3 text-center">
-                <form onSubmit={ updateCompletedHandler }>
-
-                    <input
+                        <input
                             hidden
                             readOnly
                             value = { props.order.order_id }
-                    />
+                        />
 
-                    <Button
-                        text = { completedStatus ? "COMPLETED" : "WAITING"}
-                        className = { completedStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
-                        type = "SUBMIT"
-                    />
-                </form>
-            </td>
+                        <Button
+                            text = { paidStatus ? "YES" : "NO"}
+                            className = { paidStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
+                            type = "SUBMIT"
+                        />
+                    </form>
+                </td>
 
-            {/* DELETE ORDER BUTTON */}
-            <td className="px-6 py-3">
-                <Button
-                    text = "X"
-                    className = "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"
-                />
-            </td>
-        </tr>
+                {/* COMPLETED STATUS */}
+                <td className="px-6 py-3 text-center">
+                    <form onSubmit={ updateCompletedHandler }>
+
+                        <input
+                                hidden
+                                readOnly
+                                value = { props.order.order_id }
+                        />
+
+                        <Button
+                            text = { completedStatus ? "COMPLETED" : "WAITING"}
+                            className = { completedStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
+                            type = "SUBMIT"
+                        />
+                    </form>
+                </td>
+
+                {/* DELETE ORDER BUTTON */}
+                <td className="px-6 py-3">
+                    <form onSubmit={ submitDeleteHandler }>
+                        <input
+                            hidden
+                            readOnly
+                            value = { props.order.order_id }
+                        />
+                        <Button
+                            text = "X"
+                            type = "SUBMIT"
+                            className = "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"
+                        />
+                    </form>
+                </td>
+            </tr>
+        </React.Fragment>
     )
 }
 

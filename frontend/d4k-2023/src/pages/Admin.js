@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import AdminTable from "../components/admin/AdminTable";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner";
 import ErrorModal from "../components/UIElements/ErrorModal";
+import DeleteModal from "../components/admin/DeleteModal";
 import { useFetch } from "../hooks/useFetch";
 
 // dummy
