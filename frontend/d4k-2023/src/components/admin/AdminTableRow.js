@@ -3,16 +3,18 @@ import Button from "../FormElements/Button";
 import { useFetch } from "../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "./DeleteModal";
+import comment from "../../images/comment.png"
 
 const AdminTableRow = props => {
 
     // SHITTY WAY TO RE-RENDER TABLES
     const navigate = useNavigate()
 
-    // STATES FOR PAID, COMPLETED, and SHOW DELETE MODAL
+    // STATES FOR PAID, COMPLETED, SHOW DELETE MODAL and SHOW COMMENT ROW
     const [ paidStatus, setPaidStatus ] = useState(props.order.is_paid)
     const [ completedStatus, setCompletedStatus ] = useState(props.order.is_completed)
     const [ showModal, setShowModal ] = useState([false, null])
+    const [ showComment, setShowComment ] = useState(false)
 
     const { sendRequest } = useFetch()
 
@@ -117,7 +119,13 @@ const AdminTableRow = props => {
             }
 
             <tr className = { props.className }>
-                <td className="px-6 py-3 font-bold">{ props.order.username }</td>
+                <td className="px-6 py-3 font-bold flex justify-between h-fit mt-2.5" onClick={ () => setShowComment(!showComment)}>
+                    { props.order.username }
+                    { 
+                        props.order.comments !== null &&
+                        <img alt="comment icon" src={ comment } className = "w-5" />
+                    }
+                </td>
                 <td className="px-6 py-3">{ props.order.drink }</td>
                 <td className="px-6 py-3">{ props.order.quantity }</td>
                 {/* <td>{ order.total }</td> */}
@@ -175,6 +183,13 @@ const AdminTableRow = props => {
                     </form>
                 </td>
             </tr>
+
+            {
+                props.order.comments !== null && showComment && 
+                <tr className={ props.className } onClick = { () => setShowComment(!showComment)}>
+                    <td colSpan={12} className = "px-6 py-3"><span className="font-bold">—— Comment:</span> { props.order.comments }</td>
+                </tr>
+            }
         </React.Fragment>
     )
 }
