@@ -18,7 +18,7 @@
     {
         "id": 12,
         "name": "Winter Soldier",
-        "ingredients": ["overproof rye whiskey", "falernum", "pineapple", "lemon", "angostura"],
+        "ingredients": ["rye whiskey", "falernum", "pineapple", "lemon", "angostura"],
         "description": "Whiskey gone tiki in our super-soldier serum. Bucky? Is that you?",
         "imageUrl": "/images/drinks/wintersoldier.jpg",
         "price": "11"
@@ -34,7 +34,7 @@
     {
         "id": 10,
         "name": "Prosecco-ho-ho",
-        "ingredients": ["Elderflower", "Prosecco", "Thyme & Butterfly tea infused vodka", "bubbles"],
+        "ingredients": ["Elderflower", "Prosecco", "Thyme & tea infused vodka"],
         "description": "You're on a beach. Santa shows up in a speedo with two of these. It's not even noon. Life is good.",
         "imageUrl": "/images/drinks/spritz.jpg",
         "price": "8"
@@ -42,8 +42,8 @@
     {
         "id": 3,
         "name": "Feliz Navidad",
-        "ingredients": ["tequila", "cointreau", "lime", "coconut", "jalapeno/berry/mezcal optional"],
-        "description": "Top shelf margaritas are never out of season. Get it berry, smokey, spicy, or classic.",
+        "ingredients": ["tequila", "cointreau", "lime", "coconut", "jalapeno", "berry", "mezcal (optional)"],
+        "description": "Top shelf margaritas are never out of season.",
         "imageUrl": "/images/drinks/margarita.jpg",
         "price": "12"
     },
@@ -51,7 +51,7 @@
         "id": 4,
         "name": "Santa's Little Helper",
         "ingredients": ["Bourbon", "all-spice dram", "angostura", "orange zest", "Luxardo cherry"],
-        "description": "Saint Nick's take on an old fashioned. Cookies are just his other vice",
+        "description": "Saint Nick's take on an old fashioned.",
         "imageUrl": "/images/drinks/oldfashioned.jpg",
         "price": "10"
     },
@@ -75,7 +75,7 @@
         "id": 7,
         "name": "YIPPyKIYAY-MUTHERFU",
         "ingredients": ["Vodka", "Averna Amaro", "Espresso"],
-        "description": "For those late nights climbing rooftops.<br>Welcome to the party, pal",
+        "description": "For those late nights climbing rooftops. Welcome to the party",
         "imageUrl": "/images/drinks/espresso.jpg",
         "price": "10"
     }

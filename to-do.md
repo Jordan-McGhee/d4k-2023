@@ -15,6 +15,7 @@
     - Add in ability to close tables with dropdown
     - Add recently updated identifier based on last update
     - Remove navigate from AdminTableRow and use something better to re-render tables
+    - add a tab section to close tabs and check values
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
@@ -26,4 +27,8 @@
     - add pop up if user tries to change name that's saved in localStorage
 
 - MENU
-    - make it where clicking "Add to Order" populates form in Order page 
+    - make it where clicking "Add to Order" populates form in Order page
+    — make top buttons sticky and actually redirect to different sections of the page
+
+- LEADERBOARD
+    - make that shit

@@ -11,7 +11,7 @@
         "id": 9,
         "name": "Boozy Nog",
         "ingredients": ["Homemade eggnog", "bourbon", "rum", "cognac", "vanilla", "nutmeg"],
-        "description": "A dairy-free take on Alton Brown's aged recipe. It's eggsquisite. Use your noggin and get it while it lasts",
+        "description": "A dairy-free take on Alton Brown's aged recipe. It's eggsquisite.",
         "imageUrl": "/images/drinks/eggnog.jpg",
         "price": "9"
     }
