@@ -13,43 +13,44 @@ const Menu = () => {
         <div>
 
             {/* div for buttons */}
-            <div className="flex m-auto justify-around text-white my-4">
+            <div className="flex m-auto justify-around text-white my-4 sticky top-24 bg-red-900 w-full p-2 text-sm">
                 <Button
                     text = "cocktails"
-                    link = ""
+                    onClick = { () => document.getElementById('cocktails').scrollIntoView()}
                 />
 
                 <Button
                     text = "batched"
-                    link = ""
+                    onClick = { () => document.getElementById('batched').scrollIntoView()}
                 />
 
                 <Button
                     text = "shots"
-                    link = ""
+                    onClick = { () => document.getElementById('shots').scrollIntoView()}
                 />
             </div>
             
             <p className="text-white text-center text-2xl">Want something different? <br></br> Ask what we can whip up for you!</p>
 
             {/* cocktails div */}
-            <div>
-                <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Cocktails</p>
+            <div id = "cocktails">
+                <p
+                className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Cocktails</p>
                 <MenuList
                     drinks = { cocktails }
                 />
             </div>
 
             {/* batched div */}
-            <div>
+            <div id = "batched">
                 <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Batched</p>
                 <MenuList
                     drinks = { batched }
                 />
             </div>
 
-            {/* cocktails div */}
-            <div>
+            {/* shots div */}
+            <div id = "shots">
                 <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Shots</p>
                 <MenuList
                     drinks = { shots }

@@ -26,10 +26,12 @@
     - add option to enter in own drink DONE
     - Save username to local storage DONE -->
     - add pop up if user tries to change name that's saved in localStorage
+    - Add a check to see if a user already exists with that name and isn't stored in local storage
 
 - MENU
-    - make it where clicking "Add to Order" populates form in Order page
-    — make top buttons sticky and actually redirect to different sections of the page
+    <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->
+    <!-- — make top buttons sticky and actually redirect to different sections of the page DONE -->
+    - make sticky buttons look better so everything that scrolls underneath is no longer visible
 
 - LEADERBOARD
     - make that shit
