@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/UIElements/Card"
 import Input from "../components/FormElements/Input"
 import Button from "../components/FormElements/Button"
@@ -27,6 +27,28 @@ const Order = () => {
     const clearFormErrorHandler = () => {
         setFormHasErrors(false)
     }
+
+    // check if user navigated from Menu page amd selected a drink
+    const menuDrink = localStorage.getItem('chosenDrink')
+
+    console.log(`Menu Drink Selected: ${menuDrink}`)
+    
+    // useEffect here to run this function once and prevent an endless loop. Splits up the string in localStorage and assigns values to the respective states above so shit works right
+    useEffect(() => {
+        if (menuDrink) {
+
+            const menuDrinkSplit = menuDrink.split(",")
+            const menuDrinkName = menuDrinkSplit[0]
+            const menuDrinkPrice = parseInt(menuDrinkSplit[1])
+
+            console.log(`Menu Drink Price: ${menuDrinkPrice} ${typeof menuDrinkPrice} Menu Drink Name: ${menuDrinkName} ${typeof menuDrinkName}`)
+
+            setChosenDrink(menuDrinkName)
+            setDrinkPrice(menuDrinkPrice)
+            setOrderTotal(menuDrinkPrice)
+        }
+    }, [ menuDrink ])
+
 
     // MAPPING OUT DRINK OPTIONS FOR DROPDOWN SELECT IN FORM
     let cocktailsMapped = cocktails.map((drink) => (
@@ -67,7 +89,7 @@ const Order = () => {
 
     const drinkSelectorHandler = (event) => {
         const price = event.target.value.split("$")[1]
-        console.log(`Price ${price}`)
+        console.log(`Price ${price} — ${typeof price}`)
         
         setChosenDrink(event.target.value.split("—")[0].trim())
         setDrinkPrice(price)
@@ -78,6 +100,7 @@ const Order = () => {
     const calculateOrderTotalHandler = (event) => {
         const numberOfDrinks = event.target.value
         console.log(numberOfDrinks)
+        console.log(`Drink Price: ${drinkPrice}`)
 
         setDrinkQuantity(numberOfDrinks)
         setOrderTotal(drinkPrice * numberOfDrinks)
@@ -197,6 +220,9 @@ const Order = () => {
                         name="drinkChoice"
                         className="block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2"
                         onChange= { drinkSelectorHandler }
+
+                        // FIGURE OUT HOW TO CHANGE VALUE FROM MENU SELECTION!!!!!!
+                        // value = { menuDrink ? `${menuDrink.split}`: null}
                     >
                         <option disabled selected>Pick a Drink</option>
                         { drinkOptions }

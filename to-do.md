@@ -19,6 +19,7 @@
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
+    - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE
 
 - ORDER
     <!-- - make it where form can't be submitted if any inputs are blank DONE
