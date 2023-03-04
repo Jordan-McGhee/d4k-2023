@@ -16,7 +16,7 @@ const Order = () => {
     let navigate = useNavigate()
 
     // STATES TO KEEP UP WITH CHOSEN DRINK, DRINK PRICE, QUANTITY SELECTED, and ORDER TOTAL
-    const [ chosenDrink, setChosenDrink ] = useState(null)
+    const [ chosenDrink, setChosenDrink ] = useState("default")
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
@@ -33,7 +33,8 @@ const Order = () => {
 
     console.log(`Menu Drink Selected: ${menuDrink}`)
     
-    // useEffect here to run this function once and prevent an endless loop. Splits up the string in localStorage and assigns values to the respective states above so shit works right
+    // useEffect here to run this function once and prevent an endless loop.
+    // Splits up the string in localStorage and assigns values to the respective states above so shit works right
     useEffect(() => {
         if (menuDrink) {
 
@@ -41,29 +42,34 @@ const Order = () => {
             const menuDrinkName = menuDrinkSplit[0]
             const menuDrinkPrice = parseInt(menuDrinkSplit[1])
 
-            console.log(`Menu Drink Price: ${menuDrinkPrice} ${typeof menuDrinkPrice} Menu Drink Name: ${menuDrinkName} ${typeof menuDrinkName}`)
+            // console.log(`Menu Drink Price: ${menuDrinkPrice} ${typeof menuDrinkPrice} Menu Drink Name: ${menuDrinkName} ${typeof menuDrinkName}`)
 
+            // UPDATES OUR STATE VARIABLES SO THE FORM AND TOTAL CALCULATION WORKS CORRECTLY
             setChosenDrink(menuDrinkName)
             setDrinkPrice(menuDrinkPrice)
             setOrderTotal(menuDrinkPrice)
+
+            // REMOVES THE ITEM FROM LOCAL STORAGE AFTER UPDATING STATES SO THE FORM ISN'T STUCK IN FUTURE ORDERS
+            localStorage.removeItem('chosenDrink')
         }
     }, [ menuDrink ])
 
 
     // MAPPING OUT DRINK OPTIONS FOR DROPDOWN SELECT IN FORM
     let cocktailsMapped = cocktails.map((drink) => (
-        <option key = { `Cocktail ${cocktails.indexOf(drink)}`}>{drink.name} — ${drink.price}</option>
+        <option key = { `Cocktail ${cocktails.indexOf(drink)}`} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let batchedMapped = other.map((drink) => (
-        <option key = { `Batched ${other.indexOf(drink)}`}>{drink.name} — ${drink.price}</option>
+        <option key = { `Batched ${other.indexOf(drink)}`} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let shotsMapped = shots.map((drink) => (
-        <option key = {`Shots ${shots.indexOf(drink)}`}>{drink.name} — ${drink.price}</option>
+        <option key = {`Shots ${shots.indexOf(drink)}`} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let drinkOptions = [
+        <option key = "default" disabled selected = { chosenDrink === "default" }>Pick a Drink</option>,
         <option key = "disabled1" disabled>———</option>,
         <option key = "disabled2" disabled>COCKTAILS</option>,
         <option key = "disabled3" disabled>———</option>,
@@ -86,7 +92,6 @@ const Order = () => {
 
     // GRABS THE PRICE OF THE SELECTED DRINK TO CALCULATE ESTIMATED TOTAL BEFORE USER SUBMITS
     // ALSO UPDATES THE CHOSEN DRINK OPTION - ALLOWS US TO CHECK IF USER CHOSE CUSTOM DRINK AND ADD EXTRA FORM INPUT LATER
-
     const drinkSelectorHandler = (event) => {
         const price = event.target.value.split("$")[1]
         console.log(`Price ${price} — ${typeof price}`)
@@ -220,11 +225,7 @@ const Order = () => {
                         name="drinkChoice"
                         className="block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2"
                         onChange= { drinkSelectorHandler }
-
-                        // FIGURE OUT HOW TO CHANGE VALUE FROM MENU SELECTION!!!!!!
-                        // value = { menuDrink ? `${menuDrink.split}`: null}
                     >
-                        <option disabled selected>Pick a Drink</option>
                         { drinkOptions }
                     </select>
 

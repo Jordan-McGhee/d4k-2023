@@ -1,7 +1,7 @@
 [
     {
         "id": 8,
-        "name": "Mulled Cider",
+        "name": "Fire Cider",
         "ingredients": ["Rum or Whiskey", "Mulled Cider", "Winter Spices"],
         "description": "Hot or cold, yes or no, in or out",
         "imageUrl": "/images/drinks/mulled.jpg",
