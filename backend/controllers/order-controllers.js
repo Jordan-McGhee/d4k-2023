@@ -154,22 +154,37 @@ const getOrdersAdmin = async (req, res, next) => {
 }
 
 const getOrdersGrouped = async (req, res, next) => {
-    let text = "SELECT * FROM user_totals"
-    let response
+    let paidQuery = "SELECT * FROM user_totals WHERE total_unpaid IS NULL"
+
+    let unpaidQuery = "SELECT * FROM user_totals WHERE total_unpaid > 0"
+
+    let paidResponse, unpaidResponse
 
     try {
-        response = await pool.query(text)
+        paidResponse = await pool.query(paidQuery)
     } catch (error) {
         console.log(error)
 
         return next(
             new HttpError(
-                "Error getting orders grouped by usernames", 500
+                "Error getting orders grouped by usernames COMPLETE", 500
             )
         )
     }
 
-    res.status(200).json({ message: "Retrieved orders grouped by usernames!", response: response.rows })
+    try {
+        unpaidResponse = await pool.query(unpaidQuery)
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                "Error getting orders grouped by usernames INCOMPLETE", 500
+            )
+        )
+    }
+
+    res.status(200).json({ message: "Retrieved orders grouped by usernames!", paid: paidResponse.rows, unpaid: unpaidResponse.rows })
 }
 
 const closeTab = async (req, res, next) => {

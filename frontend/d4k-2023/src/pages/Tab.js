@@ -5,7 +5,8 @@ import ErrorModal from "../components/UIElements/ErrorModal"
 import { useFetch } from "../hooks/useFetch"
 
 const Tab = () => {
-    const [ tabs, setTabs ] = useState([])
+    const [ paidTabs, setPaidTabs ] = useState([])
+    const [ unpaidTabs, setUnpaidTabs ] = useState([])
     const { isLoading, hasError, clearError, sendRequest } = useFetch()
 
     useEffect(() => {
@@ -26,7 +27,8 @@ const Tab = () => {
 
                 console.log(responseData)
 
-                setTabs(responseData.response)
+                setPaidTabs(responseData.paid)
+                setUnpaidTabs(responseData.unpaid)
 
             } catch (error) {
                 console.log(error)
@@ -46,10 +48,17 @@ const Tab = () => {
 
             { isLoading && <LoadingSpinner /> }
 
+            {/* UNPAID TABS */}
             <div>
-                <p className="my-5 text-4xl font-bold uppercase text-white">TABS</p>
+                <p className="my-5 text-4xl font-bold uppercase text-white">UNPAID TABS</p>
+                <TabTable data = { unpaidTabs } />
             </div>
-            <TabTable data = { tabs } />
+
+            {/* PAID TABS */}
+            <div>
+                <p className="my-5 text-4xl font-bold uppercase text-white">PAID TABS</p>
+                <TabTable data = { paidTabs } />
+            </div>
 
             </div>
         </React.Fragment>

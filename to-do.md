@@ -24,6 +24,7 @@
     - maybe add field to getOrdersGrouped for if total_unpaid = 0 and that will allow us to undo marking a tab closed?
     - figure out donations
     - make table scrollable?
+    <!-- - add separate queries for paid/unpaid? DONE -->
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
