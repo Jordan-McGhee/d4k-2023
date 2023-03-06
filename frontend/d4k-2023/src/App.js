@@ -4,6 +4,7 @@ import './App.css';
 
 // IMPORTS
 import Admin from "./pages/Admin"
+import Tab from "./pages/Tab";
 import FAQ from "./pages/FAQ"
 import HomePage from "./pages/HomePage"
 import Menu from "./pages/Menu"
@@ -19,6 +20,7 @@ function App() {
     <Routes>
       <Route path = "/" element = { <HomePage />} />
       <Route path = "/admin" element = { <Admin /> } />
+      <Route path = "/tabs" element = { <Tab />} />
       <Route path= "/faq" element = { <FAQ /> } />
       <Route path = "/menu" element = { <Menu />} />
       <Route path = "/order" element = { <Order />} />

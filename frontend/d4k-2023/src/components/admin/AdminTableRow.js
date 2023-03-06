@@ -127,7 +127,7 @@ const AdminTableRow = props => {
                     }
                 </td>
                 <td className="px-6 py-3">{ props.order.drink }</td>
-                <td className="px-6 py-3">{ props.order.quantity }</td>
+                <td className="px-6 py-3 text-center">{ props.order.quantity }</td>
                 {/* <td>{ order.total }</td> */}
                 <td className="px-6 py-3">{ props.order.created_at }</td>
 

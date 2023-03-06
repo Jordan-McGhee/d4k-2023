@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import MobileLeaderBoard from "../components/leaderboard/MobileLeaderBoard";
+import LargeLeaderBoard from "../components/leaderboard/LargeLeaderBoard";
 
 const LeaderBoard = () => {
 

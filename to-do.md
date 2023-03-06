@@ -16,6 +16,14 @@
     - Add recently updated identifier based on last update
     - Remove navigate from AdminTableRow and use something better to re-render tables
     - add a tab section to close tabs and check values
+    - make table scrollable?
+
+- TAB
+    - move tab out from being own page and make it a button to switch between tab and admin pages
+    - finish building out functionality in TabTableRow
+    - maybe add field to getOrdersGrouped for if total_unpaid = 0 and that will allow us to undo marking a tab closed?
+    - figure out donations
+    - make table scrollable?
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
@@ -34,4 +42,8 @@
     - make sticky buttons look better so everything that scrolls underneath is no longer visible
 
 - LEADERBOARD
-    - make that shit
+    - make that shit (mobile and other version)
+
+
+- ADD WAY TO PAY (LINK TO VENMO/PAYPAL/ETC)
+- maybe add userTotal to localStorage??

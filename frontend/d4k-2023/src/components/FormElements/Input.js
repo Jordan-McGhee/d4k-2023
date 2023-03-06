@@ -30,7 +30,7 @@ const Input = props => {
             onChange = { changeHandler }
             onBlur = { blurHandler }
             value = { inputValue }
-            className = { 'appearance-none block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2' } 
+            className = { props.className || 'appearance-none block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2' } 
             // isValid = { inputIsValid }
             // value = { props.value || inputValue } ?? 
         />

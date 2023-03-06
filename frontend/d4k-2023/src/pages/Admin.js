@@ -43,7 +43,6 @@ const Admin = () => {
     }, [ sendRequest ])
 
     return (
-        // <div>asdf</div>
         <React.Fragment>
             <div className="w-full m-auto">
                 <ErrorModal error = { hasError } onClear = { clearError } />
