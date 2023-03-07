@@ -83,6 +83,12 @@ const MainNav = () => {
                         </li>
 
                         <li className="border-b border-white ml-2 my-2 uppercase text-white">
+                            <NavLink to="/leaderboard">
+                                <p>Leaderboard</p>
+                            </NavLink>
+                        </li>
+
+                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
                             <NavLink to="/admin">
                                 <p>Admin</p>
                             </NavLink>

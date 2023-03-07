@@ -21,6 +21,8 @@ router.get("/admin", orderControllers.getOrdersAdmin)
 
 router.get("/grouped", orderControllers.getOrdersGrouped)
 
+router.get("/leaderboard", orderControllers.getOrdersLeaderboard)
+
 router.post("/:username/closeTab", orderControllers.closeTab)
 
 router.delete("/:order_id", orderControllers.deleteOrder)

@@ -187,6 +187,26 @@ const getOrdersGrouped = async (req, res, next) => {
     res.status(200).json({ message: "Retrieved orders grouped by usernames!", paid: paidResponse.rows, unpaid: unpaidResponse.rows })
 }
 
+const getOrdersLeaderboard = async (req, res, next) => {
+    let query = "SELECT * FROM user_totals ORDER BY total DESC"
+
+    let response
+
+    try {
+        response = await pool.query(query)
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                "Error getting orders for leaderboard", 500
+            )
+        )
+    }
+
+    res.status(200).json({message: "Retrieved orders for leaderboard!", response: response.rows})
+}
+
 const closeTab = async (req, res, next) => {
     // grab username from params and run query to close all upaid
     const { username } = req.params
@@ -237,5 +257,6 @@ exports.updatePaid = updatePaid
 exports.updateCompleted = updateCompleted
 exports.getOrdersAdmin = getOrdersAdmin
 exports.getOrdersGrouped = getOrdersGrouped
+exports.getOrdersLeaderboard = getOrdersLeaderboard
 exports.closeTab = closeTab
 exports.deleteOrder = deleteOrder

@@ -89,23 +89,19 @@ const AdminTableRow = props => {
 
     // STARTS PROCESS OF DELETING SPECIFIC ORDER
     // WILL PROMPT FOR CONFIRMATION
-
-    const showDeleteModalHandler = (id) => {
-        setShowModal([true, id])
-    }
-
-    const closeDeleteModalHandler = () => {
-        setShowModal([false, null])
-    }
-
+    
     const submitDeleteHandler = event => {
         event.preventDefault()
-
+        
         console.log(event.target[0].value)
         const id = event.target[0].value
         setShowModal([ true, id ])
     }
-
+    
+    const closeDeleteModalHandler = () => {
+        setShowModal([false, null])
+    }
+    
     return (
         <React.Fragment>
 
