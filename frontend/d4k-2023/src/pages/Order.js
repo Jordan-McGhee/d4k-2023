@@ -20,6 +20,8 @@ const Order = () => {
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
+    const [ donationAmount, setDonationAmount ] = useState(0)
+    const [ selectedOther, setSelectedOther ] = useState(false)
 
     // FORM ERROR STATE
     const [ formHasErrors, setFormHasErrors ] = useState(false)
@@ -31,7 +33,7 @@ const Order = () => {
     // check if user navigated from Menu page amd selected a drink
     const menuDrink = localStorage.getItem('chosenDrink')
 
-    console.log(`Menu Drink Selected: ${menuDrink}`)
+    // console.log(`Menu Drink Selected: ${menuDrink}`)
     
     // useEffect here to run this function once and prevent an endless loop.
     // Splits up the string in localStorage and assigns values to the respective states above so shit works right
@@ -94,21 +96,49 @@ const Order = () => {
     // ALSO UPDATES THE CHOSEN DRINK OPTION - ALLOWS US TO CHECK IF USER CHOSE CUSTOM DRINK AND ADD EXTRA FORM INPUT LATER
     const drinkSelectorHandler = (event) => {
         const price = event.target.value.split("$")[1]
-        console.log(`Price ${price} — ${typeof price}`)
+        console.log(`Price ${price} — ${typeof parseInt(price)}`)
         
         setChosenDrink(event.target.value.split("—")[0].trim())
-        setDrinkPrice(price)
-        setOrderTotal(price * drinkQuantity)
+        setDrinkPrice(parseInt(price))
+        setOrderTotal(parseInt(price) * parseInt(drinkQuantity))
     }
 
     // CALCULATES THE USER's TOTAL
     const calculateOrderTotalHandler = (event) => {
         const numberOfDrinks = event.target.value
-        console.log(numberOfDrinks)
-        console.log(`Drink Price: ${drinkPrice}`)
+        // console.log(typeof parseInt(numberOfDrinks))
+        // console.log(`Drink Price: ${typeof drinkPrice}`)
 
-        setDrinkQuantity(numberOfDrinks)
-        setOrderTotal(drinkPrice * numberOfDrinks)
+        setDrinkQuantity(parseInt(numberOfDrinks))
+        setOrderTotal(drinkPrice * parseInt(numberOfDrinks))
+    }
+
+    // HANDLER FOR PRESELECTED DONATION AMOUNT BUTTONS
+    const donationHandler = amount => {
+        setSelectedOther(false)
+
+        const previousDonation = donationAmount
+
+        setDonationAmount(amount)
+        setOrderTotal(orderTotal+amount-previousDonation)
+    }
+
+    // HANDLER FOR CUSTOM DONATION FIELD
+    const donationInputHandler = event => {
+        const input = document.getElementById('donationInput')
+        const inputValue = input.value
+
+        console.log(inputValue)
+
+        if (inputValue > 0 ) {
+            const previousDonation = donationAmount
+            const orderTotalNumber = parseInt(orderTotal)
+            const newTotal = orderTotalNumber + parseInt(inputValue) - parseInt(previousDonation)
+
+            setDonationAmount(inputValue)
+            setOrderTotal(newTotal)
+            setSelectedOther(false)
+        }
     }
 
     const cardFooter = (
@@ -126,10 +156,11 @@ const Order = () => {
     // FETCH CODE
     const { sendRequest } = useFetch()
 
-
     // FORM SUBMISSION
     const submitHandler = async event => {
         event.preventDefault()
+
+        console.log(event.target[7])
 
         console.log("Submitted order!")
 
@@ -139,12 +170,18 @@ const Order = () => {
 
         // UPDATE FORM DATA CONDITIONALLY IF USER CHOSE CUSTOM DRINK OR NOT
         if (chosenDrink === "Custom Drink") {
+
+            if (event.target[2].value.trim() === "") {
+                errors = true
+            }
+
             formData = {
                 username: event.target[0].value,
                 drinkTitle: `CUSTOM DRINK: ${event.target[2].value.trim()}`,
                 drinkCost: 10,
                 quantity: parseInt(event.target[3].value),
-                comments: event.target[4].value ? event.target[4].value : null
+                donation: donationAmount,
+                comments: event.target[8].value ? event.target[8].value : null
             }
         } else {
             formData = {
@@ -152,7 +189,8 @@ const Order = () => {
                 drinkTitle: event.target[1].value.split("—")[0].trim(),
                 drinkCost: parseInt(event.target[1].value.split("$")[1]),
                 quantity: parseInt(event.target[2].value),
-                comments: event.target[3].value ? event.target[3].value : null
+                donation: donationAmount,
+                comments: event.target[7].value ? event.target[7].value : null
             }
         }
 
@@ -259,6 +297,66 @@ const Order = () => {
                                 <option>4</option>
                                 <option>5</option>
                             </select>
+                        </div>
+                    }
+
+                    {
+                        // DOESN'T ALLOW USER TO DONATE UNLESS THEY'VE CHOSEN A DRINK AND QUANTITY
+                        drinkPrice !== 0 && drinkQuantity !== 0 &&
+
+                        // DIV FOR DONATION FIELD
+                        <div className="my-2">
+                            <label className="text-lg font-semibold mr-4 block uppercase">
+                                Would you like to donate?
+                            </label>
+                            
+                            {/* DIV OF BUTTONS FOR DIFFERENT DONATION AMOUNTS */}
+                            <div className="flex justify-between my-2">
+                                <Button
+                                    text = "$5"
+                                    type = "button"
+                                    onClick = { () => donationHandler(5)}
+                                />
+                                <Button
+                                    text = "$10"
+                                    type = "button"
+                                    onClick = { () => donationHandler(10)}
+                                />
+                                <Button
+                                    text = "$20"
+                                    type = "button"
+                                    onClick = { () => donationHandler(20)}
+                                />
+                                <Button
+                                    text = "Other"
+                                    type = "button"
+                                    onClick = { () => setSelectedOther(true) }
+                                />
+                            </div>
+
+                            {
+                                selectedOther && 
+                                <div className="flex justify-between">
+                                    <Input
+                                        id = "donationInput"
+                                        type = "number"
+                                        placeholder = "Enter Donation Amount"
+                                        className = "w-full appearance-none bg-white text-black border rounded p-3 my-3 leading-tight focus: outline-green-700"
+                                    />
+                                    <Button
+                                        text = '✓'
+                                        type = "button"
+                                        className = "bg-green-600 rounded-md text-white px-3 py-1 my-3 mx-2"
+                                        onClick = { donationInputHandler }
+                                    />
+                                    <Button
+                                        text = '✕'
+                                        type = "button"
+                                        className = "bg-red-700 rounded-md text-white px-3 py-1 my-3"
+                                        onClick = { () => setSelectedOther(false)}
+                                    />
+                                </div>
+                            }
                         </div>
                     }
 

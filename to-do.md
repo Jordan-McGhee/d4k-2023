@@ -29,13 +29,21 @@
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
     - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE
+    - check localStorage username against names in queue and make the card different somehow
 
 - ORDER
     <!-- - make it where form can't be submitted if any inputs are blank DONE
     - add option to enter in own drink DONE
     - Save username to local storage DONE -->
-    - add pop up if user tries to change name that's saved in localStorage
+    - don't let user change name
     - Add a check to see if a user already exists with that name and isn't stored in local storage
+    <!-- - add donation field DONE -->
+    - on donation buttons:
+        - make them grey out if not selected
+        - add field popup if other is selected
+        - if other is selected, update OTHER to reflect value chosen
+    - store tab info in local storage ?
+        - separate donation and order total?
 
 - MENU
     <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->

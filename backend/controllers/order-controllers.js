@@ -13,16 +13,16 @@ const createOrder = async (req, res, next) => {
     }
 
     // pull data from req.body
-    const { username, drinkTitle, customDrinkTitle, drinkCost, quantity, comments } = req.body
+    const { username, drinkTitle, customDrinkTitle, drinkCost, quantity, donation, comments } = req.body
 
     const total = Math.floor(drinkCost * quantity)
 
-    let text = "INSERT INTO orders(username, drink, quantity, total, comments, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, false, false, NOW(), NOW()) RETURNING *"
+    let text = "INSERT INTO orders(username, drink, quantity, total, comments, donation, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, false, false, NOW(), NOW()) RETURNING *"
     
     let newOrder
 
     try {
-        newOrder = await pool.query(text, [username, drinkTitle || customDrinkTitle, quantity, total, comments])
+        newOrder = await pool.query(text, [username, drinkTitle || customDrinkTitle, quantity, total, comments, donation])
     } catch (err) {
         console.log(`Error creating order: ${err}`)
         return next(
