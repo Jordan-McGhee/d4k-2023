@@ -1,4 +1,5 @@
 import React from "react";
+import Card from "../../UIElements/Card";
 
 const MobileLeaderBoard = props => {
 
