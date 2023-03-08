@@ -52,6 +52,7 @@
 
 - LEADERBOARD
     - make that shit (mobile and other version)
+    - add sum query to backend to get total of all orders submitted
 
 
 - ADD WAY TO PAY (LINK TO VENMO/PAYPAL/ETC)

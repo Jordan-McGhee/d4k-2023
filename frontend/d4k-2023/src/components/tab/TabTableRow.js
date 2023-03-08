@@ -91,8 +91,8 @@ const TabTableRow = props => {
                     { props.tab.total_unpaid ? `$${props.tab.total_unpaid}` : '$0' }
                 </td>
 
-                <td className="px-6 py-3 text-center">
-                    $0
+                <td className={ props.tab.total_donated ? "text-green-600 font-bold px-6 py-3 text-center" : "text-white font-bold px-6 py-3 text-center"}>
+                    { props.tab.total_donated ? `$${props.tab.total_donated}` : '$0' }
                 </td>
 
                 <td className="px-6 py-3">
