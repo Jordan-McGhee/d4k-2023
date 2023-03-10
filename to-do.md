@@ -1,5 +1,7 @@
-<!-- BACKEND -->
+BACKEND
 <!-- - double check isPaid and updatePaid logic with frontend code DONE -->
+    - update controllers and routes to account for new donation table
+    - create view that sums donations by username and order amounts
 
 <!-- FRONTEND -->
 <!-- - go through and update routes/paths from old frontend DONE -->
@@ -18,6 +20,7 @@
     - Remove navigate from AdminTableRow and use something better to re-render tables
     - add a tab section to close tabs and check values
     - make table scrollable?
+    - Add table for donations
 
 - TAB
     - move tab out from being own page and make it a button to switch between tab and admin pages
@@ -45,6 +48,7 @@
         - if other is selected, update OTHER to reflect value chosen
     - store tab info in local storage ?
         - separate donation and order total?
+    - update both ends to account for new donation table
 
 - MENU
     <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->

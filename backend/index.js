@@ -5,6 +5,7 @@ const HttpError = require("./models/http-error")
 const dotenv = require("dotenv")
 dotenv.config()
 
+const donationRoutes = require("./routes/donation-routes")
 const orderRoutes = require("./routes/order-routes")
 
 
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 })
 
 // ROUTE VARIABLES
+app.use("/donation", donationRoutes)
 app.use("/order", orderRoutes)
 
 
