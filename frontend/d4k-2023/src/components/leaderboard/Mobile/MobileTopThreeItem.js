@@ -1,14 +1,27 @@
 import React from "react";
 import Card from "../../UIElements/Card";
+import first from "../../../images/leaderboard/first-alt.png"
+import second from "../../../images/leaderboard/second-alt.png"
+import third from "../../../images/leaderboard/third-alt.png"
 
-const MobileLeaderBoardItem = props => {
+const MobileTopThreeItem = props => {
+
+    let image
+
+    if (props.rank === 1) {
+        image = first
+    } else if ( props.rank === 2) {
+        image = second
+    } else { 
+        image = third
+    }
 
     return (
         <li>
             <Card className = "flex flex-col p-4 rounded-lg border border-gray-2 bg-white w-full shadow-lg my-5">
-                <div className="flex items-center justify-around">
+                <div className="flex items-center">
                     {/* RANK */}
-                    <p className="text-4xl">{ props.rank}</p>
+                    <img src = { image } alt = { props.rank } className = "w-16 mr-4 mt-1" />
                     
                     {/* USER INFO */}
                     <div className="w-2/3">
@@ -25,4 +38,4 @@ const MobileLeaderBoardItem = props => {
     )
 }
 
-export default MobileLeaderBoardItem
+export default MobileTopThreeItem

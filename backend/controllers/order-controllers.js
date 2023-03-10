@@ -188,9 +188,11 @@ const getOrdersGrouped = async (req, res, next) => {
 }
 
 const getOrdersLeaderboard = async (req, res, next) => {
-    let query = "SELECT * FROM user_totals ORDER BY total DESC"
+    let query = "SELECT * FROM user_totals ORDER BY total DESC limit 10"
 
-    let response
+    let sumQuery = "SELECT SUM(total) from user_totals"
+
+    let response, sumResponse
 
     try {
         response = await pool.query(query)
@@ -204,7 +206,19 @@ const getOrdersLeaderboard = async (req, res, next) => {
         )
     }
 
-    res.status(200).json({message: "Retrieved orders for leaderboard!", response: response.rows})
+    try {
+        sumResponse = await pool.query(sumQuery)
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                "Error getting overall total for leaderboard", 500
+            )
+        )
+    }
+
+    res.status(200).json({message: "Retrieved orders for leaderboard!", response: response.rows, sumTotal: sumResponse.rows[0]})
 }
 
 const closeTab = async (req, res, next) => {

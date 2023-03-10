@@ -8,6 +8,7 @@ import { useFetch } from "../hooks/useFetch";
 const LeaderBoard = () => {
 
     const [ data, setData ] = useState([])
+    const [ overallTotal, setOverallTotal ] = useState(0)
 
     const { isLoading, hasError, clearError, sendRequest } = useFetch()
 
@@ -19,8 +20,10 @@ const LeaderBoard = () => {
                     `${process.env.REACT_APP_BACKEND_URL}/order/leaderboard`
                 )
 
-                console.log(`Leaderboard: ${ typeof responseData.response }`)
+                // console.log(`Leaderboard: ${ typeof responseData.response }`)
+
                 setData(responseData.response)
+                setOverallTotal(responseData.sumTotal.sum)
 
             } catch (error) {
                 console.log(error)
@@ -31,6 +34,8 @@ const LeaderBoard = () => {
 
     }, [ sendRequest ])
 
+    console.log(`Total: ${overallTotal}`)
+
     return (
         <React.Fragment>
 
@@ -38,11 +43,9 @@ const LeaderBoard = () => {
 
             { isLoading && <LoadingSpinner />}
 
-            <h1>LeaderBoard</h1>
-
             {/* MOBILE */}
             <div>
-                <MobileLeaderBoard data = { data } />
+                <MobileLeaderBoard data = { data } total = { overallTotal }/>
             </div>
 
             {/* ALL OTHER SCREENS */}

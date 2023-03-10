@@ -7,6 +7,7 @@
 - APP.js
     - make admin page not adhere to same width settings
     - update mainNav to be same width
+    - add 404 not found page
 
 - ADMIN
     <!-- - figure out how to load all orders and filter accordingly DONE
@@ -52,7 +53,9 @@
 
 - LEADERBOARD
     - make that shit (mobile and other version)
-    - add sum query to backend to get total of all orders submitted
+    <!-- - add sum query to backend to get total of all orders submitted DONE -->
+    - have whole page refresh every minute?
+    - UPDATE backend to total order_totals and total_donated
 
 
 - ADD WAY TO PAY (LINK TO VENMO/PAYPAL/ETC)
