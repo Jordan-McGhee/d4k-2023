@@ -1,6 +1,6 @@
 BACKEND
 <!-- - double check isPaid and updatePaid logic with frontend code DONE -->
-    - update controllers and routes to account for new donation table
+    <!-- - update controllers and routes to account for new donation table DONE -->
     - create view that sums donations by username and order amounts
 
 <!-- FRONTEND -->
@@ -45,7 +45,7 @@ BACKEND
     - on donation buttons:
         - make them grey out if not selected
         - add field popup if other is selected
-        - if other is selected, update OTHER to reflect value chosen
+        <!-- - if other is selected, update OTHER to reflect value chosen DONE -->
     - store tab info in local storage ?
         - separate donation and order total?
     - update both ends to account for new donation table

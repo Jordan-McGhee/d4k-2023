@@ -5,7 +5,7 @@ const createDonation = async (req, res, next) => {
     
     const { username, amount } = req.body
 
-    let text = "INSERT INTO donations(username, amount, created_at, updated_at) VALUES ($1, $2, NOW(), NOW() RETURNING *)"
+    let text = "INSERT INTO donations(username, amount, is_paid, created_at, updated_at) VALUES ($1, $2, false, NOW(), NOW())"
 
     let newDonation
 
@@ -23,7 +23,91 @@ const createDonation = async (req, res, next) => {
 
     console.log("Donation saved!")
 
-    res.status(201).json({ message: "Donation saved!", donation: newDonation.rows })
+    res.status(201).json({ message: "Donation saved!", donation: newDonation })
+}
+
+const getDonationsAdmin = async (req, res, next) => {
+    let unpaidQuery = "SELECT * FROM donations WHERE is_paid = FALSE ORDER BY created_at ASC"
+
+    let paidQuery = "SELECT * FROM donations WHERE is_paid = TRUE ORDER BY created_at ASC"
+
+    let unpaidResponse, paidResponse
+
+    // UNPAID TRY/CATCH
+    try {
+        unpaidResponse = await pool.query(unpaidQuery)
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                "Error getting unpaid donations", 500
+            )
+        )
+    }
+
+    // PAID TRY/CATCH
+    try {
+        paidResponse = await pool.query(paidQuery)
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                "Error getting paid donations", 500
+            )
+        )
+    }
+
+    res.status(200).json({ message: "Retrieved donations!", unpaid: unpaidResponse.rows, paid: paidResponse.rows})
+}
+
+const updateDonationPaid = async (req, res, next) => {
+    const { isPaid } = req.body
+    const { donation_id } = req.params
+
+    const paidStatus = isPaid ? false : true
+
+    let text = "UPDATE donations SET is_paid = $1, updated_at = NOW() WHERE donation_id = $2 RETURNING *"
+
+    let response 
+
+    try {
+        response = await pool.query(text, [ paidStatus, donation_id ])
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                `Error updating donation #${donation_id}'s paidStatus to ${ paidStatus }`, 500
+            )
+        )
+    }
+
+    res.status(201).json({ message: `Updated paidStatus of donation #${donation_id} to ${paidStatus}`, response: response.rows})
+}
+
+const updatedDonationAmount = async (req, res, next) => {
+    const { originalAmount, newAmount } = req.body
+    const { donation_id } = req.params
+
+    let text = "UPDATE donations SET amount = $1, updated_at = NOW() WHERE donation_id = $2 RETURNING *"
+
+    let response
+
+    try {
+        response = await pool.query(text, [ newAmount, donation_id ])
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                `Error updating donation #${donation_id}'s amount from $${ originalAmount } to $${ newAmount }`, 500
+            )
+        )
+    }
+
+    res.status(201).json({ message: `Updating donation #${ donation_id }'s amount from $${ originalAmount } to $${ newAmount }`, response: response.rows})
 }
 
 const deleteDonation = async (req, res, next) => {
@@ -34,7 +118,7 @@ const deleteDonation = async (req, res, next) => {
     let response
 
     try {
-        response = pool.query(text, [ donation_id ])
+        response = await pool.query(text, [ donation_id ])
     } catch (error) {
         console.log(error)
 
@@ -45,8 +129,11 @@ const deleteDonation = async (req, res, next) => {
         )
     }
 
-    res.status(200).json({ message: `Deleted order #${donation_id}`, response: response })
+    res.status(200).json({ message: `Deleted donation #${donation_id}`, response: response })
 }
 
 exports.createDonation = createDonation
+exports.getDonationsAdmin = getDonationsAdmin
+exports.updateDonationPaid = updateDonationPaid
+exports.updatedDonationAmount = updatedDonationAmount
 exports.deleteDonation = deleteDonation

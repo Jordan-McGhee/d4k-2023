@@ -180,7 +180,7 @@ const Order = () => {
                 drinkTitle: `CUSTOM DRINK: ${event.target[2].value.trim()}`,
                 drinkCost: 10,
                 quantity: parseInt(event.target[3].value),
-                donation: donationAmount,
+                donationAmount: donationAmount,
                 comments: event.target[8].value ? event.target[8].value : null
             }
         } else {
@@ -189,7 +189,7 @@ const Order = () => {
                 drinkTitle: event.target[1].value.split("—")[0].trim(),
                 drinkCost: parseInt(event.target[1].value.split("$")[1]),
                 quantity: parseInt(event.target[2].value),
-                donation: donationAmount,
+                donationAmount: donationAmount,
                 comments: event.target[7].value ? event.target[7].value : null
             }
         }
@@ -235,7 +235,7 @@ const Order = () => {
 
     }
 
-    // retreive username from localStorage if there
+    // retrieve username from localStorage if there
     let localStorageUsername = localStorage.getItem('storedUsername')
 
     return (

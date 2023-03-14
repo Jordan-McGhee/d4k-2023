@@ -5,6 +5,12 @@ const router = express.Router()
 
 router.post("/", donationControllers.createDonation)
 
+router.get("/", donationControllers.getDonationsAdmin)
+
+router.patch("/:donation_id/updatePaid", donationControllers.updateDonationPaid)
+
+router.patch("/:donation_id/amount", donationControllers.updatedDonationAmount)
+
 router.delete("/:donation_id", donationControllers.deleteDonation)
 
 module.exports = router

@@ -13,16 +13,16 @@ const createOrder = async (req, res, next) => {
     }
 
     // pull data from req.body
-    const { username, drinkTitle, customDrinkTitle, drinkCost, quantity, donation, comments } = req.body
+    const { username, drinkTitle, customDrinkTitle, drinkCost, quantity, donationAmount, comments } = req.body
 
     const total = Math.floor(drinkCost * quantity)
 
-    let text = "INSERT INTO orders(username, drink, quantity, total, comments, donation, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, false, false, NOW(), NOW()) RETURNING *"
+    let orderText = "INSERT INTO orders(username, drink, quantity, total, comments, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, false, false, NOW(), NOW()) RETURNING *"
     
-    let newOrder
+    let newOrder, newDonation
 
     try {
-        newOrder = await pool.query(text, [username, drinkTitle || customDrinkTitle, quantity, total, comments, donation])
+        newOrder = await pool.query(orderText, [username, drinkTitle || customDrinkTitle, quantity, total, comments])
     } catch (err) {
         console.log(`Error creating order: ${err}`)
         return next(
@@ -32,9 +32,26 @@ const createOrder = async (req, res, next) => {
         )
     }
 
+    if (donationAmount > 0) {
+
+        let donationText = "INSERT INTO donations(username, amount, is_paid, created_at, updated_at) VALUES ($1, $2, FALSE, NOW(), NOW()) RETURNING *"
+
+        try {
+            newDonation = await pool.query(donationText, [ username, donationAmount ])
+        } catch (error) {
+            console.log(error)
+
+            return next(
+                new HttpError(
+                    "Error creating donation along with order", 500
+                )
+            )
+        }
+    }
+
     console.log("Order created!")
 
-    res.status(201).json({ message: "Created Order!", order: newOrder.rows })
+    res.status(201).json({ message: "Created Order!", order: newOrder.rows, donation: donationAmount > 0 ? newDonation.rows : null })
 }
 
 const getOrders = async (req, res, next) => {
@@ -55,7 +72,7 @@ const getOrders = async (req, res, next) => {
 
     // const results = { 'results': response ? response.rows : null } 
 
-    const message = "Retreived orders!"
+    const message = "Retrieved orders!"
 
     console.log(message)
 
@@ -150,7 +167,7 @@ const getOrdersAdmin = async (req, res, next) => {
         )
     }
 
-    res.status(200).json({ message: "Retreived orders!", incompleteOrders: incompleteResponse.rows, completedOrders: completeResponse.rows })
+    res.status(200).json({ message: "Retrieved orders!", incompleteOrders: incompleteResponse.rows, completedOrders: completeResponse.rows })
 }
 
 const getOrdersGrouped = async (req, res, next) => {
