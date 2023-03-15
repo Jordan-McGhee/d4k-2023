@@ -32,6 +32,7 @@ BACKEND
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
+    - update cards to look better
     - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE
     - check localStorage username against names in queue and make the card different somehow
 
@@ -44,11 +45,11 @@ BACKEND
     <!-- - add donation field DONE -->
     - on donation buttons:
         - make them grey out if not selected
-        - add field popup if other is selected
+        <!-- - add field popup if other is selected DONE -->
         <!-- - if other is selected, update OTHER to reflect value chosen DONE -->
     - store tab info in local storage ?
         - separate donation and order total?
-    - update both ends to account for new donation table
+    <!-- - update both ends to account for new donation table DONE -->
 
 - MENU
     <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->
