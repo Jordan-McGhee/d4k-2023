@@ -26,10 +26,11 @@ BACKEND
     - move tab out from being own page and make it a button to switch between tab and admin pages
     - finish building out functionality in TabTableRow
     - maybe add field to getOrdersGrouped for if total_unpaid = 0 and that will allow us to undo marking a tab closed?
-    - figure out donations
+    <!-- - figure out donations DONE -->
     - make table scrollable?
-    - redo table to align with new backend queries and view
+    <!-- - redo table to align with new backend queries and view DONE -->
     <!-- - add separate queries for paid/unpaid? DONE -->
+    - add modal for confirming close tab?
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->

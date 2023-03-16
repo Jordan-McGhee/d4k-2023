@@ -9,10 +9,32 @@ const TabTableRow = props => {
     const { sendRequest } = useFetch()
     const navigate = useNavigate()
 
-    const addDonationHandler = event => {
+    const addDonationHandler = async event => {
         event.preventDefault()
 
-        console.log(event.target)
+        const username = event.target[0].value
+        const amount = parseInt(event.target[1].value)
+
+        const formData = { username, amount }
+
+        try {
+            await sendRequest(
+                // URL
+                `${process.env.REACT_APP_BACKEND_URL}/donation`,
+                // METHOD
+                'POST',
+                // HEADERS
+                {
+                    'Content-Type': 'application/json'
+                },
+                // BODY
+                JSON.stringify(formData)
+            )
+        } catch (error) {
+            console.log(error)
+        }
+
+        navigate(0)
     }
 
     const closeTabHandler = async event => {
@@ -47,7 +69,7 @@ const TabTableRow = props => {
     }
 
     const tabButton = (
-        props.tab.total_unpaid
+        props.tab.orders_total_unpaid
             ?
                 <form onSubmit = { closeTabHandler }>
                     <input
@@ -80,28 +102,33 @@ const TabTableRow = props => {
                 </td>
 
                 <td className="px-6 py-3 text-center">
-                    { props.tab.drinks_ordered }
+                    ${ props.tab.orders_total }
                 </td>
 
-                <td className="px-6 py-3 text-center">
-                    ${ props.tab.total }
+                <td className={ props.tab.orders_total_unpaid ? "text-red-700 font-bold px-6 py-3 text-center" : "text-white font-bold px-6 py-3 text-center"}>
+                    { props.tab.orders_total_unpaid ? `$${ props.tab.orders_total_unpaid}` : `$0`}
                 </td>
 
-                <td className= { props.tab.total_unpaid ? "text-red-700 font-bold px-6 py-3 text-center" : "text-white font-bold px-6 py-3 text-center"}>
-                    { props.tab.total_unpaid ? `$${props.tab.total_unpaid}` : '$0' }
+                <td className= { props.tab.donations_total ? "text-green-600 font-bold px-6 py-3 text-center" : "text-white font-bold px-6 py-3 text-center"}>
+                    { props.tab.donations_total ? `$${props.tab.donations_total}` : '$0' }
                 </td>
 
-                <td className={ props.tab.total_donated ? "text-green-600 font-bold px-6 py-3 text-center" : "text-white font-bold px-6 py-3 text-center"}>
-                    { props.tab.total_donated ? `$${props.tab.total_donated}` : '$0' }
+                <td className={ props.tab.donations_total_unpaid ? "text-red-700 font-bold px-6 py-3 text-center" : "text-white font-bold px-6 py-3 text-center"}>
+                    { props.tab.donations_total_unpaid ? `$${props.tab.donations_total_unpaid}` : '$0' }
                 </td>
 
                 <td className="px-6 py-3">
                     <form onSubmit={ addDonationHandler } className = "flex items-center justify-around">
+                        <input
+                            hidden
+                            readOnly
+                            value = { props.tab.username }
+                        />
                         <Input
-                            type = "text"
+                            type = "number"
                             placeholder = "Add Donation"
                             id = "donation-input"
-                            className = "appearance-none w-5/6 bg-white text-black border rounded p-1 my-1 leading-tight focus:outline-green-700 focus:bg-white border-gray-2"
+                            className = "appearance-none w-11/12 bg-white text-black border rounded p-1 my-1 leading-tight focus:outline-green-700 focus:bg-white border-gray-2"
                         />
 
                         <Button
