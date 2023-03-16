@@ -28,6 +28,7 @@ BACKEND
     - maybe add field to getOrdersGrouped for if total_unpaid = 0 and that will allow us to undo marking a tab closed?
     - figure out donations
     - make table scrollable?
+    - redo table to align with new backend queries and view
     <!-- - add separate queries for paid/unpaid? DONE -->
 
 - QUEUE:

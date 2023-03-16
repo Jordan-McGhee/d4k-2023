@@ -171,9 +171,9 @@ const getOrdersAdmin = async (req, res, next) => {
 }
 
 const getOrdersGrouped = async (req, res, next) => {
-    let paidQuery = "SELECT * FROM user_totals WHERE total_unpaid IS NULL"
+    let paidQuery = "SELECT * FROM user_totals WHERE orders_total_unpaid IS NULL"
 
-    let unpaidQuery = "SELECT * FROM user_totals WHERE total_unpaid > 0"
+    let unpaidQuery = "SELECT * FROM user_totals WHERE orders_total_unpaid > 0"
 
     let paidResponse, unpaidResponse
 
@@ -205,9 +205,9 @@ const getOrdersGrouped = async (req, res, next) => {
 }
 
 const getOrdersLeaderboard = async (req, res, next) => {
-    let query = "SELECT * FROM user_totals ORDER BY total DESC limit 10"
+    let query = "SELECT * FROM user_totals ORDER BY COALESCE(orders_total, 0) + COALESCE(donations_total, 0) DESC limit 10"
 
-    let sumQuery = "SELECT SUM(total) from user_totals"
+    let sumQuery = "SELECT SUM(orders_total) + SUM(donations_total) from user_totals"
 
     let response, sumResponse
 

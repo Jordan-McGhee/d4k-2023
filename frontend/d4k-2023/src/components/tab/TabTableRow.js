@@ -76,7 +76,7 @@ const TabTableRow = props => {
 
             <tr className= { props.className }>
                 <td className="px-6 py-3">
-                    { props.tab.username }
+                    { props.tab.username } — { props.tab.drinks_ordered} drinks
                 </td>
 
                 <td className="px-6 py-3 text-center">
