@@ -23,7 +23,7 @@ const LeaderBoard = () => {
                 // console.log(`Leaderboard: ${ typeof responseData.response }`)
 
                 setData(responseData.response)
-                setOverallTotal(responseData.sumTotal.sum)
+                setOverallTotal(responseData.sumTotal)
 
             } catch (error) {
                 console.log(error)

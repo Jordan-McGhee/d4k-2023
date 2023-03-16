@@ -7,7 +7,7 @@ const MobileTopThree = props => {
             id = { `mobile-leaderboard-topThree-${props.data.indexOf(user)}`}
             key = { `mobile-leaderboard-topThree-${props.data.indexOf(user)}`}
             username = { user.username }
-            total = { user.total }
+            total = { parseInt(user.orders_total) + parseInt(user.donations_total) }
             drinksOrdered = { user.drinks_ordered}
             rank = { props.data.indexOf(user) + 1}
         />

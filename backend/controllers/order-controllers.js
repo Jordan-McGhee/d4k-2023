@@ -207,7 +207,7 @@ const getOrdersGrouped = async (req, res, next) => {
 const getOrdersLeaderboard = async (req, res, next) => {
     let query = "SELECT * FROM user_totals ORDER BY COALESCE(orders_total, 0) + COALESCE(donations_total, 0) DESC limit 10"
 
-    let sumQuery = "SELECT SUM(orders_total) + SUM(donations_total) from user_totals"
+    let sumQuery = "SELECT * FROM donations_and_orders_total"
 
     let response, sumResponse
 
@@ -235,7 +235,7 @@ const getOrdersLeaderboard = async (req, res, next) => {
         )
     }
 
-    res.status(200).json({message: "Retrieved orders for leaderboard!", response: response.rows, sumTotal: sumResponse.rows[0]})
+    res.status(200).json({message: "Retrieved orders for leaderboard!", response: response.rows, sumTotal: sumResponse.rows[0].d4k_total})
 }
 
 const closeTab = async (req, res, next) => {
