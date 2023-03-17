@@ -23,7 +23,7 @@ const LeaderBoard = () => {
                 // console.log(`Leaderboard: ${ typeof responseData.response }`)
 
                 setData(responseData.response)
-                setOverallTotal(responseData.sumTotal)
+                setOverallTotal(parseInt(responseData.sumTotal))
 
             } catch (error) {
                 console.log(error)
@@ -34,7 +34,7 @@ const LeaderBoard = () => {
 
     }, [ sendRequest ])
 
-    console.log(`Total: ${overallTotal}`)
+    // console.log(`Total: ${overallTotal}`)
 
     return (
         <React.Fragment>
@@ -44,12 +44,12 @@ const LeaderBoard = () => {
             { isLoading && <LoadingSpinner />}
 
             {/* MOBILE */}
-            <div>
+            <div className="md:hidden">
                 <MobileLeaderBoard data = { data } total = { overallTotal }/>
             </div>
 
             {/* ALL OTHER SCREENS */}
-            <div>
+            <div className="hidden md:visible">
 
             </div>
 

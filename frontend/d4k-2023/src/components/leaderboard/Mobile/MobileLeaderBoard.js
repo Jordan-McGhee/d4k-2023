@@ -2,6 +2,7 @@ import React from "react";
 import Card from "../../UIElements/Card";
 import MobileLeaderBoardList from "./MobileLeaderBoardList";
 import MobileTopThree from "./MobileTopThree";
+import MobileProgressBar from "./MobileProgressBar";
 
 const MobileLeaderBoard = props => {
 
@@ -14,7 +15,7 @@ const MobileLeaderBoard = props => {
         <div>
 
             {/* SECTION FOR GOAL TRACKER */}
-
+            <MobileProgressBar total = { props.total } />
             
 
             <p className="text-center text-4xl text-white font-bold">Leaderboard</p>
