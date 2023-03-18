@@ -1,5 +1,4 @@
 import React from "react";
-import Card from "../../UIElements/Card";
 import MobileLeaderBoardList from "./MobileLeaderBoardList";
 import MobileTopThree from "./MobileTopThree";
 import MobileProgressBar from "./MobileProgressBar";

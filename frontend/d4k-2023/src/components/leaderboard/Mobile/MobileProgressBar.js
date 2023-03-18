@@ -29,7 +29,7 @@ const MobileProgressBar = props => {
             <div className="bg-green-300 h-[15px] w-full rounded-2xl my-4">
                 
                 {/* div for progress bar */}
-                <div className={percentageRoundedDown > 100 ? "h-full w-[100%] rounded-2xl progress-bar" : percentageVariations[percentageRoundedDown]}>
+                <div className={percentageRoundedDown > 100 ? percentageVariations[100] : percentageVariations[percentageRoundedDown]}>
                 </div>
             </div>
 

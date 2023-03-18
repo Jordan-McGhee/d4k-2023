@@ -62,7 +62,7 @@ BACKEND
     - make that shit (mobile and other version)
     <!-- - add sum query to backend to get total of all orders submitted DONE -->
     - have whole page refresh every minute?
-    - UPDATE backend to total order_totals and total_donated
+    <!-- - UPDATE backend to total order_totals and total_donated DONE -->
 
 
 - ADD WAY TO PAY (LINK TO VENMO/PAYPAL/ETC)

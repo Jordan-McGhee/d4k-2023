@@ -49,8 +49,8 @@ const LeaderBoard = () => {
             </div>
 
             {/* ALL OTHER SCREENS */}
-            <div className="hidden md:visible">
-
+            <div className="hidden md:block">
+                <LargeLeaderBoard data = { data } total = { overallTotal } />
             </div>
 
         </React.Fragment>
