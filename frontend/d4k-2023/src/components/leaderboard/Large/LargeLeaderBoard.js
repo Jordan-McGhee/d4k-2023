@@ -7,7 +7,7 @@ import LargeTopThree from "./LargeTopThree";
 const LargeLeaderBoard = props => {
 
     const topThree = props.data.slice(0,3)
-    const fourThroughTen = props.data.slice(3,11)
+    const fourThroughFifteen = props.data.slice(3,16)
 
     return (
         <div className="flex justify-evenly h-4/5 align-top">
@@ -15,7 +15,7 @@ const LargeLeaderBoard = props => {
             {/* SECTION FOR LEADERBOARD */}
             <div className="flex flex-col w-1/2 h-screen border border-black justify-around">
                 {/* title */}
-                <p className="uppercase flex flex-col items-center font-bold text-green-700 text-5xl">Drink 4 The Kids <span className="text-white text-6xl">Leaderboard</span></p>
+                <p className="uppercase flex flex-col items-center font-bold text-green-700 text-8xl">Drink 4 The Kids <span className="text-white text-9xl">Leaderboard</span></p>
 
                 {/* top three div */}
                 <LargeTopThree data = { topThree } />
@@ -30,7 +30,7 @@ const LargeLeaderBoard = props => {
 
             {/* section for 4-10 leaderboard */}
             <div className="h-full w-1/4">
-                <LargeLeaderBoardList data = { fourThroughTen } />
+                <LargeLeaderBoardList data = { fourThroughFifteen } />
             </div>
         </div>
     )

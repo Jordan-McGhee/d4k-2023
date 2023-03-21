@@ -7,34 +7,34 @@ const LargeProgressBar = props => {
     const percentageRoundedDown = percentage - (percentage % 10)
 
     const percentageVariations = {
-        0: "h-[0%] rounded-2xl progress-bar",
-        10: "h-[10%] rounded-2xl progress-bar",
-        20: "h-[20%] rounded-2xl progress-bar",
-        30: "h-[30%] rounded-2xl progress-bar",
-        40: "h-[40%] rounded-2xl progress-bar",
-        50: "h-[50%] rounded-2xl progress-bar",
-        60: "h-[60%] rounded-2xl progress-bar",
-        70: "h-[70%] rounded-2xl progress-bar",
-        80: "h-[80%] rounded-2xl progress-bar",
-        90: "h-[90%] rounded-2xl progress-bar",
-        100: "h-[100%] rounded-2xl progress-bar"
+        0: "h-[0%] rounded-full progress-bar",
+        10: "h-[10%] rounded-full progress-bar",
+        20: "h-[20%] rounded-full progress-bar",
+        30: "h-[30%] rounded-full progress-bar",
+        40: "h-[40%] rounded-full progress-bar",
+        50: "h-[50%] rounded-full progress-bar",
+        60: "h-[60%] rounded-full progress-bar",
+        70: "h-[70%] rounded-full progress-bar",
+        80: "h-[80%] rounded-full progress-bar",
+        90: "h-[90%] rounded-full progress-bar",
+        100: "h-[100%] rounded-full progress-bar"
     }
 
     return (
         <div className="h-screen flex flex-col items-center">
             
-            <p className="text-center font-bold text-4xl text-white">Goal: $2000</p>
+            <p className="text-center font-bold text-5xl text-white">Goal: $2000</p>
 
             {/* div for progress bar container */}
 
             {/* TOTALS */}
             <p
-                className="bg-white py-1 px-2 text-2xl font-extrabold text-green-700 text-center w-fit m-auto rounded-md"
+                className="bg-white p-4 text-6xl font-extrabold text-green-700 text-center w-fit my-12 rounded-md"
             >
                 ${currentTotal} — {percentage}%
             </p>
 
-            <div className="bg-green-300 h-4/5 w-[35px] rounded-2xl
+            <div className="bg-green-300 h-full w-[100px] rounded-full
             rotate-180 my-4">
                 
                 {/* div for progress bar */}

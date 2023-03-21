@@ -15,8 +15,8 @@ const LargeLeaderBoardList = props => {
     ))
 
     return (
-        <ul className="flex flex-col h-screen justify-between border border-black">
-            <p className="text-center uppercase text-white font-bold text-3xl">In the running</p>
+        <ul className="flex flex-col h-screen border border-black">
+            <p className="text-center uppercase text-white font-bold text-5xl mb-12">In the running</p>
             { items }
         </ul>
     )

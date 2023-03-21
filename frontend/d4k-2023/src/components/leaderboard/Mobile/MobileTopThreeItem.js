@@ -10,6 +10,7 @@ const MobileTopThreeItem = props => {
 
     if (props.rank === 1) {
         image = first
+        console.log(image)
     } else if ( props.rank === 2) {
         image = second
     } else { 

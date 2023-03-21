@@ -10,9 +10,9 @@ const HonorableMentions = props => {
     ]
 
     return (
-        <div className="flex flex-col items-center border-green-700 border-4 p-6 overflow-auto max-w-md mx-auto bg-white">
-            <p className="font-bold text-3xl">Honorable Mentions</p>
-            <p className="text-xl text-center">{ mentions[3] }</p>
+        <div className="flex flex-col items-center border-green-700 border-4 p-12 overflow-auto max-w-2xl mx-auto bg-white">
+            <p className="font-bold text-6xl">Honorable Mentions</p>
+            <p className="text-3xl mt-8 text-center">{ mentions[3] }</p>
         </div>
     )
 }
