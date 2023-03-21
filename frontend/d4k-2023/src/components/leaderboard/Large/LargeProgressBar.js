@@ -27,6 +27,13 @@ const LargeProgressBar = props => {
 
             {/* div for progress bar container */}
 
+            {/* TOTALS */}
+            <p
+                className="bg-white py-1 px-2 text-2xl font-extrabold text-green-700 text-center w-fit m-auto rounded-md"
+            >
+                ${currentTotal} — {percentage}%
+            </p>
+
             <div className="bg-green-300 h-4/5 w-[35px] rounded-2xl
             rotate-180 my-4">
                 
@@ -35,13 +42,6 @@ const LargeProgressBar = props => {
                 </div>
 
             </div>
-                
-            {/* TOTALS */}
-            <p
-                className="bg-white py-1 px-2 text-lg font-semibold text-green-700 text-center w-fit m-auto rounded-md"
-            >
-                ${currentTotal} — {percentage}%
-            </p>
         </div>
     )
 }
