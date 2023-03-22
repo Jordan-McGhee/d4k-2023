@@ -14,6 +14,7 @@ import Leaderboard from "./pages/Leaderboard"
 import MainNav from "./navigation/MainNav"
 
 import backgroundImage2 from "./images/snowflake-bg-vertical.png"
+import Donate from "./pages/Donate";
 
 function App() {
   let routes = (
@@ -26,6 +27,7 @@ function App() {
       <Route path = "/order" element = { <Order />} />
       <Route path = "/queue" element = { <Queue />} />
       <Route path = "/leaderboard" element = { <Leaderboard />} />
+      <Route path = "/donate" element = { <Donate />} />
     </Routes>
   )
 

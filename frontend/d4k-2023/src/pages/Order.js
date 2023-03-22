@@ -363,7 +363,7 @@ const Order = () => {
                     <label
                         className="text-lg font-semibold mr-4 block uppercase tracking-wide"
                     >
-                        Additional Comments
+                        Add a Comment
                     </label>
 
                     <textarea

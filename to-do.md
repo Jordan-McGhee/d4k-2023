@@ -18,13 +18,13 @@ BACKEND
     - Add in ability to close tables with dropdown
     - Add recently updated identifier based on last update
     - Remove navigate from AdminTableRow and use something better to re-render tables
-    - add a tab section to close tabs and check values
+    <!-- - add a tab section to close tabs and check values DONE -->
     - make table scrollable?
     - Add table for donations
 
 - TAB
     - move tab out from being own page and make it a button to switch between tab and admin pages
-    - finish building out functionality in TabTableRow
+    <!-- - finish building out functionality in TabTableRow DONE -->
     - maybe add field to getOrdersGrouped for if total_unpaid = 0 and that will allow us to undo marking a tab closed?
     <!-- - figure out donations DONE -->
     - make table scrollable?
@@ -45,6 +45,8 @@ BACKEND
     - don't let user change name
     - Add a check to see if a user already exists with that name and isn't stored in local storage
     <!-- - add donation field DONE -->
+    - submit button:
+        - grey out/disable until form is filled
     - on donation buttons:
         - make them grey out if not selected
         <!-- - add field popup if other is selected DONE -->
@@ -52,6 +54,12 @@ BACKEND
     - store tab info in local storage ?
         - separate donation and order total?
     <!-- - update both ends to account for new donation table DONE -->
+
+— DONATE
+    - don't let user change name
+    - make that shit
+    - grey out/disable submit until donation and name are filled
+    - grey out/disable green check if custom donation amount is empty
 
 - MENU
     <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->
@@ -64,6 +72,8 @@ BACKEND
     - have whole page refresh every minute?
     <!-- - UPDATE backend to total order_totals and total_donated DONE -->
 
-
 - ADD WAY TO PAY (LINK TO VENMO/PAYPAL/ETC)
 - maybe add userTotal to localStorage??
+
+- Extra Shit
+    - Animation for when goal is hit?

@@ -3,14 +3,14 @@ const pool = require("../db")
 
 const createDonation = async (req, res, next) => {
     
-    const { username, amount } = req.body
+    const { username, amount, comments } = req.body
 
-    let text = "INSERT INTO donations(username, amount, is_paid, created_at, updated_at) VALUES ($1, $2, false, NOW(), NOW())"
+    let text = "INSERT INTO donations(username, amount, comments, is_paid, created_at, updated_at) VALUES ($1, $2, $3,  false, NOW(), NOW())"
 
     let newDonation
 
     try {
-        newDonation = await pool.query(text, [ username, amount ])
+        newDonation = await pool.query(text, [ username, amount, comments ])
     } catch (error) {
         console.log(`Error creating donation: ${error}`)
 
