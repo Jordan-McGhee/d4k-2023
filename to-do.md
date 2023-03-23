@@ -57,7 +57,7 @@ BACKEND
 
 — DONATE
     - don't let user change name
-    - make that shit
+    <!-- - make that shit DONE -->
     - grey out/disable submit until donation and name are filled
     - grey out/disable green check if custom donation amount is empty
 

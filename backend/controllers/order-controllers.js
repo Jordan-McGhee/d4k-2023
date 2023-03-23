@@ -282,6 +282,28 @@ const deleteOrder = async (req, res, next) => {
     res.status(200).json({ message: `Deleted order #${order_id}`, response: response})
 }
 
+const pullUserTab = async (req, res, next) => {
+    const { username } = req.params
+
+    let text = "SELECT * FROM user_totals WHERE UPPER(username) = UPPER($1)"
+
+    let response
+
+    try {
+        response = await pool.query(text, [ username ])
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                `Error getting user ${username}'s tab`, 500
+            )
+        )
+    }
+    
+    res.status(200).json({ message: `Fetched ${username}'s tab!`, response: response.rows, unpaidOrderAmount: parseInt(response.rows[0].orders_total_unpaid), unpaidDonationAmount: parseInt(response.rows[0].donations_total_unpaid) })
+}
+
 exports.createOrder = createOrder
 exports.getOrders = getOrders
 exports.updatePaid = updatePaid
@@ -291,3 +313,4 @@ exports.getOrdersGrouped = getOrdersGrouped
 exports.getOrdersLeaderboard = getOrdersLeaderboard
 exports.closeTab = closeTab
 exports.deleteOrder = deleteOrder
+exports.pullUserTab = pullUserTab

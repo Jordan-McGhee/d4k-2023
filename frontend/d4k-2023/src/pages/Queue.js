@@ -26,7 +26,7 @@ const Queue = () => {
                     // NO NEED FOR METHOD, HEADERS, OR BODY
                 )
 
-                console.log(`Queue: ${ responseData.results[0] }`)
+                // console.log(`Queue: ${ responseData.results[0] }`)
 
                 setLoadedQueue(responseData.results)
             } catch (error) {

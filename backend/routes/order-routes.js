@@ -27,4 +27,6 @@ router.post("/:username/closeTab", orderControllers.closeTab)
 
 router.delete("/:order_id", orderControllers.deleteOrder)
 
+router.get("/:username/pullTab", orderControllers.pullUserTab)
+
 module.exports = router

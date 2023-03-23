@@ -11,7 +11,7 @@ const QueueItem = (props) => {
     //     </li>
     // ))
 
-    console.log(props)
+    // console.log(props)
     
     return (
         <li>
