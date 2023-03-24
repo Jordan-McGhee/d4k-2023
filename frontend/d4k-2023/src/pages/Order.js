@@ -248,7 +248,7 @@ const Order = () => {
 
             <form onSubmit={submitHandler} footer = { cardFooter }>
 
-                <Card header={"What'll Ya Have?"} footer={cardFooter}>
+                <Card header={"Place an Order!"} footer={cardFooter}>
                     <Input
                         id="name"
                         type="text"

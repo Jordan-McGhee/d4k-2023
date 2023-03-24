@@ -15,7 +15,7 @@ const Card = props => {
 
     if ( props.footer ) {
         footer = 
-            <footer className={ props.footerClass || 'flex justify-end mt-3 shrink border-top-2'}>
+            <footer className={ props.footerClass || 'flex justify-end mt-3 shrink'}>
                 { props.footer }
             </footer>
     }

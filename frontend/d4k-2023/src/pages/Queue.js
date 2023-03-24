@@ -5,9 +5,6 @@ import { useFetch } from "../hooks/useFetch";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner"
 import ErrorModal from "../components/UIElements/ErrorModal"
 
-// DUMMY DATA
-// import data from "../DUMMY/DUMMY_DATA"
-
 const Queue = () => {
 
     // let liveQueue = data.ORDERS.filter((order) => order.deliveredToCustomer === false)

@@ -12,28 +12,12 @@ import Order from "./pages/Order"
 import Queue from "./pages/Queue"
 import Leaderboard from "./pages/Leaderboard"
 import MainNav from "./navigation/MainNav"
-import UserTab from "./pages/UserTab";
-import Donate from "./pages/Donate";
 
 import backgroundImage2 from "./images/snowflake-bg-vertical.png"
-import { useEffect, useState } from "react";
+import Donate from "./pages/Donate";
+import PayTab from "./pages/PayTab";
 
 function App() {
-
-  const [ localStorageUsername, setLocalStorageUsername ] = useState(null)
-  
-  let localStorageCheck = () => {
-    const username = localStorage.getItem("storedUsername")
-
-    if (username) {
-      setLocalStorageUsername(username)
-    }
-  }
-  
-  useEffect(() => {
-    localStorageCheck()
-  }, [ localStorageUsername ])
-
   let routes = (
     <Routes>
       <Route path = "/" element = { <HomePage />} />
@@ -45,19 +29,14 @@ function App() {
       <Route path = "/queue" element = { <Queue />} />
       <Route path = "/leaderboard" element = { <Leaderboard />} />
       <Route path = "/donate" element = { <Donate />} />
+      <Route path= "/pay" element = { <PayTab /> } />
     </Routes>
   )
 
   return (
     <div className="App bg-local" style={{backgroundImage: `url(${backgroundImage2})`}}>
+      <MainNav />
       <div className="min-h-screen bg-red-900/75">
-        <MainNav />
-
-        {
-          localStorageUsername && 
-          <UserTab username = { localStorageUsername } />
-        }
-
         <div className="main-container m-auto p-5">
           { routes }
         </div>

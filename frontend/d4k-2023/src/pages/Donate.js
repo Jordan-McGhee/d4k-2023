@@ -92,6 +92,10 @@ const Donate = () => {
 
         setShowConfirmModal(true)
 
+        if (!localStorageUsername) {
+            localStorage.setItem('storedUsername', formData.username)
+        }
+
     }
 
     const confirmModalHandler = () => {
