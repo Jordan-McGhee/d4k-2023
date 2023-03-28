@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Card from "../UIElements/Card";
 import Button from "../FormElements/Button";
 import { useNavigate } from "react-router-dom";
+import PayFooter from "./PayFooter";
 
 const UserHasTab = (props) => {
 
@@ -27,28 +28,6 @@ const UserHasTab = (props) => {
         </div>
     )
 
-    const closeFooter = (
-        <div className="flex justify-around mt-4 shrink border-top-2 w-4/5 m-auto">
-            <Button
-                text = "CA"
-                type = "text"
-                // onClick = { () => setConfirmClose(true)}
-            />
-
-            <Button
-                text = "PP"
-                type = "text"
-                // onClick = { () => setConfirmClose(true)}
-            />
-
-            <Button
-                text = "V"
-                type = "text"
-                // onClick = { () => setConfirmClose(true)}
-            />
-        </div>
-    )
-
     let content = (
         <Card header = {"Leaving so soon?"} footer = { cardFooter }>
             <p className="text-2xl font-medium">Thanks for coming to the 4th annual D4K, <span className="italic uppercase font-bold text-green-700">{ data.username }!</span></p>
@@ -65,7 +44,7 @@ const UserHasTab = (props) => {
 
     if (confirmClose) {
         content = (
-            <Card header = { `${data.username}'s Tab`} headerClass = "font-bold text-3xl border-b-2 mb-4 py-2 text-center" footer = { closeFooter }>
+            <Card header = { `${data.username}'s Tab`} headerClass = "font-bold text-3xl border-b-2 mb-4 py-2 text-center capitalize" footer = { <PayFooter /> }>
 
                 <p className="text-2xl flex justify-between mb-4">Drinks Ordered: <span className="italic uppercase font-bold text-green-700">{data.drinks_ordered}</span></p>
 

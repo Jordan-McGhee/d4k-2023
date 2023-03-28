@@ -21,6 +21,7 @@ BACKEND
     <!-- - add a tab section to close tabs and check values DONE -->
     - make table scrollable?
     - Add table for donations
+    - Add Search/filter functionality
 
 - TAB
     - move tab out from being own page and make it a button to switch between tab and admin pages
@@ -31,6 +32,8 @@ BACKEND
     <!-- - redo table to align with new backend queries and view DONE -->
     <!-- - add separate queries for paid/unpaid? DONE -->
     - add modal for confirming close tab?
+    - add functionality to close all donations for a user and make "Add Donation" a modal pop-up form?
+    - Add Search/filter functionality
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->

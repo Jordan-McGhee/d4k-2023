@@ -34,7 +34,7 @@ const PayTab = props => {
             fetchUserTab()
         }
         
-    }, [])
+    }, [ sendRequest ])
 
     let content
 
