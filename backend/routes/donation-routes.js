@@ -13,4 +13,6 @@ router.patch("/:donation_id/amount", donationControllers.updatedDonationAmount)
 
 router.delete("/:donation_id", donationControllers.deleteDonation)
 
+router.post("/:username/closeDonations", donationControllers.closeDonations)
+
 module.exports = router

@@ -132,8 +132,30 @@ const deleteDonation = async (req, res, next) => {
     res.status(200).json({ message: `Deleted donation #${donation_id}`, response: response })
 }
 
+const closeDonations = async (req, res, next) => {
+    const { username } = req.params
+
+    let text = "UPDATE donations SET is_paid = TRUE, updated_at = NOW() WHERE UPPER(username) = UPPER($1) RETURNING *"
+    
+    let response
+    try {
+        response = await pool.query(text, [ username ])
+    } catch (error) {
+        console.log(error)
+
+        return next(
+            new HttpError(
+                `Error setting user ${username}'s donations to paid`, 500
+            )
+        )
+    }
+
+    res.status(201).json({ message: `Set ${ username }'s ${ response.rowCount } donations to paid`, response: response.rows })
+} 
+
 exports.createDonation = createDonation
 exports.getDonationsAdmin = getDonationsAdmin
 exports.updateDonationPaid = updateDonationPaid
 exports.updatedDonationAmount = updatedDonationAmount
 exports.deleteDonation = deleteDonation
+exports.closeDonations = closeDonations
