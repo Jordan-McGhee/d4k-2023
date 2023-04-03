@@ -5,6 +5,7 @@ BACKEND
 
 <!-- FRONTEND -->
 <!-- - go through and update routes/paths from old frontend DONE -->
+    - PROVIDE ALTERNATE STYLING FOR SELECTED BUTTONS
 
 - APP.js
     - make admin page not adhere to same width settings

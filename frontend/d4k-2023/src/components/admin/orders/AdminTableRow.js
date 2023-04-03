@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Button from "../FormElements/Button";
-import { useFetch } from "../../hooks/useFetch";
+import Button from "../../FormElements/Button";
+import { useFetch } from "../../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
-import DeleteModal from "./DeleteModal";
-import comment from "../../images/comment.png"
+import DeleteModal from "../DeleteModal"
+import comment from "../../../images/comment.png"
 
 const AdminTableRow = props => {
 

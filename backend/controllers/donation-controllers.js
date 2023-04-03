@@ -84,7 +84,7 @@ const updateDonationPaid = async (req, res, next) => {
         )
     }
 
-    res.status(201).json({ message: `Updated paidStatus of donation #${donation_id} to ${paidStatus}`, response: response.rows})
+    res.status(201).json({ message: `Updated paidStatus of donation #${donation_id} to ${paidStatus}`, newValue: paidStatus, response: response.rows})
 }
 
 const updatedDonationAmount = async (req, res, next) => {

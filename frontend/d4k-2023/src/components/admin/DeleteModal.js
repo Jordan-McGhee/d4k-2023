@@ -9,7 +9,7 @@ const DeleteModal = props => {
     let navigate = useNavigate()
     const { hasError, sendRequest, clearError } = useFetch()
 
-    const id = props.order_id
+    const id = props.order_id || props.donation_id
 
     const submitDeleteHandler = async event => {
         event.preventDefault()

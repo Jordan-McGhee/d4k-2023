@@ -1,5 +1,5 @@
 import React from "react";
-import AdminTableBody from "./AdminTableBody";
+import AdminTableBody from "./AdminTableBody"
 
 const AdminTable = props => {
 
