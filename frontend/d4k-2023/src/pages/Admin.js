@@ -6,8 +6,12 @@ import Button from "../components/FormElements/Button";
 const Admin = () => {
 
     // PULL FROM LOCAL STORAGE ON WHETHER WE'RE SHOWING DONATIONS or ORDERS?
+    // ON PAGE REFRESH - WON'T DEFAULT TO DIFFERENT VIEW
+    const showingOrdersString = localStorage.getItem('showingOrders')
+    let showingOrdersBoolean
+    showingOrdersString === "true" ? showingOrdersBoolean = true : showingOrdersBoolean = false
 
-    const [ showOrders, setShowOrders ] = useState()
+    const [ showOrders, setShowOrders ] = useState(showingOrdersBoolean)
 
     return (
         <React.Fragment>

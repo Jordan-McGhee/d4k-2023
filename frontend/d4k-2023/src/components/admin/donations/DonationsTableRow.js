@@ -59,14 +59,14 @@ const DonationsTableRow = props => {
         const id = event.target[0].value
         const newAmount = event.target[1].value
 
-        console.log(`Updating Donation #${id}'s amount!`)
+        console.log(`Updating Donation #${id}'s amount to ${newAmount}! Old Amount: ${ donationAmount }`)
 
         let response
         
         try {
             response = await sendRequest(
                 // URL
-                `${process.env.REACT_APP_BACKEND_URL}/donation/${id}/updatePaid`,
+                `${process.env.REACT_APP_BACKEND_URL}/donation/${id}/amount`,
                 // METHOD
                 "PATCH",
                 // HEADERS
@@ -116,10 +116,10 @@ const DonationsTableRow = props => {
             }
 
             <tr className = { props.className }>
-                <td className="px-6 py-3 font-bold flex justify-between items-center" onClick={ () => setShowComment(!showComment)}>
+                <td className="px-6 py-3 font-bold flex justify-between items-center my-2" onClick={ () => setShowComment(!showComment)}>
                     { props.donation.username }
                     { 
-                        props.donation.comments !== null &&
+                        props.donation.comments !== null && props.donation.comments !== "" &&
                         <img alt="comment icon" src={ comment } className = "w-5" />
                     }
                 </td>
@@ -128,7 +128,7 @@ const DonationsTableRow = props => {
 
                 {/* UPDATEAMOUNT */}
                 <td className="px-6 py-3 text-center">
-                    <form onSubmit={ updateAmountHandler } className = "flex items-center justify-evenly">
+                    <form onSubmit={ updateAmountHandler } className = "flex items-center justify-around">
 
                         <input
                                 hidden

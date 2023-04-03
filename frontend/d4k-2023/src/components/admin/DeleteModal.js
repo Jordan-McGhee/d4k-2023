@@ -9,7 +9,16 @@ const DeleteModal = props => {
     let navigate = useNavigate()
     const { hasError, sendRequest, clearError } = useFetch()
 
-    const id = props.order_id || props.donation_id
+    const order_id = props.order_id
+    const donation_id = props.donation_id
+
+    let url
+
+    if (order_id) {
+        url = `${process.env.REACT_APP_BACKEND_URL}/order/${order_id}`
+    } else {
+        url = `${process.env.REACT_APP_BACKEND_URL}/donation/${donation_id}`
+    }
 
     const submitDeleteHandler = async event => {
         event.preventDefault()
@@ -17,7 +26,7 @@ const DeleteModal = props => {
         try {
             await sendRequest(
                 // URL
-                `${process.env.REACT_APP_BACKEND_URL}/order/${id}`,
+                url,
                 // METHOD
                 "DELETE",
                 // HEADERS
@@ -56,7 +65,7 @@ const DeleteModal = props => {
             error = { hasError }
             clearError = { clearError }
         >
-            <p className="break-words">Are you sure you want to delete order #{id}? <br></br> <span className="italic font-bold">This can't be undone.</span></p>
+            <p className="break-words">Are you sure you want to delete { order_id ? `order #${ order_id }` : `donation #${ donation_id }`}? <br></br> <span className="italic font-bold">This can't be undone.</span></p>
             
         </Modal>
     )

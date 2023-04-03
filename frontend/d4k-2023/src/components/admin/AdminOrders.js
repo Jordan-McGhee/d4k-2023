@@ -34,6 +34,7 @@ const AdminOrders = props => {
             }
         }
 
+        localStorage.setItem('showingOrders', 'true')
         getOrders()
 
     }, [ sendRequest ])

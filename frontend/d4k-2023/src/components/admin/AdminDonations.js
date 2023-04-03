@@ -34,6 +34,8 @@ const AdminDonations = props => {
             }
         }
 
+        
+        localStorage.setItem('showingOrders', 'false')
         getOrders()
 
     }, [ sendRequest ])
