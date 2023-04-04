@@ -18,6 +18,7 @@ const UserHasTab = (props) => {
                 text = "Not Yet"
                 type = "text"
                 className = "bg-red-700 button rounded-md shadow font-bold uppercase text-white mr-2"
+                onClick = { () => navigate(-1)}
             />
 
             <Button

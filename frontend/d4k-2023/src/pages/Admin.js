@@ -21,12 +21,14 @@ const Admin = () => {
                     text = "Orders"
                     type = "button"
                     onClick = { !showOrders ? () => setShowOrders(true) : null }
+                    className = { showOrders ? "bg-green-100 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-green-700" : "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
                 />
 
                 <Button
                     text = "Donations"
                     type = "button"
                     onClick = { showOrders ? () => setShowOrders(false) : null }
+                    className = { !showOrders ? "bg-green-100 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-green-700" : "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
                 />
             </div>
 
@@ -39,61 +41,6 @@ const Admin = () => {
 
         </React.Fragment>
     )
-
-    // const [ incompleteOrders, setIncompleteOrders ] = useState([])
-    // const [ completedOrders, setCompletedOrders ] = useState([])
-    // const { isLoading, hasError, sendRequest, clearError } = useFetch()
-
-    // useEffect(() => {
-
-    //     const getOrders = async () => {
-
-    //         try {
-    //             const responseData = await sendRequest(
-    //                 // URL
-    //                 `${process.env.REACT_APP_BACKEND_URL}/order/admin`,
-    //                 // METHOD
-    //                 'GET',
-    //                 // HEADERS
-    //                 {
-    //                     Accept: 'application/json',
-    //                 },
-    //             )
-    //             console.log(responseData)
-
-    //             setIncompleteOrders(responseData.incompleteOrders)
-    //             setCompletedOrders(responseData.completedOrders)
-
-    //         } catch(err) {
-    //             console.log(err)
-    //         }
-    //     }
-
-    //     getOrders()
-
-    // }, [ sendRequest ])
-
-    // return (
-    //     <React.Fragment>
-    //         <div className="w-full m-auto">
-    //             <ErrorModal error = { hasError } onClear = { clearError } />
-
-    //             { isLoading && <LoadingSpinner />}
-
-    //             {/* IN PROGRESS DIV */}
-    //             <div>
-    //                 <p className="my-5 text-4xl font-bold uppercase text-white">WORKING ON IT</p>
-    //                 <AdminTable data = { incompleteOrders }/>
-    //             </div>
-
-    //             {/* completed DIV */}
-    //             <div>
-    //                 <p className="my-5 text-4xl font-bold uppercase text-white">Completed</p>
-    //                 <AdminTable data = { completedOrders }/>
-    //             </div>
-    //         </div>
-    //     </React.Fragment>
-    // )
 }
 
 export default Admin

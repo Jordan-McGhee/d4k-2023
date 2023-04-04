@@ -169,7 +169,7 @@ const DonationsTableRow = props => {
                 </td>
 
                 {/* DELETE ORDER BUTTON */}
-                <td className="px-6 py-3">
+                <td className="px-6 py-3 text-center">
                     <form onSubmit={ submitDeleteHandler }>
                         <input
                             hidden
