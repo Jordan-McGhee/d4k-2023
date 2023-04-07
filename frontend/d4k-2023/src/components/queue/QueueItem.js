@@ -3,19 +3,13 @@ import Card from "../UIElements/Card";
 
 const QueueItem = (props) => {
     
-    // const [ showMore, setShowMore ] = useState(false)
+    const storedUsername = localStorage.getItem('storedUsername')
 
-    // let allDrinks = props.drinks.map((drink) => (
-    //     <li className="list-disc ml-5">
-    //         { drink.name }
-    //     </li>
-    // ))
-
-    // console.log(props)
+    const matchClassName = "shadow-green-700 shadow-xl"
     
     return (
-        <li>
-            <Card className = "flex flex-col p-6 rounded-lg border border-gray-2 bg-white w-full shadow-lg my-5" >
+        <li className={ props.username === storedUsername ? matchClassName : null}>
+            <Card className = "flex flex-col p-6 rounded-lg border border-gray-2 bg-white w-full my-5" >
 
                 {/* container div for whole card */}
                 <div>

@@ -1,7 +1,7 @@
 BACKEND
 <!-- - double check isPaid and updatePaid logic with frontend code DONE -->
     <!-- - update controllers and routes to account for new donation table DONE -->
-    - create view that sums donations by username and order amounts
+    <!-- - create view that sums donations by username and order amounts DONE -->
 
 <!-- FRONTEND -->
 <!-- - go through and update routes/paths from old frontend DONE -->
