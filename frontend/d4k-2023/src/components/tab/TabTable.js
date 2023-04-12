@@ -16,7 +16,8 @@ const TabTable = props => {
                         {/* <th>AMOUNT</th> */}
                         <th scope="col" className="px-6 py-3 text-center w-1/12">DONATIONS TOTAL</th>
                         <th scope="col" className="px-6 py-3 text-center w-1/12">DONATIONS UNPAID</th>
-                        <th scope="col" className="px-6 py-3 text-center w-3/12">ADD DONATION</th>
+                        <th scope="col" className="px-6 py-3 text-center w-1/12">ADD DONATION</th>
+                        <th scope="col" className="px-6 py-3 text-center w-2/12">CLOSE DONATIONS</th>
                         <th scope="col" className="px-6 py-3 text-center w-2/12">CLOSE TAB</th>
                     </tr>
 

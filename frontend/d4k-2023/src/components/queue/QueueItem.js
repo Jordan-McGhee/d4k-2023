@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import DeleteModal from "../admin/DeleteModal";
-import Button from "../FormElements/Button";
 import Card from "../UIElements/Card";
 
 const QueueItem = (props) => {
@@ -11,7 +10,6 @@ const QueueItem = (props) => {
 
     if (props.drink.includes('CUSTOM')) {
         drink = props.drink.split(':')[1].trim()
-        console.log(`Split and Trimmed Drink name: ${drink}`)
     } else {
         drink = props.drink
     }

@@ -1,42 +1,79 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../FormElements/Button";
-import Input from "../FormElements/Input";
 import { useFetch } from "../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
+import TabAddDonationModal from "./TabAddDonationModal";
 
 const TabTableRow = props => {
 
     const { sendRequest } = useFetch()
     const navigate = useNavigate()
 
-    const addDonationHandler = async event => {
+    // const addDonationHandler = async event => {
+    //     event.preventDefault()
+
+    //     const username = event.target[0].value
+    //     const amount = parseInt(event.target[1].value)
+
+    //     const formData = { username, amount }
+
+    //     try {
+    //         await sendRequest(
+    //             // URL
+    //             `${process.env.REACT_APP_BACKEND_URL}/donation`,
+    //             // METHOD
+    //             'POST',
+    //             // HEADERS
+    //             {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             // BODY
+    //             JSON.stringify(formData)
+    //         )
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+
+    //     navigate(0)
+    // }
+
+    const [ showAddModal, setShowAddModal ] = useState([false, null])
+
+    const closeAddModalHandler = () => {
+        setShowAddModal([false, null])
+    }
+
+    const closeDonationsHandler = async event => {
         event.preventDefault()
 
         const username = event.target[0].value
-        const amount = parseInt(event.target[1].value)
+        
+        console.log(`Updating ${username}'s donations to closed!`)
 
-        const formData = { username, amount }
+        let response
 
         try {
-            await sendRequest(
+            response = await sendRequest(
                 // URL
-                `${process.env.REACT_APP_BACKEND_URL}/donation`,
+                `${process.env.REACT_APP_BACKEND_URL}/donation/${username}/closeDonations`,
                 // METHOD
-                'POST',
+                "POST",
                 // HEADERS
                 {
                     'Content-Type': 'application/json'
                 },
                 // BODY
-                JSON.stringify(formData)
+                JSON.stringify({username:username})
             )
         } catch (error) {
             console.log(error)
         }
 
+        console.log(`Response: ${response}`)
+
         navigate(0)
     }
-
+    
     const closeTabHandler = async event => {
         event.preventDefault()
 
@@ -68,6 +105,30 @@ const TabTableRow = props => {
         navigate(0)
     }
 
+    const donationButton = (
+        props.tab.donations_total_unpaid
+            ?
+                <form onSubmit = { closeDonationsHandler }>
+                    <input
+                        hidden
+                        readOnly
+                        value = { props.tab.username }
+                    />
+
+                    <Button
+                        type = "SUBMIT"
+                        text = "MARK PAID"
+                        className = "bg-blue-700 button rounded-md shadow text-white font-bold"
+                    />
+                </form>
+            :
+                <Button
+                    text = "DONOS PAID!"
+                    type = "text"
+                    className = "button border border-blue-700 bg-none rounded-md text-white font-bold"
+                />
+    )
+
     const tabButton = (
         props.tab.orders_total_unpaid
             ?
@@ -96,6 +157,15 @@ const TabTableRow = props => {
     return (
         <React.Fragment>
 
+            {
+                showAddModal && 
+                <TabAddDonationModal
+                    username = { showAddModal[1]}
+                    show = { showAddModal[0] }
+                    onCancel = { closeAddModalHandler }
+                />
+            }
+
             <tr className= { props.className }>
                 <td className="px-6 py-3">
                     { props.tab.username } — { props.tab.drinks_ordered} drinks
@@ -118,24 +188,15 @@ const TabTableRow = props => {
                 </td>
 
                 <td className="px-6 py-3">
-                    <form onSubmit={ addDonationHandler } className = "flex items-center justify-around">
-                        <input
-                            hidden
-                            readOnly
-                            value = { props.tab.username }
-                        />
-                        <Input
-                            type = "number"
-                            placeholder = "Add Donation"
-                            id = "donation-input"
-                            className = "appearance-none w-11/12 bg-white text-black border rounded p-1 my-1 leading-tight focus:outline-green-700 focus:bg-white border-gray-2"
-                        />
+                    <Button
+                        type = "button"
+                        text = "Add"
+                        onClick = { () => setShowAddModal([ true, props.tab.username ]) }
+                    />
+                </td>
 
-                        <Button
-                            type = "SUBMIT"
-                            text = "ADD"
-                        />
-                    </form>
+                <td className="px-6 py-3 text-center">
+                    { donationButton }
                 </td>
 
                 <td className="px-6 py-3 text-center">

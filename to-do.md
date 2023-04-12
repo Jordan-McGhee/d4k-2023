@@ -20,28 +20,29 @@ BACKEND
     - Add recently updated identifier based on last update
     - Remove navigate from AdminTableRow and use something better to re-render tables
     <!-- - add a tab section to close tabs and check values DONE -->
-    - make table scrollable?
-    - Add table for donations
-    - Add Search/filter functionality
+    <!-- !!!! NO - make table scrollable? -->
+    <!-- - Add table for donations DONE -->
+    <!-- ???? REVISIT - Add Search/filter functionality  -->
 
 - TAB
-    - move tab out from being own page and make it a button to switch between tab and admin pages
+    <!-- !!!! NO - move tab out from being own page and make it a button to switch between tab and admin pages -->
     <!-- - finish building out functionality in TabTableRow DONE -->
-    - maybe add field to getOrdersGrouped for if total_unpaid = 0 and that will allow us to undo marking a tab closed?
+    <!-- !!!! NO - maybe add field to getOrdersGrouped for if total_unpaid = 0 and that will allow us to undo marking a tab closed? -->
     <!-- - figure out donations DONE -->
-    - make table scrollable?
+    <!-- !!!! NO - make table scrollable? -->
     <!-- - redo table to align with new backend queries and view DONE -->
     <!-- - add separate queries for paid/unpaid? DONE -->
-    - add modal for confirming close tab?
-    - add functionality to close all donations for a user and make "Add Donation" a modal pop-up form?
-    - Add Search/filter functionality
+    <!-- ???? REVISIT - add modal for confirming close tab?  -->
+    <!-- - add functionality to close all donations for a user and make "Add Donation" a modal pop-up form? DONE -->
+    <!-- ???? REVISIT - Add Search/filter functionality -->
+    - have feedback for unsuccessful donation
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
     - after order is submitted, scroll down to their spot in line
     - update cards to look better
-    - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE
-    - check localStorage username against names in queue and make the card different somehow
+    <!-- - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE DONE -->
+    <!-- - check localStorage username against names in queue and make the card different somehow DONE -->
 
 - ORDER
     <!-- - make it where form can't be submitted if any inputs are blank DONE
@@ -56,8 +57,6 @@ BACKEND
         - make them grey out if not selected
         <!-- - add field popup if other is selected DONE -->
         <!-- - if other is selected, update OTHER to reflect value chosen DONE -->
-    - store tab info in local storage ?
-        - separate donation and order total?
     <!-- - update both ends to account for new donation table DONE -->
 
 — DONATE
