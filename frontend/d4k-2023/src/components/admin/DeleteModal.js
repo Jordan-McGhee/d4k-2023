@@ -59,7 +59,7 @@ const DeleteModal = props => {
 
     return (
         <Modal
-            header = {`Confirm Delete Order`}
+            header = {`Confirm Delete`}
             footer = { footer }
             show = { props.show }
             error = { hasError }

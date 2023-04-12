@@ -1,53 +1,78 @@
-// import React, { useState } from "react";
+import React, { useState } from "react";
+import DeleteModal from "../admin/DeleteModal";
+import Button from "../FormElements/Button";
 import Card from "../UIElements/Card";
 
 const QueueItem = (props) => {
-    
+
+    const [ showDeleteModal, setShowDeleteModal ] = useState(false)
+
+    let drink
+
+    if (props.drink.includes('CUSTOM')) {
+        drink = props.drink.split(':')[1].trim()
+        console.log(`Split and Trimmed Drink name: ${drink}`)
+    } else {
+        drink = props.drink
+    }
+
+    const closeDeleteModalHandler = () => {
+        setShowDeleteModal(false)
+    }
+
     const storedUsername = localStorage.getItem('storedUsername')
 
     const matchClassName = "shadow-green-700 shadow-xl"
     
     return (
-        <li className={ props.username === storedUsername ? matchClassName : null}>
-            <Card className = "flex flex-col p-6 rounded-lg border border-gray-2 bg-white w-full my-5" >
+        <React.Fragment>
 
-                {/* container div for whole card */}
-                <div>
+            {
+                showDeleteModal && 
+                <DeleteModal
+                    order_id = { props.id }
+                    show = { showDeleteModal }
+                    onCancel = { closeDeleteModalHandler }
+                />
+            }
+            <li className={ props.username === storedUsername ? matchClassName : null}>
+                <Card className = "flex flex-col p-6 rounded-lg border border-gray-2 bg-white w-full my-5">
 
-                    {/* div for section of card that's always shown */}
-                    <div className="flex justify-between">
+                    {/* container div for whole card */}
+                    <div>
 
-                        <p className="self-center text-4xl">{ props.spotInQueue }</p>
+                        {/* div for section of card that's always shown */}
+                        <div className="flex">
 
-                        {/* div for name, # of drinks, and dropdown arrow */}
-                        <div className="w-10/12 flex justify-between items-center">
+                            <p className="self-center text-4xl">{ props.spotInQueue }</p>
 
-                            <div className="">
-                                <p className="text-xl font-semibold">{ props.username }</p>
-                                <p>{ props.quantity > 1 ? `${ props.quantity } ${ props.drink }s` : `1 ${ props.drink }`  }</p>
+                            {/* div for name, # of drinks, and dropdown arrow */}
+                            <div className="flex justify-between w-full">
+
+                                <div className="ml-6">
+                                    <p className="text-2xl font-semibold truncate w-48">{ props.username }</p>
+                                    <p className="text-lg truncate w-48 capitalize">{ props.quantity > 1 ? `${ props.quantity } ${ drink }s` : `1 ${ drink }`  }</p>
+                                </div>
+
+                                {
+                                    props.username === storedUsername && props.spotInQueue > 2 && 
+                                    <p
+                                        className="self-center font-semibold text-lg text-red-600"
+                                        onClick = { () => setShowDeleteModal(true) }
+                                    >
+                                        DELETE
+                                    </p>
+                                }
+
                             </div>
 
-                            {/* <img
-                                src="../images/drop-down-arrow.png"
-                                alt="Drop down arrow"
-                                onClick= { () => { setShowMore(!showMore)} }
-                            /> */}
                         </div>
 
                     </div>
 
-                    {/* ul for extras (shows all drinks in order) */}
-
-                    {/* { showMore && 
-                        <ul className="pt-4">
-                            { allDrinks }
-                        </ul>
-                    } */}
-
-                </div>
-
-            </Card>
-        </li>
+                </Card>
+            </li>
+        </React.Fragment>
     )
 }
 

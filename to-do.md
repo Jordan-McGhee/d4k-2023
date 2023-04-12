@@ -38,6 +38,7 @@ BACKEND
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
+    - after order is submitted, scroll down to their spot in line
     - update cards to look better
     - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE
     - check localStorage username against names in queue and make the card different somehow
