@@ -24,6 +24,9 @@ BACKEND
     <!-- - Add table for donations DONE -->
     <!-- ???? REVISIT - Add Search/filter functionality  -->
 
+- FAQ
+    - redesign
+
 - TAB
     <!-- !!!! NO - move tab out from being own page and make it a button to switch between tab and admin pages -->
     <!-- - finish building out functionality in TabTableRow DONE -->
@@ -71,9 +74,10 @@ BACKEND
     - make sticky buttons look better so everything that scrolls underneath is no longer visible
 
 - LEADERBOARD
-    - make that shit (mobile and other version)
+    <!-- - make that shit (mobile and other version) DONE -->
     <!-- - add sum query to backend to get total of all orders submitted DONE -->
     - have whole page refresh every minute?
+    - Improve Honorable Mentions
     <!-- - UPDATE backend to total order_totals and total_donated DONE -->
 
 - ADD WAY TO PAY (LINK TO VENMO/PAYPAL/ETC)

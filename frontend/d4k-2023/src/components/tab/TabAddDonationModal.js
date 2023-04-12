@@ -64,6 +64,7 @@ const TabAddDonationModal = props => {
                     id = "donationInput"
                     type = "number"
                     placeholder = "Enter Donation Amount"
+                    label = "Amount"
                     className = "w-full appearance-none bg-white text-black border rounded p-3 my-3 leading-tight focus: outline-green-700"
                 />
 

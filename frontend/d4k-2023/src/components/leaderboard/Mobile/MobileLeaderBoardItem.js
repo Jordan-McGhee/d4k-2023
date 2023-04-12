@@ -5,7 +5,7 @@ const MobileLeaderBoardItem = props => {
 
     return (
         <li>
-            <Card className = "flex flex-col p-4 rounded-lg border border-gray-2 bg-white w-full shadow-lg my-5">
+            <Card className = "flex flex-col p-4 rounded-lg border border-green-700 bg-white w-full shadow-lg my-5">
                 <div className="flex items-center justify-around">
                     {/* RANK */}
                     <p className="text-4xl">{ props.rank}</p>

@@ -13,20 +13,20 @@ const Menu = () => {
         <div>
 
             {/* div for buttons */}
-            <div className="flex m-auto justify-around text-white my-4 sticky top-24 bg-red-900 w-full p-2 text-sm">
+            <div className="flex m-auto justify-between text-white my-4 sticky top-24 bg-red-900 text-sm">
                 <Button
                     text = "cocktails"
-                    onClick = { () => document.getElementById('cocktails').scrollIntoView()}
+                    onClick = { () => document.getElementById('cocktails').scrollIntoView({ behavior: 'smooth' })}
                 />
 
                 <Button
                     text = "batched"
-                    onClick = { () => document.getElementById('batched').scrollIntoView()}
+                    onClick = { () => document.getElementById('batched').scrollIntoView({ behavior: 'smooth' })}
                 />
 
                 <Button
                     text = "shots"
-                    onClick = { () => document.getElementById('shots').scrollIntoView()}
+                    onClick = { () => document.getElementById('shots').scrollIntoView({ behavior: 'smooth' })}
                 />
             </div>
             
@@ -34,8 +34,7 @@ const Menu = () => {
 
             {/* cocktails div */}
             <div id = "cocktails">
-                <p
-                className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Cocktails</p>
+                <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Cocktails</p>
                 <MenuList
                     drinks = { cocktails }
                 />

@@ -44,12 +44,12 @@ const QueueItem = (props) => {
 
                             <p className="self-center text-4xl">{ props.spotInQueue }</p>
 
-                            {/* div for name, # of drinks, and dropdown arrow */}
+                            {/* div for name, # of drinks, and DELETE */}
                             <div className="flex justify-between w-full">
 
-                                <div className="ml-6">
-                                    <p className="text-2xl font-semibold truncate w-48">{ props.username }</p>
-                                    <p className="text-lg truncate w-48 capitalize">{ props.quantity > 1 ? `${ props.quantity } ${ drink }s` : `1 ${ drink }`  }</p>
+                                <div className="ml-4">
+                                    <p className="text-2xl font-semibold truncate w-36">{ props.username }</p>
+                                    <p className="text-lg truncate capitalize w-36">{ props.quantity > 1 ? `${ props.quantity } ${ drink }s` : `1 ${ drink }`  }</p>
                                 </div>
 
                                 {
