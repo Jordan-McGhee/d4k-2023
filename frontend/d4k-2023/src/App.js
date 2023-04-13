@@ -16,6 +16,7 @@ import MainNav from "./navigation/MainNav"
 import backgroundImage2 from "./images/snowflake-bg-vertical.png"
 import Donate from "./pages/Donate";
 import PayTab from "./pages/PayTab";
+import NotFound from "./pages/NotFound";
 
 function App() {
   let routes = (
@@ -30,6 +31,7 @@ function App() {
       <Route path = "/leaderboard" element = { <Leaderboard />} />
       <Route path = "/donate" element = { <Donate />} />
       <Route path= "/pay" element = { <PayTab /> } />
+      <Route path = "*" element = { <NotFound />} />
     </Routes>
   )
 

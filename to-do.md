@@ -25,7 +25,7 @@ BACKEND
     <!-- ???? REVISIT - Add Search/filter functionality  -->
 
 - FAQ
-    - redesign
+    <!-- - redesign DONE -->
 
 - TAB
     <!-- !!!! NO - move tab out from being own page and make it a button to switch between tab and admin pages -->
@@ -52,7 +52,7 @@ BACKEND
     - add option to enter in own drink DONE
     - Save username to local storage DONE -->
     - don't let user change name
-    - Add a check to see if a user already exists with that name and isn't stored in local storage
+    <!-- !!!! NO - Add a check to see if a user already exists with that name and isn't stored in local storage -->
     <!-- - add donation field DONE -->
     - submit button:
         - grey out/disable until form is filled
@@ -80,8 +80,9 @@ BACKEND
     - Improve Honorable Mentions
     <!-- - UPDATE backend to total order_totals and total_donated DONE -->
 
-- ADD WAY TO PAY (LINK TO VENMO/PAYPAL/ETC)
-- maybe add userTotal to localStorage??
+- PAYMENT
+    - update links to pay correctly
+    <!-- !!!! NO - maybe add userTotal to localStorage?? -->
 
 - Extra Shit
     - Animation for when goal is hit?

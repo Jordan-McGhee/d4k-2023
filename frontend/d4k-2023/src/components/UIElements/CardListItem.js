@@ -5,9 +5,14 @@ const CardListItem = (props) => {
     // const [ showingMore, setShowingMore ] = useState(false)
 
     return (
-        <li className="mt-4">
-            <p className="uppercase text-2xl">{ props.question }</p>
-            <p className= {"uppercase" + props.responseClass || "text-md"}>{ props.response }</p>
+        <li className="my-4">
+            <p className="uppercase text-xl font-bold mb-2 border-b-2 pb-2 w-fit">{ props.question }</p>
+            <p className= "text-lg">{ props.response }</p>
+
+            {
+                props.link &&
+                <p className= "text-lg mt-2"> {props.linkText} </p>
+            }
         </li>
     )
 }
