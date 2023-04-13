@@ -16,7 +16,7 @@ const Admin = () => {
     return (
         <React.Fragment>
             {/* buttons for switching between orders and donations */}
-            <div className="w-[22%] flex justify-between">
+            <div className="w-64 flex justify-between">
                 <Button
                     text = "Orders"
                     type = "button"

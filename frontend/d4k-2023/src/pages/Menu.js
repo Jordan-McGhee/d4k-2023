@@ -13,7 +13,7 @@ const Menu = () => {
         <div className="">
 
             {/* div for buttons */}
-            <div className="flex m-auto justify-between text-white my-6 fixed top-12 inset-x-0 p-6 w-full text-sm bg-red-900">
+            <div className="flex m-auto justify-between text-white fixed bottom-0 inset-x-0 p-6 w-full text-sm bg-red-900">
                 <Button
                     text = "cocktails"
                     onClick = { () => document.getElementById('cocktails').scrollIntoView({ behavior: 'smooth' })}
@@ -30,7 +30,7 @@ const Menu = () => {
                 />
             </div>
             
-            <div className="mt-12">
+            <div className="">
                 <p className="text-white text-center text-2xl">Want something different? <br></br> Ask what we can whip up for you!</p>
 
                 {/* cocktails div */}

@@ -3,6 +3,9 @@ import { NavLink } from "react-router-dom";
 
 const MainNav = () => {
 
+    // retrieve username from localStorage if there
+    let localStorageUsername = localStorage.getItem('storedUsername')
+
     const [ hamburgerOpen, setHamburgerOpen ] = useState(false)
 
     const hamburgerHandler = () =>{
@@ -10,7 +13,7 @@ const MainNav = () => {
     }
 
     return (
-        <div className="nav-container bg-green-700/100 p-5 top-0 sticky">
+        <div className="nav-container bg-green-700/100 p-5 top-0 fixed w-full">
 
             {/* CLOSED HAMBURGER */}
 
@@ -94,13 +97,16 @@ const MainNav = () => {
                             </NavLink>
                         </li>
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                            <NavLink to="/pay">
-                                <p>Close Your Tab</p>
-                            </NavLink>
-                        </li>
+                        {
+                            localStorageUsername && 
+                            <li className="border-b border-white ml-2 my-2 uppercase text-white">
+                                <NavLink to="/pay">
+                                    <p>Close Your Tab</p>
+                                </NavLink>
+                            </li>
+                        }
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
+                        {/* <li className="border-b border-white ml-2 my-2 uppercase text-white">
                             <NavLink to="/admin">
                                 <p>Admin</p>
                             </NavLink>
@@ -110,7 +116,7 @@ const MainNav = () => {
                             <NavLink to="/tabs">
                                 <p>Tabs</p>
                             </NavLink>
-                        </li>
+                        </li> */}
 
                     </ul>
 
