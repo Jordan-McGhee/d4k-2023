@@ -7,8 +7,8 @@ const AdminLayout = () => {
 
     return (
         <div>
+            <MainNav />
             <div className="App bg-local overflow-hidden" style={{backgroundImage: `url(${backgroundImage2})`}}>
-                <MainNav />
                 <div className="min-h-screen bg-red-900/75">
                     <div className="main-container m-auto p-5">
                         <Outlet />

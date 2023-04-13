@@ -11,7 +11,7 @@ import Menu from "./pages/Menu"
 import Order from "./pages/Order"
 import Queue from "./pages/Queue"
 import Leaderboard from "./pages/Leaderboard"
-import MainNav from "./navigation/MainNav"
+import LargeLeaderBoard from "./components/leaderboard/Large/LargeLeaderBoard"
 import Donate from "./pages/Donate";
 import PayTab from "./pages/PayTab";
 import NotFound from "./pages/NotFound";
@@ -20,24 +20,11 @@ import NotFound from "./pages/NotFound";
 import UserLayout from "./components/layouts/UserLayout";
 import AdminLayout from "./components/layouts/AdminLayout";
 
-import backgroundImage2 from "./images/snowflake-bg-vertical.png"
-
 function App() {
   let routes = (
-    // <Routes>
-    //   <Route path = "/" element = { <HomePage />} />
-    //   <Route path = "/admin" element = { <Admin /> } />
-    //   <Route path = "/tabs" element = { <Tab />} />
-    //   <Route path= "/faq" element = { <FAQ /> } />
-    //   <Route path = "/menu" element = { <Menu />} />
-    //   <Route path = "/order" element = { <Order />} />
-    //   <Route path = "/queue" element = { <Queue />} />
-    //   <Route path = "/leaderboard" element = { <Leaderboard />} />
-    //   <Route path = "/donate" element = { <Donate />} />
-    //   <Route path= "/pay" element = { <PayTab /> } />
-    //   <Route path = "*" element = { <NotFound />} />
-    // </Routes>
     <Routes>
+
+      {/* USER LAYOUT PAGES */}
       <Route element = { <UserLayout />}>
           <Route path = "/" element = { <HomePage />} />
           <Route path= "/faq" element = { <FAQ /> } />
@@ -49,25 +36,20 @@ function App() {
           <Route path = "/leaderboard" element = { <Leaderboard />} />
           <Route path = "*" element = { <NotFound />} />
       </Route>
+
+      {/* ADMIN LAYOUT AND PAGES */}
       <Route element = { <AdminLayout />} >
         <Route path = "/admin" element = { <Admin /> } />
         <Route path = "/tabs" element = { <Tab />} />
       </Route>
+
+      {/* JUMBOTRON */}
+      <Route path="/jumbotron" element = { <LargeLeaderBoard /> }/>
+
     </Routes>
   )
 
   return (
-    // <div className="App bg-local" style={{backgroundImage: `url(${backgroundImage2})`}}>
-    //   <MainNav />
-    //   <div className="min-h-screen bg-red-900/75">
-    //     <div className="main-container m-auto p-5">
-    //       { routes }
-    //     </div>
-    //   </div>
-
-    //   {/* <img alt="xmas town" src="https://christmashq.imgix.net/assets/images/christmas-hq.png?fit=crop&amp;q=50&amp;w=1280&amp;h=320&amp;auto=format" className="absolute bottom-0 sticky"/> */}
-      
-    // </div>
     <div>
       { routes }
     </div>

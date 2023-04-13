@@ -21,7 +21,7 @@ const LargeProgressBar = props => {
     }
 
     return (
-        <div className="h-screen flex flex-col items-center">
+        <div className="h-screen flex flex-col items-center justify-center">
             
             <p className="text-center font-bold text-5xl text-white">Goal: $2000</p>
 
@@ -34,7 +34,7 @@ const LargeProgressBar = props => {
                 ${currentTotal} — {percentage}%
             </p>
 
-            <div className="bg-green-300 h-full w-[100px] rounded-full
+            <div className="bg-green-300 h-4/5 w-[100px] rounded-full
             rotate-180 my-4">
                 
                 {/* div for progress bar */}

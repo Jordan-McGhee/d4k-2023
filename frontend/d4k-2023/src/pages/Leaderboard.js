@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MobileLeaderBoard from "../components/leaderboard/Mobile/MobileLeaderBoard";
-import LargeLeaderBoard from "../components/leaderboard/Large/LargeLeaderBoard";
+// import LargeLeaderBoard from "../components/leaderboard/Large/LargeLeaderBoard";
 import ErrorModal from "../components/UIElements/ErrorModal";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner";
 import { useFetch } from "../hooks/useFetch";
@@ -48,10 +48,10 @@ const LeaderBoard = () => {
                 <MobileLeaderBoard data = { data } total = { overallTotal }/>
             </div>
 
-            {/* ALL OTHER SCREENS */}
+            {/* ALL OTHER SCREENS
             <div className="hidden md:block">
                 <LargeLeaderBoard data = { data } total = { overallTotal } />
-            </div>
+            </div> */}
 
         </React.Fragment>
     )

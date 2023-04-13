@@ -6,7 +6,7 @@ const LargeLeaderBoardItem = props => {
     return (
         
         <li>
-            <Card className = "flex flex-col p-4 rounded-lg border border-green-700 bg-white w-full shadow-lg mb-6 h-48 justify-center">
+            <Card className = "flex flex-col p-4 rounded-lg border-[8px] border-green-700 bg-white w-full shadow-xl mb-6 h-56 justify-center">
                 <div className="flex items-center justify-around">
                     {/* RANK */}
                     <p className="text-5xl flex">{ props.rank}<span className="text-2xl">th</span></p>
@@ -17,7 +17,7 @@ const LargeLeaderBoardItem = props => {
 
                         {/* DIV FOR TOTAL AND DRINK ORDERS */}
                         <div className="text-3xl">
-                            <p className="">{ props.drinksOrdered} Drinks Ordered</p>
+                            <p className="mb-4">{ props.drinksOrdered} Drinks Ordered</p>
                             <p><span className="text-green-700 font-semibold">${props.donated}</span> Donated</p>
                         </div>
                     </div>

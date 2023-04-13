@@ -34,10 +34,10 @@ const LargeTopThreeItem = props => {
 
             {/* div containing name, rank, total, drink quantity */}
             <div className="text-center">
-                <p className="text-6xl font-bold italic text-white">{ props.username }</p>
-                <p className="text-6xl font-bold italic text-green-700 my-2">${ props.total }</p>
-                <p className="text-4xl font-bold italic text-white my-2">${props.donated} donated</p>
-                <p className="text-3xl italic text-white">{ props.drinksOrdered } Drinks Ordered</p>
+                <p className="text-8xl font-bold italic text-white">{ props.username }</p>
+                <p className="text-8xl font-bold italic text-green-700 my-6">${ props.total }</p>
+                <p className="text-6xl font-bold italic text-white my-6">${props.donated} donated</p>
+                <p className="text-6xl italic text-white">{ props.drinksOrdered } Drinks Ordered</p>
             </div>
 
         </li>

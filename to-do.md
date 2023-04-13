@@ -8,17 +8,17 @@ BACKEND
     - PROVIDE ALTERNATE STYLING FOR SELECTED BUTTONS
 
 - APP.js
-    - make admin page not adhere to same width settings
-    - update mainNav to be same width
+    <!-- - make admin page not adhere to same width settings DONE -->
+    <!-- - update mainNav to be same width DONE -->
     - add 404 not found page
 
 - ADMIN
     <!-- - figure out how to load all orders and filter accordingly DONE
     - add functionality to update paid/completed/delete DONE
     - add comments into rows that have them DONE -->
-    - Add in ability to close tables with dropdown
+    <!-- ???? REVIST - Add in ability to close tables with dropdown -->
     - Add recently updated identifier based on last update
-    - Remove navigate from AdminTableRow and use something better to re-render tables
+    <!-- !!!! NO - Remove navigate from AdminTableRow and use something better to re-render tables -->
     <!-- - add a tab section to close tabs and check values DONE -->
     <!-- !!!! NO - make table scrollable? -->
     <!-- - Add table for donations DONE -->
