@@ -255,6 +255,7 @@ const Order = () => {
                         placeholder="Buddy the Elf?"
                         label="Your Name"
                         value = { localStorageUsername ? localStorageUsername : null }
+                        noEdit = { localStorageUsername ? true : false}
                     />
 
                     <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label>

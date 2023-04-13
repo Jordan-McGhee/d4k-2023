@@ -137,6 +137,7 @@ const Donate = () => {
                         placeholder="Buddy the Elf?"
                         label="Your Name"
                         value = { localStorageUsername ? localStorageUsername : null }
+                        noEdit = { localStorageUsername ? true : false}
                     />
 
                     {/* // DIV FOR DONATION FIELD */}

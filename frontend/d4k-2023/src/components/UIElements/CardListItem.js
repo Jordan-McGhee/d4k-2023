@@ -1,8 +1,6 @@
-// import React, { useState } from "react"
+import { Link } from "react-router-dom"
 
 const CardListItem = (props) => {
-
-    // const [ showingMore, setShowingMore ] = useState(false)
 
     return (
         <li className="my-4">
@@ -11,7 +9,13 @@ const CardListItem = (props) => {
 
             {
                 props.link &&
-                <p className= "text-lg mt-2"> {props.linkText} </p>
+                <Link
+                    className= "text-lg mt-2 italic underline underline-offset-4"
+                    to = { props.link }
+                    target = "_blank"
+                > 
+                    {props.linkText}
+                </Link>
             }
         </li>
     )

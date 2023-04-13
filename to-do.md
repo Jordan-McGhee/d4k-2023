@@ -51,7 +51,7 @@ BACKEND
     <!-- - make it where form can't be submitted if any inputs are blank DONE
     - add option to enter in own drink DONE
     - Save username to local storage DONE -->
-    - don't let user change name
+    <!-- - don't let user change name DONE -->
     <!-- !!!! NO - Add a check to see if a user already exists with that name and isn't stored in local storage -->
     <!-- - add donation field DONE -->
     - submit button:
@@ -63,7 +63,7 @@ BACKEND
     <!-- - update both ends to account for new donation table DONE -->
 
 — DONATE
-    - don't let user change name
+    <!-- - don't let user change name DONE -->
     <!-- - make that shit DONE -->
     - grey out/disable submit until donation and name are filled
     - grey out/disable green check if custom donation amount is empty
