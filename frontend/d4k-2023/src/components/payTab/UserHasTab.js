@@ -29,6 +29,12 @@ const UserHasTab = (props) => {
         </div>
     )
 
+    let amountDue = data.orders_total_unpaid
+
+    if (data.donations_total_unpaid) {
+        amountDue = parseInt(data.donations_total_unpaid) + parseInt(data.orders_total_unpaid)
+    }
+
     let content = (
         <Card header = {"Leaving so soon?"} footer = { cardFooter }>
             <p className="text-2xl font-medium">Thanks for coming to the 4th annual D4K, <span className="italic uppercase font-bold text-green-700">{ data.username }!</span></p>
@@ -39,7 +45,7 @@ const UserHasTab = (props) => {
 
             {/* <p>Donations: ${ data.donations_total_unpaid }</p>
             <p>Orders: ${ data.orders_total_unpaid } </p> */}
-            <p className="text-2xl font-bold">Total Due: ${ parseInt(data.donations_total_unpaid) + parseInt(data.orders_total_unpaid)}</p>
+            <p className="text-2xl font-bold">Total Due: ${amountDue}</p>
         </Card>
     )
 
@@ -51,9 +57,9 @@ const UserHasTab = (props) => {
 
                 <p className="text-2xl flex justify-between">Unpaid Orders: <span className="italic uppercase font-bold text-green-700">${data.orders_total_unpaid}</span></p>
 
-                <p className="text-2xl my-4 flex justify-between">Unpaid Donations: <span className="italic uppercase font-bold text-green-700">${data.donations_total_unpaid}</span></p>
+                <p className="text-2xl my-4 flex justify-between">Unpaid Donations: <span className="italic uppercase font-bold text-green-700">${data.donations_total_unpaid ? data.donations_total_unpaid : 0}</span></p>
 
-                <p className="text-2xl flex justify-between border-t-2 pt-4">Total Due: <span className="italic uppercase font-bold text-green-700">${ parseInt(data.donations_total_unpaid) + parseInt(data.orders_total_unpaid)}</span></p>
+                <p className="text-2xl flex justify-between border-t-2 pt-4">Total Due: <span className="italic uppercase font-bold text-green-700">${ amountDue }</span></p>
 
                 <p className="text-center mt-4">Don't want to pay yet? <span className="italic border-b-2 text-green-700" onClick = { () => navigate('/order')}>You should spend more money!</span></p>
             </Card>
