@@ -5,17 +5,23 @@ import "./Button.css"
 
 const Button = props => {
 
+    let buttonClass = "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"
+
+    if (props.buttonSelected) {
+        buttonClass = "bg-green-100 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-green-700 border border-green-700"
+    }
+
     if (props.link) {
         return (
             <Link to= { props.link } className = { props.linkClass }>
-                <button className={ props.className || "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" } type = { props.type }>
+                <button className={ props.className || buttonClass } type = { props.type }>
                     { props.text }
                 </button>
             </Link>
         )
     } else {
         return (
-            <button className= { props.className || "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" } type = { props.type } onClick = { props.onClick }>
+            <button className= { props.className || buttonClass } type = { props.type } onClick = { props.onClick }>
                 { props.text }
             </button>
         )

@@ -4,7 +4,6 @@ import QueueList from "../components/queue/QueueList";
 import { useFetch } from "../hooks/useFetch";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner"
 import ErrorModal from "../components/UIElements/ErrorModal"
-import queue from "../images/icons/queue.png"
 import refresh from "../images/icons/refresh.png"
 
 const Queue = () => {

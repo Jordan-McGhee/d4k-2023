@@ -160,21 +160,25 @@ const Donate = () => {
                                 text = "$5"
                                 type = "button"
                                 onClick = { () => donationHandler(5)}
+                                buttonSelected = { donationAmount === 5 ? true : null }
                             />
                             <Button
                                 text = "$10"
                                 type = "button"
                                 onClick = { () => donationHandler(10)}
+                                buttonSelected = { donationAmount === 10 ? true : null }
                             />
                             <Button
                                 text = "$20"
                                 type = "button"
                                 onClick = { () => donationHandler(20)}
+                                buttonSelected = { donationAmount === 20 ? true : null }
                             />
                             <Button
                                 text = "Other"
                                 type = "button"
                                 onClick = { () => setSelectedOther(!selectedOther) }
+                                buttonSelected = { donationAmount > 0 && donationAmount !== 5 && donationAmount !== 10 && donationAmount !== 20 ? true : null }
                             />
                         </div>
 

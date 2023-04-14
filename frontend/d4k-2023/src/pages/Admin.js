@@ -21,14 +21,14 @@ const Admin = () => {
                     text = "Orders"
                     type = "button"
                     onClick = { !showOrders ? () => setShowOrders(true) : null }
-                    className = { showOrders ? "bg-green-100 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-green-700" : null}
+                    buttonSelected = { showOrders ? true : null}
                 />
 
                 <Button
                     text = "Donations"
                     type = "button"
                     onClick = { showOrders ? () => setShowOrders(false) : null }
-                    className = { !showOrders ? "bg-green-100 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-green-700" : null}
+                    buttonSelected = { !showOrders ? true : null}
                 />
             </div>
 

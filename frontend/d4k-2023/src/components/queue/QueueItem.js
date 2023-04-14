@@ -20,8 +20,6 @@ const QueueItem = (props) => {
     }
 
     const storedUsername = localStorage.getItem('storedUsername')
-
-    const matchClassName = "shadow-green-700 shadow-xl"
     
     return (
         <React.Fragment>
@@ -34,8 +32,8 @@ const QueueItem = (props) => {
                     onCancel = { closeDeleteModalHandler }
                 />
             }
-            <li className={ props.username === storedUsername ? matchClassName : null}>
-                <Card className = "flex flex-col p-6 rounded-lg border border-gray-2 bg-white w-full my-5">
+            <li>
+                <Card className = { props.username === storedUsername ? "flex flex-col p-6 rounded-lg bg-white w-full my-5 border-[5px] border-green-700": "flex flex-col p-6 rounded-lg border border-gray-2 bg-white w-full my-5"}>
 
                     {/* container div for whole card */}
                     <div>
