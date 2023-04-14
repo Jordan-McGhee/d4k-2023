@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DeleteModal from "../admin/DeleteModal";
 import Card from "../UIElements/Card";
+import trash from "../../images/icons/delete.png"
 
 const QueueItem = (props) => {
 
@@ -54,12 +55,14 @@ const QueueItem = (props) => {
 
                                 {
                                     props.username === storedUsername && props.spotInQueue > 2 && 
-                                    <p
-                                        className="self-center font-semibold text-lg text-red-600"
-                                        onClick = { () => setShowDeleteModal(true) }
-                                    >
-                                        DELETE
-                                    </p>
+                                    <div className="self-center bg-red-600 p-2 rounded-md">
+                                        <img
+                                            className="w-5 h-fit"
+                                            onClick = { () => setShowDeleteModal(true) }
+                                            src = {trash}
+                                            alt = "trash icon"
+                                        />
+                                    </div>
                                 }
 
                             </div>

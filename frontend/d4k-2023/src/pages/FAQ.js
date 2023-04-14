@@ -1,13 +1,21 @@
 import React from "react";
 import CardListItem from "../components/UIElements/CardListItem";
-
 import Card from "../components/UIElements/Card"
+import faq from "../images/icons/FAQ-red.png"
 
 const FAQ = () => {
 
+    const header = (
+        <div className="flex items-end">
+            <p>FAQs</p>
+            <img src={faq} alt="faq red icon" className="w-10 ml-3 mb-1"/>
+        </div>
+    )
+
     return (
         <Card
-            header = "FAQs"
+            header = { header }
+            headerClass = "font-bold text-3xl border-b-2 mb-2 pb-2"
         >
             <ul>
                 <CardListItem

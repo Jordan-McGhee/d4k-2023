@@ -11,6 +11,9 @@ import other from "../assets/other.json"
 import shots from "../assets/shots.json"
 import ErrorModal from "../components/UIElements/ErrorModal";
 
+// icon import
+import order from "../images/icons/order-red.png"
+
 const Order = () => {
 
     let navigate = useNavigate()
@@ -141,6 +144,13 @@ const Order = () => {
         }
     }
 
+    const cardHeader = (
+        <div className="flex items-center">
+            <p>Place an Order!</p>
+            <img src={order} alt="order red icon" className="w-10 ml-3 mb-1"/>
+        </div>
+    )
+
     const cardFooter = (
         <div className="flex justify-between w-full items-center">
 
@@ -160,8 +170,6 @@ const Order = () => {
     const submitHandler = async event => {
         event.preventDefault()
 
-        console.log(event.target[7])
-
         console.log("Submitted order!")
 
         let errors = false
@@ -176,7 +184,7 @@ const Order = () => {
             }
 
             formData = {
-                username: event.target[0].value,
+                username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
                 drinkTitle: `CUSTOM DRINK: ${event.target[2].value.trim()}`,
                 drinkCost: 10,
                 quantity: parseInt(event.target[3].value),
@@ -185,10 +193,10 @@ const Order = () => {
             }
         } else {
             formData = {
-                username: event.target[0].value,
-                drinkTitle: event.target[1].value.split("—")[0].trim(),
+                username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
+                drinkTitle: event.target[1].value ? event.target[1].value.split("—")[0].trim() : setFormHasErrors(true),
                 drinkCost: parseInt(event.target[1].value.split("$")[1]),
-                quantity: parseInt(event.target[2].value),
+                quantity: event.target[2].value ? parseInt(event.target[2].value) : setFormHasErrors(true),
                 donationAmount: donationAmount,
                 comments: event.target[7].value ? event.target[7].value : null
             }
@@ -248,7 +256,7 @@ const Order = () => {
 
             <form onSubmit={submitHandler} footer = { cardFooter }>
 
-                <Card header={"Place an Order!"} footer={cardFooter}>
+                <Card header={ cardHeader } footer={cardFooter}>
                     <Input
                         id="name"
                         type="text"

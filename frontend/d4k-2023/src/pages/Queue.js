@@ -4,6 +4,8 @@ import QueueList from "../components/queue/QueueList";
 import { useFetch } from "../hooks/useFetch";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner"
 import ErrorModal from "../components/UIElements/ErrorModal"
+import queue from "../images/icons/queue.png"
+import refresh from "../images/icons/refresh.png"
 
 const Queue = () => {
 
@@ -49,8 +51,14 @@ const Queue = () => {
 
                 {/* div for title & refresh */}
                 <div className="flex justify-between items-center">
-                    <p className="text-white text-4xl font-bold">Queue</p>
-                    <p className="text-white text-lg" onClick = { () => navigate(0) }>REFRESH</p>
+                    <div className="flex items-center">
+                        {/* <img src={ queue } alt="queue icon" className="w-8 mr-3"/> */}
+                        <p className="text-white text-4xl font-bold">Queue</p>
+                    </div>
+                    <div className="flex items-center" onClick = { () => navigate(0) }>
+                        <img src={ refresh } alt="refresh icon" className="w-6 mr-3"/>
+                        <p className="text-white text-lg">REFRESH</p>
+                    </div>
                 </div>
 
                 <p className="text-white text-lg text-center my-5">All open drink orders will show here. Refresh to check your spot in the queue!</p>

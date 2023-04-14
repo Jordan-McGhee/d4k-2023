@@ -51,7 +51,7 @@ const MenuItem = props => {
                                 className = "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"
                             />
 
-                            <p>{ props.price }</p>
+                            <p>${ props.price }</p>
                         </div>
 
                     </div>

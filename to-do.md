@@ -2,6 +2,7 @@ BACKEND
 <!-- - double check isPaid and updatePaid logic with frontend code DONE -->
 <!-- - update controllers and routes to account for new donation table DONE -->
 <!-- - create view that sums donations by username and order amounts DONE -->
+    - Bug if a user deletes their order in queue, but it has a donation attached. Messes up the total for the leaderboard
 
 <!-- FRONTEND -->
 <!-- - go through and update routes/paths from old frontend DONE -->
@@ -10,7 +11,7 @@ BACKEND
 - APP.js
     <!-- - make admin page not adhere to same width settings DONE -->
     <!-- - update mainNav to be same width DONE -->
-    - add 404 not found page
+    <!-- - add 404 not found page DONE -->
 
 - ADMIN
     <!-- - figure out how to load all orders and filter accordingly DONE
@@ -45,7 +46,7 @@ BACKEND
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
     - after order is submitted, scroll down to their spot in line
-    - update cards to look better
+    <!-- - update cards to look better DONE -->
     <!-- - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE DONE -->
     <!-- - check localStorage username against names in queue and make the card different somehow DONE -->
 
@@ -73,7 +74,7 @@ BACKEND
 - MENU
     <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->
     <!-- — make top buttons sticky and actually redirect to different sections of the page DONE -->
-    - make sticky buttons look better so everything that scrolls underneath is no longer visible
+    <!-- - make sticky buttons look better so everything that scrolls underneath is no longer visible DONE -->
 
 - LEADERBOARD
     <!-- - make that shit (mobile and other version) DONE -->

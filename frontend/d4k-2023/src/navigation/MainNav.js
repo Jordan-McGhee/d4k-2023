@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import faq from "../images/icons/FAQ.png"
+import menu from "../images/icons/menu.png"
+import order from "../images/icons/order.png"
+import donate from "../images/icons/donate.png"
+import queue from "../images/icons/queue.png"
+import leaderboard from "../images/icons/leaderboard.png"
+import closeTab from "../images/icons/closeTab.png"
 
-const MainNav = () => {
+const MainNav = (props) => {
 
     // retrieve username from localStorage if there
     let localStorageUsername = localStorage.getItem('storedUsername')
@@ -13,7 +20,7 @@ const MainNav = () => {
     }
 
     return (
-        <div className="nav-container bg-green-700/100 p-5 top-0 fixed w-full">
+        <div className= { props.navClass ? props.navClass : "nav-container bg-green-700/100 p-5 top-0 fixed w-full"}>
 
             {/* CLOSED HAMBURGER */}
 
@@ -61,46 +68,53 @@ const MainNav = () => {
 
                     <ul className="NAVIGATION-MOBILE-OPEN flex flex-col items-start justify-between">
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                            <NavLink to="/faq">
+                        <li className="ml-1.5 my-4 uppercase text-white">
+                            <NavLink to="/faq" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
+                                <img src={ faq } alt = "faq-icon" className="w-7 mr-5"/>
                                 <p>FAQ</p>
                             </NavLink>
                         </li>
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                            <NavLink to="/menu">
+                        <li className="ml-1.5 my-4 uppercase text-white">
+                            <NavLink to="/menu" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
+                                <img src={ menu } alt = "faq-icon" className="w-7 mr-5"/>
                                 <p>Menu</p>
                             </NavLink>
                         </li>
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                            <NavLink to="/order">
+                        <li className="ml-1.5 my-4 uppercase text-white">
+                            <NavLink to="/order" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
+                                <img src={ order } alt = "faq-icon" className="w-7 mr-5"/>
                                 <p>Order</p>
                             </NavLink>
                         </li>
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                            <NavLink to="/donate">
+                        <li className="ml-1.5 my-4 uppercase text-white">
+                            <NavLink to="/donate" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
+                                <img src={ donate } alt = "faq-icon" className="w-7 mr-5"/>
                                 <p>Donate</p>
                             </NavLink>
                         </li>
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                            <NavLink to="/queue">
+                        <li className="ml-1.5 my-4 uppercase text-white">
+                            <NavLink to="/queue" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
+                                <img src={ queue } alt = "faq-icon" className="w-7 mr-5"/>
                                 <p>Queue</p>
                             </NavLink>
                         </li>
 
-                        <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                            <NavLink to="/leaderboard">
+                        <li className="ml-1.5 my-4 uppercase text-white">
+                            <NavLink to="/leaderboard" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
+                                <img src={ leaderboard } alt = "faq-icon" className="w-7 mr-5"/>
                                 <p>Leaderboard</p>
                             </NavLink>
                         </li>
 
                         {
                             localStorageUsername && 
-                            <li className="border-b border-white ml-2 my-2 uppercase text-white">
-                                <NavLink to="/pay">
+                            <li className="ml-1.5 my-4 uppercase text-white">
+                                <NavLink to="/pay" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
+                                    <img src={ closeTab } alt = "faq-icon" className="w-7 mr-5"/>
                                     <p>Close Your Tab</p>
                                 </NavLink>
                             </li>

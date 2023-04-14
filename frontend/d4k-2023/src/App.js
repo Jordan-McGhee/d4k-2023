@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 // LAYOUTS
 import UserLayout from "./components/layouts/UserLayout";
 import AdminLayout from "./components/layouts/AdminLayout";
+import NotFoundLayout from "./components/layouts/NotFoundLayout";
 
 function App() {
   let routes = (
@@ -34,7 +35,6 @@ function App() {
           <Route path = "/donate" element = { <Donate />} />
           <Route path= "/pay" element = { <PayTab /> } />
           <Route path = "/leaderboard" element = { <Leaderboard />} />
-          <Route path = "*" element = { <NotFound />} />
       </Route>
 
       {/* ADMIN LAYOUT AND PAGES */}
@@ -43,6 +43,10 @@ function App() {
         <Route path = "/tabs" element = { <Tab />} />
       </Route>
 
+      {/* NOT FOUND LAYOUT */}
+      <Route element = { <NotFoundLayout />}>
+        <Route path = "*" element = { <NotFound />} />
+      </Route>
       {/* JUMBOTRON */}
       <Route path="/jumbotron" element = { <LargeLeaderBoard /> }/>
 

@@ -1,9 +1,11 @@
 import React from "react";
+import image from "../images/404NotFound.png"
 
 const NotFound = () => {
 
     return (
-        <p>404 Not Found!</p>
+        // <div className="" style={{ backgroundImage: {image}}}></div>
+        <img src={ image } alt = "404 Not Found" className="object-fill"/>
     )
 }
 

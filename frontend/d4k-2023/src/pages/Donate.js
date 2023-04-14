@@ -6,6 +6,7 @@ import Modal from "../components/UIElements/Modal"
 import ErrorModal from "../components/UIElements/ErrorModal"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
+import donate from "../images/icons/donate-red.png"
 
 const Donate = () => {
 
@@ -18,6 +19,13 @@ const Donate = () => {
 
     // retrieve username from localStorage if there
     let localStorageUsername = localStorage.getItem('storedUsername')
+
+    const cardHeader = (
+        <div className="flex items-center">
+            <p>Add a Donation!</p>
+            <img src={donate} alt="donate red icon" className="w-9 ml-3 mb-1"/>
+        </div>
+    )
 
     const cardFooter = (
         <div className="flex justify-between w-full items-center">
@@ -130,7 +138,7 @@ const Donate = () => {
             }
 
             <form onSubmit={ submitHandler }>
-                <Card header = { "Add A Donation"} footer = { cardFooter }>
+                <Card header = { cardHeader } footer = { cardFooter }>
                     <Input
                         id="name"
                         type="text"
