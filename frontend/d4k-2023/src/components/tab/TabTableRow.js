@@ -9,34 +9,6 @@ const TabTableRow = props => {
     const { sendRequest } = useFetch()
     const navigate = useNavigate()
 
-    // const addDonationHandler = async event => {
-    //     event.preventDefault()
-
-    //     const username = event.target[0].value
-    //     const amount = parseInt(event.target[1].value)
-
-    //     const formData = { username, amount }
-
-    //     try {
-    //         await sendRequest(
-    //             // URL
-    //             `${process.env.REACT_APP_BACKEND_URL}/donation`,
-    //             // METHOD
-    //             'POST',
-    //             // HEADERS
-    //             {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             // BODY
-    //             JSON.stringify(formData)
-    //         )
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-
-    //     navigate(0)
-    // }
-
     const [ showAddModal, setShowAddModal ] = useState([false, null])
 
     const closeAddModalHandler = () => {
@@ -123,7 +95,7 @@ const TabTableRow = props => {
                 </form>
             :
                 <Button
-                    text = "DONOS PAID!"
+                    text = "DONO PAID!"
                     type = "text"
                     className = "button border border-blue-700 bg-none rounded-md text-white font-bold"
                 />

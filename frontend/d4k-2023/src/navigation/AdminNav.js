@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 
 const AdminNav = () => {
@@ -8,8 +8,9 @@ const AdminNav = () => {
 
             <div className="flex justify-between">
                 
-                <h1 className="text-4xl font-bold text-white">D4K ADMIN</h1>
-                
+                <NavLink to="/" className=''>
+                    <h1 className="text-4xl font-bold text-white">D4K ADMIN</h1>
+                </NavLink>                
 
                 <div className="flex">
 

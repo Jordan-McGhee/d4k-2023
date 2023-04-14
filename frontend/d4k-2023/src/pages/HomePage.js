@@ -18,7 +18,7 @@ const HomePage = () => {
 
                 <p className="text-2xl italic mt-2 mb-5">Christmas Cocktails for a Charitable Cause</p>
 
-                <p className="text-3xl my-8 font-bold flex flex-col">Saturday,<span className="my-2">December 17th</span>5PM — Late</p>
+                <p className="text-3xl my-8 font-bold flex flex-col">Saturday,<span className="my-2">December 16th</span>5PM — Late</p>
 
                 <Button
                     link = "https://docs.google.com/forms/d/e/1FAIpQLSeaCqqYVV38URqfCGFvf9ZXw-fSHigXAe0c55kPU8N5iN0Jag/viewform"

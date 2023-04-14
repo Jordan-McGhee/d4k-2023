@@ -50,7 +50,7 @@ const Menu = () => {
                 </div>
 
                 {/* shots div */}
-                <div id = "shots">
+                <div id = "shots" className="mb-20">
                     <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Shots</p>
                     <MenuList
                         drinks = { shots }

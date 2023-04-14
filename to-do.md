@@ -18,6 +18,7 @@ BACKEND
     - add comments into rows that have them DONE -->
     <!-- ???? REVIST - Add in ability to close tables with dropdown -->
     - Add recently updated identifier based on last update
+    - Fix Date/time
     <!-- !!!! NO - Remove navigate from AdminTableRow and use something better to re-render tables -->
     <!-- - add a tab section to close tabs and check values DONE -->
     <!-- !!!! NO - make table scrollable? -->
@@ -39,6 +40,7 @@ BACKEND
     <!-- - add functionality to close all donations for a user and make "Add Donation" a modal pop-up form? DONE -->
     <!-- ???? REVISIT - Add Search/filter functionality -->
     - have feedback for unsuccessful donation
+    - Fix Date/time
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
