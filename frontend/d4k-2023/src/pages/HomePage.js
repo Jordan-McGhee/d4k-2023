@@ -35,7 +35,7 @@ const HomePage = () => {
 
                 <p className="text-2xl font-extrabold italic">All proceeds go to charity</p>
 
-                <p className="text-4xl font-extrabold text-green-400 my-8">Nicholas House Family Homeless Shelter</p>
+                <p className="text-4xl font-extrabold text-green-600 my-8">Nicholas House Family Homeless Shelter</p>
 
                 {/* <p className="text-2xl my-5">Welcome to the party</p> */}
 

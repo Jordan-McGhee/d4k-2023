@@ -6,7 +6,7 @@ BACKEND
 
 <!-- FRONTEND -->
 <!-- - go through and update routes/paths from old frontend DONE -->
-    - PROVIDE ALTERNATE STYLING FOR SELECTED BUTTONS
+<!-- - PROVIDE ALTERNATE STYLING FOR SELECTED BUTTONS DONE -->
 
 - APP.js
     <!-- - make admin page not adhere to same width settings DONE -->
@@ -45,7 +45,7 @@ BACKEND
 
 - QUEUE:
     <!-- - Go through queue, queueList, queueItem and update to match what is returned from database DONE -->
-    - after order is submitted, scroll down to their spot in line
+    <!-- ???? REVISIT - after order is submitted, scroll down to their spot in line -->
     <!-- - update cards to look better DONE -->
     <!-- - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE DONE -->
     <!-- - check localStorage username against names in queue and make the card different somehow DONE -->
@@ -57,19 +57,19 @@ BACKEND
     <!-- - don't let user change name DONE -->
     <!-- !!!! NO - Add a check to see if a user already exists with that name and isn't stored in local storage -->
     <!-- - add donation field DONE -->
-    - submit button:
-        - grey out/disable until form is filled
-    - on donation buttons:
-        - make them grey out if not selected
-        <!-- - add field popup if other is selected DONE -->
-        <!-- - if other is selected, update OTHER to reflect value chosen DONE -->
+    <!-- - submit button: -->
+    <!-- - grey out/disable until form is filled -->
+    <!-- - on donation buttons: DONE -->
+    <!-- - make them grey out if not selected DONE -->
+    <!-- - add field popup if other is selected DONE -->
+    <!-- - if other is selected, update OTHER to reflect value chosen DONE -->
     <!-- - update both ends to account for new donation table DONE -->
 
 — DONATE
     <!-- - don't let user change name DONE -->
     <!-- - make that shit DONE -->
-    - grey out/disable submit until donation and name are filled
-    - grey out/disable green check if custom donation amount is empty
+    <!-- - grey out/disable submit until donation and name are filled -->
+    <!-- - grey out/disable green check if custom donation amount is empty -->
 
 - MENU
     <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->

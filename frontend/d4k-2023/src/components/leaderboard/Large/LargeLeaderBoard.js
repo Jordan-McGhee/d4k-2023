@@ -67,7 +67,7 @@ const LargeLeaderBoard = props => {
                         
                         </div>
 
-                        <div className="">
+                        <div className="mr-24">
                             {/* SECTION FOR PROGRESS BAR */}
                             <LargeProgressBar total = { overallTotal } />
                         </div>

@@ -31,11 +31,11 @@ const Menu = () => {
             </div>
             
             <div className="">
-                <p className="text-white text-center text-2xl">Want something <span className="italic">off menu?</span> <br></br> Ask what we can whip up for you!</p>
+                <p className="text-white text-center text-2xl">Want something <span className="italic">off menu?</span><br></br>Ask what we can whip up for you!</p>
 
                 {/* cocktails div */}
                 <div id = "cocktails">
-                    <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Cocktails</p>
+                    <p className="text-center text-6xl mt-4 text-green-600 font-extrabold uppercase">Cocktails</p>
                     <MenuList
                         drinks = { cocktails }
                     />
@@ -43,7 +43,7 @@ const Menu = () => {
 
                 {/* batched div */}
                 <div id = "batched">
-                    <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Batched</p>
+                    <p className="text-center text-6xl mt-4 text-green-600 font-extrabold uppercase">Batched</p>
                     <MenuList
                         drinks = { batched }
                     />
@@ -51,7 +51,7 @@ const Menu = () => {
 
                 {/* shots div */}
                 <div id = "shots" className="mb-20">
-                    <p className="text-center text-6xl mt-4 text-green-500 font-extrabold uppercase">Shots</p>
+                    <p className="text-center text-6xl mt-4 text-green-600 font-extrabold uppercase">Shots</p>
                     <MenuList
                         drinks = { shots }
                     />
