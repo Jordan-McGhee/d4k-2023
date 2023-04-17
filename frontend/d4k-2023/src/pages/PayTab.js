@@ -36,8 +36,10 @@ const PayTab = props => {
         
     }, [ sendRequest ])
 
+    // empty variable to assign our content to based on whether we have user tab data from the useEffect call above
     let content
 
+    // if we have data, load the userHasTab component. If not, NoTab component
     data != null ?
         content = <UserHasTab data = { data } />
         :

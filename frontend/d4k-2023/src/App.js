@@ -47,6 +47,7 @@ function App() {
       <Route element = { <NotFoundLayout />}>
         <Route path = "*" element = { <NotFound />} />
       </Route>
+      
       {/* JUMBOTRON */}
       <Route path="/jumbotron" element = { <LargeLeaderBoard /> }/>
 

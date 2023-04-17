@@ -77,8 +77,6 @@ const Donate = () => {
             comments: event.target[5].value
         }
 
-        // console.log(formData)
-
         try {
             await sendRequest(
                 // URL
@@ -106,6 +104,7 @@ const Donate = () => {
 
     }
 
+    // closes pop up modal and refreshes page
     const confirmModalHandler = () => {
         setShowConfirmModal(false)
         navigate(0)

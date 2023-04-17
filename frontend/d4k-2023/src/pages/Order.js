@@ -35,8 +35,6 @@ const Order = () => {
 
     // check if user navigated from Menu page amd selected a drink
     const menuDrink = localStorage.getItem('chosenDrink')
-
-    // console.log(`Menu Drink Selected: ${menuDrink}`)
     
     // useEffect here to run this function once and prevent an endless loop.
     // Splits up the string in localStorage and assigns values to the respective states above so shit works right
@@ -373,9 +371,7 @@ const Order = () => {
                         </div>
                     }
 
-                    <label
-                        className="text-lg font-semibold mr-4 block uppercase tracking-wide"
-                    >
+                    <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">
                         Add a Comment
                     </label>
 
