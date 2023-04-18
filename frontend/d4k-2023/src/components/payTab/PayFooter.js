@@ -4,14 +4,16 @@ import paypal from "../../images/payment/paypal.jpeg"
 import venmo from "../../images/payment/venmo.png"
 import { Link, useNavigate } from "react-router-dom";
 
-const PayFooter = () => {
+const PayFooter = (props) => {
 
     const navigate = useNavigate()
+
+    console.log(props.amount)
 
     return (
         <div className="flex justify-around items-center w-4/5 m-auto">
             <Link
-                to = "https://cash.app/$wakejebber"
+                to = {`https://cash.app/$wakejebber/${props.amount}`}
                 target = "_blank"
                 className="w-24 h-fit object-cover"
             >
@@ -35,7 +37,7 @@ const PayFooter = () => {
             </Link>
             
             <Link
-                to = "https://venmo.com/jacobwebber?txn=pay&note=drink4dakids"
+                to = {`https://venmo.com/jacobwebber?txn=pay&note=drink4dakids&amount=${props.amount}`}
                 target = "_blank"
                 className="w-24 h-fit object-cover"
             >

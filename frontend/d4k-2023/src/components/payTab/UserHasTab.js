@@ -29,7 +29,7 @@ const UserHasTab = (props) => {
         </div>
     )
 
-    let amountDue = data.orders_total_unpaid
+    let amountDue = parseInt(data.orders_total_unpaid)
 
     if (data.donations_total_unpaid) {
         amountDue = parseInt(data.donations_total_unpaid) + parseInt(data.orders_total_unpaid)
@@ -51,7 +51,7 @@ const UserHasTab = (props) => {
 
     if (confirmClose) {
         content = (
-            <Card header = { `${data.username}'s Tab`} headerClass = "font-bold text-3xl border-b-2 mb-4 py-2 text-center capitalize" footer = { <PayFooter /> }>
+            <Card header = { `${data.username}'s Tab`} headerClass = "font-bold text-3xl border-b-2 mb-4 py-2 text-center capitalize" footer = { <PayFooter amount = { amountDue } /> }>
 
                 <p className="text-2xl flex justify-between mb-4">Drinks Ordered: <span className="italic uppercase font-bold text-green-700">{data.drinks_ordered}</span></p>
 

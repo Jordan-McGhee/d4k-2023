@@ -49,6 +49,7 @@ BACKEND
     <!-- - update cards to look better DONE -->
     <!-- - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE DONE -->
     <!-- - check localStorage username against names in queue and make the card different somehow DONE -->
+    - Add state for if data comes back empty
 
 - ORDER
     <!-- - make it where form can't be submitted if any inputs are blank DONE
@@ -82,6 +83,7 @@ BACKEND
     - have whole page refresh every minute?
     - Improve Honorable Mentions
     <!-- - UPDATE backend to total order_totals and total_donated DONE -->
+    - Add state for if data comes back empty
 
 - PAYMENT
     <!-- - update links to pay correctly DONE -->
