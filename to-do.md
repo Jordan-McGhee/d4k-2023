@@ -84,7 +84,7 @@ BACKEND
     <!-- - UPDATE backend to total order_totals and total_donated DONE -->
 
 - PAYMENT
-    - update links to pay correctly
+    <!-- - update links to pay correctly DONE -->
     <!-- !!!! NO - maybe add userTotal to localStorage?? -->
 
 - Extra Shit
