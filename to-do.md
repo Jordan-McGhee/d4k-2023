@@ -3,6 +3,7 @@ BACKEND
 <!-- - update controllers and routes to account for new donation table DONE -->
 <!-- - create view that sums donations by username and order amounts DONE -->
     - Bug if a user deletes their order in queue, but it has a donation attached. Messes up the total for the leaderboard
+    - Bug if user donates, but doesn't order a drink. Doesn't load correctly in leaderboard
 
 <!-- FRONTEND -->
 <!-- - go through and update routes/paths from old frontend DONE -->

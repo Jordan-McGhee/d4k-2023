@@ -29,12 +29,12 @@ const LargeLeaderBoardItem = props => {
                                 <div className="rounded-full bg-green-600 p-5 mr-4">
                                     <img src={donate} alt = "donate icon" className="w-10"/>
                                 </div>
-                                <p className="flex"><span className="text-green-700 font-semibold mr-2">${props.donated}</span> Donated</p>
+                                <p className="flex"><span className="text-green-700 font-semibold mr-2">${props.donationTotal}</span> Donated</p>
                             </div>
                         </div>
                     </div>
 
-                    <p className="font-bold text-6xl text-green-700">${ props.total} </p>
+                    <p className="font-bold text-6xl text-green-700">${ parseInt(props.donationTotal) + parseInt(props.orderTotal)} </p>
                 </div>
             </Card>
         </li>

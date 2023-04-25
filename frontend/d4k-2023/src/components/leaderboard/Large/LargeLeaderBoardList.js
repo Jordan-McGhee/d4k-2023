@@ -7,9 +7,9 @@ const LargeLeaderBoardList = props => {
             id = { `large-leaderboard-${props.data.indexOf(user)}`}
             key = { `large-leaderboard-${props.data.indexOf(user)}`}
             username = { user.username }
-            total = { user.donations_total ? parseInt(user.orders_total) + parseInt(user.donations_total) : parseInt(user.orders_total)}
-            donated = { user.donations_total ? user.donations_total : 0 }
-            drinksOrdered = { user.drinks_ordered}
+            orderTotal = { user.orders_total ? parseInt(user.orders_total) : 0 }
+            donationTotal = { user.donations_total ? parseInt(user.donations_total) : 0}
+            drinksOrdered = { user.drinks_ordered ? user.drinks_ordered : 0}
             rank = { props.data.indexOf(user) + 4}
         />
     ))
