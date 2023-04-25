@@ -2,13 +2,9 @@ import React from "react";
 import cashapp from "../../images/payment/cashapp.png"
 import paypal from "../../images/payment/paypal.jpeg"
 import venmo from "../../images/payment/venmo.png"
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const PayFooter = (props) => {
-
-    const navigate = useNavigate()
-
-    console.log(props.amount)
 
     return (
         <div className="flex justify-around items-center w-4/5 m-auto">

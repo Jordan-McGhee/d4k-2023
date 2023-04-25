@@ -72,11 +72,13 @@ const getOrders = async (req, res, next) => {
 
     // const results = { 'results': response ? response.rows : null } 
 
-    const message = "Retrieved orders!"
+    let results = response.rows
 
-    console.log(message)
+    if (response.rowCount === 0) {
+        results = "empty"
+    }
 
-    res.status(200).json({message: message, results: response.rows})
+    res.status(200).json({ results: results })
 }
 
 const updatePaid = async (req, res, next) => {
@@ -209,7 +211,7 @@ const getOrdersLeaderboard = async (req, res, next) => {
 
     let sumQuery = "SELECT * FROM donations_and_orders_total"
 
-    let response, sumResponse
+    let response, sumResponse, sumTotal
 
     try {
         response = await pool.query(query)
@@ -235,7 +237,15 @@ const getOrdersLeaderboard = async (req, res, next) => {
         )
     }
 
-    res.status(200).json({message: "Retrieved orders for leaderboard!", response: response.rows, sumTotal: sumResponse.rows[0].d4k_total})
+    if (response.rowCount === 0) {
+        response = "empty"
+        sumTotal = 0
+    } else {
+        response = response.rows
+        sumTotal = sumResponse.rows[0].d4k_total
+    }
+
+    res.status(200).json({message: "Retrieved orders for leaderboard!", response: response, sumTotal: sumTotal })
 }
 
 const closeTab = async (req, res, next) => {

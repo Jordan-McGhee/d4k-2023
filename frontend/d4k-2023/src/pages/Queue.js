@@ -5,6 +5,7 @@ import { useFetch } from "../hooks/useFetch";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner"
 import ErrorModal from "../components/UIElements/ErrorModal"
 import refresh from "../images/icons/refresh.png"
+import EmptyQueue from "../components/queue/EmptyQueue";
 
 const Queue = () => {
 
@@ -26,7 +27,7 @@ const Queue = () => {
 
                 // console.log(`Queue: ${ responseData.results[0] }`)
 
-                setLoadedQueue(responseData.results)
+                responseData.results === "empty" ? setLoadedQueue([]) : setLoadedQueue(responseData.results)
             } catch (error) {
                 console.log(error)
             }
@@ -60,13 +61,18 @@ const Queue = () => {
                     </div>
                 </div>
 
-                <p className="text-white text-lg text-center my-5">All open drink orders will show here. Refresh to check your spot in the queue!</p>
 
-
-                {/* queue list */}
-                <QueueList
-                    queue = { loadedQueue }
-                />
+                {
+                    loadedQueue.length === 0 ?
+                        <EmptyQueue />
+                    :
+                    <div>
+                        <p className="text-white text-lg text-center my-5">All open drink orders will show here. Refresh to check your spot in the queue!</p>
+                        <QueueList
+                            queue = { loadedQueue }
+                        />
+                    </div>
+                }
 
             </div>
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import MobileEmptyLeaderBoard from "../components/leaderboard/Mobile/MobileEmptyLeaderBoard";
 import MobileLeaderBoard from "../components/leaderboard/Mobile/MobileLeaderBoard";
 import ErrorModal from "../components/UIElements/ErrorModal";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner";
@@ -19,10 +20,14 @@ const LeaderBoard = () => {
                     `${process.env.REACT_APP_BACKEND_URL}/order/leaderboard`
                 )
 
-                // console.log(`Leaderboard: ${ typeof responseData.response }`)
-
-                setData(responseData.response)
-                setOverallTotal(parseInt(responseData.sumTotal))
+                if (responseData.response === "empty") {
+                    setData([])
+                    setOverallTotal(0)
+                } else {
+                    setData(responseData.response)
+                    setOverallTotal(parseInt(responseData.sumTotal))
+                }
+                
 
             } catch (error) {
                 console.log(error)
@@ -42,10 +47,15 @@ const LeaderBoard = () => {
 
             { isLoading && <LoadingSpinner />}
 
-            {/* MOBILE */}
-            <div className="md:hidden">
-                <MobileLeaderBoard data = { data } total = { overallTotal }/>
-            </div>
+            {
+                data.length === 0 ? 
+                    <MobileEmptyLeaderBoard total = { overallTotal } />
+                :
+                <div className="md:hidden">
+                    <MobileLeaderBoard data = { data } total = { overallTotal }/>
+                </div>
+            }
+
 
             {/* ALL OTHER SCREENS
             <div className="hidden md:block">
