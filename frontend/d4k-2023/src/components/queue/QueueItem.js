@@ -47,8 +47,8 @@ const QueueItem = (props) => {
                             <div className="flex justify-between w-full">
 
                                 <div className="ml-4">
-                                    <p className="text-2xl font-semibold truncate w-36">{ props.username }</p>
-                                    <p className="text-lg truncate capitalize w-36">{ props.quantity > 1 ? `${ props.quantity } ${ drink }s` : `1 ${ drink }`  }</p>
+                                    <p className="text-2xl font-semibold truncate w-56">{ props.username }</p>
+                                    <p className="text-lg truncate capitalize w-56">{ props.quantity > 1 ? `${ props.quantity } ${ drink }s` : `1 ${ drink }`  }</p>
                                 </div>
 
                                 {

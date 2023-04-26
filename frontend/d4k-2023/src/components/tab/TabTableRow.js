@@ -144,7 +144,7 @@ const TabTableRow = props => {
                 </td>
 
                 <td className="px-6 py-3 text-center">
-                    ${ props.tab.orders_total }
+                    ${ props.tab.orders_total ? props.tab.orders_total : `0` }
                 </td>
 
                 <td className={ props.tab.orders_total_unpaid ? "text-red-700 font-bold px-6 py-3 text-center" : "text-white font-bold px-6 py-3 text-center"}>

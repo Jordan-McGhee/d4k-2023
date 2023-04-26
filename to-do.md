@@ -2,8 +2,8 @@ BACKEND
 <!-- - double check isPaid and updatePaid logic with frontend code DONE -->
 <!-- - update controllers and routes to account for new donation table DONE -->
 <!-- - create view that sums donations by username and order amounts DONE -->
-    - Bug if a user deletes their order in queue, but it has a donation attached. Messes up the total for the leaderboard
-    - Bug if user donates, but doesn't order a drink. Doesn't load correctly in leaderboard
+<!-- - Bug if a user deletes their order in queue, but it has a donation attached. Messes up the total for the leaderboard DONE -->
+<!-- - Bug if user donates, but doesn't order a drink. Doesn't load correctly in leaderboard DONE -->
 
 <!-- FRONTEND -->
 <!-- - go through and update routes/paths from old frontend DONE -->
@@ -50,7 +50,7 @@ BACKEND
     <!-- - update cards to look better DONE -->
     <!-- - Add EDIT/DELETE FUNCTIONALITY TO QUEUE BASED ON USER's NAME IN LOCALSTORAGE DONE -->
     <!-- - check localStorage username against names in queue and make the card different somehow DONE -->
-    - Add state for if data comes back empty
+    <!-- - Add state for if data comes back empty DONE -->
 
 - ORDER
     <!-- - make it where form can't be submitted if any inputs are blank DONE
@@ -66,12 +66,14 @@ BACKEND
     <!-- - add field popup if other is selected DONE -->
     <!-- - if other is selected, update OTHER to reflect value chosen DONE -->
     <!-- - update both ends to account for new donation table DONE -->
+    <!-- - allow user to deselect donate option DONE -->
 
 — DONATE
     <!-- - don't let user change name DONE -->
     <!-- - make that shit DONE -->
     <!-- - grey out/disable submit until donation and name are filled -->
     <!-- - grey out/disable green check if custom donation amount is empty -->
+    <!-- - allow user to deselect donate option DONE -->
 
 - MENU
     <!-- - make it where clicking "Add to Order" populates form in Order page DONE -->
@@ -84,7 +86,7 @@ BACKEND
     - have whole page refresh every minute?
     - Improve Honorable Mentions
     <!-- - UPDATE backend to total order_totals and total_donated DONE -->
-    - Add state for if data comes back empty
+    <!-- - Add state for if data comes back empty DONE -->
 
 - PAYMENT
     <!-- - update links to pay correctly DONE -->
