@@ -8,9 +8,9 @@ const UserLayout = () => {
     return (
         <div>
             <MainNav />
-            <div className="App bg-local overflow-hidden max-w-md mt-20" style={{backgroundImage: `url(${backgroundImage2})`}}>
+            <div className="App bg-local overflow-hidden mt-20" style={{backgroundImage: `url(${backgroundImage2})`}}>
                 <div className="min-h-screen bg-red-900/75">
-                    <div className="main-container m-auto p-5">
+                    <div className="main-container m-auto p-5 max-w-md">
                         <Outlet />
                     </div>
                 </div>

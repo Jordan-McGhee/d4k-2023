@@ -1,4 +1,4 @@
-import React, { useState, useEffect }  from "react";
+import React, { useState, useEffect, useCallback }  from "react";
 import HonorableMentions from "./HonorableMentions";
 import LargeLeaderBoardList from "./LargeLeaderBoardList";
 import LargeProgressBar from "./LargeProgressBar";
@@ -17,30 +17,40 @@ const LargeLeaderBoard = props => {
 
     const { isLoading, hasError, clearError, sendRequest } = useFetch()
 
-    useEffect(() => {
+    const fetchLeaderboard = useCallback(async () => {
+        try {
+            const responseData = await sendRequest(
+                `${process.env.REACT_APP_BACKEND_URL}/order/leaderboard`
+            )
 
-        const fetchLeaderboard = async () => {
-            try {
-                const responseData = await sendRequest(
-                    `${process.env.REACT_APP_BACKEND_URL}/order/leaderboard`
-                )
-
-                if (responseData.response === "empty") {
-                    setData([])
-                    setOverallTotal(0)
-                } else {
-                    setData(responseData.response)
-                    setOverallTotal(parseInt(responseData.sumTotal))
-                }
-
-            } catch (error) {
-                console.log(error)
+            if (responseData.response === "empty") {
+                setData([])
+                setOverallTotal(0)
+            } else {
+                setData(responseData.response)
+                setOverallTotal(parseInt(responseData.sumTotal))
             }
+            
+
+        } catch (error) {
+            console.log(error)
         }
+    }, [ sendRequest ])
+
+    useEffect(() => {
 
         fetchLeaderboard()
 
-    }, [ sendRequest ])
+    }, [ fetchLeaderboard ])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            fetchLeaderboard()
+            // console.log('rerendering!')
+        }, 30000)
+
+        return () => clearInterval(interval)
+    }, [ fetchLeaderboard ])
 
     const topThree = data.slice(0,3)
     const fourThroughTen = data.slice(3,11)

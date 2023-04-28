@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import MobileEmptyLeaderBoard from "../components/leaderboard/Mobile/MobileEmptyLeaderBoard";
 import MobileLeaderBoard from "../components/leaderboard/Mobile/MobileLeaderBoard";
 import ErrorModal from "../components/UIElements/ErrorModal";
@@ -12,33 +12,40 @@ const LeaderBoard = () => {
 
     const { isLoading, hasError, clearError, sendRequest } = useFetch()
 
-    useEffect(() => {
+    const fetchLeaderboard = useCallback(async () => {
+        try {
+            const responseData = await sendRequest(
+                `${process.env.REACT_APP_BACKEND_URL}/order/leaderboard`
+            )
 
-        const fetchLeaderboard = async () => {
-            try {
-                const responseData = await sendRequest(
-                    `${process.env.REACT_APP_BACKEND_URL}/order/leaderboard`
-                )
-
-                if (responseData.response === "empty") {
-                    setData([])
-                    setOverallTotal(0)
-                } else {
-                    setData(responseData.response)
-                    setOverallTotal(parseInt(responseData.sumTotal))
-                }
-                
-
-            } catch (error) {
-                console.log(error)
+            if (responseData.response === "empty") {
+                setData([])
+                setOverallTotal(0)
+            } else {
+                setData(responseData.response)
+                setOverallTotal(parseInt(responseData.sumTotal))
             }
+            
+
+        } catch (error) {
+            console.log(error)
         }
+    }, [ sendRequest ])
+
+    useEffect(() => {
 
         fetchLeaderboard()
 
-    }, [ sendRequest ])
+    }, [ fetchLeaderboard ])
 
-    // console.log(`Total: ${overallTotal}`)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            fetchLeaderboard()
+            // console.log('rerendering!')
+        }, 30000)
+
+        return () => clearInterval(interval)
+    }, [ fetchLeaderboard ])
 
     return (
         <React.Fragment>
