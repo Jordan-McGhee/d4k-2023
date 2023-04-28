@@ -25,7 +25,7 @@ const Tab = () => {
                     }
                 )
 
-                console.log(responseData)
+                // console.log(responseData)
 
                 setPaidTabs(responseData.paid)
                 setUnpaidTabs(responseData.unpaid)

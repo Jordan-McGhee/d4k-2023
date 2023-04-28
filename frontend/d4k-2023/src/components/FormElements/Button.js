@@ -5,10 +5,10 @@ import "./Button.css"
 
 const Button = props => {
 
-    let buttonClass = "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"
+    let buttonClass = "bg-green-600 button rounded-md shadow font-bold uppercase text-white"
 
     if (props.buttonSelected) {
-        buttonClass = "bg-green-100 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-green-700 border border-green-700"
+        buttonClass = "bg-green-100 button rounded-md shadow font-bold uppercase text-green-700"
     }
 
     if (props.link) {

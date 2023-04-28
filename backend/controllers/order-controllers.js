@@ -88,7 +88,7 @@ const updatePaid = async (req, res, next) => {
 
     // use paidStatus to determine what to switch the DB value to
     // if paidStatus is currently FALSE in DB, we assign it to TRUE here to switch and vice versa
-    console.log(`Currently in DB as: ${isPaid}`)
+    // console.log(`Currently in DB as: ${isPaid}`)
     const paidStatus = isPaid ? false : true
     let text = "UPDATE orders SET is_paid = $1, updated_at = NOW () WHERE order_id = $2 RETURNING *"
 
@@ -105,7 +105,7 @@ const updatePaid = async (req, res, next) => {
         )
     }
 
-    console.log(`Updating Order #${order_id} to ${paidStatus}`)
+    // console.log(`Updating Order #${order_id} to ${paidStatus}`)
     
     res.status(201).json({ message: `Updated paidStatus of Order ${ order_id } to ${ paidStatus }`, newValue: paidStatus, response: response.rows[0]})
 }
@@ -131,7 +131,7 @@ const updateCompleted = async (req, res, next) => {
         )
     }
 
-    console.log(`Updating Order #${order_id} to ${completedStatus}`)
+    // console.log(`Updating Order #${order_id} to ${completedStatus}`)
     
     res.status(201).json({ message: `Updated completedStatus of Order ${ order_id } to ${ completedStatus }`, newValue: completedStatus,response: response.rows[0] })
 }

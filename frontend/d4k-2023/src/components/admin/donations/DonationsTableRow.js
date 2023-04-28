@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import DeleteModal from "../DeleteModal";
 import comment from "../../../images/comment.png"
 import Input from "../../FormElements/Input";
+import convertDate from "../../../DateTimeConversion/convertDateTime";
 
 const DonationsTableRow = props => {
 
@@ -99,9 +100,11 @@ const DonationsTableRow = props => {
     }
     
     const closeDeleteModalHandler = () => {
-        setShowModal([false, null])
+        setShowModal([ false, null ])
     }
 
+    // quick boolean to check if the row has been updated in the last 5 minutes
+    const recentlyUpdated = new Date().getTime() - new Date(props.donation.updated_at) < 300000
 
     return (
         <React.Fragment>
@@ -117,13 +120,19 @@ const DonationsTableRow = props => {
 
             <tr className = { props.className }>
                 <td className="px-6 py-3 font-bold flex justify-between items-center my-2" onClick={ () => setShowComment(!showComment)}>
-                    { props.donation.username }
+                    <div className="flex items-center">
+                        {
+                            recentlyUpdated && 
+                            <div className="rounded-full h-2 w-2 bg-green-400 mr-2 animate-pulse" />
+                        }
+                        <p>{ props.donation.username }</p>
+                    </div>
                     { 
                         props.donation.comments !== null && props.donation.comments !== "" &&
                         <img alt="comment icon" src={ comment } className = "w-5" />
                     }
                 </td>
-                <td className="px-6 py-3">{ props.donation.created_at }</td>
+                <td className="px-6 py-3">{ convertDate(props.donation.created_at) }</td>
                 <td className="px-6 py-3 text-center">${ props.donation.amount }</td>
 
                 {/* UPDATEAMOUNT */}

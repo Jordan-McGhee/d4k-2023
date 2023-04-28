@@ -5,7 +5,7 @@ const TabTable = props => {
 
     return (
         <div className="rounded-lg shadow-md">
-            <table className="w-full text-sm text-left text-white rounded-lg">
+            <table className="w-full text-md text-left text-white rounded-lg">
 
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 

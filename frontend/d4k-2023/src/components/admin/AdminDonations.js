@@ -24,7 +24,7 @@ const AdminDonations = props => {
                         Accept: 'application/json',
                     },
                 )
-                console.log(responseData)
+                // console.log(responseData)
 
                 setIncompleteDonations(responseData.unpaid)
                 setCompletedDonations(responseData.paid)

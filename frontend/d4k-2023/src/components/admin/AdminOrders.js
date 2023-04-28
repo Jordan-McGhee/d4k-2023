@@ -24,7 +24,7 @@ const AdminOrders = props => {
                         Accept: 'application/json',
                     },
                 )
-                console.log(responseData)
+                // console.log(responseData)
 
                 setIncompleteOrders(responseData.incompleteOrders)
                 setCompletedOrders(responseData.completedOrders)

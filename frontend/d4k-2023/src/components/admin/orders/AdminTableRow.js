@@ -4,6 +4,7 @@ import { useFetch } from "../../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../DeleteModal"
 import comment from "../../../images/comment.png"
+import convertDate from "../../../DateTimeConversion/convertDateTime";
 
 const AdminTableRow = props => {
 
@@ -101,6 +102,9 @@ const AdminTableRow = props => {
     const closeDeleteModalHandler = () => {
         setShowModal([false, null])
     }
+
+    // quick boolean to check if the row has been updated in the last 5 minutes
+    const recentlyUpdated = new Date().getTime() - new Date(props.order.updated_at) < 300000    
     
     return (
         <React.Fragment>
@@ -116,7 +120,13 @@ const AdminTableRow = props => {
 
             <tr className = { props.className }>
                 <td className="px-6 py-3 font-bold flex justify-between h-fit mt-2.5" onClick={ () => setShowComment(!showComment)}>
-                    { props.order.username }
+                    <div className="flex items-center">
+                        {
+                            recentlyUpdated && 
+                            <div className="rounded-full h-2 w-2 bg-green-400 mr-2 animate-pulse" />
+                        }
+                        { props.order.username }
+                    </div>
                     { 
                         props.order.comments !== null &&
                         <img alt="comment icon" src={ comment } className = "w-5" />
@@ -125,7 +135,7 @@ const AdminTableRow = props => {
                 <td className="px-6 py-3">{ props.order.drink }</td>
                 <td className="px-6 py-3 text-center">{ props.order.quantity }</td>
                 {/* <td>{ order.total }</td> */}
-                <td className="px-6 py-3">{ props.order.created_at }</td>
+                <td className="px-6 py-3">{ convertDate(props.order.created_at) }</td>
 
                 {/* PAID STATUS */}
                 <td className="px-6 py-3 text-center">
@@ -139,7 +149,7 @@ const AdminTableRow = props => {
 
                         <Button
                             text = { paidStatus ? "YES" : "NO"}
-                            className = { paidStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
+                            className = { paidStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white text-sm" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white text-sm"}
                             type = "SUBMIT"
                         />
                     </form>
@@ -157,7 +167,7 @@ const AdminTableRow = props => {
 
                         <Button
                             text = { completedStatus ? "COMPLETED" : "WAITING"}
-                            className = { completedStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"}
+                            className = { completedStatus ? "bg-green-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white text-sm" : "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white text-sm"}
                             type = "SUBMIT"
                         />
                     </form>
@@ -174,7 +184,7 @@ const AdminTableRow = props => {
                         <Button
                             text = "X"
                             type = "SUBMIT"
-                            className = "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white"
+                            className = "bg-red-600 button rounded-md shadow hover:cursor-pointer hover:scale-105 font-bold uppercase text-white text-sm"
                         />
                     </form>
                 </td>
