@@ -84,8 +84,8 @@ BACKEND
     <!-- - make that shit (mobile and other version) DONE -->
     <!-- - add sum query to backend to get total of all orders submitted DONE -->
     <!-- - have whole page refresh every minute? DONE -->
-    - Improve Honorable Mentions
-    - Improve progress bar styling
+    <!-- - Improve Honorable Mentions NO -->
+    <!-- - Improve progress bar styling DONE -->
     <!-- - UPDATE backend to total order_totals and total_donated DONE -->
     <!-- - Add state for if data comes back empty DONE -->
 
