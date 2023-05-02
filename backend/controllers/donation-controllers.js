@@ -21,7 +21,7 @@ const createDonation = async (req, res, next) => {
         )
     }
 
-    console.log("Donation saved!")
+    // console.log("Donation saved!")
 
     res.status(201).json({ message: "Donation saved!", donation: newDonation })
 }

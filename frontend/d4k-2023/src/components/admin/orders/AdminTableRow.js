@@ -4,7 +4,7 @@ import { useFetch } from "../../../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import DeleteModal from "../DeleteModal"
 import comment from "../../../images/comment.png"
-import convertDate from "../../../DateTimeConversion/convertDateTime";
+import convertDate from "../../../Conversions/convertDateTime";
 
 const AdminTableRow = props => {
 

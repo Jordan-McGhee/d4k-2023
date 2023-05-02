@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import DeleteModal from "../DeleteModal";
 import comment from "../../../images/comment.png"
 import Input from "../../FormElements/Input";
-import convertDate from "../../../DateTimeConversion/convertDateTime";
+import convertDate from "../../../Conversions/convertDateTime";
 
 const DonationsTableRow = props => {
 
