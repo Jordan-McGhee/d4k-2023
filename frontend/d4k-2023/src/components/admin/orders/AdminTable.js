@@ -12,7 +12,7 @@ const AdminTable = props => {
 
                     <tr className="divide-x divide-gray-800">
                         <th scope="col" className="px-6 py-3 w-3/12">NAME</th>
-                        <th scope="col" className="px-6 py-3 w-3/12">DRINK</th>
+                        <th scope="col" className="px-6 py-3 w-2/12">DRINK</th>
                         <th scope="col" className="px-6 py-3">QTY.</th>
                         {/* <th>AMOUNT</th> */}
                         <th scope="col" className="px-6 py-3">TIME</th>

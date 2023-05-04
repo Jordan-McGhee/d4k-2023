@@ -29,7 +29,7 @@ const LargeProgressBar = props => {
         //     </div>
         // </div>
 
-        <div className="flex items-center justify-around mt-24">
+        <div className="flex items-center justify-around mt-24 px-8">
             <p className="text-8xl text-white text-center font-bold">Goal: $2000</p>
 
             {/* div for progress bar container */}

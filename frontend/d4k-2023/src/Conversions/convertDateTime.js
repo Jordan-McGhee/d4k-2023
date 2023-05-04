@@ -10,7 +10,7 @@ const convertDate = (date) => {
     const militaryTime = newDate.toTimeString()
 
     const toRegularTime = (givenTime) => {
-        let [ hours, minutes, seconds ] = givenTime.split(":")
+        let [ hours, minutes ] = givenTime.split(":")
         let amTime = true
 
         if (hours === 0) {

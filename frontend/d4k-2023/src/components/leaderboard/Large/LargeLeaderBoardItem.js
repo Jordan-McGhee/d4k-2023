@@ -18,18 +18,18 @@ const LargeLeaderBoardItem = props => {
                         <p className="text-5xl font-bold uppercase truncate mb-4">{ props.username }</p>
 
                         {/* DIV FOR TOTAL AND DRINK ORDERS */}
-                        <div className="text-4xl font-semibold flex items-center">
-                            <div className="flex items-center">
-                                {/* <div className="rounded-full bg-green-600 p-5 mr-4">
+                        <div className="text-4xl font-semibold w-4/5 flex items-center">
+                            <div className="flex items-center mr-8">
+                                <div className="rounded-full bg-green-600 p-5 mr-4">
                                     <img src={order} alt = "order icon" className="w-10"/>
-                                </div> */}
-                                <p className="">{ props.drinksOrdered} Drinks</p>
+                                </div>
+                                <p className="">{ props.drinksOrdered}</p>
                             </div>
                             <div className="flex items-center ml-4">
-                                {/* <div className="rounded-full bg-green-600 p-5 mr-4">
+                                <div className="rounded-full bg-green-600 p-5 mr-4">
                                     <img src={donate} alt = "donate icon" className="w-10"/>
-                                </div> */}
-                                <p className="flex"><span className="text-green-700 font-semibold mr-2">${props.donationTotal}</span> Donated</p>
+                                </div>
+                                <p className="flex"><span className="text-green-700 font-semibold mr-2">${props.donationTotal}</span></p>
                             </div>
                         </div>
                     </div>

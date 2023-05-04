@@ -49,7 +49,7 @@ const createOrder = async (req, res, next) => {
         }
     }
 
-    console.log("Order created!")
+    // console.log("Order created!")
 
     res.status(201).json({ message: "Created Order!", order: newOrder.rows, donation: donationAmount > 0 ? newDonation.rows : null })
 }
