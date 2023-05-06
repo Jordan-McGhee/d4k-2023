@@ -14,14 +14,14 @@ const Button = props => {
     if (props.link) {
         return (
             <Link to= { props.link } className = { props.linkClass }>
-                <button className={ props.className || buttonClass } type = { props.type }>
+                <button className={ props.className || buttonClass } type = { props.type } disabled = { props.disabled }>
                     { props.text }
                 </button>
             </Link>
         )
     } else {
         return (
-            <button className= { props.className || buttonClass } type = { props.type } onClick = { props.onClick }>
+            <button className= { props.className || buttonClass } type = { props.type } onClick = { props.onClick } disabled = { props.disabled }>
                 { props.text }
             </button>
         )

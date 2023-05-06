@@ -42,6 +42,7 @@ BACKEND
     <!-- - add functionality to close all donations for a user and make "Add Donation" a modal pop-up form? DONE -->
     <!-- ???? REVISIT - Add Search/filter functionality -->
     - have feedback for unsuccessful donation
+    - confirm modal on close donations/tab?
     <!-- - Fix Date/time DONE -->
 
 - QUEUE:

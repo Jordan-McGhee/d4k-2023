@@ -31,11 +31,11 @@ const NoTab = () => {
     if (showPay) {
         content = (
             <Card header = { `Send Us Money!`} headerClass = "font-bold text-3xl border-b-2 mb-4 py-2 text-center" footer = { <PayFooter /> }>
-                <p className="text-2xl text-center mb-4">Choose your preferred payment method below!</p>
+                <p className="text-2xl text-center">Choose your preferred payment method below!</p>
 
                 <p className="text-center mt-4">Don't want to pay yet?</p>
                 
-                <p className="text-center mt-4">Why don't you <span className="italic border-b-2 text-green-700" onClick = { () => navigate('/menu')}>visit our menu</span> or <span className="italic border-b-2 text-green-700" onClick = { () => navigate('/order')}>order yourself a drink!</span></p>
+                <p className="text-center my-4">Why don't you <span className="italic border-b-2 text-green-700" onClick = { () => navigate('/menu')}>visit our menu</span> or <span className="italic border-b-2 text-green-700" onClick = { () => navigate('/order')}>order yourself a drink!</span></p>
             </Card>
         )
     }
