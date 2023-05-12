@@ -3,3 +3,4 @@
 
 # env variables
 .env
+.env.production
