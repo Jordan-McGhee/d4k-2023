@@ -12,6 +12,7 @@ const {onRequest} = require("firebase-functions/v2/https");
 // const logger = require("firebase-functions/logger");
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require('cors');
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -20,25 +21,36 @@ const orderRoutes = require("./routes/order-routes");
 
 const app = express();
 
+// const corsOptions = {
+//   origin: '*',
+//   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+//   methods: 'GET, POST, PATCH, DELETE',
+// };
+
+// app.use(cors(corsOptions));
+app.use(cors({origin: 'https://d4k2023.web.app'}));
+
+
+// middleware to work around CORS errors since our front and backend are on separate servers
+// attaches headers on its responses to prevent the browser from blocking the response
+// app.use((req, res, next) => {
+//   // determines which domains have access, the * means all are acceptable
+//   res.set("Access-Control-Allow-Origin", "*");
+
+//   // specifies which headers are allowed on incoming requests to be handled by this API
+//   // Content-Type and Authorization are the only 2 that aren't default in this group
+//   res.set("Access-Control-Allow-Headers", "Content-Type");
+
+//   // allowed methods for incoming requests
+//   res.set("Access-Control-Allow-Methods", "*");
+
+//   next();
+// });
+
 // want to parse the information we receive from the user before it reaches our other middlewares
 // this converts all incoming json data into regular javascript
 app.use(bodyParser.json());
 
-// middleware to work around CORS errors since our front and backend are on separate servers
-// attaches headers on its responses to prevent the browser from blocking the response
-app.use((req, res, next) => {
-  // determines which domains have access, the * means all are acceptable
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  // specifies which headers are allowed on incoming requests to be handled by this API
-  // Content-Type and Authorization are the only 2 that aren't default in this group
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-Width, Content-Type, Accept, Authorization");
-
-  // allowed methods for incoming requests
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
-
-  next();
-});
 
 // ROUTE VARIABLES
 app.use("/donation", donationRoutes);

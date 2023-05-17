@@ -58,6 +58,7 @@ const getOrders = async (req, res, next) => {
 
   try {
     response = await pool.query(text);
+    console.log('entered try/catch')
   } catch (error) {
     console.log(error);
 

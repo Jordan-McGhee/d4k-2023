@@ -6,12 +6,12 @@ const router = express.Router();
 
 router.post("/",
     [
-      check("username").notEmpty(),
+        check("username").notEmpty(),
     ],
     orderControllers.createOrder,
 );
 
-router.get("/", orderControllers.getOrders);
+router.get("", orderControllers.getOrders);
 
 router.patch("/:order_id/updatePaid", orderControllers.updatePaid);
 
