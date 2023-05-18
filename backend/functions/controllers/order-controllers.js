@@ -53,6 +53,11 @@ const createOrder = async (req, res, next) => {
 };
 
 const getOrders = async (req, res, next) => {
+
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
   const text = "SELECT * FROM orders WHERE is_completed != true ORDER BY created_at ASC";
   let response;
 

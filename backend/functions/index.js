@@ -21,31 +21,13 @@ const orderRoutes = require("./routes/order-routes");
 
 const app = express();
 
-// const corsOptions = {
-//   origin: '*',
-//   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-//   methods: 'GET, POST, PATCH, DELETE',
-// };
-
-// app.use(cors(corsOptions));
-app.use(cors({origin: 'https://d4k2023.web.app'}));
-
-
-// middleware to work around CORS errors since our front and backend are on separate servers
-// attaches headers on its responses to prevent the browser from blocking the response
-// app.use((req, res, next) => {
-//   // determines which domains have access, the * means all are acceptable
-//   res.set("Access-Control-Allow-Origin", "*");
-
-//   // specifies which headers are allowed on incoming requests to be handled by this API
-//   // Content-Type and Authorization are the only 2 that aren't default in this group
-//   res.set("Access-Control-Allow-Headers", "Content-Type");
-
-//   // allowed methods for incoming requests
-//   res.set("Access-Control-Allow-Methods", "*");
-
-//   next();
-// });
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-Width, Content-Type, Accept, Authorization")
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
+  
+  next()
+})
 
 // want to parse the information we receive from the user before it reaches our other middlewares
 // this converts all incoming json data into regular javascript
@@ -73,12 +55,7 @@ app.use((error, req, res, next) => {
       .json({message: error.message || "Something went wrong!"});
 });
 
-exports.api = functions.https.onRequest(app);
-
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
-
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+exports.api = functions.https.onRequest(
+  { cors: true },
+  app
+);
