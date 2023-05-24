@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
 const HttpError = require("./models/http-error")
+const Pool = require("pg").Pool;
 const dotenv = require("dotenv")
 dotenv.config()
 
@@ -9,7 +10,7 @@ const donationRoutes = require("./routes/donation-routes")
 const orderRoutes = require("./routes/order-routes")
 
 const app = express()
-const PORT = process.env.DATABASE_PORT || 5000
+const PORT = process.env.DATABASE_PORT
 
 // want to parse the information we receive from the user before it reaches our other middlewares
 // this converts all incoming json data into regular javascript
@@ -27,7 +28,7 @@ app.use((req, res, next) => {
 
     // allowed methods for incoming requests
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
-    
+
     next()
 })
 
@@ -37,10 +38,27 @@ app.use("/order", orderRoutes)
 
 
 // TEST ROUTE
-app.use('/', async (req, res) => {
-    res
-        .json({message: `API Works !`})
-});
+// const testDatabaseConnection = async () => {
+//     const pool = new Pool({
+//         host: process.env.DATABASE_HOST,
+//         database: process.env.DATABASE,
+//         user: process.env.DATABASE_USER,
+//         port: process.env.DATABASE_PORT,
+//         password: process.env.DATABASE_PASSWORD,
+//     });
+
+//     try {
+//         const client = await pool.connect();
+//         console.log('Connected to the PostgreSQL database');
+//         client.release();
+//     } catch (error) {
+//         console.error('Failed to connect to the PostgreSQL database:', error);
+//     } finally {
+//         pool.end();
+//     }
+// };
+
+// testDatabaseConnection()
 
 // ERROR ROUTE
 // middleware with 4 parameters is treated as a special middleware by express and will only be executed on requests that have an error associated with it
@@ -61,4 +79,4 @@ app.use((error, req, res, next) => {
 
 })
 
-    .listen(5000, () => console.log(`Server has started on 5000`))
+    .listen(5000, () => console.log(`Server has started on ${PORT}`))

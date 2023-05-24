@@ -8,8 +8,6 @@ import refresh from "../images/icons/refresh.png"
 import EmptyQueue from "../components/queue/EmptyQueue";
 
 const Queue = () => {
-
-    // let liveQueue = data.ORDERS.filter((order) => order.deliveredToCustomer === false)
     
     // state for loaded queue from database
     const [ loadedQueue, setLoadedQueue ] = useState([])
