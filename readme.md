@@ -3,9 +3,7 @@
 ### *A web app to for the 4th annual D4K charity party.*<br><br>
 
 All proceeds will go directly to The Nicholas House — An Atlanta based charity that operates an emergency shelter, as well as apartment sites for homeless families.
-This year's goal is to raise $2,000.<br>
-
-<br>
+This year's goal is to raise $2,000.
 
 # Demo 
 
@@ -15,7 +13,7 @@ This year's goal is to raise $2,000.<br>
 
 
 <img src="readme-stuff/menu.gif" width = "30%" alt = "menu-gif"/>
-<br>
+
 
 
 ## Order
@@ -27,7 +25,7 @@ This year's goal is to raise $2,000.<br>
 
 
 <img src="readme-stuff/order.png" width = "30%" />
-<br>
+
 
 ## Donate
 - Stores username in local storage after donation is submitted
@@ -35,21 +33,21 @@ This year's goal is to raise $2,000.<br>
 - Has preset donation amounts and allows for users to submit their own amount
 
 <img src="readme-stuff/donate.gif" width = "30%" />
-<br>
+
 
 ## Queue
 - Shows what drinks are being worked on and where a user is in line
 - If a user's order is 3rd in line or later, allows a user to delete their order
 
 <img src="readme-stuff/queue.png" width = "30%" />
-<br>
+
 
 ## Mobile Leaderboard
 - Shows goal (*$2000*), current total, and percentage of goal hit
 - Automatically refreshes every 30 seconds
 
 <img src="readme-stuff/mobile-leaderboard.gif" width = "30%" />
-<br>
+
 
 ## Large Leaderboard
 - Displayed on tv at party
@@ -57,14 +55,14 @@ This year's goal is to raise $2,000.<br>
 - Automatically refreshes every 30 seconds
 
 <img src="readme-stuff/large-leaderboard.png" />
-<br>
+
 
 ## Closing Tabs
 - Aggregates user's orders and donations to a grand total
 - Auto-populates amount for different payment methods (CashApp, PayPal, Venmo)
 
 <img src="readme-stuff/closing-tab.gif" width = "30%" />
-<br>
+
 
 # Admin Pages
 
@@ -74,12 +72,11 @@ This year's goal is to raise $2,000.<br>
 - Admins can delete orders or update donation amounts
 
 <img src="readme-stuff/admin-orders.gif" />
-<br>
+
 
 ## Donations
 
 <img src="readme-stuff/admin-donations.gif" />
-<br>
 
 
 ## Tabs
