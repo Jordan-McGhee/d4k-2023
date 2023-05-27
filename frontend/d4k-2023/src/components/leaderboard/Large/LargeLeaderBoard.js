@@ -53,7 +53,7 @@ const LargeLeaderBoard = props => {
     }, [ fetchLeaderboard ])
 
     const topThree = data.slice(0,3)
-    const fourThroughEight = data.slice(3,9)
+    const fourThroughEight = data.slice(3,8)
     console.log(fourThroughEight)
 
     const content = (
