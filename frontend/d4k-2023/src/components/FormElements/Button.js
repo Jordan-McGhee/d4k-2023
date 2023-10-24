@@ -10,6 +10,9 @@ const Button = props => {
     if (props.buttonSelected) {
         buttonClass = "bg-green-100 button rounded-md shadow font-bold uppercase text-green-700"
     }
+    if (props.winterize) {
+        buttonClass += " uk-button"
+    }
 
     if (props.link) {
         return (

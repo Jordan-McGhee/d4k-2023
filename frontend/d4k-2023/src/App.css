@@ -11,3 +11,15 @@
     #15803d 20px
   );
 }
+
+.font-bungee {
+  font-family: 'Bungee', cursive !important;
+}
+
+.font-fugaz {
+  font-family: 'Fugaz One', sans-serif !important;
+}
+
+.title {
+  text-shadow: 1px 1px 6px rgb(0 0 0 / 92%), 4px 2px 7px rgb(0 0 0 / 80%);
+}
