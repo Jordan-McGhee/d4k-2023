@@ -20,7 +20,9 @@ const FAQ = () => {
             <ul>
                 <CardListItem
                     question = "What Charity?"
-                    response = "The Nicholas house! It's a nonprofit agency that operates an emergency shelter, as well as scattered apartment sites for homeless families. They help homeless families make the transition from homelessness to self-sufficiency in a structured, but home-like environment."
+                    response = {`The Nicholas house! It's a nonprofit agency that operates an emergency shelter, 
+                    as well as scattered apartment sites for homeless families.
+                    They help homeless families make the transition from homelessness to self-sufficiency in a structured, but home-like environment.`}
                     link = "https://nicholashouse.org/"
                     linkText = "Visit their site to read more!"
                 />
@@ -34,7 +36,7 @@ const FAQ = () => {
                 />
                 <CardListItem
                     question = "Can I BYOB?"
-                    response = "Keep it to a minimum. We encourage you to swing by the bar to get served something worthy of your (multiple) donations"
+                    response = "Keep it to a minimum. We encourage you to swing by the bar to get served something worthy of your donations"
                 />
                 <CardListItem
                     question = "Can I Order Off-Menu?"

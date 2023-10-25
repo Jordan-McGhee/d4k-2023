@@ -20,7 +20,7 @@ const MainNav = (props) => {
     }
 
     return (
-        <div className= { props.navClass ? props.navClass : "nav-container bg-green-600 p-5 top-0 fixed w-full"}>
+        <div className= { props.navClass ? props.navClass : "nav-container bg-green-600 p-5 top-0 fixed w-full z-50"}>
 
             <div className="m-auto max-w-md">
 
