@@ -9,7 +9,7 @@ import donate from "../images/icons/donate.png"
 import queue from "../images/icons/queue.png"
 import leaderboard from "../images/icons/leaderboard.png"
 import closeTab from "../images/icons/closeTab.png"
-import { faCandyCane, faCocktail, faGift, faHandHoldingHeart, faIgloo, faNoteSticky } from "@fortawesome/free-solid-svg-icons";
+import { faCandyCane, faCocktail, faGift, faIgloo, faNoteSticky } from "@fortawesome/free-solid-svg-icons";
 
 const MainNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
@@ -33,7 +33,7 @@ const MainNav = (props) => {
 
                     <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/faq"><FontAwesomeIcon className="mx-1" icon={faCandyCane} />FAQ</NavLink>
                 
-                    <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/charity"><FontAwesomeIcon className="mx-1" icon={faHandHoldingHeart} />Nicholas House</NavLink>
+                    {/* <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/charity"><FontAwesomeIcon className="mx-1" icon={faHandHoldingHeart} />Nicholas House</NavLink> */}
             
                     <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/order"><FontAwesomeIcon className="mx-1" icon={faGift} />Order</NavLink>
             
