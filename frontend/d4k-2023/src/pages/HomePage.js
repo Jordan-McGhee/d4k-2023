@@ -3,8 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChampagneGlasses, faClose } from '@fortawesome/free-solid-svg-icons'
 import Button from "../components/FormElements/Button"
 import BuddyLogo from "../components/UIElements/BuddyLogo"
-import Modal from "../components/UIElements/Modal"
-import { toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const HomePage = () => {
     const [ showToast, setShowToast ] = useState(false)
