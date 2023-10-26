@@ -27,13 +27,16 @@ const Input = props => {
             id= { props.id }
             type = { props.type }
             placeholder = { props.placeholder || ""}
+            required = {props.required || null}
+            onInvalid = {props.onInvalid || null}
+            onInput={e => e.target.setCustomValidity('')}
             onChange = { changeHandler }
             onBlur = { blurHandler }
             value = { inputValue }
             className = { props.className || 'appearance-none block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2' } 
             // isValid = { inputIsValid }
             // value = { props.value || inputValue } ?? 
-            readOnly = { props.noEdit ? true : false}
+            readOnly = { props.noEdit }
         />
 
     return (

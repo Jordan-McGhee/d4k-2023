@@ -4,6 +4,8 @@ import Input from "../components/FormElements/Input"
 import Button from "../components/FormElements/Button"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChampagneGlasses, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
 
 // DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
@@ -25,6 +27,7 @@ const Order = () => {
     const [ orderTotal, setOrderTotal ] = useState(0)
     const [ donationAmount, setDonationAmount ] = useState(0)
     const [ selectedOther, setSelectedOther ] = useState(false)
+
 
     // FORM ERROR STATE
     const [ formHasErrors, setFormHasErrors ] = useState(false)
@@ -96,22 +99,29 @@ const Order = () => {
     // GRABS THE PRICE OF THE SELECTED DRINK TO CALCULATE ESTIMATED TOTAL BEFORE USER SUBMITS
     // ALSO UPDATES THE CHOSEN DRINK OPTION - ALLOWS US TO CHECK IF USER CHOSE CUSTOM DRINK AND ADD EXTRA FORM INPUT LATER
     const drinkSelectorHandler = (event) => {
+        if(event.target.selectedOptions[0].disabled){
+            setChosenDrink("default")
+            setDrinkPrice(0)
+            setOrderTotal(0)
+            setDrinkQuantity(1)
+            return
+        }
+
         const price = event.target.value.split("$")[1]
         console.log(`Price ${price} — ${typeof parseInt(price)}`)
-        
         setChosenDrink(event.target.value.split("—")[0].trim())
         setDrinkPrice(parseInt(price))
         setOrderTotal(parseInt(price) * parseInt(drinkQuantity))
     }
 
-    // CALCULATES THE USER's TOTAL
-    const calculateOrderTotalHandler = (event) => {
-        const numberOfDrinks = event.target.value
-        // console.log(typeof parseInt(numberOfDrinks))
-        // console.log(`Drink Price: ${typeof drinkPrice}`)
-
-        setDrinkQuantity(parseInt(numberOfDrinks))
-        setOrderTotal(drinkPrice * parseInt(numberOfDrinks))
+    const incrementDrinkQuantity = () => {
+        setDrinkQuantity(drinkQuantity + 1)
+        setOrderTotal(drinkPrice * (drinkQuantity + 1))
+    }
+    
+    const decrementDrinkQuantity = () => {
+        setDrinkQuantity(drinkQuantity - 1)
+        setOrderTotal(drinkPrice * (drinkQuantity - 1))
     }
 
     // HANDLER FOR PRESELECTED DONATION AMOUNT BUTTONS
@@ -157,6 +167,7 @@ const Order = () => {
             <Button
                 type="submit"
                 text="Grab a Drink"
+                disabled={!chosenDrink}
             />
         </div>
     )
@@ -242,7 +253,7 @@ const Order = () => {
     }
 
     // retrieve username from localStorage if there
-    let localStorageUsername = localStorage.getItem('storedUsername')
+    let username = localStorage.getItem('storedUsername')
 
     return (
         <React.Fragment>
@@ -260,8 +271,10 @@ const Order = () => {
                         type="text"
                         placeholder="Buddy the Elf?"
                         label="Your Name"
-                        value = { localStorageUsername ? localStorageUsername : null }
-                        noEdit = { localStorageUsername ? true : false}
+                        required
+                        onInvalid={e => e.target.setCustomValidity('We need a name to yell out')}
+                        value = { username ? username : null }
+                        noEdit = { username ? true : false}
                     />
 
                     <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label>
@@ -288,22 +301,17 @@ const Order = () => {
                     {
                         // DOESN'T ALLOW USER TO SELECT QUANTITY UNLESS THEY'VE ALREADY CHOSEN A DRINK
                         drinkPrice !== 0 &&
-
-                        <div>
+                        <div className={`transition-all ease-out ${drinkPrice !== 0 ? 'visible' : 'invisible'}`}>
                             <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">How Many?</label>
-
-                            <select
-                                id="drinkQuantity"
-                                name="drinkQuantity"
-                                className="block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2"
-                                onChange={ calculateOrderTotalHandler }
-                            >
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
+                            <Button className="border-solid border-2 border-green-200 bg-green-700 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5" 
+                            disabled={drinkQuantity <= 1} type="button" onClick={decrementDrinkQuantity}>
+                                <FontAwesomeIcon className="title" icon={faMinus}></FontAwesomeIcon>
+                            </Button>
+                            <span className="text-xl">{drinkQuantity}</span>
+                            <Button className="border-solid border-2 border-green-200  bg-green-700 disabled:bg-gray-400 w-12 h-12 text-white rounded-full ml-5" 
+                            disabled={drinkQuantity >= 5} type="button" onClick={incrementDrinkQuantity}>
+                                <FontAwesomeIcon className="title" icon={faPlus}></FontAwesomeIcon>
+                            </Button>
                         </div>
                     }
 
@@ -313,10 +321,11 @@ const Order = () => {
 
                         // DIV FOR DONATION FIELD
                         <div className="my-2">
+
                             <label className="text-lg font-semibold mr-4 block uppercase">
-                                Would you like to donate?
+                                Additional Tip/Donation
                             </label>
-                            
+
                             {/* DIV OF BUTTONS FOR DIFFERENT DONATION AMOUNTS */}
                             <div className="flex justify-between my-2">
                                 <Button

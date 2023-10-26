@@ -71,7 +71,7 @@ const HomePage = () => {
                 <br/>
                 <Button winterize link="/info" >
                     Read More
-                    </Button>
+                </Button>
                     <br/><br/><br/><br/>
 
             </div>
