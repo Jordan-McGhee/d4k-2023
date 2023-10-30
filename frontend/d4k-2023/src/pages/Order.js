@@ -19,9 +19,10 @@ import order from "../images/icons/order-red.png"
 const Order = () => {
 
     let navigate = useNavigate()
-
+    let allDrinksJson = cocktails.concat(other).concat(shots)
     // STATES TO KEEP UP WITH CHOSEN DRINK, DRINK PRICE, QUANTITY SELECTED, and ORDER TOTAL
     const [ chosenDrink, setChosenDrink ] = useState("default")
+    const [ selectedDrinkId, setSelectedDrinkId ] = useState(null)
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
@@ -63,15 +64,15 @@ const Order = () => {
 
     // MAPPING OUT DRINK OPTIONS FOR DROPDOWN SELECT IN FORM
     let cocktailsMapped = cocktails.map((drink) => (
-        <option key = { `Cocktail ${cocktails.indexOf(drink)}`} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
+        <option  key = { drink.id} value={drink.id} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let batchedMapped = other.map((drink) => (
-        <option key = { `Batched ${other.indexOf(drink)}`} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
+        <option key = { drink.id} value={drink.id} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let shotsMapped = shots.map((drink) => (
-        <option key = {`Shots ${shots.indexOf(drink)}`} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
+        <option key = { drink.id } value={drink.id} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let drinkOptions = [
@@ -94,25 +95,22 @@ const Order = () => {
         <option key = "custom">Custom Drink — $10</option>
     ]
 
-    // HANDLER FUNCTIONS FOR FORM
-
-    // GRABS THE PRICE OF THE SELECTED DRINK TO CALCULATE ESTIMATED TOTAL BEFORE USER SUBMITS
-    // ALSO UPDATES THE CHOSEN DRINK OPTION - ALLOWS US TO CHECK IF USER CHOSE CUSTOM DRINK AND ADD EXTRA FORM INPUT LATER
-    const drinkSelectorHandler = (event) => {
-        if(event.target.selectedOptions[0].disabled){
+    const drinkDropdownChanged = (e) => {
+        if(e.target.selectedOptions[0].disabled){
             setChosenDrink("default")
             setDrinkPrice(0)
             setOrderTotal(0)
             setDrinkQuantity(1)
+            setSelectedDrinkId("")
             return
         }
-
-        const price = event.target.value.split("$")[1]
-        console.log(`Price ${price} — ${typeof parseInt(price)}`)
-        setChosenDrink(event.target.value.split("—")[0].trim())
-        setDrinkPrice(parseInt(price))
-        setOrderTotal(parseInt(price) * parseInt(drinkQuantity))
-    }
+        let currentDrinkId = parseInt(e.target.value)
+        setSelectedDrinkId(currentDrinkId)
+        let selectedDrink = allDrinksJson.find(x=> x.id === currentDrinkId)
+        setDrinkPrice(selectedDrink.price)
+        setOrderTotal(selectedDrink.price * drinkQuantity)
+      }
+      
 
     const incrementDrinkQuantity = () => {
         setDrinkQuantity(drinkQuantity + 1)
@@ -167,7 +165,7 @@ const Order = () => {
             <Button
                 type="submit"
                 text="Grab a Drink"
-                disabled={!chosenDrink}
+                disabled={!selectedDrinkId }
             />
         </div>
     )
@@ -179,7 +177,7 @@ const Order = () => {
     const submitHandler = async event => {
         event.preventDefault()
 
-        console.log("Submitted order!")
+        console.log("submitting order...")
 
         let errors = false
 
@@ -196,7 +194,7 @@ const Order = () => {
                 username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
                 drinkTitle: `CUSTOM DRINK: ${event.target[2].value.trim()}`,
                 drinkCost: 10,
-                quantity: parseInt(event.target[3].value),
+                quantity: drinkQuantity,
                 donationAmount: donationAmount,
                 comments: event.target[8].value ? event.target[8].value : null
             }
@@ -204,8 +202,8 @@ const Order = () => {
             formData = {
                 username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
                 drinkTitle: event.target[1].value ? event.target[1].value.split("—")[0].trim() : setFormHasErrors(true),
-                drinkCost: parseInt(event.target[1].value.split("$")[1]),
-                quantity: event.target[2].value ? parseInt(event.target[2].value) : setFormHasErrors(true),
+                drinkCost: drinkPrice,
+                quantity: drinkQuantity,
                 donationAmount: donationAmount,
                 comments: event.target[7].value ? event.target[7].value : null
             }
@@ -228,19 +226,7 @@ const Order = () => {
         }
 
         try {
-            await sendRequest(
-                // URL
-                `${process.env.REACT_APP_BACKEND_URL}/order`,
-                // METHOD
-                "POST",
-                // HEADERS
-                {
-                    'Content-Type': 'application/json'
-                },
-                // BODY
-                JSON.stringify(formData)
-            )
-
+            await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify(formData))
             console.log("Sent request!")
         } catch (error) {
             
@@ -279,10 +265,12 @@ const Order = () => {
 
                     <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label>
                     <select
+                        value={selectedDrinkId}
+                        onChange={(e) => drinkDropdownChanged(e)}
                         id="drinkChoice"
                         name="drinkChoice"
                         className="block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2"
-                        onChange= { drinkSelectorHandler }
+                        // onChange= { drinkSelectorHandler }
                     >
                         { drinkOptions }
                     </select>
