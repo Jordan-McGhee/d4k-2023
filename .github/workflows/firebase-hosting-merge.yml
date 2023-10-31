@@ -9,12 +9,26 @@ name: Deploy to Firebase Hosting on merge
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend/d4k-2023
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - run: |
+          if [ -e yarn.lock ]; then
+          yarn install --frozen-lockfile
+          elif [ -e package-lock.json ]; then
+          npm ci
+          else
+          npm i
+          fi
+          npm run build
+        env:
+          CI: ""
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_D4K2K23 }}'
           channelId: live
           projectId: d4k2k23
-          entryPoint: 'frontend/d4k-2023'
+          entryPoint: './frontend/d4k-2023'
