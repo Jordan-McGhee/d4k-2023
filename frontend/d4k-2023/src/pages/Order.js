@@ -6,6 +6,7 @@ import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChampagneGlasses, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { toast, Zoom } from 'react-toastify';
 
 // DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
@@ -21,7 +22,7 @@ const Order = () => {
     let navigate = useNavigate()
     let allDrinksJson = cocktails.concat(other).concat(shots)
     // STATES TO KEEP UP WITH CHOSEN DRINK, DRINK PRICE, QUANTITY SELECTED, and ORDER TOTAL
-    const [ chosenDrink, setChosenDrink ] = useState("default")
+    const [ drinkName, setDrinkName ] = useState(null)
     const [ selectedDrinkId, setSelectedDrinkId ] = useState(null)
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
@@ -49,10 +50,8 @@ const Order = () => {
             const menuDrinkName = menuDrinkSplit[0]
             const menuDrinkPrice = parseInt(menuDrinkSplit[1])
 
-            // console.log(`Menu Drink Price: ${menuDrinkPrice} ${typeof menuDrinkPrice} Menu Drink Name: ${menuDrinkName} ${typeof menuDrinkName}`)
-
             // UPDATES OUR STATE VARIABLES SO THE FORM AND TOTAL CALCULATION WORKS CORRECTLY
-            setChosenDrink(menuDrinkName)
+            setDrinkName(menuDrinkName)
             setDrinkPrice(menuDrinkPrice)
             setOrderTotal(menuDrinkPrice)
 
@@ -64,19 +63,19 @@ const Order = () => {
 
     // MAPPING OUT DRINK OPTIONS FOR DROPDOWN SELECT IN FORM
     let cocktailsMapped = cocktails.map((drink) => (
-        <option  key = { drink.id} value={drink.id} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
+        <option  key = { drink.id} value={drink.id} selected = { drinkName === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let batchedMapped = other.map((drink) => (
-        <option key = { drink.id} value={drink.id} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
+        <option key = { drink.id} value={drink.id} selected = { drinkName === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let shotsMapped = shots.map((drink) => (
-        <option key = { drink.id } value={drink.id} selected = { chosenDrink === drink.name }>{drink.name} — ${drink.price}</option>
+        <option key = { drink.id } value={drink.id} selected = { drinkName === drink.name }>{drink.name} — ${drink.price}</option>
     ))
 
     let drinkOptions = [
-        <option key = "default" disabled selected = { chosenDrink === "default" }>Pick a Drink</option>,
+        <option key = "default" disabled selected = { drinkName === "default" }>Pick a Drink</option>,
         <option key = "disabled1" disabled>———</option>,
         <option key = "disabled2" disabled>COCKTAILS</option>,
         <option key = "disabled3" disabled>———</option>,
@@ -92,23 +91,24 @@ const Order = () => {
         <option key = "disabled10" disabled>———</option>,
         <option key = "disabled11" disabled>SOMETHING ELSE</option>,
         <option key = "disabled12" disabled>———</option>,
-        <option key = "custom">Custom Drink — $10</option>
+        <option key = "custom" value="-1">Custom Drink — $10</option>
     ]
 
     const drinkDropdownChanged = (e) => {
         if(e.target.selectedOptions[0].disabled){
-            setChosenDrink("default")
+            setDrinkName(null)
             setDrinkPrice(0)
             setOrderTotal(0)
             setDrinkQuantity(1)
-            setSelectedDrinkId("")
+            setSelectedDrinkId(null)
             return
         }
         let currentDrinkId = parseInt(e.target.value)
-        setSelectedDrinkId(currentDrinkId)
         let selectedDrink = allDrinksJson.find(x=> x.id === currentDrinkId)
-        setDrinkPrice(selectedDrink.price)
-        setOrderTotal(selectedDrink.price * drinkQuantity)
+        setSelectedDrinkId(currentDrinkId)
+        setDrinkName(selectedDrink?.name ?? "custom")
+        setDrinkPrice(selectedDrink?.price ?? 10)
+        setOrderTotal(selectedDrink?.price ?? 10 * drinkQuantity)
       }
       
 
@@ -129,7 +129,7 @@ const Order = () => {
         const previousDonation = donationAmount
 
         setDonationAmount(amount)
-        setOrderTotal(orderTotal+amount-previousDonation)
+        setOrderTotal(orderTotal + amount - previousDonation)
     }
 
     // HANDLER FOR CUSTOM DONATION FIELD
@@ -184,7 +184,7 @@ const Order = () => {
         let formData
 
         // UPDATE FORM DATA CONDITIONALLY IF USER CHOSE CUSTOM DRINK OR NOT
-        if (chosenDrink === "Custom Drink") {
+        if (drinkName === "Custom Drink") {
 
             if (event.target[2].value.trim() === "") {
                 errors = true
@@ -192,7 +192,7 @@ const Order = () => {
 
             formData = {
                 username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
-                drinkTitle: `CUSTOM DRINK: ${event.target[2].value.trim()}`,
+                drinkTitle: drinkName,
                 drinkCost: 10,
                 quantity: drinkQuantity,
                 donationAmount: donationAmount,
@@ -201,7 +201,7 @@ const Order = () => {
         } else {
             formData = {
                 username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
-                drinkTitle: event.target[1].value ? event.target[1].value.split("—")[0].trim() : setFormHasErrors(true),
+                drinkTitle: drinkName,
                 drinkCost: drinkPrice,
                 quantity: drinkQuantity,
                 donationAmount: donationAmount,
@@ -270,14 +270,13 @@ const Order = () => {
                         id="drinkChoice"
                         name="drinkChoice"
                         className="block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2"
-                        // onChange= { drinkSelectorHandler }
                     >
                         { drinkOptions }
                     </select>
 
                     {
                         // CONDITIONAL INPUT FOR IF USER CHOSE CUSTOM DRINK FROM DROP DOWN
-                        chosenDrink === "Custom Drink" &&
+                        drinkName === "Custom Drink" &&
                         <Input
                             id = "customDrinkInput"
                             type = "text"

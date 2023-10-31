@@ -7,7 +7,6 @@ import Modal from "../components/UIElements/Modal"
 import { toast, Zoom } from 'react-toastify';
 
 const HomePage = () => {
-    const [ showToast, setShowToast ] = useState(false)
     const Msg = ({ closeToast, toastProps }) => (
         <div className="grid place-content-center text-center">
             <div className="font-fugaz text-lg">Welcome to the party</div>
@@ -23,6 +22,7 @@ const HomePage = () => {
             </div>
         </div>
     )
+        
     useEffect(() => {
         const notify = () => toast(<Msg/>, {
             position: "bottom-center",
@@ -33,8 +33,13 @@ const HomePage = () => {
             progress: undefined,
             theme: "light"
             });
+
             
-            notify();
+            let now = new Date()
+            let partyTime = new Date("2023-12-16")
+            if(now < partyTime){
+                notify();
+            }
     }, [])
 
 
