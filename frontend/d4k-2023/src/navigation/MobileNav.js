@@ -29,15 +29,15 @@ const MainNav = (props) => {
         <div className="menu">
             <div>
                 <div className="grid text-center opacity-0 transition-opacity ease-in-out text-2xl">
-                    <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/"><FontAwesomeIcon className="mx-1" icon={faIgloo} />D4K</NavLink>
+                    <NavLink  className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} onClick={() => setIsChecked(!isChecked)} to="/"><FontAwesomeIcon className="mx-1" icon={faIgloo} />Home</NavLink>
 
-                    <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/faq"><FontAwesomeIcon className="mx-1" icon={faCandyCane} />FAQ</NavLink>
+                    <NavLink className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} onClick={() => setIsChecked(!isChecked)} to="/faq"><FontAwesomeIcon className="mx-1" icon={faCandyCane} />Faq</NavLink>
                 
                     {/* <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/charity"><FontAwesomeIcon className="mx-1" icon={faHandHoldingHeart} />Nicholas House</NavLink> */}
             
-                    <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/order"><FontAwesomeIcon className="mx-1" icon={faGift} />Order</NavLink>
+                    <NavLink className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} onClick={() => setIsChecked(!isChecked)} to="/order"><FontAwesomeIcon className="mx-1" icon={faGift} />Order</NavLink>
             
-                    <NavLink className="py-4" onClick={() => setIsChecked(!isChecked)} to="/menu"><FontAwesomeIcon className="mx-1" icon={faCocktail} />Menu</NavLink>
+                    <NavLink className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} onClick={() => setIsChecked(!isChecked)} to="/menu"><FontAwesomeIcon className="mx-1" icon={faCocktail} />Menu</NavLink>
                     {
                         localStorageUsername && 
                         <NavLink className="py-4" to="/pay">

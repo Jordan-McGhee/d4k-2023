@@ -4,12 +4,15 @@ import MobileNav from "../../navigation/MobileNav";
 import backgroundImage2 from "../../images/bgmobile2.jpg"
 import { Outlet } from "react-router-dom";
 import { isMobile } from 'react-device-detect';
+import BartabNav from "../../navigation/BartabNav";
 
 const UserLayout = () => {
     let nav = isMobile ? <MobileNav /> : <MainNav />
     return (
         <div>
-             {nav}
+            {nav}
+            <BartabNav />
+            <div className="fixed bottom-0 left-0 right-0 bg-slate-200/80 pt-16 z-50 backdrop-blur-md border-solid border-t-2 border-gray-500"></div>
             <div className={`App bg-local overflow-hidden ${!isMobile ? 'mt-20' : ''}`} style={{backgroundImage: `url(${backgroundImage2})`}}>
                 <div className="min-h-screen ">
                     <div className="main-container m-auto p-5 max-w-md">

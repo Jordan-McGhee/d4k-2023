@@ -21,7 +21,7 @@ const Order = () => {
 
     let navigate = useNavigate()
     let allDrinksJson = cocktails.concat(other).concat(shots)
-    // STATES TO KEEP UP WITH CHOSEN DRINK, DRINK PRICE, QUANTITY SELECTED, and ORDER TOTAL
+
     const [ username, setUsername ] = useState(null)
     const [ drinkName, setDrinkName ] = useState(null)
     const [ selectedDrinkId, setSelectedDrinkId ] = useState('')
@@ -30,7 +30,7 @@ const Order = () => {
     const [ orderTotal, setOrderTotal ] = useState(0)
     const [ donationAmount, setDonationAmount ] = useState(0)
     const [ selectedOther, setSelectedOther ] = useState(false)
-    const [searchParams ] = useSearchParams();
+    const [ searchParams ] = useSearchParams();
 
 
     // FORM ERROR STATE
@@ -89,21 +89,13 @@ const Order = () => {
 
     let drinkOptions = [
         <option key = "default" disabled value="-1">Pick a Drink</option>,
-        <option key = "disabled1" disabled>———</option>,
         <option key = "disabled2" disabled>COCKTAILS</option>,
-        <option key = "disabled3" disabled>———</option>,
         cocktailsMapped,
-        <option key = "disabled4" disabled>———</option>,
         <option key = "disabled5" disabled>BATCHED</option>,
-        <option key = "disabled6" disabled>———</option>,
         batchedMapped,
-        <option key = "disabled7" disabled>———</option>,
         <option key = "disabled8" disabled>SHOTS</option>,
-        <option key = "disabled9" disabled>———</option>,
         shotsMapped,
-        <option key = "disabled10" disabled>———</option>,
         <option key = "disabled11" disabled>SOMETHING ELSE</option>,
-        <option key = "disabled12" disabled>———</option>,
         <option key = "custom" value="0">Custom Drink — $10</option>
     ]
 
@@ -153,7 +145,7 @@ const Order = () => {
 
     const cardHeader = (
         <div className="flex items-center">
-            <p>Place an Order!</p>
+            <p>Order</p>
             <img src={order} alt="order red icon" className="w-10 ml-3 mb-1"/>
         </div>
     )
@@ -167,7 +159,7 @@ const Order = () => {
                 className=" px-4 py-3 rounded-full bg-gradient-to-tr from-green-900 to-green-500 text-white font-bold shadow-lg"
                 type="submit"
                 text="Grab a Drink"
-                disabled={!selectedDrinkId }
+                disabled={!selectedDrinkId}
             />
         </div>
     )
