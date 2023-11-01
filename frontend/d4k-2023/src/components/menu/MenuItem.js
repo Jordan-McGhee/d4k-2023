@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../../components/FormElements/Button";
 import Card from "../../components/UIElements/Card";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, createSearchParams } from "react-router-dom";
 
 const MenuItem = props => {
 
@@ -12,9 +12,11 @@ const MenuItem = props => {
 
         const chosenDrink = event.target[0].value
         console.log(chosenDrink)
-        localStorage.setItem('chosenDrink', chosenDrink)
-
-        navigate('/order')
+        // localStorage.setItem('chosenDrink', chosenDrink)
+        navigate({
+            pathname: '/order', 
+            search: createSearchParams({drinkId: props.id}).toString()
+        })
     }
 
     return (

@@ -25,7 +25,7 @@ const HomePage = () => {
         
     useEffect(() => {
         const notify = () => toast(<Msg/>, {
-            position: "bottom-center",
+            position: "bottom-right",
             hideProgressBar: true,
             autoClose: 999999,
             delay: 3000,

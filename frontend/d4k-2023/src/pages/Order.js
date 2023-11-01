@@ -6,7 +6,7 @@ import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChampagneGlasses, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { toast, Zoom } from 'react-toastify';
+import { useSearchParams } from "react-router-dom";
 
 // DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
@@ -22,13 +22,15 @@ const Order = () => {
     let navigate = useNavigate()
     let allDrinksJson = cocktails.concat(other).concat(shots)
     // STATES TO KEEP UP WITH CHOSEN DRINK, DRINK PRICE, QUANTITY SELECTED, and ORDER TOTAL
+    const [ username, setUsername ] = useState(null)
     const [ drinkName, setDrinkName ] = useState(null)
-    const [ selectedDrinkId, setSelectedDrinkId ] = useState(null)
+    const [ selectedDrinkId, setSelectedDrinkId ] = useState('')
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
     const [ donationAmount, setDonationAmount ] = useState(0)
     const [ selectedOther, setSelectedOther ] = useState(false)
+    const [searchParams ] = useSearchParams();
 
 
     // FORM ERROR STATE
@@ -39,43 +41,54 @@ const Order = () => {
     }
 
     // check if user navigated from Menu page amd selected a drink
-    const menuDrink = localStorage.getItem('chosenDrink')
     
     // useEffect here to run this function once and prevent an endless loop.
     // Splits up the string in localStorage and assigns values to the respective states above so shit works right
     useEffect(() => {
-        if (menuDrink) {
-
-            const menuDrinkSplit = menuDrink.split(",")
-            const menuDrinkName = menuDrinkSplit[0]
-            const menuDrinkPrice = parseInt(menuDrinkSplit[1])
-
-            // UPDATES OUR STATE VARIABLES SO THE FORM AND TOTAL CALCULATION WORKS CORRECTLY
-            setDrinkName(menuDrinkName)
-            setDrinkPrice(menuDrinkPrice)
-            setOrderTotal(menuDrinkPrice)
-
-            // REMOVES THE ITEM FROM LOCAL STORAGE AFTER UPDATING STATES SO THE FORM ISN'T STUCK IN FUTURE ORDERS
-            localStorage.removeItem('chosenDrink')
+        let uname = localStorage.getItem('storedUsername')
+        if(uname){
+            setUsername(uname)
         }
-    }, [ menuDrink ])
+        let drinkIdParam = searchParams.get("drinkId")
+        if (drinkIdParam) {
+            updateDrinkState(parseInt(drinkIdParam))
+        }
+    }, [])
+
+    const updateDrinkState = (drinkId) =>{
+        if(drinkId === null) return
+
+        if(drinkId < 0){
+            setDrinkName('')
+            setDrinkPrice(0)
+            setOrderTotal(0)
+            setDrinkQuantity(1)
+            setSelectedDrinkId(null)
+            return
+        }
+        let selectedDrink = allDrinksJson.find(x=> x.id === drinkId)
+        setSelectedDrinkId(drinkId)
+        setDrinkName(selectedDrink?.name ?? "custom")
+        setDrinkPrice(selectedDrink?.price ?? 10)
+        setOrderTotal(selectedDrink?.price ?? 10 * drinkQuantity)
+    }
 
 
     // MAPPING OUT DRINK OPTIONS FOR DROPDOWN SELECT IN FORM
     let cocktailsMapped = cocktails.map((drink) => (
-        <option  key = { drink.id} value={drink.id} selected = { drinkName === drink.name }>{drink.name} — ${drink.price}</option>
+        <option key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</option>
     ))
 
     let batchedMapped = other.map((drink) => (
-        <option key = { drink.id} value={drink.id} selected = { drinkName === drink.name }>{drink.name} — ${drink.price}</option>
+        <option key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</option>
     ))
 
     let shotsMapped = shots.map((drink) => (
-        <option key = { drink.id } value={drink.id} selected = { drinkName === drink.name }>{drink.name} — ${drink.price}</option>
+        <option key = { drink.id } value={drink.id}>{drink.name} — ${drink.price}</option>
     ))
 
     let drinkOptions = [
-        <option key = "default" disabled selected = { drinkName === "default" }>Pick a Drink</option>,
+        <option key = "default" disabled value="-1">Pick a Drink</option>,
         <option key = "disabled1" disabled>———</option>,
         <option key = "disabled2" disabled>COCKTAILS</option>,
         <option key = "disabled3" disabled>———</option>,
@@ -91,24 +104,12 @@ const Order = () => {
         <option key = "disabled10" disabled>———</option>,
         <option key = "disabled11" disabled>SOMETHING ELSE</option>,
         <option key = "disabled12" disabled>———</option>,
-        <option key = "custom" value="-1">Custom Drink — $10</option>
+        <option key = "custom" value="0">Custom Drink — $10</option>
     ]
 
     const drinkDropdownChanged = (e) => {
-        if(e.target.selectedOptions[0].disabled){
-            setDrinkName(null)
-            setDrinkPrice(0)
-            setOrderTotal(0)
-            setDrinkQuantity(1)
-            setSelectedDrinkId(null)
-            return
-        }
         let currentDrinkId = parseInt(e.target.value)
-        let selectedDrink = allDrinksJson.find(x=> x.id === currentDrinkId)
-        setSelectedDrinkId(currentDrinkId)
-        setDrinkName(selectedDrink?.name ?? "custom")
-        setDrinkPrice(selectedDrink?.price ?? 10)
-        setOrderTotal(selectedDrink?.price ?? 10 * drinkQuantity)
+        updateDrinkState(currentDrinkId)
       }
       
 
@@ -163,6 +164,7 @@ const Order = () => {
             <p className="font-bold text-xl">Total: ${ orderTotal }</p>
 
             <Button
+                className=" px-4 py-3 rounded-full bg-gradient-to-tr from-green-900 to-green-500 text-white font-bold shadow-lg"
                 type="submit"
                 text="Grab a Drink"
                 disabled={!selectedDrinkId }
@@ -191,7 +193,7 @@ const Order = () => {
             }
 
             formData = {
-                username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
+                username: username ?? event.target[0].value ?? setFormHasErrors(true),
                 drinkTitle: drinkName,
                 drinkCost: 10,
                 quantity: drinkQuantity,
@@ -211,8 +213,6 @@ const Order = () => {
 
         // ADD USERNAME TO LOCAL STORAGE FOR FUTURE ORDERS
         localStorage.setItem('storedUsername', formData.username )
-
-        console.log(formData)
 
         // ERROR CODE
 
@@ -238,9 +238,6 @@ const Order = () => {
 
     }
 
-    // retrieve username from localStorage if there
-    let username = localStorage.getItem('storedUsername')
-
     return (
         <React.Fragment>
 
@@ -252,16 +249,21 @@ const Order = () => {
             <form onSubmit={submitHandler} footer = { cardFooter }>
 
                 <Card header={ cardHeader } footer={cardFooter}>
-                    <Input
-                        id="name"
-                        type="text"
-                        placeholder="Buddy the Elf?"
-                        label="Your Name"
-                        required
-                        onInvalid={e => e.target.setCustomValidity('We need a name to yell out')}
-                        value = { username ? username : null }
-                        noEdit = { username ? true : false}
-                    />
+                    { username &&
+                       <div className="text-xl mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bungee"> {username}</span></div>
+                    }
+                    { !username &&
+                        <Input
+                            id="name"
+                            type="text"
+                            placeholder="Buddy the Elf?"
+                            label="Your Name"
+                            required
+                            onInvalid={e => e.target.setCustomValidity('We need a name to yell out')}
+                            value = { username ? username : null }
+                            noEdit = { username ? true : false}
+                        />
+                    }
 
                     <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label>
                     <select
@@ -310,7 +312,7 @@ const Order = () => {
                         <div className="my-2">
 
                             <label className="text-lg font-semibold mr-4 block uppercase">
-                                Additional Tip/Donation
+                                Additional Tip / Donation
                             </label>
 
                             {/* DIV OF BUTTONS FOR DIFFERENT DONATION AMOUNTS */}
