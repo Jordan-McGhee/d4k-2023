@@ -2,6 +2,7 @@ import React, { Suspense } from "react"
 import { Route, Routes } from "react-router-dom"
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
+import {NextUIProvider} from "@nextui-org/react";
 
 // IMPORTS
 // import Admin from "./pages/Admin"
@@ -71,7 +72,7 @@ function App() {
   )
 
   return (
-    <div>
+    <NextUIProvider>
       <Suspense fallback = {
         <div>
           <LoadingSpinner />
@@ -82,7 +83,7 @@ function App() {
       <ToastContainer
       transition={Zoom} />
 
-    </div>
+    </NextUIProvider>
   );
 }
 

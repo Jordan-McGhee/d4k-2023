@@ -16,7 +16,7 @@ const BartabNav = (props) => {
             <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
                 onChange={(event) => setIsChecked(event.currentTarget.checked)}
             />
-            <div className="bar-tab border-2 border-slate-700 border-solid rounded-full">
+            <div className="bar-tab border-2 border-white border-solid rounded-full">
             <div className="font-fugaz text-white tracking-widest">Pay Tab</div>
             </div>
             <div className="menu">
