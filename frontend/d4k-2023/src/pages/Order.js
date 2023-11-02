@@ -24,7 +24,7 @@ const Order = () => {
 
     const [ username, setUsername ] = useState(null)
     const [ drinkName, setDrinkName ] = useState(null)
-    const [ selectedDrinkId, setSelectedDrinkId ] = useState('')
+    const [ selectedDrinkId, setSelectedDrinkId ] = useState('-1')
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
@@ -63,7 +63,7 @@ const Order = () => {
             setDrinkPrice(0)
             setOrderTotal(0)
             setDrinkQuantity(1)
-            setSelectedDrinkId(null)
+            setSelectedDrinkId('-1')
             return
         }
         let selectedDrink = allDrinksJson.find(x=> x.id === drinkId)

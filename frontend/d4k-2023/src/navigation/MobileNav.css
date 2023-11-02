@@ -21,13 +21,14 @@
 .outer-menu .checkbox-toggle:checked+.hamburger>div {
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
+    -webkit-transform: translate3d(0,0,0);
 }
 
 .outer-menu .checkbox-toggle:checked+.hamburger>div:before,
 .outer-menu .checkbox-toggle:checked+.hamburger>div:after {
     top: 0;
     transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);   
 }
 
 .outer-menu .checkbox-toggle:checked+.hamburger>div:after {
@@ -42,18 +43,16 @@
 .outer-menu .checkbox-toggle:checked~.menu>div {
     transform: scale(1.25);
     -webkit-transform: scale(1.25);
-    transition-duration: 0.75s;
+    transition-duration: 0.2s;
     -webkit-transform: rotateZ(360deg);
     -webkit-transform: translate3d(0,0,0)
 }
 
 .outer-menu .checkbox-toggle:checked~.menu>div>div {
     opacity: 1;
-    transition: opacity 0.4s ease 0.4s;
+    transition: opacity 0.4s ease 0.2s;
 }
 
-.outer-menu .checkbox-toggle:hover+.hamburger {
-}
 
 .outer-menu .checkbox-toggle:checked:hover+.hamburger>div {
     transform: rotate(225deg);
@@ -139,7 +138,7 @@
     color: #FEFEFE;
     background: rgba(42, 151, 66, 0.897);
     border-radius: 50%;
-    transition: all 0.4s ease;
+    transition: all 0.2s ease;
     flex: none;
     -webkit-transform: scale(0);
     transform: scale(0);

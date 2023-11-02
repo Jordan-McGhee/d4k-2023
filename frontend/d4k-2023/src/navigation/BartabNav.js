@@ -12,6 +12,8 @@ const BartabNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
     const [ data, setData ] = useState(null)
     const [ totalOwed, setTotalOwed ] = useState(0)
+    const [ venmoUrl, setVenmoUrl ] = useState('https://venmo.com/jacobwebber')
+    const [ paypalUrl, setPaypalUrl ] = useState('https://paypal.me/jacobwwebber')
 
     useEffect(() => {
         const username = localStorage.getItem('storedUsername')
@@ -32,7 +34,16 @@ const BartabNav = (props) => {
 
     useEffect(() => {
         if(data){
-            setTotalOwed(parseInt(data?.donations_total_unpaid) + parseInt(data?.orders_total_unpaid))
+            let total = parseInt(data.donations_total_unpaid || 0) + parseInt(data.orders_total_unpaid || 0)
+            setTotalOwed(total)
+            
+            let note = `${data.username} for ${data.drinks_ordered} drinks, $${data.orders_total_unpaid} ${data.donations_total_unpaid ? `plus $${data.donations_total_unpaid} donation` : '' }`
+            
+            let venmoUrl = `https://venmo.com/jacobwebber?txn=pay&amount=${total}&note=${note}`.replace(/ /g, '%20')
+            setVenmoUrl(venmoUrl)
+
+            let paypalUrl = `https://paypal.me/jacobwwebber/${total}?&item_name=${note}`.replace(/ /g, '%20')
+            setPaypalUrl(paypalUrl)
         }
     }, [data]);
 
@@ -56,17 +67,6 @@ const BartabNav = (props) => {
                         </li>
                         <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.username}</div></li>
                         <li>          
-                            {/* <div id="bar-tab-info" >
-                            <div>Total Drinks: <span className="fs-2 fw-bold" id="bar-tab-amount"> {data.drinks_ordered}</span></div>
-                            <div>Unpaid Tab: <span className="fs-2 fw-bold" id="bar-tab-amount">
-                                ${data.orders_total_unpaid ? data.orders_total_unpaid : 0}
-                            </span></div>
-                            <div>Added Donations: <span className="fs-2 fw-bold">
-                                $<span className="fw-bold" id="bar-tab-cost">
-                                {data.donations_total_unpaid ? data.donations_total_unpaid : 0}
-                                    </span></span></div>
-                            </div> */}
-                            
                             <p className="text-xl flex justify-between">Drinks Ordered: 
                     <span className=" uppercase font-bold">
                         {data.drinks_ordered ? data.drinks_ordered : 0}
@@ -99,7 +99,7 @@ const BartabNav = (props) => {
                                 <Link 
                                     className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 paypal"
                                     target = "_blank"
-                                    to={`https://paypal.me/jacobwwebber/${totalOwed}?&item_name=${data.username} for ${data.drinks_ordered} drinks, $${data.orders_total_unpaid} ${data.donations_total_unpaid ? `plus $${data.donations_total_unpaid} donation` : '' }`.replace(/ /g, '%20')}>
+                                    to={paypalUrl}>
                                 </Link>
                                 <Link 
                                     className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 cashapp"
@@ -109,7 +109,7 @@ const BartabNav = (props) => {
                                 <Link 
                                     className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 venmo"
                                     target = "_blank"
-                                    to={`https://venmo.com/jacobwebber?txn=pay&amount=${totalOwed}&note=${data.username} for ${data.drinks_ordered} drinks, $${data.orders_total_unpaid} ${data.donations_total_unpaid ? `plus $${data.donations_total_unpaid} donation` : '' }`.replace(/ /g, '%20')}>
+                                    to={venmoUrl}>
                                 </Link>
                             </div>
                         </div>
