@@ -111,6 +111,7 @@ const Donate = () => {
     }
 
     return (
+        <div className="m-auto lg:max-w-lg">
         <React.Fragment>
 
             {/* MODAL CONFIRMS THAT DONATION WAS SUCCESSFUL */}
@@ -221,6 +222,7 @@ const Donate = () => {
                 </Card>
             </form>
         </React.Fragment>
+        </div>
     )
 }
 

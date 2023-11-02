@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import MobileEmptyLeaderBoard from "../components/leaderboard/Mobile/MobileEmptyLeaderBoard";
 import MobileLeaderBoard from "../components/leaderboard/Mobile/MobileLeaderBoard";
+import LargeLeaderBoard from "../components/leaderboard/Large/LargeLeaderBoard"
 import ErrorModal from "../components/UIElements/ErrorModal";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner";
 import { useFetch } from "../hooks/useFetch";
@@ -55,7 +56,7 @@ const LeaderBoard = () => {
             { isLoading && <LoadingSpinner />}
 
             {
-                data.length === 0 ? 
+                data.length === 0 && !isLoading ? 
                     <MobileEmptyLeaderBoard total = { overallTotal } />
                 :
                 <div className="md:hidden">
@@ -64,10 +65,10 @@ const LeaderBoard = () => {
             }
 
 
-            {/* ALL OTHER SCREENS
-            <div className="hidden md:block">
+            {
+            <div className="hidden md:block max-w-screen-2xl">
                 <LargeLeaderBoard data = { data } total = { overallTotal } />
-            </div> */}
+            </div>}
 
         </React.Fragment>
     )

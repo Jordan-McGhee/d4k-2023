@@ -12,3 +12,31 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.venmo{
+  background-image: url("./images/icons/venmo.png");
+}
+.cashapp{
+  background-image: url("./images/icons/cashapp.png");
+}
+.paypal{
+  background-image: url("./images/icons/paypal.png");
+}
+.payment-icon{
+  background-size: 47px 47px;
+  width: 47px;
+  height: 47px;
+  border-radius: 5px;
+  border: 2px solid rgb(22, 22, 22);
+  text-align: center;
+  display: inline-flex;
+  font-size: 20px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.payment-icon-lg{
+  width: 60px;
+  height: 60px;
+  background-size: 60px 60px;
+  border: 1px solid #eee;
+}

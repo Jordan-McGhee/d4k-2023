@@ -45,7 +45,7 @@ const Queue = () => {
 
             { isLoading && <LoadingSpinner />}
 
-            <div className="">
+            <div className="m-auto lg:max-w-xl">
 
                 {/* div for title & refresh */}
                 <div className="flex justify-between items-center">

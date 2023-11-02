@@ -10,7 +10,7 @@ import shots from "../assets/shots.json"
 const Menu = () => {
 
     return (
-        <div className="">
+        <div className="max-w-md m-auto">
 
             {/* div for buttons */}
             <div className="flex m-auto justify-between text-white fixed top-0 inset-x-0 p-6 w-full text-sm bg-red-900 max-w-md">

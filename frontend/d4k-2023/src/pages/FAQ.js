@@ -15,7 +15,7 @@ const FAQ = () => {
     return (
         <Card
             header = { header }
-            headerClass = "font-bold text-3xl border-b-2 mb-2 pb-2"
+            headerClass = "font-bold text-3xl border-b-2 mb-2 pb-2 m-auto lg:max-w-xl"
         >
             <ul>
                 <CardListItem
