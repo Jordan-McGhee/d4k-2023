@@ -37,13 +37,13 @@ const BartabNav = (props) => {
             let total = parseInt(data.donations_total_unpaid || 0) + parseInt(data.orders_total_unpaid || 0)
             setTotalOwed(total)
             
-            let note = `${data.username} for ${data.drinks_ordered} drinks, $${data.orders_total_unpaid} ${data.donations_total_unpaid ? `plus $${data.donations_total_unpaid} donation` : '' }`
+            let note = (`${data.username} for ${data.drinks_ordered} drinks, $${data.orders_total_unpaid} ${data.donations_total_unpaid ? `plus $${data.donations_total_unpaid} donation` : '' }`)
             
-            let venmoUrl = `https://venmo.com/jacobwebber?txn=pay&amount=${total}&note=${note}`.replace(/ /g, '%20')
-            setVenmoUrl(venmoUrl)
+            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${total}&note=${note}`
+            setVenmoUrl(venmo)
 
-            let paypalUrl = `https://paypal.me/jacobwwebber/${total}?&item_name=${note}`.replace(/ /g, '%20')
-            setPaypalUrl(paypalUrl)
+            let paypal = `https://paypal.me/jacobwwebber/${total}?&item_name=${note}`.replace(/ /g, '%20')
+            setPaypalUrl(paypal)
         }
     }, [data]);
 
