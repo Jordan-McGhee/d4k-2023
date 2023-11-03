@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Card from "../components/UIElements/Card"
 import Input from "../components/FormElements/Input"
-import Button from "../components/FormElements/Button"
+// import Button from "../components/FormElements/Button"
+import {Button, ButtonGroup, Accordion, AccordionItem } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChampagneGlasses, faClose, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses, faC } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 
 // DRINK IMPORTS
@@ -29,7 +30,7 @@ const Order = () => {
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
     const [ donationAmount, setDonationAmount ] = useState(0)
-    const [ selectedOther, setSelectedOther ] = useState(false)
+    const [ selectedOtherDonation, setSelectedOtherDonation ] = useState(false)
     const [ searchParams ] = useSearchParams();
 
 
@@ -55,6 +56,14 @@ const Order = () => {
         }
     }, [])
 
+    useEffect(() => {
+        if(selectedOtherDonation){
+            const previousDonation = donationAmount
+
+            setDonationAmount(0)
+            setOrderTotal(orderTotal - previousDonation)        }
+    }, [selectedOtherDonation])
+
     const updateDrinkState = (drinkId) =>{
         if(drinkId === null) return
 
@@ -69,8 +78,8 @@ const Order = () => {
         let selectedDrink = allDrinksJson.find(x=> x.id === drinkId)
         setSelectedDrinkId(drinkId)
         setDrinkName(selectedDrink?.name ?? "custom")
-        setDrinkPrice(selectedDrink?.price ?? 10)
-        setOrderTotal(selectedDrink?.price ?? 10 * drinkQuantity)
+        setDrinkPrice(parseInt(selectedDrink?.price || 10))
+        setOrderTotal(parseInt(selectedDrink?.price || 10) * drinkQuantity)
     }
 
 
@@ -107,17 +116,17 @@ const Order = () => {
 
     const incrementDrinkQuantity = () => {
         setDrinkQuantity(drinkQuantity + 1)
-        setOrderTotal(drinkPrice * (drinkQuantity + 1))
+        setOrderTotal(drinkPrice * (drinkQuantity + 1) + donationAmount)
     }
     
     const decrementDrinkQuantity = () => {
         setDrinkQuantity(drinkQuantity - 1)
-        setOrderTotal(drinkPrice * (drinkQuantity - 1))
+        setOrderTotal(drinkPrice * (drinkQuantity - 1) + donationAmount)
     }
 
     // HANDLER FOR PRESELECTED DONATION AMOUNT BUTTONS
     const donationHandler = amount => {
-        setSelectedOther(false)
+        setSelectedOtherDonation(false)
 
         const previousDonation = donationAmount
 
@@ -139,7 +148,7 @@ const Order = () => {
 
             setDonationAmount(inputValue)
             setOrderTotal(newTotal)
-            setSelectedOther(false)
+            setSelectedOtherDonation(false)
         }
     }
 
@@ -156,11 +165,12 @@ const Order = () => {
             <p className="font-bold text-xl">Total: ${ orderTotal }</p>
 
             <Button
-                className=" px-4 py-3 rounded-full bg-gradient-to-tr from-green-900 to-green-500 text-white font-bold shadow-lg"
+                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
                 type="submit"
-                text="Grab a Drink"
-                disabled={!selectedDrinkId}
-            />
+                isDisabled={!selectedDrinkId || selectedDrinkId < 0}
+            >Grab a Drink
+            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+            </Button>
         </div>
     )
 
@@ -231,14 +241,14 @@ const Order = () => {
     }
 
     return (
-        <React.Fragment>
+        <React.Fragment >
 
             {   
                 formHasErrors &&
                 <ErrorModal error = { "Please make sure you filled in your name, drink order, and how many you'd like!" } onClear = { clearFormErrorHandler } />
             }
 
-            <form onSubmit={submitHandler} footer = { cardFooter }>
+            <form className="max-w-md m-auto" onSubmit={submitHandler} footer = { cardFooter }>
 
                 <Card header={ cardHeader } footer={cardFooter}>
                     { username &&
@@ -284,14 +294,14 @@ const Order = () => {
                         drinkPrice !== 0 &&
                         <div className={`transition-all ease-out ${drinkPrice !== 0 ? 'visible' : 'invisible'}`}>
                             <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">How Many?</label>
-                            <Button className="border-solid border-2 border-green-200 bg-green-700 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5" 
-                            disabled={drinkQuantity <= 1} type="button" onClick={decrementDrinkQuantity}>
-                                <FontAwesomeIcon className="title" icon={faMinus}></FontAwesomeIcon>
+                            <Button isIconOnly className="border-solid border-2 border-green-200 bg-green-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5" 
+                            isDisabled={drinkQuantity <= 1} type="button" onPress={decrementDrinkQuantity}>
+                                <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
                             </Button>
                             <span className="text-xl">{drinkQuantity}</span>
-                            <Button className="border-solid border-2 border-green-200  bg-green-700 disabled:bg-gray-400 w-12 h-12 text-white rounded-full ml-5" 
-                            disabled={drinkQuantity >= 5} type="button" onClick={incrementDrinkQuantity}>
-                                <FontAwesomeIcon className="title" icon={faPlus}></FontAwesomeIcon>
+                            <Button  isIconOnly className="border-solid border-2 border-green-200  bg-green-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full ml-5" 
+                            isDisabled={drinkQuantity >= 5} type="button" onPress={incrementDrinkQuantity}>
+                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
                             </Button>
                         </div>
                     }
@@ -310,52 +320,61 @@ const Order = () => {
                             {/* DIV OF BUTTONS FOR DIFFERENT DONATION AMOUNTS */}
                             <div className="flex justify-between my-2">
                                 <Button
-                                    text = "$5"
-                                    type = "button"
-                                    onClick = { donationAmount === 5 ? () => donationHandler(0) : () => donationHandler(5)}
-                                    buttonSelected = { donationAmount === 5 ? true : null }
-                                />
+                                isIconOnly
+                                radius="full"
+                                className={`border-2 font-bold border-green-600  ${donationAmount === 2 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                 onPress = { donationAmount === 2 ? () => donationHandler(0) : () => donationHandler(2)}
+                                >$2</Button>
                                 <Button
-                                    text = "$10"
-                                    type = "button"
-                                    onClick = { donationAmount === 10 ? () => donationHandler(0) : () => donationHandler(10)}
-                                    buttonSelected = { donationAmount === 10 ? true : null }
-                                />
+                                isIconOnly
+                                radius="full"
+                                className={`border-2 font-bold border-green-600  ${donationAmount === 5 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                    onPress = { donationAmount === 5 ? () => donationHandler(0) : () => donationHandler(5)}
+                                    >$5</Button>
                                 <Button
-                                    text = "$20"
-                                    type = "button"
-                                    onClick = { donationAmount === 20 ? () => donationHandler(0) : () => donationHandler(20)}
-                                    buttonSelected = { donationAmount === 20 ? true : null }
-                                />
+                                isIconOnly
+                                radius="full"
+                                className={`border-2 font-bold border-green-600  ${donationAmount === 10 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                onPress = { donationAmount === 10 ? () => donationHandler(0) : () => donationHandler(10)}
+                                    >$10</Button>
                                 <Button
-                                    text = "Other"
-                                    type = "button"
-                                    onClick = { donationAmount > 0 && donationAmount !== 5 && donationAmount !== 10 && donationAmount !== 20 ? () => donationHandler(0) : () => setSelectedOther(true) }
-                                    buttonSelected = { donationAmount > 0 && donationAmount !== 5 && donationAmount !== 10 && donationAmount !== 20 ? true : null }
-                                />
+                                    radius="full"
+                                    className={`border-2 font-bold border-green-600  ${selectedOtherDonation || (donationAmount > 0 && 
+                                        donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10)  ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                    onPress = { donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10 ? () => donationHandler(0) : () => setSelectedOtherDonation(true) }
+                                    >Custom</Button>
                             </div>
 
                             {
-                                selectedOther && 
-                                <div className="flex justify-between">
+                                selectedOtherDonation && 
+                                <div className="flex justify-between duration-200 
+                                ease-out transition animate-slideIn">
                                     <Input
                                         id = "donationInput"
                                         type = "number"
                                         placeholder = "Enter Donation Amount"
                                         className = "w-full appearance-none bg-white text-black border rounded p-3 my-3 leading-tight focus: outline-green-700"
                                     />
+                                    <ButtonGroup>
                                     <Button
-                                        text = '✓'
+                                        size="md"
+                                        isIconOnly
+                                        className="bg-green-600 text-slate-200 text-xl"
                                         type = "button"
-                                        className = "bg-green-600 rounded-md text-white px-3 py-1 my-3 mx-2"
                                         onClick = { donationInputHandler }
-                                    />
+                                    >
+                                        <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+                                    </Button>
                                     <Button
-                                        text = '✕'
+                                    size="md"
+                                        className="bg-red-600 text-slate-200 text-xl"
+                                        isIconOnly
                                         type = "button"
-                                        className = "bg-red-700 rounded-md text-white px-3 py-1 my-3"
-                                        onClick = { () => setSelectedOther(false)}
-                                    />
+                                        onClick = { () => setSelectedOtherDonation(false)}
+                                    >
+                                        <FontAwesomeIcon icon={faClose}></FontAwesomeIcon>
+                                    </Button>
+                                    </ButtonGroup>
                                 </div>
                             }
                         </div>

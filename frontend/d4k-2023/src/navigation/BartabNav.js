@@ -37,12 +37,12 @@ const BartabNav = (props) => {
             let total = parseInt(data.donations_total_unpaid || 0) + parseInt(data.orders_total_unpaid || 0)
             setTotalOwed(total)
             
-            let note = encodeURIComponent(`${data.username}-${data.drinks_ordered || 0} drinks,$${data.orders_total_unpaid || 0}${data.donations_total_unpaid ? `,$${data.donations_total_unpaid} donation` : '' }`)
+            let note = `${data.username}-${data.drinks_ordered || 0} drinks,$${data.orders_total_unpaid || 0}${data.donations_total_unpaid ? `,$${data.donations_total_unpaid} donation` : '' }`
             
-            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${total}&note=${note}`
+            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${total}&note=${note}`.replace(/ /g, '+')
             setVenmoUrl(venmo)
 
-            let paypal = `https://paypal.me/jacobwwebber/${total}?&item_name=${note}`.replace(/ /g, '%20')
+            let paypal = `https://paypal.me/jacobwwebber/${total}?&item_name=${note}`.replace(/ /g, '+')
             setPaypalUrl(paypal)
         }
     }, [data]);
@@ -50,7 +50,7 @@ const BartabNav = (props) => {
     return (
         <div>
         { data && (data.orders_total_unpaid || data.donations_total_unpaid) && 
-            <div className="outer-menu menu-left">
+            <div className={`outer-menu menu-left ${!isChecked ? 'animate-pulse' : ''}`}>
                 <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
                     onChange={(event) => setIsChecked(event.currentTarget.checked)}
                 />

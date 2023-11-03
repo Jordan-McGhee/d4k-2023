@@ -5,7 +5,7 @@
         "ingredients": ["gin", "basil", "lemon"],
         "description": "Just took a DNA test, turns out it’s mostly alcohol",
         "imageUrl": "/images/drinks/ginbasilsmash.jpg",
-        "price": "10"
+        "price": 10
     },
     {
         "id": 2,
@@ -13,7 +13,7 @@
         "ingredients": ["bourbon", "egg white", "maple", "lemon", "angostura"],
         "description": "A crowd favorite. Reindeer Fuel baby",
         "imageUrl": "/images/drinks/whiskeysour.jpg",
-        "price": "10"
+        "price": 10
     },
     {
         "id": 13,
@@ -21,7 +21,7 @@
         "ingredients": ["Tequila", "Lychee", "Coconut", "Lime", "Sumac"],
         "description": "In Whoville they say this grew the Grinch's heart three sizes that day",
         "imageUrl": "/images/drinks/lychee.jpg",
-        "price": "10"
+        "price": 10
     },
     {
         "id": 3,
@@ -29,7 +29,7 @@
         "ingredients": ["tequila", "cointreau", "lime", "coconut", "jalapeno", "berry", "mezcal (optional)"],
         "description": "Top shelf margaritas are never out of season.",
         "imageUrl": "/images/drinks/margarita.jpg",
-        "price": "12"
+        "price": 12
     },
     {
         "id": 4,
@@ -37,7 +37,7 @@
         "ingredients": ["Bourbon", "all-spice dram", "angostura", "orange zest", "Luxardo cherry"],
         "description": "Saint Nick's take on an old fashioned.",
         "imageUrl": "/images/drinks/oldfashioned.jpg",
-        "price": "10"
+        "price": 10
     },
     {
         "id": 6,
@@ -45,7 +45,7 @@
         "ingredients": ["Gin", "Ginger", "Aperol", "lemon"],
         "description": "Bend and snap, baby. Lots of gin, lots of ginger, lots of snap",
         "imageUrl": "/images/drinks/maverick.jpg",
-        "price": "10"
+        "price": 10
     },
     {
         "id": 7,
@@ -53,6 +53,6 @@
         "ingredients": ["Vodka", "Averna Amaro", "Espresso"],
         "description": "For those late nights climbing rooftops. Welcome to the party",
         "imageUrl": "/images/drinks/espresso.jpg",
-        "price": "10"
+        "price": 10
     }
 ]
