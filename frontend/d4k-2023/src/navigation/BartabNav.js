@@ -37,7 +37,7 @@ const BartabNav = (props) => {
             let total = parseInt(data.donations_total_unpaid || 0) + parseInt(data.orders_total_unpaid || 0)
             setTotalOwed(total)
             
-            let note = (`${data.username} for ${data.drinks_ordered} drinks, $${data.orders_total_unpaid} ${data.donations_total_unpaid ? `plus $${data.donations_total_unpaid} donation` : '' }`)
+            let note = encodeURIComponent(`${data.username}-${data.drinks_ordered || 0} drinks,$${data.orders_total_unpaid || 0}${data.donations_total_unpaid ? `,$${data.donations_total_unpaid} donation` : '' }`)
             
             let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${total}&note=${note}`
             setVenmoUrl(venmo)
@@ -46,8 +46,6 @@ const BartabNav = (props) => {
             setPaypalUrl(paypal)
         }
     }, [data]);
-
-    // retrieve username from localStorage if there
 
     return (
         <div>

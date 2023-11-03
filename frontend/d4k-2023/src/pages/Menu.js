@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../components/FormElements/Button";
+import {Button} from "@nextui-org/react";
 import MenuList from "../components/menu/MenuList";
 
 import cocktails from "../assets/drinks.json"
@@ -13,21 +13,27 @@ const Menu = () => {
         <div className="max-w-md m-auto">
 
             {/* div for buttons */}
-            <div className="flex m-auto justify-between text-white fixed top-0 inset-x-0 p-6 w-full text-sm bg-red-900 max-w-md">
+            <div className="flex m-auto justify-between text-white fixed top-0 inset-x-0 p-4 w-full text-sm z-10 backdrop-blur-md
+            	 bg-slate-500/80 max-w-md border-b-2 border-green-500">
                 <Button
-                    text = "Cocktails"
-                    onClick = { () => document.getElementById('cocktails').scrollIntoView({ behavior: 'smooth' })}
-                />
+                    className="bg-green-600 focus:text-green-600 hover:text-green-600 text-slate-100 text-lg font-fugaz"
+                    radius="full" 
+                    variant="ghost"
+                    onPress = { () => document.getElementById('cocktails').scrollIntoView({ behavior: 'smooth' })}
+                >Cocktails</Button>
 
                 <Button
-                    text = "Batched"
+                    className="bg-green-600 text-slate-100 text-lg font-fugaz"
+                    radius="full" variant="ghost"
                     onClick = { () => document.getElementById('batched').scrollIntoView({ behavior: 'smooth' })}
-                />
+                >Batched</Button>
 
                 <Button
-                    text = "Shots"
-                    onClick = { () => document.getElementById('shots').scrollIntoView({ behavior: 'smooth' })}
-                />
+                    className="bg-green-600 text-slate-100 text-lg font-fugaz"
+                    radius="full" variant="ghost"
+                    onClick = { () => document.getElementById('shots').scrollIntoView({ behavior: 'smooth' })}>
+                        Shots
+                    </Button>
             </div>
             
             <div className="mt-10 pt-10">
