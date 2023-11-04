@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChampagneGlasses, faClose } from '@fortawesome/free-solid-svg-icons'
-// import Button from "../components/FormElements/Button"
 import BuddyLogo from "../components/UIElements/BuddyLogo"
-import { toast, Zoom } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { Link, Button, useDisclosure, Modal, ModalHeader, ModalFooter, ModalBody, ModalContent } from "@nextui-org/react";
 import icsFile from '../assets/drink4thekidsparty.ics'
 
 const HomePage = () => {
-    // const [ showCalendarModal, setShowCalendarModal ] = useState(null)
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     const openInNewTab = (url) => {
@@ -34,13 +32,13 @@ const HomePage = () => {
         
     useEffect(() => {
         const notify = () => toast(<Msg/>, {
-            position: "bottom-right",
-            hideProgressBar: true,
-            autoClose: 999999,
-            delay: 3000,
-            pauseOnHover: true,
-            progress: undefined,
-            theme: "light"
+                position: "top-center",
+                hideProgressBar: true,
+                autoClose: 999999,
+                delay: 3000,
+                pauseOnHover: true,
+                progress: undefined,
+                theme: "light"
             });
 
             

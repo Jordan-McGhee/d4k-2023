@@ -13,9 +13,9 @@ const UserLayout = () => {
             {nav}
             <BartabNav />
             {/* <div className="fixed bottom-0 left-0 right-0 bg-slate-100/90 pt-16 z-50 backdrop-blur-md border-solid border-t-2 border-gray-500"></div> */}
-            <div className={`App bg-local overflow-hidden ${!isMobile ? 'mt-20' : ''}`} style={{backgroundImage: `url(${backgroundImage2})`}}>
+            <div className={`App overflow-hidden bg-cover bg-no-repeat bg-top ${!isMobile ? 'mt-20' : ''}`} style={{backgroundImage: `url(${backgroundImage2})`}}>
                 <div className="min-h-screen ">
-                    <div className="main-container m-auto p-5">
+                    <div className="main-container m-5">
                         <Outlet />
                     </div>
                 </div>

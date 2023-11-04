@@ -7,16 +7,13 @@ import { faCandyCane, faCocktail, faGift, faIgloo, faPeopleGroup, faMedal } from
 const MainNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
 
-    // retrieve username from localStorage if there
-    let localStorageUsername = localStorage.getItem('storedUsername')
-
     return (
     <div className="outer-menu">
         <input id="nav-checkbox" 
             className="checkbox-toggle" 
             onChange={(event) => setIsChecked(event.currentTarget.checked)}
             checked={isChecked}type="checkbox" />
-        <div className="hamburger">
+        <div className="hamburger bg-green-600 border-2 border-slate-200">
             <div></div>
         </div>
         <div className="menu">

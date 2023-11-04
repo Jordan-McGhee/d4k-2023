@@ -1,7 +1,7 @@
 .outer-menu {
     position: fixed;
-    bottom: 60px;
-    right: 60px;
+    bottom: 70px;
+    right: 70px;
     z-index: 100;
     border-radius: 10px;
 }
@@ -21,14 +21,14 @@
 .outer-menu .checkbox-toggle:checked+.hamburger>div {
     transform: rotate(135deg);
     -webkit-transform: rotate(135deg);
-    -webkit-transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0, 0, 0);
 }
 
 .outer-menu .checkbox-toggle:checked+.hamburger>div:before,
 .outer-menu .checkbox-toggle:checked+.hamburger>div:after {
     top: 0;
     transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);   
+    -webkit-transform: rotate(90deg);
 }
 
 .outer-menu .checkbox-toggle:checked+.hamburger>div:after {
@@ -45,7 +45,7 @@
     -webkit-transform: scale(1.25);
     transition-duration: 0.2s;
     -webkit-transform: rotateZ(360deg);
-    -webkit-transform: translate3d(0,0,0)
+    -webkit-transform: translate3d(0, 0, 0)
 }
 
 .outer-menu .checkbox-toggle:checked~.menu>div>div {
@@ -59,7 +59,7 @@
     -webkit-transform: rotate(225deg);
     -webkit-font-smoothing: antialiased;
     -webkit-transform: rotateZ(360deg);
-    -webkit-transform: translate3d(0,0,0)
+    -webkit-transform: translate3d(0, 0, 0)
 }
 
 .outer-menu .hamburger {
@@ -67,11 +67,11 @@
     top: 0;
     left: 0;
     z-index: 1;
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     padding: 0.5em 1em;
-    background: rgba(40, 219, 109, 0.75);
-    border-top-left-radius: 20px;
+    border-radius: 50%;
+
     cursor: pointer;
     /* shadow */
     transition: box-shadow 0.4s ease;

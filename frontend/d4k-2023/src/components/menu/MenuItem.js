@@ -12,7 +12,7 @@ const MenuItem = props => {
 
         const chosenDrink = event.target[0].value
         console.log(chosenDrink)
-        // localStorage.setItem('chosenDrink', chosenDrink)
+
         navigate({
             pathname: '/order', 
             search: createSearchParams({drinkId: props.id}).toString()

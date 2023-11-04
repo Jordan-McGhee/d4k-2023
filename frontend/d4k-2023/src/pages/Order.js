@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Card from "../components/UIElements/Card"
 import Input from "../components/FormElements/Input"
 // import Button from "../components/FormElements/Button"
-import {Button, ButtonGroup, Accordion, AccordionItem } from "@nextui-org/react"
+import {Button, ButtonGroup, Select, SelectItem, SelectSection } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -25,7 +25,8 @@ const Order = () => {
 
     const [ username, setUsername ] = useState(null)
     const [ drinkName, setDrinkName ] = useState(null)
-    const [ selectedDrinkId, setSelectedDrinkId ] = useState('-1')
+    const [ selectedDrinkId, setSelectedDrinkId ] = useState(-1)
+    const [selectValue, setSelectValue] = useState(new Set([]));
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
     const [ orderTotal, setOrderTotal ] = useState(0)
@@ -61,7 +62,8 @@ const Order = () => {
             const previousDonation = donationAmount
 
             setDonationAmount(0)
-            setOrderTotal(orderTotal - previousDonation)        }
+            setOrderTotal(orderTotal - previousDonation)
+        }
     }, [selectedOtherDonation])
 
     const updateDrinkState = (drinkId) =>{
@@ -72,10 +74,11 @@ const Order = () => {
             setDrinkPrice(0)
             setOrderTotal(0)
             setDrinkQuantity(1)
-            setSelectedDrinkId('-1')
+            setSelectedDrinkId(-1)
             return
         }
         let selectedDrink = allDrinksJson.find(x=> x.id === drinkId)
+        setSelectValue(new Set([drinkId.toString()]))
         setSelectedDrinkId(drinkId)
         setDrinkName(selectedDrink?.name ?? "custom")
         setDrinkPrice(parseInt(selectedDrink?.price || 10))
@@ -83,30 +86,6 @@ const Order = () => {
     }
 
 
-    // MAPPING OUT DRINK OPTIONS FOR DROPDOWN SELECT IN FORM
-    let cocktailsMapped = cocktails.map((drink) => (
-        <option key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</option>
-    ))
-
-    let batchedMapped = other.map((drink) => (
-        <option key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</option>
-    ))
-
-    let shotsMapped = shots.map((drink) => (
-        <option key = { drink.id } value={drink.id}>{drink.name} — ${drink.price}</option>
-    ))
-
-    let drinkOptions = [
-        <option key = "default" disabled value="-1">Pick a Drink</option>,
-        <option key = "disabled2" disabled>COCKTAILS</option>,
-        cocktailsMapped,
-        <option key = "disabled5" disabled>BATCHED</option>,
-        batchedMapped,
-        <option key = "disabled8" disabled>SHOTS</option>,
-        shotsMapped,
-        <option key = "disabled11" disabled>SOMETHING ELSE</option>,
-        <option key = "custom" value="0">Custom Drink — $10</option>
-    ]
 
     const drinkDropdownChanged = (e) => {
         let currentDrinkId = parseInt(e.target.value)
@@ -161,7 +140,6 @@ const Order = () => {
 
     const cardFooter = (
         <div className="flex justify-between w-full items-center">
-
             <p className="font-bold text-xl">Total: ${ orderTotal }</p>
 
             <Button
@@ -267,20 +245,66 @@ const Order = () => {
                         />
                     }
 
-                    <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label>
-                    <select
-                        value={selectedDrinkId}
-                        onChange={(e) => drinkDropdownChanged(e)}
-                        id="drinkChoice"
-                        name="drinkChoice"
-                        className="block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2"
-                    >
-                        { drinkOptions }
-                    </select>
+                    {/* <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label> */}
+                    <Select
+                        variant="bordered"
+                        selectionMode="single"
+                        onSelectionChange={setSelectValue}
+                         onChange={(e) => drinkDropdownChanged(e)}
+                        fullWidth
+                        radius="full"
+                        classNames={{
+                            label: "group-data-[filled=true]:-translate-y-5",
+                            trigger: "min-h-unit-16",
+                            listboxWrapper: "max-h-[400px]",
+                          }}
+                        listboxProps={{
+                            classNames: {
+                                list: ["border-2", "bg-red-200", "border-black"],
+                                base: ["border-2", "bg-red-200", "border-black"],
+
+                            },
+                            itemClasses: {
+                              base: [
+                                "rounded-md",
+                                "data-[hover=true]:bg-default-100",
+                                "data-[selectable=true]:focus:bg-green-600",
+                                "data-[focus-visible=true]:ring-default-500",
+                              ],
+                            },
+                          }}
+                        label="Select a Drink"
+                        selectedKeys={selectValue}
+                        >
+                        <SelectSection showDivider title="Cocktails">
+                        { 
+                           cocktails.map((drink) => (
+                                <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                            ))
+                        }
+                        </SelectSection>
+                        <SelectSection showDivider title="Shots">
+                        {
+                           shots.map((drink) => (
+                                <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                            ))
+                        } 
+                        </SelectSection>
+                        <SelectSection showDivider title="Batched">
+                        {
+                            other.map((drink) => (
+                                <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                            ))
+                        } 
+                        </SelectSection>
+                        <SelectSection showDivider title="Something Else">
+                            <SelectItem textValue="Custom Drink - $10" key={0} value="0">Custom Drink — $10</SelectItem>
+                        </SelectSection>
+                    </Select>
 
                     {
                         // CONDITIONAL INPUT FOR IF USER CHOSE CUSTOM DRINK FROM DROP DOWN
-                        drinkName === "Custom Drink" &&
+                        selectedDrinkId === 0 &&
                         <Input
                             id = "customDrinkInput"
                             type = "text"
