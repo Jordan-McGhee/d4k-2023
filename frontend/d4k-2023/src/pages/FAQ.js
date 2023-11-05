@@ -20,19 +20,18 @@ const FAQ = () => {
             <ul>
                 <CardListItem
                     question = "What Charity?"
-                    response = {`The Nicholas house! It's a nonprofit agency that operates an emergency shelter, 
-                    as well as scattered apartment sites for homeless families.
-                    They help homeless families make the transition from homelessness to self-sufficiency in a structured, but home-like environment.`}
+                    response = {`The Nicholas House and Bethany Haven. Both are a nonprofit agencies that operate emergency shelters, for homeless families.
+                    They help families make the transition from homelessness to self-sufficiency in a structured, but home-like environment.`}
                     link = "https://nicholashouse.org/"
-                    linkText = "Visit their site to read more!"
+                    linkText = "Visit their site to read more"
                 />
                 <CardListItem
                     question = "What Should I Bring?"
-                    response = "Your friends, your mom, your friend's mom, and a heart of gold (or cash/card)"
+                    response = "Your friends, your parents, your friend's parents, and a heart of gold (or cash/card)"
                 />
                 <CardListItem
-                    question = "What's the Dress Code'?"
-                    response = "Bring that holiday spirit. Tacky sweaters, xmas pajamas, santa tuxedoes, elf shit"
+                    question = "What's the Dress Code?"
+                    response = "Tacky sweaters, xmas pajamas, santa tuxedoes. Bring that holiday spirit."
                 />
                 <CardListItem
                     question = "Can I BYOB?"
@@ -40,7 +39,7 @@ const FAQ = () => {
                 />
                 <CardListItem
                     question = "Can I Order Off-Menu?"
-                    response = "Absolutely! You can put a custom drink order in on the order page. Just make sure to leave a comment telling us what you'd like!"
+                    response = "Absolutely! We have a fully-stocked bar and you can put a custom drink order in on the order page. Just make sure to leave a comment telling us what you'd like!"
                 />
                 
             </ul>

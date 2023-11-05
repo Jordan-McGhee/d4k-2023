@@ -81,30 +81,30 @@ const HomePage = () => {
 
                 {/* DIV FOR NEW LOGO */}
                 <div>
-                    <p className="text-6xl text-green-600 mt-5 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
-                        <br/><FontAwesomeIcon className="title" icon={faChampagneGlasses}></FontAwesomeIcon>
+                    <p className="text-6xl text-green-600 my-3 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
+                        <br/><FontAwesomeIcon className="mt-4 title font-extrabold" icon={faChampagneGlasses}></FontAwesomeIcon>
                     </p>
                 </div>
 
-                <p className="text-2xl italic font-fugaz mt-2 mb-5">Christmas Cocktails for a Charitable Cause</p>
+                <p className="text-2xl italic font-fugaz mt-2">Christmas Cocktails <br/> for a Charitable Cause</p>
 
-                <p onClick={onOpen} className="text-3xl my-8 font-bold font-bungee flex flex-col underline tracking-wider">
+                <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
                     Saturday<span className="my-2">
                         December 16th</span>
-                        5PM — Late
+                        6PM — Late
                 </p>
 
                 <BuddyLogo />
             </div>
 
         {/* EXPLAINER DIV */}
-            <div className="py-5 my-5">
+            <div className="py-5 mb-5 mt-8">
 
                 <p className="italic text-3xl my-5 font-bold font-fugaz">Not just another Christmas Party</p>
 
                 <p className="text-2xl my-5">It's a holiday spirited pop up bar serving up <span className="italic font-bold">the best craft cocktails</span> and the worst puns for donations to a great cause</p>
 
-                <p className="text-2xl font-extrabold italic">All proceeds go to Nicholas House Family Homeless Shelter</p>
+                <p className="text-2xl font-extrabold italic">All proceeds go to Bethany Haven & Nicholas House Family Homeless Shelter</p>
                 <br/>
                 <Button 
                 className="uk-button bg-green-600" 
