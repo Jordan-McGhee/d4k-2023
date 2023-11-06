@@ -50,6 +50,10 @@ const Order = () => {
     const isInvalidUsername = React.useMemo(() => {
         return username === '' && !usernameFocused
       }, [username, usernameFocused]);
+
+    const isInvalidDonationAmount = React.useMemo(() => {
+    return donationAmount < 0 || donationAmount > 1000
+    }, [donationAmount]);
     
 
     // check if user navigated from Menu page amd selected a drink
@@ -246,6 +250,7 @@ const Order = () => {
                                     inputWrapper: "bg-white",
                                     errorMessage: "absolute italic bottom-2 left-4"
                                 }}
+                                maxLength={30}
                                 autoFocus
                                 onFocus={onUsernameFocus}
                                 onBlur={onUsernameBlur}
@@ -387,15 +392,20 @@ const Order = () => {
                                     variant="bordered"
                                     labelPlacement="outside"
                                     type="number"
+                                    pattern="\d*"
+                                    inputMode="decimal"
+                                    min={0}
+                                    max={1000}
+                                    maxLength={4}
+                                    color={isInvalidDonationAmount ? "danger" : "success"}
+                                    isInvalid={isInvalidDonationAmount}
                                     classNames={{
                                         label: "text-black/50 dark:text-white/90",
                                         input: [
-                                            "bg-transparent",
                                             "text-black/90 dark:text-white/90",
                                             "placeholder:text-default-700/50 dark:placeholder:text-white/60",
                                         ],
-                                        innerWrapper: "bg-transparent",
-                                        inputWrapper: ["pr-0"]
+                                        inputWrapper: ["pr-0", "bg-white", "rounded-r-none"]
                                         }
                                     }                                  
                                     startContent={
@@ -403,31 +413,31 @@ const Order = () => {
                                             <span className="text-default-400 text-small">$</span>
                                         </div>
                                     }
-                                    endContent={
-                                        <div className="">
-                                            <ButtonGroup>
-                                            <Button
-                                                size="md"
-                                                    className="bg-red-600 text-slate-200 text-xl border-t-2 border-b-2"
-                                                    isIconOnly
-                                                    type = "button"
-                                                    onClick = { () => setSelectedOtherDonation(false)}
-                                                >
-                                                    <FontAwesomeIcon icon={faClose}></FontAwesomeIcon>
-                                                </Button>
-                                                <Button
-                                                    size="md"
-                                                    isIconOnly
-                                                    className="bg-green-600 text-slate-200 text-xl border-t-2 border-b-2"
-                                                    type = "button"
-                                                    onClick = { customDonationInputHandler }
-                                                >
-                                                    <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                                                </Button>
-                                            </ButtonGroup>
-                                        </div>
-                                    }
                                     />
+                                    <div className="mt-6 border-t-2">
+                                        <span className="flex">
+                                            <Button
+                                                classNames={{base: "rounded-l-none"}}
+                                                size="md"
+                                                className="bg-red-600 text-slate-200 text-xl border-t-2 rounded-none border-b-2"
+                                                isIconOnly
+                                                type = "button"
+                                                onClick = { () => setSelectedOtherDonation(false)}
+                                            >
+                                            <FontAwesomeIcon icon={faClose}></FontAwesomeIcon>
+                                            </Button>
+                                            <Button
+                                                isDisabled={isInvalidDonationAmount}
+                                                size="md"
+                                                isIconOnly
+                                                className="bg-green-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
+                                                type = "button"
+                                                onClick = { customDonationInputHandler }
+                                            >
+                                                <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+                                            </Button>
+                                            </span>
+                                    </div>
                                 </div>
                             }
                         </div>
