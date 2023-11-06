@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // import Card from "../components/UIElements/Card"
 import {Button, ButtonGroup, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
@@ -197,15 +197,17 @@ const Order = () => {
         }
 
         try {
-            await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify(formData))
-            console.log("Sent request!")
+            let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify(formData))
+            console.log(data)
+            setIsLoading(false)
+
+            navigate({
+                pathname: '/queue', 
+                search: createSearchParams({orderId: data?.order[0]?.order_id}).toString()
+            })
         } catch (error) {
             
         }
-
-
-        setIsLoading(false)
-        navigate('/queue')
     }
 
     const cardFooter = (
@@ -224,14 +226,11 @@ const Order = () => {
     
     return (
         <React.Fragment >
-
             {   
                 formHasErrors &&
                 <ErrorModal error = { "Please make sure you filled in your name, drink order, and how many you'd like!" } onClear = { clearFormErrorHandler } />
             }
-
             <form className="max-w-md m-auto">
-
                 <Card className=" bg-slate-200 mb-5 pb-5">
                     <CardHeader className="pb-0 text-4xl font-bungee text-center justify-center text-green-700">
                             Order

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom"
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import {NextUIProvider} from "@nextui-org/react";
+import { Spinner } from "@nextui-org/spinner";
 
 // IMPORTS
 // import Admin from "./pages/Admin"
@@ -22,7 +23,6 @@ import HomePage from "./pages/HomePage"
 import UserLayout from "./components/layouts/UserLayout";
 import AdminLayout from "./components/layouts/AdminLayout";
 import NotFoundLayout from "./components/layouts/NotFoundLayout";
-import LoadingSpinner from "./components/UIElements/LoadingSpinner";
 import { ToastContainer, Zoom } from 'react-toastify';
 
 // LAZY IMPORTS
@@ -75,14 +75,12 @@ function App() {
     <NextUIProvider>
       <Suspense fallback = {
         <div>
-          <LoadingSpinner />
+          <Spinner color="success" className="fixed top-2/4" style={{left:'calc(50% - 20px)'}} size="lg" />
         </div>
       }>
         { routes }
       </Suspense>
-      <ToastContainer
-      transition={Zoom} />
-
+      <ToastContainer transition={Zoom} />
     </NextUIProvider>
   );
 }
