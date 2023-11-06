@@ -93,7 +93,6 @@ const HomePage = () => {
                         December 16th</span>
                         6PM — Late
                 </p>
-
                 <BuddyLogo />
             </div>
 

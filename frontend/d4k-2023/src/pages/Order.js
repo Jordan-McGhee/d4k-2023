@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import Card from "../components/UIElements/Card"
-import Input from "../components/FormElements/Input"
-// import Button from "../components/FormElements/Button"
-import {Button, ButtonGroup, Select, SelectItem, SelectSection } from "@nextui-org/react"
+// import Card from "../components/UIElements/Card"
+import {Button, ButtonGroup, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses, faC } from '@fortawesome/free-solid-svg-icons'
+import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 
 // DRINK IMPORTS
@@ -21,9 +19,11 @@ import order from "../images/icons/order-red.png"
 const Order = () => {
 
     let navigate = useNavigate()
+        const { sendRequest } = useFetch()
     let allDrinksJson = cocktails.concat(other).concat(shots)
 
-    const [ username, setUsername ] = useState(null)
+    const [ username, setUsername ] = useState('')
+    const [ hasStoredUsername, setHasStoredUsername ] = useState(false)
     const [ drinkName, setDrinkName ] = useState(null)
     const [ selectedDrinkId, setSelectedDrinkId ] = useState(-1)
     const [selectValue, setSelectValue] = useState(new Set([]));
@@ -32,24 +32,34 @@ const Order = () => {
     const [ orderTotal, setOrderTotal ] = useState(0)
     const [ donationAmount, setDonationAmount ] = useState(0)
     const [ selectedOtherDonation, setSelectedOtherDonation ] = useState(false)
-    const [ searchParams ] = useSearchParams();
+    const [ comments, setComments ] = useState('')
 
+    const [ isLoading, setIsLoading ] = useState(false)
+    const [ searchParams ] = useSearchParams();
 
     // FORM ERROR STATE
     const [ formHasErrors, setFormHasErrors ] = useState(false)
+    const [usernameFocused, setUsernameFocused] = React.useState(false)
+    const onUsernameFocus = () => setUsernameFocused(true)
+    const onUsernameBlur = () => setUsernameFocused(false)
     
     const clearFormErrorHandler = () => {
         setFormHasErrors(false)
     }
 
+    const isInvalidUsername = React.useMemo(() => {
+        return username === '' && !usernameFocused
+      }, [username, usernameFocused]);
+    
+
     // check if user navigated from Menu page amd selected a drink
     
     // useEffect here to run this function once and prevent an endless loop.
-    // Splits up the string in localStorage and assigns values to the respective states above so shit works right
     useEffect(() => {
         let uname = localStorage.getItem('storedUsername')
         if(uname){
             setUsername(uname)
+            setHasStoredUsername(true)
         }
         let drinkIdParam = searchParams.get("drinkId")
         if (drinkIdParam) {
@@ -114,16 +124,15 @@ const Order = () => {
     }
 
     // HANDLER FOR CUSTOM DONATION FIELD
-    const donationInputHandler = event => {
+    const customDonationInputHandler = event => {
         const input = document.getElementById('donationInput')
-        const inputValue = input.value
+        const inputValue = parseInt(input.value)
 
-        console.log(inputValue)
 
         if (inputValue > 0 ) {
             const previousDonation = donationAmount
             const orderTotalNumber = parseInt(orderTotal)
-            const newTotal = orderTotalNumber + parseInt(inputValue) - parseInt(previousDonation)
+            const newTotal = orderTotalNumber + inputValue - parseInt(previousDonation)
 
             setDonationAmount(inputValue)
             setOrderTotal(newTotal)
@@ -131,34 +140,12 @@ const Order = () => {
         }
     }
 
-    const cardHeader = (
-        <div className="flex items-center">
-            <p>Order</p>
-            <img src={order} alt="order red icon" className="w-10 ml-3 mb-1"/>
-        </div>
-    )
-
-    const cardFooter = (
-        <div className="flex justify-between w-full items-center">
-            <p className="font-bold text-xl">Total: ${ orderTotal }</p>
-
-            <Button
-                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
-                type="submit"
-                isDisabled={!selectedDrinkId || selectedDrinkId < 0}
-            >Grab a Drink
-            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
-            </Button>
-        </div>
-    )
-
-    // FETCH CODE
-    const { sendRequest } = useFetch()
+  
 
     // FORM SUBMISSION
     const submitHandler = async event => {
-        event.preventDefault()
-
+        if(isLoading) return
+        setIsLoading(true)
         console.log("submitting order...")
 
         let errors = false
@@ -173,27 +160,27 @@ const Order = () => {
             }
 
             formData = {
-                username: username ?? event.target[0].value ?? setFormHasErrors(true),
+                username: username ?? setFormHasErrors(true),
                 drinkTitle: drinkName,
                 drinkCost: 10,
                 quantity: drinkQuantity,
                 donationAmount: donationAmount,
-                comments: event.target[8].value ? event.target[8].value : null
+                comments: comments.trim()
             }
         } else {
             formData = {
-                username: event.target[0].value ? event.target[0].value : setFormHasErrors(true),
+                username: username ?? setFormHasErrors(true),
                 drinkTitle: drinkName,
                 drinkCost: drinkPrice,
                 quantity: drinkQuantity,
                 donationAmount: donationAmount,
-                comments: event.target[7].value ? event.target[7].value : null
+                comments: comments.trim()
             }
         }
 
         // ADD USERNAME TO LOCAL STORAGE FOR FUTURE ORDERS
-        localStorage.setItem('storedUsername', formData.username )
-
+        localStorage.setItem('storedUsername', username )
+        setHasStoredUsername(true)
         // ERROR CODE
 
         if (formData.username === 0 || formData.username.length < 1 || formData.drinkTitle.length<2 || formData.quantity < 1 || formData.quantity > 5) {
@@ -212,12 +199,25 @@ const Order = () => {
             
         }
 
-        const navigateHandler = () => navigate('/queue')
 
-        setTimeout(navigateHandler, 500)
-
+        setIsLoading(false)
+        navigate('/queue')
     }
 
+    const cardFooter = (
+        <div className="flex justify-between w-full items-center pb-5">
+            <p className="font-bold text-xl">Total: ${ orderTotal }</p>
+
+            <Button
+                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
+                onPress={submitHandler}
+                isDisabled={isLoading || !selectedDrinkId || selectedDrinkId < 0}
+            >Grab a Drink
+            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+            </Button>
+        </div>
+    )
+    
     return (
         <React.Fragment >
 
@@ -226,98 +226,113 @@ const Order = () => {
                 <ErrorModal error = { "Please make sure you filled in your name, drink order, and how many you'd like!" } onClear = { clearFormErrorHandler } />
             }
 
-            <form className="max-w-md m-auto" onSubmit={submitHandler} footer = { cardFooter }>
+            <form className="max-w-md m-auto">
 
-                <Card header={ cardHeader } footer={cardFooter}>
-                    { username &&
-                       <div className="text-xl mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bungee"> {username}</span></div>
-                    }
-                    { !username &&
-                        <Input
-                            id="name"
-                            type="text"
-                            placeholder="Buddy the Elf?"
-                            label="Your Name"
-                            required
-                            onInvalid={e => e.target.setCustomValidity('We need a name to yell out')}
-                            value = { username ? username : null }
-                            noEdit = { username ? true : false}
-                        />
-                    }
-
-                    {/* <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">Drink Order</label> */}
-                    <Select
-                        variant="bordered"
-                        selectionMode="single"
-                        onSelectionChange={setSelectValue}
-                         onChange={(e) => drinkDropdownChanged(e)}
-                        fullWidth
-                        radius="full"
-                        classNames={{
-                            label: "group-data-[filled=true]:-translate-y-5",
-                            trigger: "min-h-unit-16",
-                            listboxWrapper: "max-h-[400px]",
-                          }}
-                        listboxProps={{
-                            classNames: {
-                                list: ["border-2", "bg-red-200", "border-black"],
-                                base: ["border-2", "bg-red-200", "border-black"],
-
-                            },
-                            itemClasses: {
-                              base: [
-                                "rounded-md",
-                                "data-[hover=true]:bg-default-100",
-                                "data-[selectable=true]:focus:bg-green-600",
-                                "data-[focus-visible=true]:ring-default-500",
-                              ],
-                            },
-                          }}
-                        label="Select a Drink"
-                        selectedKeys={selectValue}
-                        >
-                        <SelectSection showDivider title="Cocktails">
-                        { 
-                           cocktails.map((drink) => (
-                                <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
-                            ))
+                <Card className=" bg-slate-200 mb-5 pb-5">
+                    <CardHeader className="pb-0 text-4xl font-bungee text-center justify-center text-green-700">
+                            Order
+                    </CardHeader>
+                    <CardBody>
+                        { hasStoredUsername &&
+                            <div className="text-xl mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bungee"> {username}</span></div>
                         }
-                        </SelectSection>
-                        <SelectSection showDivider title="Shots">
-                        {
-                           shots.map((drink) => (
-                                <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
-                            ))
-                        } 
-                        </SelectSection>
-                        <SelectSection showDivider title="Batched">
-                        {
-                            other.map((drink) => (
-                                <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
-                            ))
-                        } 
-                        </SelectSection>
-                        <SelectSection showDivider title="Something Else">
-                            <SelectItem textValue="Custom Drink - $10" key={0} value="0">Custom Drink — $10</SelectItem>
-                        </SelectSection>
-                    </Select>
+                        { !hasStoredUsername &&
+                            <Input
+                                className="pb-5"
+                                classNames={{
+                                    label: "text-xl group-data-[filled=true]:-translate-y-4",
+                                    trigger: "min-h-unit-16",
+                                    listboxWrapper: "max-h-[400px]",
+                                    inputWrapper: "bg-white",
+                                    errorMessage: "absolute italic bottom-2 left-4"
+                                }}
+                                autoFocus
+                                onFocus={onUsernameFocus}
+                                onBlur={onUsernameBlur}
+                                value={username}
+                                variant="bordered"
+                                radius="full"
+                                color={isInvalidUsername ? "danger" : "success"}
+                                label="Your Name"
+                                isInvalid={isInvalidUsername}
+                                onValueChange={setUsername}
+                                errorMessage={isInvalidUsername && "We'll need your name, nutcracker"}
+                            />
+                        }
 
-                    {
-                        // CONDITIONAL INPUT FOR IF USER CHOSE CUSTOM DRINK FROM DROP DOWN
-                        selectedDrinkId === 0 &&
-                        <Input
-                            id = "customDrinkInput"
-                            type = "text"
-                            placeholder = "Tell us what you want"
-                            label = "Custom Drink Name"
-                        />
-                    }
+                        <Select
+                            variant="bordered"
+                            selectionMode="single"
+                            onSelectionChange={setSelectValue}
+                            onChange={(e) => drinkDropdownChanged(e)}
+                            fullWidth
+                            color="success"
+                            radius="full"
+                            className="pb-5"
+                            classNames={{
+                                label: "text-xl group-data-[filled=true]:-translate-y-4",
+                                trigger: "min-h-unit-16 bg-white",
+                                listboxWrapper: "max-h-[400px]",
+                            }}
+                            listboxProps={{
+                                classNames: {
+                                    list: ["border-2", "bg-red-200", "border-black"],
+                                    base: ["border-2", "bg-red-200", "border-black"],
 
-                    {
-                        // DOESN'T ALLOW USER TO SELECT QUANTITY UNLESS THEY'VE ALREADY CHOSEN A DRINK
-                        drinkPrice !== 0 &&
-                        <div className={`transition-all ease-out ${drinkPrice !== 0 ? 'visible' : 'invisible'}`}>
-                            <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">How Many?</label>
+                                },
+                                itemClasses: {
+                                base: [
+                                    "rounded-md",
+                                    "data-[hover=true]:bg-default-100",
+                                    "data-[selectable=true]:focus:bg-green-600",
+                                    "data-[focus-visible=true]:ring-default-500",
+                                ],
+                                },
+                            }}
+                            label="Select a Drink"
+                            selectedKeys={selectValue}
+                            >
+                            <SelectSection showDivider title="Cocktails">
+                            { 
+                                cocktails.map((drink) => (
+                                    <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                ))
+                            }
+                            </SelectSection>
+                            <SelectSection showDivider title="Shots">
+                            {
+                                shots.map((drink) => (
+                                    <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                ))
+                            } 
+                            </SelectSection>
+                            <SelectSection showDivider title="Batched">
+                            {
+                                other.map((drink) => (
+                                    <SelectItem textValue={`${drink.name} — $${drink.price}`} key = { drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                ))
+                            } 
+                            </SelectSection>
+                            <SelectSection showDivider title="Something Else">
+                                <SelectItem textValue="Custom Drink - $10" key={0} value="0">Custom Drink — $10</SelectItem>
+                            </SelectSection>
+                        </Select>
+                        { /** Custom Drink Dropdown */
+                        selectedDrinkId > -1 && <div className="border-2 border-slate-200 p-2 rounded-3xl">
+                            {
+                                selectedDrinkId === 0 &&
+                                <Input
+                                    id = "customDrinkInput"
+                                    type = "text"
+                                    placeholder = "Tell us what you want"
+                                    label = "Custom Drink Description"
+                                    radius="full"
+                                    variant="bordered"
+                                />
+                            }
+                    
+                        <div className={`text-center transition-all ease-out ${drinkPrice !== 0 ? 'visible' : 'invisible'}`}>
+                            <label className="text-lg font-semibold mr-4 block text-center tracking-wide">How Many?</label>
                             <Button isIconOnly className="border-solid border-2 border-green-200 bg-green-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5" 
                             isDisabled={drinkQuantity <= 1} type="button" onPress={decrementDrinkQuantity}>
                                 <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
@@ -328,16 +343,8 @@ const Order = () => {
                                 <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
                             </Button>
                         </div>
-                    }
-
-                    {
-                        // DOESN'T ALLOW USER TO DONATE UNLESS THEY'VE CHOSEN A DRINK AND QUANTITY
-                        drinkPrice !== 0 && drinkQuantity !== 0 &&
-
-                        // DIV FOR DONATION FIELD
                         <div className="my-2">
-
-                            <label className="text-lg font-semibold mr-4 block uppercase">
+                            <label className="text-lg text-center font-semibold mr-4 block">
                                 Additional Tip / Donation
                             </label>
 
@@ -346,78 +353,118 @@ const Order = () => {
                                 <Button
                                 isIconOnly
                                 radius="full"
-                                className={`border-2 font-bold border-green-600  ${donationAmount === 2 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
-                                 onPress = { donationAmount === 2 ? () => donationHandler(0) : () => donationHandler(2)}
+                                className={`border-2 font-bold border-green-600 bg-white ${donationAmount === 2 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                    onPress = { donationAmount === 2 ? () => donationHandler(0) : () => donationHandler(2)}
                                 >$2</Button>
                                 <Button
                                 isIconOnly
                                 radius="full"
-                                className={`border-2 font-bold border-green-600  ${donationAmount === 5 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                className={`border-2 font-bold border-green-600 bg-white ${donationAmount === 5 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
                                     onPress = { donationAmount === 5 ? () => donationHandler(0) : () => donationHandler(5)}
                                     >$5</Button>
                                 <Button
                                 isIconOnly
                                 radius="full"
-                                className={`border-2 font-bold border-green-600  ${donationAmount === 10 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                className={`border-2 font-bold border-green-600 bg-white ${donationAmount === 10 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
                                 onPress = { donationAmount === 10 ? () => donationHandler(0) : () => donationHandler(10)}
                                     >$10</Button>
                                 <Button
                                     radius="full"
-                                    className={`border-2 font-bold border-green-600  ${selectedOtherDonation || (donationAmount > 0 && 
+                                    className={`border-2 font-bold bg-white border-green-600  ${selectedOtherDonation || (donationAmount > 0 && 
                                         donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10)  ? "text-slate-200 bg-green-700" : "text-green-700" }`}
                                     onPress = { donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10 ? () => donationHandler(0) : () => setSelectedOtherDonation(true) }
-                                    >Custom</Button>
+                                    > { (donationAmount > 0 && 
+                                        donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10) ? `$${donationAmount}` : 'Custom'} </Button>
                             </div>
 
                             {
                                 selectedOtherDonation && 
-                                <div className="flex justify-between duration-200 
-                                ease-out transition animate-slideIn">
+                                <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
                                     <Input
-                                        id = "donationInput"
-                                        type = "number"
-                                        placeholder = "Enter Donation Amount"
-                                        className = "w-full appearance-none bg-white text-black border rounded p-3 my-3 leading-tight focus: outline-green-700"
+                                    id = "donationInput"
+                                    label="Custom Donation Amount"
+                                    placeholder="0"
+                                    variant="bordered"
+                                    labelPlacement="outside"
+                                    type="number"
+                                    classNames={{
+                                        label: "text-black/50 dark:text-white/90",
+                                        input: [
+                                            "bg-transparent",
+                                            "text-black/90 dark:text-white/90",
+                                            "placeholder:text-default-700/50 dark:placeholder:text-white/60",
+                                        ],
+                                        innerWrapper: "bg-transparent",
+                                        inputWrapper: ["pr-0"]
+                                        }
+                                    }                                  
+                                    startContent={
+                                        <div className="pointer-events-none flex items-center">
+                                            <span className="text-default-400 text-small">$</span>
+                                        </div>
+                                    }
+                                    endContent={
+                                        <div className="">
+                                            <ButtonGroup>
+                                            <Button
+                                                size="md"
+                                                    className="bg-red-600 text-slate-200 text-xl border-t-2 border-b-2"
+                                                    isIconOnly
+                                                    type = "button"
+                                                    onClick = { () => setSelectedOtherDonation(false)}
+                                                >
+                                                    <FontAwesomeIcon icon={faClose}></FontAwesomeIcon>
+                                                </Button>
+                                                <Button
+                                                    size="md"
+                                                    isIconOnly
+                                                    className="bg-green-600 text-slate-200 text-xl border-t-2 border-b-2"
+                                                    type = "button"
+                                                    onClick = { customDonationInputHandler }
+                                                >
+                                                    <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+                                                </Button>
+                                            </ButtonGroup>
+                                        </div>
+                                    }
                                     />
-                                    <ButtonGroup>
-                                    <Button
-                                        size="md"
-                                        isIconOnly
-                                        className="bg-green-600 text-slate-200 text-xl"
-                                        type = "button"
-                                        onClick = { donationInputHandler }
-                                    >
-                                        <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                                    </Button>
-                                    <Button
-                                    size="md"
-                                        className="bg-red-600 text-slate-200 text-xl"
-                                        isIconOnly
-                                        type = "button"
-                                        onClick = { () => setSelectedOtherDonation(false)}
-                                    >
-                                        <FontAwesomeIcon icon={faClose}></FontAwesomeIcon>
-                                    </Button>
-                                    </ButtonGroup>
                                 </div>
                             }
                         </div>
+                        
+                    </div>
                     }
-
-                    <label className="text-lg font-semibold mr-4 block uppercase tracking-wide">
-                        Add a Comment
-                    </label>
-
-                    <textarea
+                    <Textarea
                         name="comments"
-                        rows="3"
+                        minRows="3"
+                        maxRows="6"
+                        variant="bordered"
+                        color="success"
+                        fullWidth
+                        maxLength="120"
+                        label="Comments"
+                        value={comments}
+                        onValueChange={setComments}
                         placeholder="Write us love letters"
-                        className="block w-full max-w-2xl bg-white text-black border rounded p-3 my-3 leading-tight focus:outline-none focus:bg-white border-gray-2"
+                        classNames={{
+                            inputWrapper: "bg-white"
+                        }}
                     />
+                    </CardBody>
+                    <CardFooter>
+                        <div className="flex justify-between w-full items-center pb-5">
+                            <p className="font-bold text-xl">Total: ${ orderTotal }</p>
+                            <Button
+                                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
+                                onPress={submitHandler}
+                                isDisabled={isLoading || !username || !selectedDrinkId || selectedDrinkId < 0}
+                            >Grab a Drink
+                            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+                            </Button>
+                        </div>
+                    </CardFooter>
                 </Card>
-
             </form>
-
         </React.Fragment>
     )
 }

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
+// import { useIsFocused } from '@react-navigation/native'
 import { useFetch } from "../hooks/useFetch";
 import { Link } from "react-router-dom";
 import "./BartabNav.css"
@@ -9,11 +11,13 @@ import UserHasTab from "../components/payTab/UserHasTab";
 
 const BartabNav = (props) => {
     const { isLoading, sendRequest, hasError, clearError } = useFetch()
+    // const isFocused = useIsFocused()
     const [isChecked, setIsChecked] = useState(false);
     const [ data, setData ] = useState(null)
     const [ totalOwed, setTotalOwed ] = useState(0)
     const [ venmoUrl, setVenmoUrl ] = useState('https://venmo.com/jacobwebber')
     const [ paypalUrl, setPaypalUrl ] = useState('https://paypal.me/jacobwwebber')
+    const location = useLocation();
 
     useEffect(() => {
         const username = localStorage.getItem('storedUsername')
@@ -30,7 +34,7 @@ const BartabNav = (props) => {
             fetchUserTab()
         }
         
-    }, [ sendRequest ])
+    }, [sendRequest, location ])
 
     useEffect(() => {
         if(data){
