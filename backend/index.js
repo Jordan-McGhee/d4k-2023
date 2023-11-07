@@ -8,6 +8,7 @@ dotenv.config()
 
 const donationRoutes = require("./routes/donation-routes")
 const orderRoutes = require("./routes/order-routes")
+const userRoutes = require("./routes/user-routes")
 
 const app = express()
 const PORT = process.env.DATABASE_PORT
@@ -35,6 +36,7 @@ app.use((req, res, next) => {
 // ROUTE VARIABLES
 app.use("/donation", donationRoutes)
 app.use("/order", orderRoutes)
+app.use("/user", userRoutes)
 
 
 // TEST ROUTE
