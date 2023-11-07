@@ -27,17 +27,18 @@ const LargeTopThreeItem = props => {
     return (
         <li className={ rankClass }>
 
-            <p className="uppercase text-white text-6xl font-bold italic">{ rankText }</p>
+            <p className="uppercase text-purple text-6xl font-bold font-bungee">{ rankText }</p>
             {/* image */}
-            <img src = { image } alt = {`user rank ${props.rank}`} className={ imageClass } />
-            {/* <div  className= { imageClass }></div> */}
-
-            {/* div containing name, rank, total, drink quantity */}
-            <div className="text-center">
-                <p className="text-8xl font-bold italic text-white">{ props.username }</p>
-                <p className="text-8xl font-bold italic text-green-700 my-6">${ parseInt(props.donationTotal) + parseInt(props.orderTotal)}</p>
-                <p className="text-6xl font-bold italic text-white my-6">${props.donationTotal} donated</p>
-                <p className="text-6xl italic text-white">{ props.drinksOrdered } Drinks Ordered</p>
+            <div className="relative text-center">
+                <img src = { image } alt = {`user rank ${props.rank}`} className={ imageClass + " border-5 shadow-xl drop-shadow-xl rounded-full border-white" } />
+                <p className="text-5xl font-fugaz font-bold italic text-white absolute rounded-xl bg-emerald-800 bottom-0 inset-x-0 m-10 mb-0 p-2">
+                    { props.username }
+                </p>
+            </div>
+            <div className="text-center mt-10 border-4 border-slate-500/20 backdrop-blur bg-black/40  p-4 rounded-3xl">
+                <p className="text-7xl font-fugaz font-bold text-emerald-400 mb-2">${ parseInt(props.donationTotal) + parseInt(props.orderTotal)}</p>
+                <p className="text-5xl font-bold text-white mb-2">${props.donationTotal} extra donated</p>
+                <p className="text-5xl text-white">{ props.drinksOrdered } Drinks</p>
             </div>
 
         </li>

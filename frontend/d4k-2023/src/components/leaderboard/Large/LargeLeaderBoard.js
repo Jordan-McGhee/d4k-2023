@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useCallback }  from "react";
 // import HonorableMentions from "./HonorableMentions";
 import LargeLeaderBoardList from "./LargeLeaderBoardList";
+import LargeLeaderBoardItem from "./LargeLeaderBoardItem"
+import LargeTopThreeItem from "./LargeTopThreeItem";
 import LargeProgressBar from "./LargeProgressBar";
-import LargeTopThree from "./LargeTopThree";
 import ErrorModal from "../../UIElements/ErrorModal";
 import LoadingSpinner from "../../UIElements/LoadingSpinner";
 import { useFetch } from "../../../hooks/useFetch";
 
-import bgImage from "../../../images/snowflake-bg.png"
+import bgImage from "../../../images/leaderboard.jpg"
 import LargeEmptyLeaderBoard from "./LargeEmptyLeaderBoard";
 
 const LargeLeaderBoard = props => {
@@ -30,8 +31,6 @@ const LargeLeaderBoard = props => {
                 setData(responseData.response)
                 setOverallTotal(parseInt(responseData.sumTotal))
             }
-            
-
         } catch (error) {
             console.log(error)
         }
@@ -44,11 +43,7 @@ const LargeLeaderBoard = props => {
     }, [ fetchLeaderboard ])
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            fetchLeaderboard()
-            // console.log('rerendering!')
-        }, 30000)
-
+        const interval = setInterval(() => {fetchLeaderboard()}, 30000)
         return () => clearInterval(interval)
     }, [ fetchLeaderboard ])
 
@@ -57,60 +52,65 @@ const LargeLeaderBoard = props => {
     console.log(fourThroughEight)
 
     const content = (
-        <div className="flex flex-col justify-around items-center w-11/12 mx-auto">
-                        
-            <div className="flex items-center w-full justify-around">
-                {/* SECTION FOR LEADERBOARD */}
-                <div className="flex flex-col w-3/5 justify-around">
-                    {/* title */}
-                    <p className="uppercase flex flex-col items-center font-bold text-green-700 text-9xl">Drink 4 The Kids <span className="text-white text-9xl">Leaderboard</span></p>
-
-                    {/* top three div */}
-                    <LargeTopThree data = { topThree } />
-
-                    {/* div for honorable mentions */}
-                    {/* <HonorableMentions /> */}
-                
-                </div>
-
-                {
-                    fourThroughEight.length !== 0 && 
-                    <div className="h-full w-1/4">
-                        <LargeLeaderBoardList data = { fourThroughEight } />
+        <div className="flex flex-col justify-around items-center p-10 mx-auto">
+                    <div className="uppercase flex items-center font-bold text-emerald-600 text-7xl font-bungee pb-10">Drink 4 The Kids 
+                        <span className="font-fugaz text-slate-500 text-6xl pl-6">Leaderboard</span>
                     </div>
-                }
-
+            <div className="flex items-center w-full items-stretch">
+                <div className="flex flex-col w-1/12">
+                    <LargeProgressBar total = { overallTotal } />
+                </div>
+                    <div className="flex flex-col w-8/12 mx-6 px-4 justify-around">
+                        <ul className="flex justify-center my-12  px-16 rounded-2xl">
+                        { topThree.map((user, i) => (
+                            <LargeTopThreeItem
+                                id = {`large-leaderboard-topThree-${i}`}
+                                key = {`large-leaderboard-topThree-${i}`}
+                                username = { user.username }
+                                orderTotal = { user.orders_total ? parseInt(user.orders_total) : 0 }
+                                donationTotal = { user.donations_total ? parseInt(user.donations_total) : 0}
+                                drinksOrdered = { user.drinks_ordered ? user.drinks_ordered : 0}
+                                rank = { i + 1}
+                            />
+                        )) }
+                        </ul>
+                    </div>
+                    {
+                        fourThroughEight.length !== 0 && 
+                        <div className="flex flex-col h-full mt-20 w-3/12">
+                            {
+                                fourThroughEight.map((user, i) => (
+                                    <LargeLeaderBoardItem
+                                        id = { `large-leaderboard-${i}`}
+                                        key = { `large-leaderboard-${i}`}
+                                        username = { user.username }
+                                        orderTotal = { user.orders_total ? parseInt(user.orders_total) : 0 }
+                                        donationTotal = { user.donations_total ? parseInt(user.donations_total) : 0}
+                                        drinksOrdered = { user.drinks_ordered ? user.drinks_ordered : 0}
+                                        rank = { i+ 4}
+                                    />
+                                ))
+                            }
+                        </div>
+                    }
             </div>
-
-            <div className="w-full">
-                {/* SECTION FOR PROGRESS BAR */}
-                <LargeProgressBar total = { overallTotal } />
-            </div>
-
         </div>
     )
 
     return (
         <React.Fragment>
-            <div className="h-screen object-fill" style={{backgroundImage: `url(${bgImage})`}}>
-                <div className="bg-red-900/90 h-full flex items-center">
-
-                
-
+            <div className="bg-cover" style={{backgroundImage: `url(${bgImage})`, padding:0, margin:0}}>
+                <div>
                 <ErrorModal error = { hasError } onClear = { clearError } />
-
-                { isLoading && <LoadingSpinner />}
-
                     {
                         data.length === 0 ?
-                        <div className="w-2/3 mx-auto h-2/5 bg-black/30 p-12 rounded-2xl border-[16px] border-green-700">
+                        <div className="w-2/3 mx-auto h-2/5 p-12 rounded-2xl border-[16px] border-green-700">
                             <LargeEmptyLeaderBoard />
                         </div>
                         :
                             content
                     }
 
-                    
                 </div>
 
             </div>

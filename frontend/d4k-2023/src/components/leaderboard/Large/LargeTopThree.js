@@ -15,7 +15,7 @@ const LargeTopThree = props => {
     ))
 
     return (
-        <ul className="flex justify-center w-full h-3/5 my-12 bg-black/30 px-16 py-24 rounded-2xl border-[16px] border-green-700">
+        <ul className="flex justify-center w-full my-12 bg-black/30 px-16 rounded-2xl">
             { items }
         </ul>
     )

@@ -3,13 +3,17 @@
 @tailwind utilities;
 
 .progress-bar {
-  background: repeating-linear-gradient(
-    45deg,
-    #dcfce7,
-    #dcfce7 10px,
-    #15803d 10px,
-    #15803d 20px
-  );
+  box-shadow: 0px 0px 10px rgba(255, 50, 0, 0.8) inset;
+  background: repeating-linear-gradient(45deg, #FFFFEE, #FFFFEE 35px, #D33144 40px, #D33144 75px);
+}
+
+.gold {
+  overflow: hidden;
+
+  box-shadow: 0px 0px 10px rgba(255, 50, 0, 0.8) inset;
+  background: repeating-linear-gradient(45deg, #FFFFEE, #FFFFEE 35px, #fcc100 40px, #e0aa35 75px);
+
+
 }
 
 .font-bungee {
