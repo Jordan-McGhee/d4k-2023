@@ -26,6 +26,13 @@ const FAQ = () => {
                     linkText = "Visit their site to read more"
                 />
                 <CardListItem
+                    question = "How Can We Donate?"
+                    response = {`You can order drinks and add donation tips on this website. Keep track of your tab under the "Pay Tab" button where
+                    you can use your preferred payment method to donate. Once collected, we will DOUBLE your donation with a company match!
+                    Visit the leaderboard to see the top donors.'
+                    `}
+                />
+                <CardListItem
                     question = "What Should I Bring?"
                     response = "Your friends, your parents, your friend's parents, and a heart of gold (or cash/card)"
                 />

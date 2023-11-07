@@ -31,7 +31,7 @@ const MainNav = (props) => {
                     <NavLink
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}
                         onClick={() => setIsChecked(!isChecked)} to="/faq">
-                        <FontAwesomeIcon className="mx-1" icon={faCandyCane} />Faq
+                        <FontAwesomeIcon className="mx-1" icon={faCandyCane} />Info
                     </NavLink>
 
                     {showOrderingNav && <NavLink 

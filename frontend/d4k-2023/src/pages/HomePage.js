@@ -103,7 +103,7 @@ const HomePage = () => {
 
                 <p className="text-2xl my-5">It's a holiday spirited pop up bar serving up <span className="italic font-bold">the best craft cocktails</span> and the worst puns for donations to a great cause</p>
 
-                <p className="text-2xl font-extrabold italic">All proceeds go to Bethany Haven & Nicholas House Family Homeless Shelter</p>
+                <p className="text-2xl font-extrabold italic">All donations are matched and all proceeds go to Bethany Haven & Nicholas House Family Homeless Shelter</p>
                 <br/>
                 <Button 
                 className="uk-button bg-green-600" 
