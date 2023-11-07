@@ -7,7 +7,7 @@ import { faCandyCane, faCocktail, faGift, faIgloo, faPeopleGroup, faMedal } from
 const MainNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
     const isLocal = window.location.hostname.includes("localhost")
-    const isPartyDate = new Date() < new Date('12/16/2023')
+    const isPartyDate = new Date() >= new Date('12/16/2023')
     const showOrderingNav = isLocal || isPartyDate
     
     return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {Button} from "@nextui-org/react";
 import MenuList from "../components/menu/MenuList";
 
@@ -8,9 +8,12 @@ import shots from "../assets/shots.json"
 
 
 const Menu = () => {
-    const isLocal = window.location.hostname.includes("localhost")
-    const isPartyDate = new Date() < new Date('12/16/2023')
-    const showOrderingNav = isLocal || isPartyDate
+    const [ showOrderingNav, setShowOrderingNav ] = useState(false)
+    useEffect(() => {
+        const isLocal = window.location.hostname.includes("localhost")
+        const isPartyDate = new Date() >= new Date('12/16/2023')
+        setShowOrderingNav(isLocal || isPartyDate)
+    }, [  ])
 
     return (
         <div className="max-w-md m-auto">
