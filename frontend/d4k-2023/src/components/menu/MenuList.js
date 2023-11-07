@@ -12,6 +12,7 @@ const MenuList = props => {
             description = { drink.description }
             ingredients = { drink.ingredients }
             price = { drink.price }
+            showOrderButton = {props.showOrderButton}
         />
     ))
 

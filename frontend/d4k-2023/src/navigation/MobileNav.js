@@ -6,7 +6,10 @@ import { faCandyCane, faCocktail, faGift, faIgloo, faPeopleGroup, faMedal } from
 
 const MainNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
-
+    const isLocal = window.location.hostname.includes("localhost")
+    const isPartyDate = new Date() < new Date('12/16/2023')
+    const showOrderingNav = isLocal || isPartyDate
+    
     return (
     <div className="outer-menu">
         <input id="nav-checkbox" 
@@ -31,39 +34,29 @@ const MainNav = (props) => {
                         <FontAwesomeIcon className="mx-1" icon={faCandyCane} />Faq
                     </NavLink>
 
-                    <NavLink 
+                    {showOrderingNav && <NavLink 
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} 
                         onClick={() => setIsChecked(!isChecked)} to="/leaderboard">
                         <FontAwesomeIcon className="mx-1" icon={faMedal} />Leaderboard
-                    </NavLink>
+                    </NavLink>}
                 
-                    <NavLink 
+                    {showOrderingNav && <NavLink 
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} 
                         onClick={() => setIsChecked(!isChecked)} to="/queue">
                         <FontAwesomeIcon className="mx-1" icon={faPeopleGroup} />Queue
-                    </NavLink>
+                    </NavLink>}
             
-                    <NavLink
+                    {showOrderingNav && <NavLink
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}
                         onClick={() => setIsChecked(!isChecked)} to="/order">
                         <FontAwesomeIcon className="mx-1" icon={faGift} />Order
-                    </NavLink>
+                    </NavLink>}
             
                     <NavLink
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}
                         onClick={() => setIsChecked(!isChecked)} to="/menu">
                         <FontAwesomeIcon className="mx-1" icon={faCocktail} />Menu
                     </NavLink>
-                    {/* {
-                        localStorageUsername && 
-                        <NavLink
-                        to="/pay"
-                        className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} 
-                        onClick={() => setIsChecked(!isChecked)}>
-                        <FontAwesomeIcon className="mx-1" icon={faNoteSticky} />
-                            Close Your Tab
-                        </NavLink>
-                    } */}
                 </div>
             </div>
         </div>

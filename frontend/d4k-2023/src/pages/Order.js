@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import Card from "../components/UIElements/Card"
-import {Button, ButtonGroup, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react"
+import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -12,9 +11,6 @@ import cocktails from "../assets/drinks.json"
 import other from "../assets/other.json"
 import shots from "../assets/shots.json"
 import ErrorModal from "../components/UIElements/ErrorModal";
-
-// icon import
-import order from "../images/icons/order-red.png"
 
 const Order = () => {
 

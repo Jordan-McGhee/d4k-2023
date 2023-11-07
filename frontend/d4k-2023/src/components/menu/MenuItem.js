@@ -36,21 +36,14 @@ const MenuItem = props => {
                             <p className="uppercase font-light text-[10px] my-2">{ props.ingredients.join(" * ")}</p>
                         </div>
 
-                        {/* HIDDEN INPUT TO PASS THROUGH TO ORDER PAGE */}
-                        <input
-                            hidden
-                            readOnly
-                            value = { [ props.name, props.price] }
-                        />
-
                         {/* div for order button and price */}
                         <div className="flex items-center justify-between">
-                            <Button
+                            {props.showOrderButton && <Button
                                 text = "Order"
                                 type = "SUBMIT"
                                 radius="full"
-                                className = "bg-gradient-to-tr from-green-600 to-lime-400 text-white shadow-lg hover:scale-105 font-bold uppercase text-white">Order</Button>
-
+                                className = "bg-gradient-to-r from-green-800 to-emerald-400 shadow-lg hover:scale-105 font-bold uppercase text-white">Order</Button>
+                            }
                             <p>${ props.price }</p>
                         </div>
 

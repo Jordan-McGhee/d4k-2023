@@ -8,28 +8,31 @@ import shots from "../assets/shots.json"
 
 
 const Menu = () => {
+    const isLocal = window.location.hostname.includes("localhost")
+    const isPartyDate = new Date() < new Date('12/16/2023')
+    const showOrderingNav = isLocal || isPartyDate
 
     return (
         <div className="max-w-md m-auto">
 
             {/* div for buttons */}
             <div className="flex m-auto justify-between text-white fixed top-0 inset-x-0 p-4 w-full text-sm z-10 backdrop-blur-md
-            	 bg-slate-500/80 max-w-md border-b-2 border-green-500">
+            	 bg-slate-500/80 max-w-md border-b-2 border-emerald-500">
                 <Button
-                    className="bg-green-600 focus:text-green-600 hover:text-green-600 text-slate-100 text-lg font-fugaz"
+                    className="bg-emerald-600 focus:text-green-600 hover:text-green-600 text-slate-100 text-lg font-fugaz"
                     radius="full" 
                     variant="ghost"
                     onPress = { () => document.getElementById('cocktails').scrollIntoView({ behavior: 'smooth' })}
                 >Cocktails</Button>
 
                 <Button
-                    className="bg-green-600 text-slate-100 text-lg font-fugaz"
+                    className="bg-emerald-600 text-slate-100 text-lg font-fugaz"
                     radius="full" variant="ghost"
                     onClick = { () => document.getElementById('batched').scrollIntoView({ behavior: 'smooth' })}
                 >Batched</Button>
 
                 <Button
-                    className="bg-green-600 text-slate-100 text-lg font-fugaz"
+                    className="bg-emerald-600 text-slate-100 text-lg font-fugaz"
                     radius="full" variant="ghost"
                     onClick = { () => document.getElementById('shots').scrollIntoView({ behavior: 'smooth' })}>
                         Shots
@@ -37,29 +40,31 @@ const Menu = () => {
             </div>
             
             <div className="mt-10 pt-10">
-                <p className="text-white text-center text-2xl">Want something <span className="italic">off menu?</span><br></br>Ask what we can whip up for you!</p>
-
+                <p className="text-white text-center text-2xl"> <span className="font-fugaz italic">WORK IN PROGRESS</span></p>
                 {/* cocktails div */}
                 <div id = "cocktails" className="scroll-mt-24">
-                    <p className="text-center text-4xl mt-4 text-green-600 font-extrabold uppercase">Cocktails</p>
+                    <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Cocktails</p>
                     <MenuList
                         drinks = { cocktails }
+                        showOrderButton = {showOrderingNav}
                     />
                 </div>
 
                 {/* batched div */}
                 <div id = "batched" className="scroll-mt-24">
-                    <p className="text-center text-4xl mt-4 text-green-600 font-extrabold uppercase">Batched</p>
+                    <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Batched</p>
                     <MenuList
                         drinks = { batched }
+                        showOrderButton = {showOrderingNav}
                     />
                 </div>
 
                 {/* shots div */}
                 <div id = "shots" className="scroll-mt-24 mb-20">
-                    <p className="text-center text-4xl mt-4 text-green-600 font-extrabold uppercase">Shots</p>
+                    <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Shots</p>
                     <MenuList
                         drinks = { shots }
+                        showOrderButton = {showOrderingNav}
                     />
                 </div>
             </div>
