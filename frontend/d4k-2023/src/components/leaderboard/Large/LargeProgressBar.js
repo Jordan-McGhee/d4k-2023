@@ -1,7 +1,7 @@
 import React from "react";
 
 const LargeProgressBar = props => {
-    const currentTotal = 3000 // props.total
+    const currentTotal = props.total
     const goal = 2000
     const percentage =  Math.floor((currentTotal / goal) * 100)
 
@@ -18,7 +18,7 @@ const LargeProgressBar = props => {
                 </div>
             </div>
             <span className="text-3xl text-white bg-slate-400 p-2 rounded-full text-center font-bold align-bottom absolute top-10">
-                Goal $2000
+                Goal ${goal}
             </span>  
         </div>
         </React.Fragment>

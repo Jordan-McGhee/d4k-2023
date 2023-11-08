@@ -7,12 +7,7 @@ const MenuItem = props => {
 
     const navigate = useNavigate()
 
-    const submitHandler = (event) => {
-        event.preventDefault()
-
-        const chosenDrink = event.target[0].value
-        console.log(chosenDrink)
-
+    const orderButtonPressed = (event) => {
         navigate({
             pathname: '/order', 
             search: createSearchParams({drinkId: props.id}).toString()
@@ -20,11 +15,8 @@ const MenuItem = props => {
     }
 
     return (
-        <li className="max-height-48 flex">
-            <form onSubmit={ submitHandler }>
-
-                <Card className = "flex px-4 py-2 justify-between rounded-lg border border-gray-2 bg-white w-full overflow-hidden shadow-lg mt-5">
-                    <img src = { props.image } alt = { `${props.name}` } className = "border border-black h-5/6 w-1/3 my-auto" />
+                <Card className = "flex px-4 py-3 justify-between border border-b-1 border-slate-500 first:rounded-t-3xl last:rounded-b-3xl bg-white/80 backdrop-blur-lg w-full overflow-hidden shadow-lg ">
+                    <img src = { props.image } alt = { `${props.name}` } className = "border border-slate-500 shadow-lg h-40 w-1/3 rounded-xl" />
 
                     {/* div for full list item */}
                     <div className="w-7/12 flex flex-col justify-center">
@@ -39,19 +31,18 @@ const MenuItem = props => {
                         {/* div for order button and price */}
                         <div className="flex items-center justify-between">
                             {props.showOrderButton && <Button
-                                text = "Order"
                                 type = "SUBMIT"
                                 radius="full"
-                                className = "bg-gradient-to-r from-green-800 to-emerald-400 shadow-lg hover:scale-105 font-bold uppercase text-white">Order</Button>
+                                onPress={orderButtonPressed}
+                                className = "bg-gradient-to-r from-green-800 to-emerald-400 shadow-lg hover:scale-105 font-bold uppercase text-white">
+                                    Order
+                                </Button>
                             }
-                            <p>${ props.price }</p>
+                            <span className="text-emerald-600 font-bungee text-xl">${ props.price }</span>
                         </div>
 
                     </div>
                 </Card>
-
-            </form>
-        </li>
     )
 }
 

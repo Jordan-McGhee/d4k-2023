@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChampagneGlasses, faClose } from '@fortawesome/free-solid-svg-icons'
 import BuddyLogo from "../components/UIElements/BuddyLogo"
@@ -8,7 +9,7 @@ import icsFile from '../assets/drink4thekidsparty.ics'
 
 const HomePage = () => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-
+    const location = useLocation()
     const openInNewTab = (url) => {
         const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
         if (newWindow) newWindow.opener = null
@@ -54,8 +55,7 @@ const HomePage = () => {
     return (
         // WELCOME DIV
         <div className="text-white text-center">
-   <Modal className="z-[1000]"         backdrop="opaque" 
- placement="top" isOpen={isOpen} onOpenChange={onOpenChange}>
+   <Modal className="z-[1000]" backdrop="opaque" placement="top" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -65,9 +65,8 @@ const HomePage = () => {
                     onPress={() => openInNewTab("https://www.google.com/calendar/render?action=TEMPLATE&text=Drink4TheKidsParty&dates=20231216T220000Z/20231217T080000Z&details=Christmas%20Cocktails%20for%20a%20Charitable%20Cause%0A5pm%20Saturday%20Dec%2016&location=195%20Arizona%20Ave%20NE&trp=true&sf=true&output=xml#f")}>
                   Google Calendar
                 </Button>
-                <Button color="success" radius="full" variant="shadow" 
-                   >
-                 <a href={icsFile} download="d4k-party.ics">Phone Calendar</a>
+                <Button color="success" radius="full" variant="shadow">
+                    <a href={icsFile} download="d4k-party.ics">Phone Calendar</a>
                 </Button>
               </ModalBody>
               <ModalFooter>
@@ -103,7 +102,7 @@ const HomePage = () => {
 
                 <p className="text-2xl my-5">It's a holiday spirited pop up bar serving up <span className="italic font-bold">the best craft cocktails</span> and the worst puns for donations to a great cause</p>
 
-                <p className="text-2xl font-extrabold italic">All donations are matched and all proceeds go to Bethany Haven & Nicholas House Family Homeless Shelter</p>
+                <p className="text-2xl font-bold italic">All donations are <span className="text-3xl font-extrabold">doubled </span> with a match and go to Bethany Haven & Nicholas House Family Homeless Shelter</p>
                 <br/>
                 <Button 
                 className="uk-button bg-green-600" 
