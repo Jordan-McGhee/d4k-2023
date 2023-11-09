@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChampagneGlasses, faClose } from '@fortawesome/free-solid-svg-icons'
+import { faChampagneGlasses } from '@fortawesome/free-solid-svg-icons'
 import BuddyLogo from "../components/UIElements/BuddyLogo"
 import { toast } from 'react-toastify';
 import { Link, Button, useDisclosure, Modal, ModalHeader, ModalFooter, ModalBody, ModalContent } from "@nextui-org/react";
@@ -9,7 +8,6 @@ import icsFile from '../assets/drink4thekidsparty.ics'
 
 const HomePage = () => {
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const location = useLocation()
     const openInNewTab = (url) => {
         const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
         if (newWindow) newWindow.opener = null
@@ -19,11 +17,11 @@ const HomePage = () => {
         <div className=" z-50 grid place-content-center text-center">
             <div className="font-fugaz text-lg">Welcome to the party</div>
             <div className="flex pt-3">
-                <Button winterize className="mx-1 bg-green-600 text-md px-5 py-3 border rounded-full text-white float-right" target="_blank"
+                <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white float-right" target="_blank"
                     onPress={() => openInNewTab("https://docs.google.com/forms/d/e/1FAIpQLSeaCqqYVV38URqfCGFvf9ZXw-fSHigXAe0c55kPU8N5iN0Jag/viewform")}>
                     RSVP
                     </Button>
-                    <Button winterize className="mx-1 bg-green-600 text-md px-5 py-3 border rounded-full text-white float-right"
+                    <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white float-right"
                         onPress={() => openInNewTab("sms:6787361277&body=drink4thekids%20Christmas%20party%20address%3F")}>
                     Address
                     </Button>
@@ -80,7 +78,7 @@ const HomePage = () => {
 
                 {/* DIV FOR NEW LOGO */}
                 <div>
-                    <p className="text-6xl text-green-600 my-3 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
+                    <p className="text-6xl text-emerald-600 my-3 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
                         <br/><FontAwesomeIcon className="mt-4 title font-extrabold" icon={faChampagneGlasses}></FontAwesomeIcon>
                     </p>
                 </div>
@@ -105,7 +103,7 @@ const HomePage = () => {
                 <p className="text-2xl font-bold italic">All donations are <span className="text-3xl font-extrabold">doubled </span> with a match and go to Bethany Haven & Nicholas House Family Homeless Shelter</p>
                 <br/>
                 <Button 
-                className="uk-button bg-green-600" 
+                className="uk-button bg-emerald-600" 
                 radius="full" as={Link} href="/FAQ" >
                     Read More
                 </Button>
