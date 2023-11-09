@@ -46,7 +46,7 @@ const Menu = () => {
                 <p className="text-white text-center text-2xl"> <span className="font-fugaz italic">WORK IN PROGRESS</span></p>
                 {/* cocktails div */}
                 <div id = "cocktails" className="scroll-mt-24">
-                    <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Cocktails</p>
+                    <p className="te    xt-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Cocktails</p>
                     <MenuList
                         drinks = { cocktails }
                         showOrderButton = {showOrderingNav}

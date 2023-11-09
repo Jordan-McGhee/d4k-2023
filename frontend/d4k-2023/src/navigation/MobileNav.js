@@ -16,10 +16,10 @@ const MainNav = (props) => {
             className="checkbox-toggle" 
             onChange={(event) => setIsChecked(event.currentTarget.checked)}
             checked={isChecked}type="checkbox" />
-        <div className="hamburger bg-green-600 border-2 border-slate-200">
+        <div className="hamburger bg-emerald-600 border-2 border-slate-200">
             <div></div>
         </div>
-        <div className="menu">
+        <div className="menu backdrop-blur-sm">
             <div>
                 <div className="grid text-center opacity-0 transition-opacity ease-in-out text-2xl">
                     <NavLink

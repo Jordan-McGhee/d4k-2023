@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate, createSearchParams } from "react-router-dom";
@@ -13,7 +13,6 @@ import shots from "../assets/shots.json"
 import ErrorModal from "../components/UIElements/ErrorModal";
 
 const Order = () => {
-
     let navigate = useNavigate()
         const { sendRequest } = useFetch()
     let allDrinksJson = cocktails.concat(other).concat(shots)
@@ -22,39 +21,49 @@ const Order = () => {
     const [ hasStoredUsername, setHasStoredUsername ] = useState(false)
     const [ drinkName, setDrinkName ] = useState(null)
     const [ selectedDrinkId, setSelectedDrinkId ] = useState(-1)
-    const [selectValue, setSelectValue] = useState(new Set([]));
+    const [ selectValue, setSelectValue ] = useState(new Set([]));
     const [ drinkPrice, setDrinkPrice ] = useState(0)
     const [ drinkQuantity, setDrinkQuantity ] = useState(1)
-    const [ orderTotal, setOrderTotal ] = useState(0)
-    const [ donationAmount, setDonationAmount ] = useState(0)
-    const [ selectedOtherDonation, setSelectedOtherDonation ] = useState(false)
+    const [ donationAmount, _setDonationAmount ] = useState(0)
+    const setDonationAmount = (amount) => {_setDonationAmount(amount > 0 ? parseInt(amount) : 0)}
+    const [ showCustomDonation, setShowCustomDonation ] = useState(false)
     const [ comments, setComments ] = useState('')
-
     const [ isLoading, setIsLoading ] = useState(false)
     const [ searchParams ] = useSearchParams();
-
-    // FORM ERROR STATE
     const [ formHasErrors, setFormHasErrors ] = useState(false)
-    const [usernameFocused, setUsernameFocused] = React.useState(false)
+    const [usernameFocused, setUsernameFocused] = useState(false)
     const onUsernameFocus = () => setUsernameFocused(true)
     const onUsernameBlur = () => setUsernameFocused(false)
+    const [ customDrinkDescription, setCustomDrinkDescription ] = useState('')
+    const [customDrinkDescriptionFocused, setCustomDrinkDescriptionFocused] = useState(false)
+    const onCustomDrinkDescriptionFocus = () => setCustomDrinkDescriptionFocused(true)
+    const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
+    const customDrinkDescriptionRef = useRef(null);
+
+    const clearFormErrorHandler = () => { setFormHasErrors(false) }
+
+    const customDrinkId = 999
+    const isCustomDrinkSelected = useMemo(() => {
+        return selectedDrinkId === customDrinkId
+    }, [selectedDrinkId])
+
+    const isInvalidCustomDrinkDescription = useMemo(() => {
+        return (!customDrinkDescription || customDrinkDescription.trim().length < 3) && isCustomDrinkSelected
+    }, [isCustomDrinkSelected, customDrinkDescription]);
+
+    const orderTotal = useMemo(() => {
+        return (drinkPrice * drinkQuantity) + donationAmount
+    }, [drinkPrice, drinkQuantity, donationAmount]);
+
     
-    const clearFormErrorHandler = () => {
-        setFormHasErrors(false)
-    }
+    const isInvalidUsername = useMemo(() => {
+        return (!username ||  username.trim().length < 3)
+    }, [username]);
 
-    const isInvalidUsername = React.useMemo(() => {
-        return username === '' && !usernameFocused
-      }, [username, usernameFocused]);
-
-    const isInvalidDonationAmount = React.useMemo(() => {
+    const isInvalidDonationAmount = useMemo(() => {
     return donationAmount < 0 || donationAmount > 1000
     }, [donationAmount]);
     
-
-    // check if user navigated from Menu page amd selected a drink
-    
-    // useEffect here to run this function once and prevent an endless loop.
     useEffect(() => {
         let uname = localStorage.getItem('storedUsername')
         if(uname){
@@ -68,13 +77,16 @@ const Order = () => {
     }, [])
 
     useEffect(() => {
-        if(selectedOtherDonation){
-            const previousDonation = donationAmount
-
+        if(showCustomDonation){
             setDonationAmount(0)
-            setOrderTotal(orderTotal - previousDonation)
         }
-    }, [selectedOtherDonation])
+    }, [showCustomDonation])
+
+    useEffect(() => {
+        if(isCustomDrinkSelected){
+            customDrinkDescriptionRef.current.focus();
+        }
+    }, [isCustomDrinkSelected])
 
     const updateDrinkState = (drinkId) =>{
         if(drinkId === null) return
@@ -82,7 +94,6 @@ const Order = () => {
         if(drinkId < 0){
             setDrinkName('')
             setDrinkPrice(0)
-            setOrderTotal(0)
             setDrinkQuantity(1)
             setSelectedDrinkId(-1)
             return
@@ -92,10 +103,7 @@ const Order = () => {
         setSelectedDrinkId(drinkId)
         setDrinkName(selectedDrink?.name ?? "custom")
         setDrinkPrice(parseInt(selectedDrink?.price || 10))
-        setOrderTotal(parseInt(selectedDrink?.price || 10) * drinkQuantity)
     }
-
-
 
     const drinkDropdownChanged = (e) => {
         let currentDrinkId = parseInt(e.target.value)
@@ -105,89 +113,48 @@ const Order = () => {
 
     const incrementDrinkQuantity = () => {
         setDrinkQuantity(drinkQuantity + 1)
-        setOrderTotal(drinkPrice * (drinkQuantity + 1) + donationAmount)
     }
     
     const decrementDrinkQuantity = () => {
         setDrinkQuantity(drinkQuantity - 1)
-        setOrderTotal(drinkPrice * (drinkQuantity - 1) + donationAmount)
     }
 
     // HANDLER FOR PRESELECTED DONATION AMOUNT BUTTONS
     const donationHandler = amount => {
-        setSelectedOtherDonation(false)
-
-        const previousDonation = donationAmount
-
+        setShowCustomDonation(false)
         setDonationAmount(amount)
-        setOrderTotal(orderTotal + amount - previousDonation)
     }
 
-    // HANDLER FOR CUSTOM DONATION FIELD
-    const customDonationInputHandler = event => {
-        const input = document.getElementById('donationInput')
-        const inputValue = parseInt(input.value)
-
-
-        if (inputValue > 0 ) {
-            const previousDonation = donationAmount
-            const orderTotalNumber = parseInt(orderTotal)
-            const newTotal = orderTotalNumber + inputValue - parseInt(previousDonation)
-
-            setDonationAmount(inputValue)
-            setOrderTotal(newTotal)
-            setSelectedOtherDonation(false)
+    function limitKeyPress(event) {
+        let value = event.target.value
+        if (value !== undefined && value.length >= 4 && event.key !== "Backspace") {
+            event.preventDefault();
         }
     }
 
-  
+    const cancelCustomDonation = () => {
+        setShowCustomDonation(false)
+        setDonationAmount(0)
+    }
 
-    // FORM SUBMISSION
-    const submitHandler = async event => {
+      const submitOrder = async event => {
         if(isLoading) return
         setIsLoading(true)
-        console.log("submitting order...")
 
-        let errors = false
-
-        let formData
-
-        // UPDATE FORM DATA CONDITIONALLY IF USER CHOSE CUSTOM DRINK OR NOT
-        if (drinkName === "Custom Drink") {
-
-            if (event.target[2].value.trim() === "") {
-                errors = true
-            }
-
-            formData = {
-                username: username ?? setFormHasErrors(true),
-                drinkTitle: drinkName,
-                drinkCost: 10,
-                quantity: drinkQuantity,
-                donationAmount: donationAmount,
-                comments: comments.trim()
-            }
-        } else {
-            formData = {
-                username: username ?? setFormHasErrors(true),
+        let formData = {
+                username: username.trim() ?? setFormHasErrors(true),
                 drinkTitle: drinkName,
                 drinkCost: drinkPrice,
                 quantity: drinkQuantity,
                 donationAmount: donationAmount,
-                comments: comments.trim()
+                comments: `${comments.trim()}${customDrinkDescription ? ` (${customDrinkDescription.trim()})` : ''}` 
             }
-        }
-
+        
         // ADD USERNAME TO LOCAL STORAGE FOR FUTURE ORDERS
-        localStorage.setItem('storedUsername', username )
+        localStorage.setItem('storedUsername', username.trim() )
         setHasStoredUsername(true)
-        // ERROR CODE
 
         if (formData.username === 0 || formData.username.length < 1 || formData.drinkTitle.length<2 || formData.quantity < 1 || formData.quantity > 5) {
-            errors = true
-        }
-
-        if (errors) {
             setFormHasErrors(true)
             return
         }
@@ -202,23 +169,10 @@ const Order = () => {
                 search: createSearchParams({orderId: data?.order[0]?.order_id}).toString()
             })
         } catch (error) {
-            
+            console.log(error)
         }
     }
 
-    const cardFooter = (
-        <div className="flex justify-between w-full items-center pb-5">
-            <p className="font-bold text-xl">Total: ${ orderTotal }</p>
-
-            <Button
-                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
-                onPress={submitHandler}
-                isDisabled={isLoading || !selectedDrinkId || selectedDrinkId < 0}
-            >Grab a Drink
-            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
-            </Button>
-        </div>
-    )
     
     return (
         <React.Fragment >
@@ -228,12 +182,12 @@ const Order = () => {
             }
             <form className="max-w-md m-auto">
                 <Card className=" bg-slate-200 mb-5 pb-5">
-                    <CardHeader className="pb-0 text-4xl font-bungee text-center justify-center text-green-700">
+                    <CardHeader className="pb-0 text-4xl font-bungee text-center justify-center text-emerald-700">
                             Order
                     </CardHeader>
                     <CardBody>
                         { hasStoredUsername &&
-                            <div className="text-xl mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bungee"> {username}</span></div>
+                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bold text-emerald-900"> {username}</span></div>
                         }
                         { !hasStoredUsername &&
                             <Input
@@ -252,11 +206,11 @@ const Order = () => {
                                 value={username}
                                 variant="bordered"
                                 radius="full"
-                                color={isInvalidUsername ? "danger" : "success"}
+                                color={isInvalidUsername && !usernameFocused ? "danger" : "success"}
                                 label="Your Name"
-                                isInvalid={isInvalidUsername}
+                                isInvalid={isInvalidUsername && !usernameFocused}
                                 onValueChange={setUsername}
-                                errorMessage={isInvalidUsername && "We'll need your name, nutcracker"}
+                                errorMessage={isInvalidUsername && !usernameFocused && "We'll need your name, nutcracker"}
                             />
                         }
 
@@ -284,7 +238,7 @@ const Order = () => {
                                 base: [
                                     "rounded-md",
                                     "data-[hover=true]:bg-default-100",
-                                    "data-[selectable=true]:focus:bg-green-600",
+                                    "data-[selectable=true]:focus:bg-emerald-600",
                                     "data-[focus-visible=true]:ring-default-500",
                                 ],
                                 },
@@ -314,31 +268,46 @@ const Order = () => {
                             } 
                             </SelectSection>
                             <SelectSection showDivider title="Something Else">
-                                <SelectItem textValue="Custom Drink - $10" key={0} value="0">Custom Drink — $10</SelectItem>
+                                <SelectItem textValue="Custom Drink - $10" key={customDrinkId} value={customDrinkId}>Custom Drink — $10</SelectItem>
                             </SelectSection>
                         </Select>
                         { /** Custom Drink Dropdown */
-                        selectedDrinkId > -1 && <div className="border-2 border-slate-200 p-2 rounded-3xl">
+                            selectedDrinkId > -1 && <div className="border-2 border-slate-200 p-2 rounded-3xl">
                             {
-                                selectedDrinkId === 0 &&
+                                isCustomDrinkSelected &&
                                 <Input
+                                    ref={customDrinkDescriptionRef}
                                     id = "customDrinkInput"
-                                    type = "text"
-                                    placeholder = "Tell us what you want"
-                                    label = "Custom Drink Description"
+                                    label = "Describe your drink"
                                     radius="full"
                                     variant="bordered"
+                                    className="pb-5"
+                                    maxLength={200}
+                                    onFocus={onCustomDrinkDescriptionFocus}
+                                    onBlur={onCustomDrinkDescriptionBlur}
+                                    value={customDrinkDescription}
+                                    onValueChange={setCustomDrinkDescription}
+                                    color={isInvalidCustomDrinkDescription && !customDrinkDescriptionFocused ? "danger" : "success"}
+                                    isInvalid={isInvalidCustomDrinkDescription && !customDrinkDescriptionFocused}
+                                    errorMessage={isInvalidCustomDrinkDescription && !customDrinkDescriptionFocused && "We need to know what you want"}
+                                    classNames={{
+                                        label: "text-xl group-data-[filled=true]:-translate-y-4",
+                                        trigger: "min-h-unit-16",
+                                        listboxWrapper: "max-h-[400px]",
+                                        inputWrapper: "bg-white",
+                                        errorMessage: "absolute italic bottom-2 left-4"
+                                    }}
                                 />
                             }
                     
                         <div className={`text-center transition-all ease-out ${drinkPrice !== 0 ? 'visible' : 'invisible'}`}>
                             <label className="text-lg font-semibold mr-4 block text-center tracking-wide">How Many?</label>
-                            <Button isIconOnly className="border-solid border-2 border-green-200 bg-green-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5" 
+                            <Button isIconOnly className="border-solid border-2 border-green-200 bg-emerald-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5" 
                             isDisabled={drinkQuantity <= 1} type="button" onPress={decrementDrinkQuantity}>
                                 <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
                             </Button>
                             <span className="text-xl">{drinkQuantity}</span>
-                            <Button  isIconOnly className="border-solid border-2 border-green-200  bg-green-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full ml-5" 
+                            <Button  isIconOnly className="border-solid border-2 border-green-200  bg-emerald-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full ml-5" 
                             isDisabled={drinkQuantity >= 5} type="button" onPress={incrementDrinkQuantity}>
                                 <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
                             </Button>
@@ -353,32 +322,33 @@ const Order = () => {
                                 <Button
                                 isIconOnly
                                 radius="full"
-                                className={`border-2 font-bold border-green-600 bg-white ${donationAmount === 2 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                className={`border-2 font-bold border-emerald-600 bg-white ${donationAmount === 2 ? "text-slate-200 bg-emerald-700" : "text-emerald-700" }`}
                                     onPress = { donationAmount === 2 ? () => donationHandler(0) : () => donationHandler(2)}
                                 >$2</Button>
                                 <Button
                                 isIconOnly
                                 radius="full"
-                                className={`border-2 font-bold border-green-600 bg-white ${donationAmount === 5 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                className={`border-2 font-bold border-emerald-600 bg-white ${donationAmount === 5 ? "text-slate-200 bg-emerald-700" : "text-emerald-700" }`}
                                     onPress = { donationAmount === 5 ? () => donationHandler(0) : () => donationHandler(5)}
                                     >$5</Button>
                                 <Button
                                 isIconOnly
                                 radius="full"
-                                className={`border-2 font-bold border-green-600 bg-white ${donationAmount === 10 ? "text-slate-200 bg-green-700" : "text-green-700" }`}
+                                className={`border-2 font-bold border-emerald-600 bg-white ${donationAmount === 10 ? "text-slate-200 bg-emerald-700" : "text-emerald-700" }`}
                                 onPress = { donationAmount === 10 ? () => donationHandler(0) : () => donationHandler(10)}
                                     >$10</Button>
                                 <Button
                                     radius="full"
-                                    className={`border-2 font-bold bg-white border-green-600  ${selectedOtherDonation || (donationAmount > 0 && 
-                                        donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10)  ? "text-slate-200 bg-green-700" : "text-green-700" }`}
-                                    onPress = { donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10 ? () => donationHandler(0) : () => setSelectedOtherDonation(true) }
-                                    > { (donationAmount > 0 && 
-                                        donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10) ? `$${donationAmount}` : 'Custom'} </Button>
+                                    className={`border-2 font-bold bg-white border-emerald-600  ${showCustomDonation || (donationAmount > 0 && 
+                                        donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10)  ? "text-slate-200 bg-emerald-700" : "text-emerald-700" }`}
+                                    onPress = { donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10 ? () => donationHandler(0) : () => setShowCustomDonation(true) }
+                                    > 
+                                    { (donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10) ? `$${donationAmount}` : 'Custom'} 
+                                </Button>
                             </div>
 
                             {
-                                selectedOtherDonation && 
+                                showCustomDonation && 
                                 <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
                                     <Input
                                     id = "donationInput"
@@ -392,8 +362,11 @@ const Order = () => {
                                     min={0}
                                     max={1000}
                                     maxLength={4}
+                                    onKeyDown={limitKeyPress}
                                     color={isInvalidDonationAmount ? "danger" : "success"}
+                                    onValueChange={setDonationAmount}
                                     isInvalid={isInvalidDonationAmount}
+                                    errorMessage={isInvalidDonationAmount && "Please enter a valid donation"}
                                     classNames={{
                                         label: "text-black/50 dark:text-white/90",
                                         input: [
@@ -414,10 +387,10 @@ const Order = () => {
                                             <Button
                                                 classNames={{base: "rounded-l-none"}}
                                                 size="md"
-                                                className="bg-red-600 text-slate-200 text-xl border-t-2 rounded-none border-b-2"
+                                                className="bg-rose-700 text-slate-200 text-xl border-t-2 rounded-none border-b-2"
                                                 isIconOnly
                                                 type = "button"
-                                                onClick = { () => setSelectedOtherDonation(false)}
+                                                onPress={cancelCustomDonation}
                                             >
                                             <FontAwesomeIcon icon={faClose}></FontAwesomeIcon>
                                             </Button>
@@ -425,9 +398,9 @@ const Order = () => {
                                                 isDisabled={isInvalidDonationAmount}
                                                 size="md"
                                                 isIconOnly
-                                                className="bg-green-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
+                                                className="bg-emerald-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
                                                 type = "button"
-                                                onClick = { customDonationInputHandler }
+                                                onPress = { () => setShowCustomDonation(false) }
                                             >
                                                 <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
                                             </Button>
@@ -461,8 +434,8 @@ const Order = () => {
                             <p className="font-bold text-xl">Total: ${ orderTotal }</p>
                             <Button
                                 className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
-                                onPress={submitHandler}
-                                isDisabled={isLoading || !username || !selectedDrinkId || selectedDrinkId < 0}
+                                onPress={submitOrder}
+                                isDisabled={isLoading || isInvalidUsername || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                             >Grab a Drink
                             <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
                             </Button>
