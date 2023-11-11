@@ -1,17 +1,18 @@
 const HttpError = require("../models/http-error")
 const pool = require("../db")
+const logger = require('firebase-functions/logger')
 
 const createDonation = async (req, res, next) => {
     
-    const { username, amount, comments } = req.body
+    const { user_id, amount, comments } = req.body
 
-    let text = "INSERT INTO donations(username, amount, comments, is_paid, created_at, updated_at) VALUES ($1, $2, $3,  false, NOW(), NOW())"
+    let text = "INSERT INTO donations(user_id, amount, comments, is_paid, created_at, updated_at) VALUES ($1, $2, $3,  false, NOW(), NOW())"
 
     let newDonation
 
     try {
         const client = await pool.connect()
-        newDonation = await client.query(text, [username, amount, comments])
+        newDonation = await client.query(text, [user_id, amount, comments])
         client.release()
     } catch (error) {
         logger.error(`Error creating donation. ${error}`, 500)
@@ -129,25 +130,25 @@ const deleteDonation = async (req, res, next) => {
 }
 
 const closeDonations = async (req, res, next) => {
-    const { username } = req.params
+    const { user_id } = req.params
 
-    let text = "UPDATE donations SET is_paid = TRUE, updated_at = NOW() WHERE UPPER(username) = UPPER($1) RETURNING *"
+    let text = "UPDATE donations SET is_paid = TRUE, updated_at = NOW() WHERE user_id = $1 RETURNING *"
 
     let response
 
     try {
         const client = await pool.connect()
-        response = await client.query(text, [username])
+        response = await client.query(text, [user_id])
         client.release()
     } catch (error) {
-        logger.error(`Error setting user ${username}'s donations to paid`, 500)
+        logger.error(`Error setting user #${user_id}'s donations to paid`, 500)
 
         return next(
-            new HttpError(`Error setting user ${username}'s donations to paid`, 500)
+            new HttpError(`Error setting user #${user_id}'s donations to paid`, 500)
         )
     }
 
-    res.status(201).json({ message: `Set ${username}'s ${response.rowCount} donations to paid`, response: response.rows })
+    res.status(201).json({ message: `Set User #${user_id}'s ${response.rowCount} donations to paid`, response: response.rows })
 } 
 
 exports.createDonation = createDonation

@@ -4,25 +4,25 @@ const pool = require("../db")
 
 const createOrder = async (req, res, next) => {
 
-    // see if any data submitted didn't match with checks in our router file
-    const errors = validationResult(req)
+    // // see if any data submitted didn't match with checks in our router file
+    // const errors = validationResult(req)
 
-    if (!errors.isEmpty()) {
-        console.log(errors)
-        return new HttpError("Please make sure all field are filled out! (Name, Drink Name, and Quantity)")
-    }
+    // if (!errors.isEmpty()) {
+    //     console.log(errors)
+    //     return new HttpError("Please make sure all field are filled out! (Name, Drink Name, and Quantity)")
+    // }
 
     // pull data from req.body
-    const { username, drinkTitle, customDrinkTitle, drinkCost, quantity, donationAmount, comments } = req.body
+    const { user_id, drinkTitle, customDrinkTitle, drinkCost, quantity, donationAmount, comments } = req.body
 
     const total = Math.floor(drinkCost * quantity)
 
-    let orderText = "INSERT INTO orders(username, drink, quantity, total, comments, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, false, false, NOW(), NOW()) RETURNING *"
+    let orderText = "INSERT INTO orders(user_id, drink, quantity, total, comments, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, false, false, NOW(), NOW()) RETURNING *"
     
     let newOrder, newDonation
 
     try {
-        newOrder = await pool.query(orderText, [username, drinkTitle || customDrinkTitle, quantity, total, comments])
+        newOrder = await pool.query(orderText, [user_id, drinkTitle || customDrinkTitle, quantity, total, comments])
     } catch (err) {
         console.log(`Error creating order: ${err}`)
         return next(
@@ -34,10 +34,10 @@ const createOrder = async (req, res, next) => {
 
     if (donationAmount > 0) {
 
-        let donationText = "INSERT INTO donations(username, amount, is_paid, created_at, updated_at) VALUES ($1, $2, FALSE, NOW(), NOW()) RETURNING *"
+        let donationText = "INSERT INTO donations(user_id, amount, is_paid, created_at, updated_at) VALUES ($1, $2, FALSE, NOW(), NOW()) RETURNING *"
 
         try {
-            newDonation = await pool.query(donationText, [ username, donationAmount ])
+            newDonation = await pool.query(donationText, [ user_id, donationAmount ])
         } catch (error) {
             console.log(error)
 
@@ -173,7 +173,7 @@ const getOrdersAdmin = async (req, res, next) => {
 }
 
 const getOrdersGrouped = async (req, res, next) => {
-    let paidQuery = "SELECT * FROM user_totals WHERE orders_total_unpaid IS NULL"
+    let paidQuery = "SELECT * FROM user_totals WHERE orders_total_unpaid = 0"
 
     let unpaidQuery = "SELECT * FROM user_totals WHERE orders_total_unpaid > 0"
 
@@ -250,24 +250,24 @@ const getOrdersLeaderboard = async (req, res, next) => {
 
 const closeTab = async (req, res, next) => {
     // grab username from params and run query to close all upaid
-    const { username } = req.params
+    const { user_id } = req.params
 
-    let text = "UPDATE orders SET is_paid = TRUE, updated_at = NOW() WHERE UPPER(username) = UPPER($1) RETURNING *"
+    let text = "UPDATE orders SET is_paid = TRUE, updated_at = NOW() WHERE user_id = $1 RETURNING *"
 
     let response
     try {
-        response = await pool.query(text, [ username ])
+        response = await pool.query(text, [ user_id ])
     } catch (error) {
         console.log(error)
 
         return next(
             new HttpError(
-                `Error setting user ${username}'s orders to paid`, 500
+                `Error setting user ${user_id}'s orders to paid`, 500
             )
         )
     }
 
-    res.status(201).json({ message: `Set ${ username }'s ${ response.rowCount } orders to paid`, response: response.rows })
+    res.status(201).json({ message: `Set user #${ user_id }'s ${ response.rowCount } orders to paid`, response: response.rows })
 }
 
 const deleteOrder = async (req, res, next) => {
@@ -293,25 +293,25 @@ const deleteOrder = async (req, res, next) => {
 }
 
 const pullUserTab = async (req, res, next) => {
-    const { username } = req.params
+    const { user_id } = req.params
 
-    let text = "SELECT * FROM user_totals WHERE UPPER(username) = UPPER($1)"
+    let text = "SELECT * FROM user_totals WHERE user_id = $1"
 
     let response
 
     try {
-        response = await pool.query(text, [ username ])
+        response = await pool.query(text, [ user_id ])
     } catch (error) {
         console.log(error)
 
         return next(
             new HttpError(
-                `Error getting user ${username}'s tab`, 500
+                `Error getting user # ${user_id}'s tab`, 500
             )
         )
     }
     
-    res.status(200).json({ message: `Fetched ${username}'s tab!`, response: response.rows, unpaidOrderAmount: parseInt(response.rows[0].orders_total_unpaid), unpaidDonationAmount: parseInt(response.rows[0].donations_total_unpaid) })
+    res.status(200).json({ message: `Fetched User #${user_id}'s tab!`, response: response.rows, unpaidOrderAmount: parseInt(response.rows[0].orders_total_unpaid), unpaidDonationAmount: parseInt(response.rows[0].donations_total_unpaid) })
 }
 
 exports.createOrder = createOrder

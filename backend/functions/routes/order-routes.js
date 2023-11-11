@@ -4,12 +4,7 @@ const orderControllers = require("../controllers/order-controllers")
 
 const router = express.Router()
 
-router.post("/",
-    [
-        check('username').notEmpty(),
-    ],
-    orderControllers.createOrder
-)
+router.post("/", orderControllers.createOrder)
 
 router.get("/", orderControllers.getOrders)
 
@@ -23,10 +18,10 @@ router.get("/grouped", orderControllers.getOrdersGrouped)
 
 router.get("/leaderboard", orderControllers.getOrdersLeaderboard)
 
-router.post("/:username/closeTab", orderControllers.closeTab)
+router.post("/:user_id/closeTab", orderControllers.closeTab)
 
 router.delete("/:order_id", orderControllers.deleteOrder)
 
-router.get("/:username/pullTab", orderControllers.pullUserTab)
+router.get("/:user_id/pullTab", orderControllers.pullUserTab)
 
 module.exports = router
