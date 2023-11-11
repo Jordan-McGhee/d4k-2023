@@ -34,7 +34,7 @@ const Donate = React.lazy(() => import("./pages/Donate"))
 const PayTab = React.lazy(() => import("./pages/PayTab"))
 const Leaderboard = React.lazy(() => import("./pages/Leaderboard"))
 const Admin = React.lazy(() => import("./pages/Admin"))
-const Tab = React.lazy(() => import("./pages/Tab"))
+const AdminBarTabs = React.lazy(() => import("./pages/AdminBarTab"))
 const LargeLeaderBoard = React.lazy(() => import("./components/leaderboard/Large/LargeLeaderBoard"))
 const NotFound = React.lazy(() => import("./pages/NotFound"))
 
@@ -57,7 +57,7 @@ function App() {
       {/* ADMIN LAYOUT AND PAGES */}
       <Route element = { <AdminLayout />} >
         <Route path = "/admin" element = { <Admin /> } />
-        <Route path = "/tabs" element = { <Tab />} />
+        <Route path = "/tabs" element = { <AdminBarTabs />} />
       </Route>
 
       {/* NOT FOUND LAYOUT */}

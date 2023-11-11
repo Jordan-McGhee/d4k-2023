@@ -47,12 +47,10 @@ const Admin = () => {
 
             </div>
 
-            {
-                showOrders ?
+            
                 <AdminOrders />
-                    :
-                <AdminDonations />
-            }
+
+            
 
         </React.Fragment>
     )
