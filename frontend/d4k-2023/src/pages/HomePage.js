@@ -40,7 +40,6 @@ const HomePage = () => {
                 theme: "light"
             });
 
-            
             let now = new Date()
             let partyTime = new Date("2023-12-16")
             if(now < partyTime){
@@ -100,7 +99,7 @@ const HomePage = () => {
 
                 <p className="text-2xl my-5">It's a holiday spirited pop up bar serving up <span className="italic font-bold">the best craft cocktails</span> and the worst puns for donations to a great cause</p>
 
-                <p className="text-2xl font-bold italic">All donations are <span className="text-3xl font-extrabold">doubled </span> with a match and go to Bethany Haven & Nicholas House Family Homeless Shelter</p>
+                <div className="text-3xl font-bold font-fugaz">All donations are <span className="font-extrabold">doubled</span></div><div className="text-2xl">with a match and go to Bethany Haven & Nicholas House Family Homeless Shelter</div>
                 <br/>
                 <Button 
                 className="uk-button bg-emerald-600" 
