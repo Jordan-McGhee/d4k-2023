@@ -3,7 +3,7 @@ import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHe
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses } from '@fortawesome/free-solid-svg-icons'
+import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 
 // DRINK IMPORTS
@@ -18,6 +18,8 @@ const Order = () => {
     let allDrinksJson = cocktails.concat(other).concat(shots)
 
     const [ username, setUsername ] = useState('')
+    const [ editedUsername, setEditedUsername ] = useState('')
+    const [ isUsernameTaken, setIsUsernameTaken ] = useState(false)
     const [ hasStoredUsername, setHasStoredUsername ] = useState(false)
     const [ drinkName, setDrinkName ] = useState(null)
     const [ selectedDrinkId, setSelectedDrinkId ] = useState(-1)
@@ -27,6 +29,7 @@ const Order = () => {
     const [ donationAmount, _setDonationAmount ] = useState(0)
     const setDonationAmount = (amount) => {_setDonationAmount(amount > 0 ? parseInt(amount) : 0)}
     const [ showCustomDonation, setShowCustomDonation ] = useState(false)
+    const [ showEditNameInput, setShowEditNameInput ] = useState(false)
     const [ comments, setComments ] = useState('')
     const [ isLoading, setIsLoading ] = useState(false)
     const [ searchParams ] = useSearchParams();
@@ -38,7 +41,9 @@ const Order = () => {
     const [customDrinkDescriptionFocused, setCustomDrinkDescriptionFocused] = useState(false)
     const onCustomDrinkDescriptionFocus = () => setCustomDrinkDescriptionFocused(true)
     const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
+
     const customDrinkDescriptionRef = useRef(null);
+    const editUsernameInputRef = useRef(null);
 
     const clearFormErrorHandler = () => { setFormHasErrors(false) }
 
@@ -60,6 +65,10 @@ const Order = () => {
         return (!username ||  username.trim().length < 3)
     }, [username]);
 
+    const isInvalidEditedUsername = useMemo(() => {
+        return (!editedUsername ||  editedUsername.trim().length < 3)
+    }, [editedUsername]);
+
     const isInvalidDonationAmount = useMemo(() => {
     return donationAmount < 0 || donationAmount > 1000
     }, [donationAmount]);
@@ -77,16 +86,20 @@ const Order = () => {
     }, [])
 
     useEffect(() => {
-        if(showCustomDonation){
-            setDonationAmount(0)
-        }
+        if(showCustomDonation) setDonationAmount(0)
     }, [showCustomDonation])
 
     useEffect(() => {
-        if(isCustomDrinkSelected){
-            customDrinkDescriptionRef.current.focus();
-        }
+        if(isCustomDrinkSelected) customDrinkDescriptionRef.current.focus()
     }, [isCustomDrinkSelected])
+
+    useEffect(() => {
+        if(showEditNameInput) editUsernameInputRef.current.focus()
+    }, [showEditNameInput])
+
+    useEffect(() => {
+        setIsUsernameTaken(false)
+    }, [editedUsername])
 
     const updateDrinkState = (drinkId) =>{
         if(drinkId === null) return
@@ -111,15 +124,10 @@ const Order = () => {
       }
       
 
-    const incrementDrinkQuantity = () => {
-        setDrinkQuantity(drinkQuantity + 1)
-    }
+    const incrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity + 1)
+    const decrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity - 1)
     
-    const decrementDrinkQuantity = () => {
-        setDrinkQuantity(drinkQuantity - 1)
-    }
 
-    // HANDLER FOR PRESELECTED DONATION AMOUNT BUTTONS
     const donationHandler = amount => {
         setShowCustomDonation(false)
         setDonationAmount(amount)
@@ -137,7 +145,22 @@ const Order = () => {
         setDonationAmount(0)
     }
 
-      const submitOrder = async event => {
+    const handleShowEditName = () => {
+        setShowEditNameInput(true)
+        setEditedUsername(username)
+    }
+    
+    const cancelEditName = () => {
+        setShowEditNameInput(false)
+        setEditedUsername(username)
+    }
+
+    const handleSubmitUsername = () => {
+        setUsername(editedUsername)
+        setShowEditNameInput(false)
+    }
+
+    const submitOrder = async () => {
         if(isLoading) return
         setIsLoading(true)
 
@@ -150,7 +173,6 @@ const Order = () => {
                 comments: `${comments.trim()}${customDrinkDescription ? ` (${customDrinkDescription.trim()})` : ''}` 
             }
         
-        // ADD USERNAME TO LOCAL STORAGE FOR FUTURE ORDERS
         localStorage.setItem('storedUsername', username.trim() )
         setHasStoredUsername(true)
 
@@ -172,7 +194,6 @@ const Order = () => {
             console.log(error)
         }
     }
-
     
     return (
         <React.Fragment >
@@ -186,8 +207,58 @@ const Order = () => {
                             Order
                     </CardHeader>
                     <CardBody>
-                        { hasStoredUsername &&
-                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bold text-emerald-900"> {username}</span></div>
+                        { hasStoredUsername && !showEditNameInput &&
+                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bold text-emerald-900"> {username}</span> 
+                            <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-xl text-emerald-600" icon={faEdit}/></Button> </div>
+                        }
+                        { hasStoredUsername && showEditNameInput && 
+                            <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
+                                <Input
+                                    ref={editUsernameInputRef}
+                                    id = "editNameInput"
+                                    label="Edit Your Name"
+                                    variant="bordered"
+                                    radius="full"
+                                    maxLength={30}
+                                    color={isInvalidEditedUsername || isUsernameTaken ? "danger" : "success"}
+                                    value={editedUsername}
+                                    onValueChange={setEditedUsername}
+                                    onFocus={onUsernameFocus}
+                                    onBlur={onUsernameBlur}
+                                    isInvalid={isInvalidEditedUsername || isUsernameTaken}
+                                    errorMessage={isInvalidEditedUsername ? "We'll need a proper name, nutcracker" 
+                                    : isUsernameTaken ? "This user already exists" : false}
+                                    className="pb-5"
+                                    classNames={{
+                                        label: "text-xl group-data-[filled=true]:-translate-y-4",
+                                        trigger: "min-h-unit-16",
+                                        listboxWrapper: "max-h-[400px]",
+                                        inputWrapper: ["pr-0", "bg-white", "rounded-r-none"],
+                                        errorMessage: "italic ml-4"
+                                    }}
+                                />
+                                <span className="flex">
+                                    <Button
+                                        classNames={{base: "rounded-l-none"}}
+                                        size="md"
+                                        className="h-14 bg-rose-700 text-slate-200 text-xl border-t-2 rounded-none border-b-2"
+                                        isIconOnly
+                                        type = "button"
+                                        onPress={cancelEditName}
+                                    ><FontAwesomeIcon icon={faClose}/>
+                                    </Button>
+                                    <Button
+                                        isDisabled={isInvalidEditedUsername || isUsernameTaken}
+                                        size="md"
+                                        isIconOnly
+                                        radius="full"
+                                        className="h-14 bg-emerald-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
+                                        type = "button"
+                                        onPress = {handleSubmitUsername}
+                                    ><FontAwesomeIcon icon={faCheck}/>
+                                    </Button>
+                                </span>
+                        </div>
                         }
                         { !hasStoredUsername &&
                             <Input
@@ -304,12 +375,12 @@ const Order = () => {
                             <label className="text-lg font-semibold mr-4 block text-center tracking-wide">How Many?</label>
                             <Button isIconOnly className="border-solid border-2 border-green-200 bg-emerald-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5" 
                             isDisabled={drinkQuantity <= 1} type="button" onPress={decrementDrinkQuantity}>
-                                <FontAwesomeIcon icon={faMinus}></FontAwesomeIcon>
+                                <FontAwesomeIcon icon={faMinus}/>
                             </Button>
                             <span className="text-xl">{drinkQuantity}</span>
                             <Button  isIconOnly className="border-solid border-2 border-green-200  bg-emerald-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full ml-5" 
                             isDisabled={drinkQuantity >= 5} type="button" onPress={incrementDrinkQuantity}>
-                                <FontAwesomeIcon icon={faPlus}></FontAwesomeIcon>
+                                <FontAwesomeIcon icon={faPlus}/>
                             </Button>
                         </div>
                         <div className="my-2">
@@ -346,7 +417,6 @@ const Order = () => {
                                     { (donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10) ? `$${donationAmount}` : 'Custom'} 
                                 </Button>
                             </div>
-
                             {
                                 showCustomDonation && 
                                 <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
@@ -401,15 +471,13 @@ const Order = () => {
                                                 className="bg-emerald-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
                                                 type = "button"
                                                 onPress = { () => setShowCustomDonation(false) }
-                                            >
-                                                <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+                                            ><FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
                                             </Button>
-                                            </span>
+                                        </span>
                                     </div>
                                 </div>
                             }
                         </div>
-                        
                     </div>
                     }
                     <Textarea
@@ -435,9 +503,9 @@ const Order = () => {
                             <Button
                                 className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
                                 onPress={submitOrder}
-                                isDisabled={isLoading || isInvalidUsername || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
+                                isDisabled={isLoading || isInvalidUsername || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                             >Grab a Drink
-                            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+                                <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
                             </Button>
                         </div>
                     </CardFooter>
