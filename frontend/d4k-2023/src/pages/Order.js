@@ -155,9 +155,28 @@ const Order = () => {
         setEditedUsername(username)
     }
 
-    const handleSubmitUsername = () => {
-        setUsername(editedUsername)
-        setShowEditNameInput(false)
+    const handleSubmitUsername = async () => {
+        if(isLoading) return
+        setIsLoading(true)
+
+        try {
+            let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/verify/${editedUsername}`, "GET", { 'Content-Type': 'application/json' })
+            console.log(data)
+            if(data?.user_id !== null){
+                setIsUsernameTaken(true)
+                return
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+        // try {
+        //     let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/${}`, "PATCH", { 'Content-Type': 'application/json' })
+
+        // }
+            setUsername(editedUsername)
+            setShowEditNameInput(false)
+        
     }
 
     const submitOrder = async () => {
