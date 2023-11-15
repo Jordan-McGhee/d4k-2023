@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
-
+import { UserApi } from "../api/user"
 // DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
 import other from "../assets/other.json"
@@ -14,13 +14,15 @@ import ErrorModal from "../components/UIElements/ErrorModal";
 
 const Order = () => {
     let navigate = useNavigate()
-        const { sendRequest } = useFetch()
+    const { sendRequest } = useFetch()
+    const { updateUsername, getUserIdByUsername } = UserApi()
     let allDrinksJson = cocktails.concat(other).concat(shots)
 
     const [ username, setUsername ] = useState('')
+    const [ userId, setUserId ] = useState('')
     const [ editedUsername, setEditedUsername ] = useState('')
     const [ isUsernameTaken, setIsUsernameTaken ] = useState(false)
-    const [ hasStoredUsername, setHasStoredUsername ] = useState(false)
+    const [ hasStoredUserId, setHasStoredUserId ] = useState(false)
     const [ drinkName, setDrinkName ] = useState(null)
     const [ selectedDrinkId, setSelectedDrinkId ] = useState(-1)
     const [ selectValue, setSelectValue ] = useState(new Set([]));
@@ -74,10 +76,23 @@ const Order = () => {
     }, [donationAmount]);
     
     useEffect(() => {
-        let uname = localStorage.getItem('storedUsername')
-        if(uname){
-            setUsername(uname)
-            setHasStoredUsername(true)
+        const setUserIdByUsername = async (username) => {
+            let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/verify/${username}`, "GET", { 'Content-Type': 'application/json' })
+            let id = data?.user_id
+            if(!id) return
+
+            localStorage.setItem('userId', id)
+            setUsername(username)
+            setHasStoredUserId(true)   
+        }
+
+        let storedUsername = localStorage.getItem('storedUsername')
+        let storedUserId = localStorage.getItem('userId')
+        if(storedUsername && !storedUserId){
+            setUserIdByUsername(storedUsername)
+        }else if(storedUsername){
+            setUsername(storedUsername)
+            setHasStoredUserId(true)   
         }
         let drinkIdParam = searchParams.get("drinkId")
         if (drinkIdParam) {
@@ -100,6 +115,38 @@ const Order = () => {
     useEffect(() => {
         setIsUsernameTaken(false)
     }, [editedUsername])
+
+    // useEffect(() => {
+    //     if (!isInvalidUsername) {
+    //       verify(username);
+    //     }
+    //   }, [username, isInvalidUsername]);
+    
+    //   const verify = useCallback(
+    //     debounce(async (username) => {
+    //         let data = await getUserIdByUsername(username)
+    //         if(data?.user_id !== null) {
+    //             setIsUsernameTaken(true)
+    //             return
+    //         }
+
+    //     }, 500),
+    //     []
+    //   )
+
+    //   const delayedSearch = useCallback(
+    //     debounce(async (searchTerm) => {
+    //         await launchSearch(searchTerm);
+    //     }, 2000),
+    //     []
+    // );
+    // useEffect(() => {
+    //     if (searchTerm.length >= 2) {
+    //         delayedSearch(searchTerm);
+    //     }
+    // }, [searchTerm]);
+
+
 
     const updateDrinkState = (drinkId) =>{
         if(drinkId === null) return
@@ -155,28 +202,32 @@ const Order = () => {
         setEditedUsername(username)
     }
 
-    const handleSubmitUsername = async () => {
+    const handleEditUsername = async () => {
         if(isLoading) return
         setIsLoading(true)
 
         try {
-            let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/verify/${editedUsername}`, "GET", { 'Content-Type': 'application/json' })
+            let data = await getUserIdByUsername(editedUsername)
             console.log(data)
             if(data?.user_id !== null){
                 setIsUsernameTaken(true)
                 return
             }
-        } catch (error) {
-            console.log(error)
+        } catch (e) {
+            console.log(e)
+            return
         }
 
-        // try {
-        //     let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/${}`, "PATCH", { 'Content-Type': 'application/json' })
-
-        // }
+        try {
+            let data = await updateUsername(userId, username)
+            console.log(data)
+        } catch (e) {
+            console.log(e)
+            return
+        }
             setUsername(editedUsername)
+            localStorage.setItem('storedUsername', editedUsername)
             setShowEditNameInput(false)
-        
     }
 
     const submitOrder = async () => {
@@ -192,8 +243,7 @@ const Order = () => {
                 comments: `${comments.trim()}${customDrinkDescription ? ` (${customDrinkDescription.trim()})` : ''}` 
             }
         
-        localStorage.setItem('storedUsername', username.trim() )
-        setHasStoredUsername(true)
+
 
         if (formData.username === 0 || formData.username.length < 1 || formData.drinkTitle.length<2 || formData.quantity < 1 || formData.quantity > 5) {
             setFormHasErrors(true)
@@ -203,6 +253,8 @@ const Order = () => {
         try {
             let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify(formData))
             console.log(data)
+            localStorage.setItem('storedUsername', username.trim() )
+            setHasStoredUserId(true)
             setIsLoading(false)
 
             navigate({
@@ -226,11 +278,11 @@ const Order = () => {
                             Order
                     </CardHeader>
                     <CardBody>
-                        { hasStoredUsername && !showEditNameInput &&
+                        { hasStoredUserId && !showEditNameInput &&
                             <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <span className="font-bold text-emerald-900"> {username}</span> 
                             <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-xl text-emerald-600" icon={faEdit}/></Button> </div>
                         }
-                        { hasStoredUsername && showEditNameInput && 
+                        { hasStoredUserId && showEditNameInput && 
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
                                 <Input
                                     ref={editUsernameInputRef}
@@ -273,13 +325,13 @@ const Order = () => {
                                         radius="full"
                                         className="h-14 bg-emerald-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
                                         type = "button"
-                                        onPress = {handleSubmitUsername}
+                                        onPress = {handleEditUsername}
                                     ><FontAwesomeIcon icon={faCheck}/>
                                     </Button>
                                 </span>
                         </div>
                         }
-                        { !hasStoredUsername &&
+                        { !hasStoredUserId &&
                             <Input
                                 className="pb-5"
                                 classNames={{
