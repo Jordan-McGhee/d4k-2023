@@ -20,12 +20,8 @@ router.get("/grouped", orderControllers.getOrdersGrouped)
 
 router.get("/leaderboard", orderControllers.getOrdersLeaderboard)
 
-router.post("/:user_id/closeTab", orderControllers.closeTab)
-
 router.delete("/:order_id", orderControllers.deleteOrder)
 
 router.patch(`/:order_id/unvoid`, orderControllers.unvoidOrder)
-
-router.get("/:user_id/pullTab", orderControllers.pullUserTab)
 
 module.exports = router

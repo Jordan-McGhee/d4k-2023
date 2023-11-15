@@ -259,29 +259,6 @@ const getOrdersLeaderboard = async (req, res, next) => {
     res.status(200).json({ message: "Retrieved orders for leaderboard!", response: response, sumTotal: sumTotal })
 }
 
-const closeTab = async (req, res, next) => {
-    // grab username from params and run query to close all upaid
-    const { user_id } = req.params
-
-    let text = "UPDATE orders SET is_paid = TRUE, updated_at = NOW() WHERE user_id = $1 RETURNING *"
-
-    let response
-
-    try {
-        const client = await pool.connect()
-        response = await client.query(text, [user_id])
-        client.release()
-    } catch (error) {
-        logger.error(`Error setting User #${user_id}'s orders to paid. ${error}`, 500)
-
-        return next(
-            new HttpError(`Error setting User #${user_id}'s orders to paid. ${error}`, 500)
-        )
-    }
-
-    res.status(201).json({ message: `Set User #${user_id}'s ${response.rowCount} orders to paid`, response: response.rows })
-}
-
 const deleteOrder = async (req, res, next) => {
     const { order_id } = req.params
 
@@ -327,28 +304,6 @@ const unvoidOrder = async (req, res, next) => {
     res.status(200).json({ message: `Unvoided order #${ order_id }`, response: response })
 }
 
-const pullUserTab = async (req, res, next) => {
-    const { user_id } = req.params
-
-    let text = "SELECT * FROM tab_totals WHERE user_id = $1"
-
-    let response
-
-    try {
-        const client = await pool.connect()
-        response = await client.query(text, [user_id])
-        client.release()
-    } catch (error) {
-        logger.error(`Error getting user #${user_id}'s tab. ${error}`, 500)
-
-        return next(
-            new HttpError(`Error getting user #${user_id}'s tab. ${error}`, 500)
-        )
-    }
-
-    res.status(200).json({ message: `Fetched user #${user_id}'s tab!`, response: response.rows })
-}
-
 exports.createOrder = createOrder
 exports.getOrders = getOrders
 exports.updateTip = updateTip
@@ -357,7 +312,5 @@ exports.updateCompleted = updateCompleted
 exports.getOrdersAdmin = getOrdersAdmin
 exports.getOrdersGrouped = getOrdersGrouped
 exports.getOrdersLeaderboard = getOrdersLeaderboard
-exports.closeTab = closeTab
 exports.deleteOrder = deleteOrder
 exports.unvoidOrder = unvoidOrder
-exports.pullUserTab = pullUserTab

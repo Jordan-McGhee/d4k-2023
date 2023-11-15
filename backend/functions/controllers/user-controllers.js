@@ -26,7 +26,7 @@ const createUser = async (req, res, next) => {
     }
 
     if (response.rows.length > 0) {
-        res.status(409).json({ message: "This username is taken!", id: response.rows[0].user_id })
+        res.status(409).json({ message: "This username is taken!", user_id: response.rows[0].user_id })
     } else {
         // query for inserting into database
         let query = "INSERT INTO users(username, created_at, updated_at) VALUES ($1, NOW(), NOW()) RETURNING *"
@@ -52,11 +52,11 @@ const createUser = async (req, res, next) => {
     }
 }
 
-// check if username is taken already
-const verifyUserID = async (req, res, next) => {
+/** check if username is taken already */
+const getUserIDByUsername = async (req, res, next) => {
 
     // pull data from body
-    const { username } = req.body
+    const { username } = req.params
 
     // check if any capitalized variation of that username exists
     let query = "SELECT * FROM users WHERE UPPER(username) = UPPER($1)"
@@ -81,9 +81,9 @@ const verifyUserID = async (req, res, next) => {
 
     // check if rows returned a value or not
     if (response.rows.length > 0) {
-        res.status(409).json({ message: "This username is taken!", available: false })
+        res.status(409).json({ user_id: response.rows.user_id })
     } else {
-        res.status(200).json({ message: "Username is available!", available: true })
+        res.status(200).json({ user_id: null })
     }
 }
 
@@ -141,30 +141,98 @@ const changeUsername = async (req, res, next) => {
     const { user_id } = req.params
     const { username } = req.body
 
-    let query = "UPDATE users SET username = $1, updated_at = NOW() WHERE user_id = $2 RETURNING *"
+    let nameQuery = "SELECT * FROM users WHERE UPPER(username) = UPPER($1)"
+
+    let nameQueryResponse
+
+    try {
+        const client = await pool.connect()
+        nameQueryResponse = await client.query(nameQuery, [ username ])
+        client.release()
+    } catch (error) {
+        logger.error(`Error checking if username is available: ${error}`)
+
+        return next(
+            new HttpError(
+                `Error checking if username is available: ${ error }`, 500
+            )
+        )
+    }
+
+    if (nameQueryResponse.rows.length > 0) {
+        res.status(409).json({ user_id: nameQueryResponse.rows[0].user_id })
+    } else {
+        let query = "UPDATE users SET username = $1, updated_at = NOW() WHERE user_id = $2 RETURNING *"
+        let response
+    
+        try {
+            const client = await pool.connect()
+            response = await client.query(query, [username, user_id])
+            client.release()
+    
+        } catch (error) {
+            logger.error(`Error changing User ${user_id}'s name to ${username}. ${error}`)
+    
+            return next(
+                new HttpError(
+                    `Error changing User ${user_id}'s name to ${username}.`, 500
+                )
+            )
+        }
+    
+        res.status(201).json({ message: `Changed User ${user_id}'s name to ${username}`, newUsername: username, response: response.rows[0] })
+    }
+}
+
+const pullUserTab = async (req, res, next) => {
+    const { user_id } = req.params
+
+    let text = "SELECT * FROM tab_totals WHERE user_id = $1"
 
     let response
 
     try {
         const client = await pool.connect()
-        response = await client.query(query, [username, user_id])
+        response = await client.query(text, [user_id])
         client.release()
-
     } catch (error) {
-        logger.error(`Error changing User ${user_id}'s name to ${username}. ${error}`)
+        logger.error(`Error getting user #${user_id}'s tab. ${error}`, 500)
 
         return next(
-            new HttpError(
-                `Error changing User ${user_id}'s name to ${username}.`, 500
-            )
+            new HttpError(`Error getting user #${user_id}'s tab. ${error}`, 500)
         )
     }
 
-    res.status(201).json({ message: `Changed User ${user_id}'s name to ${username}`, newUsername: username, response: response.rows[0] })
+    res.status(200).json({ message: `Fetched user #${user_id}'s tab!`, response: response.rows })
+}
+
+const closeTab = async (req, res, next) => {
+    // grab username from params and run query to close all upaid
+    const { user_id } = req.params
+
+    let text = "UPDATE orders SET is_paid = TRUE, updated_at = NOW() WHERE user_id = $1 RETURNING *"
+
+    let response
+
+    try {
+        const client = await pool.connect()
+        response = await client.query(text, [user_id])
+        client.release()
+    } catch (error) {
+        logger.error(`Error setting User #${user_id}'s orders to paid. ${error}`, 500)
+
+        return next(
+            new HttpError(`Error setting User #${user_id}'s orders to paid. ${error}`, 500)
+        )
+    }
+
+    res.status(201).json({ message: `Set User #${user_id}'s ${response.rowCount} orders to paid`, response: response.rows })
 }
 
 exports.createUser = createUser
-exports.verifyUserID = verifyUserID
+exports.getUserIDByUsername = getUserIDByUsername
 exports.adjustDonations = adjustDonations
 exports.getAllUsers = getAllUsers
 exports.changeUsername = changeUsername
+exports.pullUserTab = pullUserTab
+exports.closeTab = closeTab
