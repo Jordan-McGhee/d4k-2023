@@ -10,7 +10,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // route imports
-const donationRoutes = require("./routes/donation-routes")
 const orderRoutes = require("./routes/order-routes")
 const userRoutes = require('./routes/user-routes')
 
@@ -21,7 +20,6 @@ const app = express();
 app.use(bodyParser.json());
 
 // route variables
-app.use("/donation", donationRoutes)
 app.use("/order", orderRoutes)
 app.use("/user", userRoutes)
 

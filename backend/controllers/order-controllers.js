@@ -176,9 +176,9 @@ const getOrdersAdmin = async (req, res, next) => {
 }
 
 const getOrdersGrouped = async (req, res, next) => {
-    let paidQuery = "SELECT * FROM user_totals WHERE orders_total_unpaid = 0"
+    let paidQuery = "SELECT * FROM user_totals WHERE amount_unpaid = 0"
 
-    let unpaidQuery = "SELECT * FROM user_totals WHERE orders_total_unpaid > 0"
+    let unpaidQuery = "SELECT * FROM user_totals WHERE amount_unpaid > 0"
 
     let paidResponse, unpaidResponse
 
@@ -320,7 +320,7 @@ const unvoidOrder = async (req, res, next) => {
 const pullUserTab = async (req, res, next) => {
     const { user_id } = req.params
 
-    let text = "SELECT * FROM user_totals WHERE user_id = $1"
+    let text = "SELECT * FROM tab_totals WHERE user_id = $1"
 
     let response
 

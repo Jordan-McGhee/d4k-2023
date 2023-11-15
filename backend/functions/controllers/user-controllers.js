@@ -87,6 +87,32 @@ const verifyUserID = async (req, res, next) => {
     }
 }
 
+const adjustDonations = async (req, res, next) => {
+
+    const { donation_amount } = req.body
+    const { user_id } = req.params
+
+    let query = "UPDATE users SET adjusted_donations = $1, updated_at = NOW() WHERE user_id = $2 RETURNING *"
+    let response
+
+    try {
+        const client = await pool.connect()
+        response = await client.query(query, [ donation_amount, user_id ])
+        client.release()
+
+    } catch (error) {
+        logger.error(`Error updating user #${user_id}'s donation amount`)
+
+        return next(
+            new HttpError(
+                `Error updating user #${user_id}'s donation amount`, 500
+            )
+        )
+    }
+
+    res.status(201).json({ message: `Updated user #${user_id}'s adjusted_donations amount to ${donation_amount}`})
+}
+
 const getAllUsers = async (req, res, next) => {
     let query = "SELECT * from users"
 
@@ -139,5 +165,6 @@ const changeUsername = async (req, res, next) => {
 
 exports.createUser = createUser
 exports.verifyUserID = verifyUserID
+exports.adjustDonations = adjustDonations
 exports.getAllUsers = getAllUsers
 exports.changeUsername = changeUsername
