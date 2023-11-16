@@ -12,9 +12,7 @@ const createUser = async (req, res, next) => {
     let response
 
     try {
-        const client = await pool.connect()
-        response = await client.query(nameQuery, [username])
-        client.release()
+        response = await pool.query(nameQuery, [username])
     } catch (error) {
         logger.error(`Error checking if username is available: ${error}`)
 
@@ -34,9 +32,8 @@ const createUser = async (req, res, next) => {
         let newUser
 
         try {
-            const client = await pool.connect()
-            newUser = await client.query(query, [username])
-            client.release()
+            //const client = await pool.connect()
+            newUser = await pool.query(query, [username])
 
         } catch (error) {
             logger.error(`Error creating user: ${error}`)
@@ -65,9 +62,8 @@ const getUserIDByUsername = async (req, res, next) => {
 
     try {
 
-        const client = await pool.connect()
-        response = await client.query(query, [username])
-        client.release()
+       // const client = await pool.connect()
+        response = await pool.query(query, [username])
 
     } catch (error) {
         logger.error(`Error searching for users: ${error}`)
@@ -78,13 +74,7 @@ const getUserIDByUsername = async (req, res, next) => {
             )
         )
     }
-
-    // check if rows returned a value or not
-    if (response.rows.length > 0) {
-        res.status(409).json({ user_id: response.rows.user_id })
-    } else {
-        res.status(200).json({ user_id: null })
-    }
+    res.status(200).json({ user_id: response?.rows[0]?.user_id })
 }
 
 const adjustDonations = async (req, res, next) => {
@@ -96,9 +86,8 @@ const adjustDonations = async (req, res, next) => {
     let response
 
     try {
-        const client = await pool.connect()
-        response = await client.query(query, [ donation_amount, user_id ])
-        client.release()
+        //const client = await pool.connect()
+        response = await pool.query(query, [ donation_amount, user_id ])
 
     } catch (error) {
         logger.error(`Error updating user #${user_id}'s donation amount`)
@@ -118,9 +107,8 @@ const getAllUsers = async (req, res, next) => {
 
     let response
     try {
-        const client = await pool.connect()
-        response = await client.query(query)
-        client.release()
+        //const client = await pool.connect()
+        response = await pool.query(query)
 
     } catch (error) {
         logger.error(`Error retreiving users: ${error}`)
@@ -146,9 +134,8 @@ const changeUsername = async (req, res, next) => {
     let nameQueryResponse
 
     try {
-        const client = await pool.connect()
-        nameQueryResponse = await client.query(nameQuery, [ username ])
-        client.release()
+        //const client = await pool.connect()
+        nameQueryResponse = await pool.query(nameQuery, [ username ])
     } catch (error) {
         logger.error(`Error checking if username is available: ${error}`)
 
@@ -166,9 +153,8 @@ const changeUsername = async (req, res, next) => {
         let response
     
         try {
-            const client = await pool.connect()
-            response = await client.query(query, [username, user_id])
-            client.release()
+            //const client = await pool.connect()
+            response = await pool.query(query, [username, user_id])
     
         } catch (error) {
             logger.error(`Error changing User ${user_id}'s name to ${username}. ${error}`)
@@ -192,9 +178,8 @@ const pullUserTab = async (req, res, next) => {
     let response
 
     try {
-        const client = await pool.connect()
-        response = await client.query(text, [user_id])
-        client.release()
+        //const client = await pool.connect()
+        response = await pool.query(text, [user_id])
     } catch (error) {
         logger.error(`Error getting user #${user_id}'s tab. ${error}`, 500)
 
@@ -215,9 +200,8 @@ const closeTab = async (req, res, next) => {
     let response
 
     try {
-        const client = await pool.connect()
-        response = await client.query(text, [user_id])
-        client.release()
+        //const client = await pool.connect()
+        response = await pool.query(text, [user_id])
     } catch (error) {
         logger.error(`Error setting User #${user_id}'s orders to paid. ${error}`, 500)
 

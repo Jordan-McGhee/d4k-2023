@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 import { UserApi } from "../api/user"
+import { debounce } from "lodash"
 // DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
 import other from "../assets/other.json"
@@ -15,10 +16,11 @@ import ErrorModal from "../components/UIElements/ErrorModal";
 const Order = () => {
     let navigate = useNavigate()
     const { sendRequest } = useFetch()
-    const { updateUsername, getUserIdByUsername } = UserApi()
+    const { updateUsername, getUserIdByUsername, createUser } = UserApi()
     let allDrinksJson = cocktails.concat(other).concat(shots)
 
     const [ username, setUsername ] = useState('')
+    const [ storedUsername, setStoredUsername ] = useState('')
     const [ userId, setUserId ] = useState('')
     const [ editedUsername, setEditedUsername ] = useState('')
     const [ isUsernameTaken, setIsUsernameTaken ] = useState(false)
@@ -64,7 +66,7 @@ const Order = () => {
 
     
     const isInvalidUsername = useMemo(() => {
-        return (!username ||  username.trim().length < 3)
+        return (!username || username.trim().length < 3)
     }, [username]);
 
     const isInvalidEditedUsername = useMemo(() => {
@@ -76,23 +78,28 @@ const Order = () => {
     }, [donationAmount]);
     
     useEffect(() => {
-        const setUserIdByUsername = async (username) => {
-            let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/verify/${username}`, "GET", { 'Content-Type': 'application/json' })
+        const checkUserIdByUsername = async (username) => {
+            let data = await getUserIdByUsername(username)
             let id = data?.user_id
             if(!id) return
 
             localStorage.setItem('userId', id)
             setUsername(username)
+            setStoredUsername(username)
             setHasStoredUserId(true)   
         }
 
         let storedUsername = localStorage.getItem('storedUsername')
         let storedUserId = localStorage.getItem('userId')
         if(storedUsername && !storedUserId){
-            setUserIdByUsername(storedUsername)
+            checkUserIdByUsername(storedUsername)
         }else if(storedUsername){
             setUsername(storedUsername)
-            setHasStoredUserId(true)   
+            setStoredUsername(storedUsername)
+        }
+        if(storedUserId){
+            setHasStoredUserId(true)
+            setUserId(storedUserId)
         }
         let drinkIdParam = searchParams.get("drinkId")
         if (drinkIdParam) {
@@ -116,37 +123,27 @@ const Order = () => {
         setIsUsernameTaken(false)
     }, [editedUsername])
 
-    // useEffect(() => {
-    //     if (!isInvalidUsername) {
-    //       verify(username);
-    //     }
-    //   }, [username, isInvalidUsername]);
-    
-    //   const verify = useCallback(
-    //     debounce(async (username) => {
-    //         let data = await getUserIdByUsername(username)
-    //         if(data?.user_id !== null) {
-    //             setIsUsernameTaken(true)
-    //             return
-    //         }
+    const verifyUsernameIsNew = async (uname)  => {
+        let data = await getUserIdByUsername(uname)
+        if(data?.user_id) {
+            setIsUsernameTaken(true)
+            return false
+        }
+        return true
+    }
 
-    //     }, 500),
-    //     []
-    //   )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const verifyUsernameDebounce = useCallback(debounce(async (uname) => {
+        await verifyUsernameIsNew(uname)
+    }, 2000), [])
 
-    //   const delayedSearch = useCallback(
-    //     debounce(async (searchTerm) => {
-    //         await launchSearch(searchTerm);
-    //     }, 2000),
-    //     []
-    // );
-    // useEffect(() => {
-    //     if (searchTerm.length >= 2) {
-    //         delayedSearch(searchTerm);
-    //     }
-    // }, [searchTerm]);
-
-
+    useEffect(() => {
+        setIsUsernameTaken(false)
+        if (!isInvalidUsername && username !== storedUsername) {
+          verifyUsernameDebounce(username);
+        }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [username, storedUsername, isInvalidUsername]);
 
     const updateDrinkState = (drinkId) =>{
         if(drinkId === null) return
@@ -170,7 +167,6 @@ const Order = () => {
         updateDrinkState(currentDrinkId)
       }
       
-
     const incrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity + 1)
     const decrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity - 1)
     
@@ -203,29 +199,24 @@ const Order = () => {
     }
 
     const handleEditUsername = async () => {
-        if(isLoading) return
+        if(isLoading || storedUsername === editedUsername) return
         setIsLoading(true)
 
         try {
-            let data = await getUserIdByUsername(editedUsername)
-            console.log(data)
-            if(data?.user_id !== null){
-                setIsUsernameTaken(true)
-                return
-            }
+            let isNew = await verifyUsernameIsNew(editedUsername)
+            if(!isNew) return
         } catch (e) {
-            console.log(e)
             return
         }
 
         try {
-            let data = await updateUsername(userId, username)
+            let data = await updateUsername(userId, editedUsername)
             console.log(data)
         } catch (e) {
-            console.log(e)
             return
         }
             setUsername(editedUsername)
+            setStoredUsername(editedUsername)
             localStorage.setItem('storedUsername', editedUsername)
             setShowEditNameInput(false)
     }
@@ -234,26 +225,33 @@ const Order = () => {
         if(isLoading) return
         setIsLoading(true)
 
+        let currentUserId = userId
+        var trimmedUsername = username.trim()
+
+        if(!hasStoredUserId){
+            let isNewUsername = await verifyUsernameIsNew(trimmedUsername)
+            if(!isNewUsername) return
+
+            let data = await createUser(trimmedUsername)
+            if(!data?.user_id) return
+            setUserId(data.user_id)
+            localStorage.setItem(data.user_id)
+            currentUserId = data.user_id
+        }
+
         let formData = {
-                username: username.trim() ?? setFormHasErrors(true),
+                user_id: currentUserId,
                 drinkTitle: drinkName,
                 drinkCost: drinkPrice,
                 quantity: drinkQuantity,
                 donationAmount: donationAmount,
                 comments: `${comments.trim()}${customDrinkDescription ? ` (${customDrinkDescription.trim()})` : ''}` 
             }
-        
-
-
-        if (formData.username === 0 || formData.username.length < 1 || formData.drinkTitle.length<2 || formData.quantity < 1 || formData.quantity > 5) {
-            setFormHasErrors(true)
-            return
-        }
 
         try {
             let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify(formData))
             console.log(data)
-            localStorage.setItem('storedUsername', username.trim() )
+            localStorage.setItem('storedUsername', trimmedUsername)
             setHasStoredUserId(true)
             setIsLoading(false)
 
@@ -319,7 +317,7 @@ const Order = () => {
                                     ><FontAwesomeIcon icon={faClose}/>
                                     </Button>
                                     <Button
-                                        isDisabled={isInvalidEditedUsername || isUsernameTaken}
+                                        isDisabled={isInvalidEditedUsername || isUsernameTaken || storedUsername === editedUsername}
                                         size="md"
                                         isIconOnly
                                         radius="full"
@@ -348,11 +346,11 @@ const Order = () => {
                                 value={username}
                                 variant="bordered"
                                 radius="full"
-                                color={isInvalidUsername && !usernameFocused ? "danger" : "success"}
+                                color={(isInvalidUsername && !usernameFocused) || isUsernameTaken ? "danger" : "success"}
                                 label="Your Name"
-                                isInvalid={isInvalidUsername && !usernameFocused}
+                                isInvalid={(isInvalidUsername && !usernameFocused) || isUsernameTaken}
                                 onValueChange={setUsername}
-                                errorMessage={isInvalidUsername && !usernameFocused && "We'll need your name, nutcracker"}
+                                errorMessage={(isInvalidUsername && !usernameFocused) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
                             />
                         }
 
@@ -574,7 +572,7 @@ const Order = () => {
                             <Button
                                 className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
                                 onPress={submitOrder}
-                                isDisabled={isLoading || isInvalidUsername || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
+                                isDisabled={isLoading || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                             >Grab a Drink
                                 <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
                             </Button>

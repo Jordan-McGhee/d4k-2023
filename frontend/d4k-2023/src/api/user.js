@@ -10,9 +10,13 @@ export const UserApi = () => {
             "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({username: username}))
     }
 
-    const getUserIDByUsername = async (username) => {
-        await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/verify/${username}`, "GET", { 'Content-Type': 'application/json' })
+    const getUserIdByUsername = async (username) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/verify/${username}`, "GET")
     }
 
-    return { updateUsername, getUserIDByUsername }
+    const createUser = async (username) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify({username: username}))
+    }
+
+    return { updateUsername, getUserIdByUsername, createUser }
 }
