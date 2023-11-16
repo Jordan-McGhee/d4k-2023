@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter } from "@nextui-org/react"
+import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter, Spinner } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -36,6 +36,7 @@ const Order = () => {
     const [ showEditNameInput, setShowEditNameInput ] = useState(false)
     const [ comments, setComments ] = useState('')
     const [ isLoading, setIsLoading ] = useState(false)
+    const [ isLoadingUsername, setIsLoadingUsername ] = useState(false)
     const [ searchParams ] = useSearchParams();
     const [ formHasErrors, setFormHasErrors ] = useState(false)
     const [usernameFocused, setUsernameFocused] = useState(false)
@@ -124,26 +125,27 @@ const Order = () => {
     }, [editedUsername])
 
     const verifyUsernameIsNew = async (uname)  => {
+        setIsLoadingUsername(true)
         let data = await getUserIdByUsername(uname)
         if(data?.user_id) {
             setIsUsernameTaken(true)
-            return false
         }
-        return true
+        setIsLoadingUsername(false)
+        return !data?.user_id
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const verifyUsernameDebounce = useCallback(debounce(async (uname) => {
-        await verifyUsernameIsNew(uname)
-    }, 2000), [])
+    // const verifyUsernameDebounce = useCallback(debounce(async (uname) => {
+    //     await verifyUsernameIsNew(uname)
+    // }, 2000), [])
 
     useEffect(() => {
         setIsUsernameTaken(false)
-        if (!isInvalidUsername && username !== storedUsername) {
-          verifyUsernameDebounce(username);
+        if (!isInvalidUsername && !usernameFocused && username !== storedUsername) {
+          verifyUsernameIsNew(username);
         }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [username, storedUsername, isInvalidUsername]);
+      }, [usernameFocused]);
 
     const updateDrinkState = (drinkId) =>{
         if(drinkId === null) return
@@ -305,6 +307,9 @@ const Order = () => {
                                         inputWrapper: ["pr-0", "bg-white", "rounded-r-none"],
                                         errorMessage: "italic ml-4"
                                     }}
+                                    endContent={
+                                        isLoadingUsername && <Spinner color="success"/>
+                                      }
                                 />
                                 <span className="flex">
                                     <Button
@@ -322,14 +327,15 @@ const Order = () => {
                                         isIconOnly
                                         radius="full"
                                         className="h-14 bg-emerald-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
-                                        type = "button"
-                                        onPress = {handleEditUsername}
+                                        type="button"
+                                        onPress={handleEditUsername}
                                     ><FontAwesomeIcon icon={faCheck}/>
                                     </Button>
                                 </span>
                         </div>
                         }
                         { !hasStoredUserId &&
+                        <div>
                             <Input
                                 className="pb-5"
                                 classNames={{
@@ -352,7 +358,16 @@ const Order = () => {
                                 onValueChange={setUsername}
                                 errorMessage={(isInvalidUsername && !usernameFocused) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
                             />
+                            { !usernameFocused &&
+                                <div className="absolute right-10 top-9"> {
+                                    ((isLoadingUsername && <Spinner color="success"/>) || 
+                                    (!isInvalidUsername && !isLoadingUsername && <FontAwesomeIcon className="text-emerald-600" icon={faCheck}/>))
+                                }
+                                </div>
+                            }+
+                            </div>
                         }
+              
 
                         <Select
                             variant="bordered"
