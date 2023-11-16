@@ -1,27 +1,13 @@
-// const { validationResult, body } = require("express-validator")
 const HttpError = require("../models/http-error")
 const pool = require("../db")
 const logger = require('firebase-functions/logger')
 
 const createOrder = async (req, res, next) => {
-
-    // OLD VALIDATION ERROR CODE — LEFT JUST IN CASE
-
-    // // see if any data submitted didn't match with checks in our router file
-    // const errors = validationResult(req)
-
-    // if (!errors.isEmpty()) {
-    //     console.log(errors)
-    //     return new HttpError("Please make sure all fields are filled out! (Name, Drink Name, and Quantity)")
-    // }
-
-
-    // pull data from req.body
     const { user_id, drinkTitle, customDrinkTitle, drinkCost, quantity, tip_amount, comments } = req.body
 
     const total = Math.floor(drinkCost * quantity)
 
-    let orderText = "INSERT INTO orders(user_id, drink, quantity, total, tip_amount, comments, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, false, false, NOW(), NOW()) RETURNING *"
+    let orderText = `INSERT INTO orders(user_id, drink, quantity, total, tip_amount, comments, is_paid, is_completed, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, false, false, NOW(), NOW()) RETURNING *`
 
     let newOrder
 

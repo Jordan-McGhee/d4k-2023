@@ -29,11 +29,11 @@ const createUser = async (req, res, next) => {
         // query for inserting into database
         let query = "INSERT INTO users(username, created_at, updated_at) VALUES ($1, NOW(), NOW()) RETURNING *"
 
-        let newUser
+        let response
 
         try {
             //const client = await pool.connect()
-            newUser = await pool.query(query, [username])
+            response = await pool.query(query, [username])
 
         } catch (error) {
             logger.error(`Error creating user: ${error}`)
@@ -45,7 +45,7 @@ const createUser = async (req, res, next) => {
             )
         }
 
-        res.status(201).json({ message: "Created user!", user: newUser.rows })
+        res.status(201).json(response.rows[0])
     }
 }
 
@@ -120,7 +120,7 @@ const getAllUsers = async (req, res, next) => {
         )
     }
 
-    res.status(200).json({ users: response.rows.length > 0 ? response.rows : "No users" })
+    res.status(200).json(response.rows)
 }
 
 const changeUsername = async (req, res, next) => {
@@ -166,7 +166,7 @@ const changeUsername = async (req, res, next) => {
             )
         }
     
-        res.status(201).json({ message: `Changed User ${user_id}'s name to ${username}`, newUsername: username, response: response.rows[0] })
+        res.status(201).json(response.rows[0])
     }
 }
 
@@ -188,7 +188,7 @@ const pullUserTab = async (req, res, next) => {
         )
     }
 
-    res.status(200).json({ message: `Fetched user #${user_id}'s tab!`, response: response.rows })
+    res.status(200).json(response.rows)
 }
 
 const closeTab = async (req, res, next) => {
