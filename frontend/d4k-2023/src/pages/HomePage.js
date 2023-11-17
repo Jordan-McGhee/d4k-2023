@@ -22,7 +22,7 @@ const HomePage = () => {
                     RSVP
                     </Button>
                     <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white float-right"
-                        onPress={() => openInNewTab("sms:6787361277&body=drink4thekids%20Christmas%20party%20address%3F")}>
+                        onPress={() => openInNewTab("sms:6787361277?&body=drink4thekids%20Christmas%20party%20address%3F")}>
                     Address
                     </Button>
             </div>
