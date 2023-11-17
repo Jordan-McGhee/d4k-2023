@@ -1,17 +1,18 @@
-import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter, Spinner } from "@nextui-org/react"
+import React, { useEffect, useState, useMemo, useRef } from "react";
+import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter, 
+    Spinner, Modal, ModalBody, ModalContent , ModalHeader, ModalFooter, Link } from "@nextui-org/react"
 import { useFetch } from "../hooks/useFetch";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 import { UserApi } from "../api/user"
-import { debounce } from "lodash"
+
 // DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
 import other from "../assets/other.json"
 import shots from "../assets/shots.json"
-import ErrorModal from "../components/UIElements/ErrorModal";
+import icsFile from '../assets/drink4thekidsparty.ics'
 
 const Order = () => {
     let navigate = useNavigate()
@@ -38,7 +39,6 @@ const Order = () => {
     const [ isLoading, setIsLoading ] = useState(false)
     const [ isLoadingUsername, setIsLoadingUsername ] = useState(false)
     const [ searchParams ] = useSearchParams();
-    const [ formHasErrors, setFormHasErrors ] = useState(false)
     const [usernameFocused, setUsernameFocused] = useState(false)
     const onUsernameFocus = () => setUsernameFocused(true)
     const onUsernameBlur = () => setUsernameFocused(false)
@@ -46,11 +46,11 @@ const Order = () => {
     const [customDrinkDescriptionFocused, setCustomDrinkDescriptionFocused] = useState(false)
     const onCustomDrinkDescriptionFocus = () => setCustomDrinkDescriptionFocused(true)
     const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
+    const [ isOrderingEnabled, setIsOrderingEnabled ] = useState(false)
+    const [ showNotPartyTimeModal, setShowNotPartyTimeModal ] = useState(false)
 
     const customDrinkDescriptionRef = useRef(null);
     const editUsernameInputRef = useRef(null);
-
-    const clearFormErrorHandler = () => { setFormHasErrors(false) }
 
     const customDrinkId = 999
     const isCustomDrinkSelected = useMemo(() => {
@@ -106,6 +106,10 @@ const Order = () => {
         if (drinkIdParam) {
             updateDrinkState(parseInt(drinkIdParam))
         }
+
+        const isLocal = window.location.hostname.includes("localhost")
+        const isPartyDate = new Date() >= new Date('12/16/2023')
+        setIsOrderingEnabled(isLocal || isPartyDate)
     }, [])
 
     useEffect(() => {
@@ -133,11 +137,6 @@ const Order = () => {
         setIsLoadingUsername(false)
         return !data?.user_id
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    // const verifyUsernameDebounce = useCallback(debounce(async (uname) => {
-    //     await verifyUsernameIsNew(uname)
-    // }, 2000), [])
 
     useEffect(() => {
         setIsUsernameTaken(false)
@@ -172,7 +171,6 @@ const Order = () => {
     const incrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity + 1)
     const decrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity - 1)
     
-
     const donationHandler = amount => {
         setShowCustomDonation(false)
         setDonationAmount(amount)
@@ -224,6 +222,10 @@ const Order = () => {
     }
 
     const submitOrder = async () => {
+        if(!isOrderingEnabled){
+            setShowNotPartyTimeModal(true)
+            return
+        }
         if(isLoading) return
         setIsLoading(true)
 
@@ -268,10 +270,33 @@ const Order = () => {
     
     return (
         <React.Fragment >
-            {   
-                formHasErrors &&
-                <ErrorModal error = { "Please make sure you filled in your name, drink order, and how many you'd like!" } onClear = { clearFormErrorHandler } />
-            }
+                <Modal placement="center" isOpen={showNotPartyTimeModal} onClose={() => setShowNotPartyTimeModal(false)}>
+                    <ModalContent>
+                    {(onClose) => (
+                        <>
+                        <ModalHeader className="font-fugaz text-2xl justify-center text-emerald-600">Son of a Nutcracker</ModalHeader>
+                        <ModalBody className="justify-center">
+                            <p className="text-center text-xl font-bold"> 
+                                Orders are open at the party on
+                            </p>
+
+                            <Link isBlock className="text-center self-center text-xl" underline="always" color="success" href={icsFile} download="d4k-party.ics">
+                                Saturday<br/>December 16<br/>6PM — Late
+                            </Link>
+                            <p className="pt-2 text-xl text-center"> 
+                                Mark your calendar
+                            </p>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="success" variant="light" onPress={onClose}>
+                            Close
+                            </Button>
+                        </ModalFooter>
+                        </>
+                    )}
+                    </ModalContent>
+                </Modal>
+                
             <form className="max-w-md m-auto">
                 <Card className=" bg-slate-200 mb-5 pb-5">
                     <CardHeader className="pb-0 text-4xl font-bungee text-center justify-center text-emerald-700">
@@ -364,10 +389,9 @@ const Order = () => {
                                     (!isInvalidUsername && !isLoadingUsername && <FontAwesomeIcon className="text-emerald-600" icon={faCheck}/>))
                                 }
                                 </div>
-                            }+
+                            }
                             </div>
                         }
-              
 
                         <Select
                             variant="bordered"

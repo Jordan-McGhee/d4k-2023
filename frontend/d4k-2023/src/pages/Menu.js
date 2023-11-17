@@ -8,12 +8,6 @@ import shots from "../assets/shots.json"
 
 
 const Menu = () => {
-    const [ showOrderingNav, setShowOrderingNav ] = useState(false)
-    useEffect(() => {
-        const isLocal = window.location.hostname.includes("localhost")
-        const isPartyDate = new Date() >= new Date('12/16/2023')
-        setShowOrderingNav(isLocal || isPartyDate)
-    }, [  ])
 
     return (
         <div className="max-w-md m-auto">
@@ -46,10 +40,9 @@ const Menu = () => {
                 <p className="text-white text-center text-2xl"> <span className="font-fugaz italic">WORK IN PROGRESS</span></p>
                 {/* cocktails div */}
                 <div id = "cocktails" className="scroll-mt-24">
-                    <p className="te    xt-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Cocktails</p>
+                    <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Cocktails</p>
                     <MenuList
                         drinks = { cocktails }
-                        showOrderButton = {showOrderingNav}
                     />
                 </div>
 
@@ -58,7 +51,6 @@ const Menu = () => {
                     <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Batched</p>
                     <MenuList
                         drinks = { batched }
-                        showOrderButton = {showOrderingNav}
                     />
                 </div>
 
@@ -67,7 +59,6 @@ const Menu = () => {
                     <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Shots</p>
                     <MenuList
                         drinks = { shots }
-                        showOrderButton = {showOrderingNav}
                     />
                 </div>
             </div>

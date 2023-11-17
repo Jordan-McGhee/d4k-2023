@@ -46,11 +46,11 @@ const MainNav = (props) => {
                         <FontAwesomeIcon className="mx-1" icon={faPeopleGroup} />Queue
                     </NavLink>}
             
-                    {showOrderingNav && <NavLink
+                    <NavLink
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}
                         onClick={() => setIsChecked(!isChecked)} to="/order">
                         <FontAwesomeIcon className="mx-1" icon={faGift} />Order
-                    </NavLink>}
+                    </NavLink>
             
                     <NavLink
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}

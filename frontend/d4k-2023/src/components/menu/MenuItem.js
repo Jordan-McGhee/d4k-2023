@@ -30,14 +30,13 @@ const MenuItem = props => {
 
                         {/* div for order button and price */}
                         <div className="flex items-center justify-between">
-                            {props.showOrderButton && <Button
+                            <Button
                                 type = "SUBMIT"
                                 radius="full"
                                 onPress={orderButtonPressed}
                                 className = "bg-gradient-to-r from-green-800 to-emerald-400 shadow-lg hover:scale-105 font-bold uppercase text-white">
                                     Order
-                                </Button>
-                            }
+                            </Button>
                             <span className="text-emerald-600 font-bungee text-xl">${ props.price }</span>
                         </div>
 
