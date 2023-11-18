@@ -112,16 +112,6 @@ const MainNav = (props) => {
                             </NavLink>
                         </li>
 
-                        {
-                            localStorageUsername && 
-                            <li className="ml-1.5 my-4 uppercase text-white">
-                                <NavLink to="/pay" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
-                                    <img src={ closeTab } alt = "faq-icon" className="w-7 mr-5"/>
-                                    <p>Close Your Tab</p>
-                                </NavLink>
-                            </li>
-                        }
-
                         {/* <li className="border-b border-white ml-2 my-2 uppercase text-white">
                             <NavLink to="/admin">
                                 <p>Admin</p>

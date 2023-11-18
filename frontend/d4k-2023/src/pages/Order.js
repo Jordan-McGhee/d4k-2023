@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import {Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter, 
     Spinner, Modal, ModalBody, ModalContent , ModalHeader, ModalFooter, Link } from "@nextui-org/react"
-import { useFetch } from "../hooks/useFetch";
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck,faMinus, faPlus, faChampagneGlasses, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
-import { UserApi } from "../api/user"
+import { UserApi } from "../api/userApi"
+import { OrderApi } from "../api/orderApi"
+import { toast } from 'react-toastify';
 
 // DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
@@ -16,8 +17,8 @@ import icsFile from '../assets/drink4thekidsparty.ics'
 
 const Order = () => {
     let navigate = useNavigate()
-    const { sendRequest } = useFetch()
     const { updateUsername, getUserIdByUsername, createUser } = UserApi()
+    const { createOrder } = OrderApi()
     let allDrinksJson = cocktails.concat(other).concat(shots)
 
     const [ username, setUsername ] = useState('')
@@ -25,7 +26,6 @@ const Order = () => {
     const [ userId, setUserId ] = useState('')
     const [ editedUsername, setEditedUsername ] = useState('')
     const [ isUsernameTaken, setIsUsernameTaken ] = useState(false)
-    const [ hasStoredUserId, setHasStoredUserId ] = useState(false)
     const [ drinkName, setDrinkName ] = useState(null)
     const [ selectedDrinkId, setSelectedDrinkId ] = useState(-1)
     const [ selectValue, setSelectValue ] = useState(new Set([]));
@@ -61,6 +61,10 @@ const Order = () => {
         return (!customDrinkDescription || customDrinkDescription.trim().length < 3) && isCustomDrinkSelected
     }, [isCustomDrinkSelected, customDrinkDescription]);
 
+    const hasStoredUserId = useMemo(() => {
+        return (!!userId)
+    }, [userId]);
+
     const orderTotal = useMemo(() => {
         return (drinkPrice * drinkQuantity) + donationAmount
     }, [drinkPrice, drinkQuantity, donationAmount]);
@@ -78,29 +82,17 @@ const Order = () => {
     return donationAmount < 0 || donationAmount > 1000
     }, [donationAmount]);
     
+    const notify = (error) => {
+        toast.error(`UH OH! ${error}`,  { position: toast.POSITION.BOTTOM_CENTER });
+    }
+
     useEffect(() => {
-        const checkUserIdByUsername = async (username) => {
-            let data = await getUserIdByUsername(username)
-            let id = data?.user_id
-            if(!id) return
-
-            localStorage.setItem('userId', id)
-            setUsername(username)
-            setStoredUsername(username)
-            setHasStoredUserId(true)   
-        }
-
         let storedUsername = localStorage.getItem('storedUsername')
         let storedUserId = localStorage.getItem('userId')
-        if(storedUsername && !storedUserId){
-            checkUserIdByUsername(storedUsername)
-        }else if(storedUsername){
+        if(storedUsername && storedUserId){
             setUsername(storedUsername)
+            setUserId(parseInt(storedUserId))
             setStoredUsername(storedUsername)
-        }
-        if(storedUserId){
-            setHasStoredUserId(true)
-            setUserId(storedUserId)
         }
         let drinkIdParam = searchParams.get("drinkId")
         if (drinkIdParam) {
@@ -202,23 +194,18 @@ const Order = () => {
         if(isLoading || storedUsername === editedUsername) return
         setIsLoading(true)
 
-        try {
-            let isNew = await verifyUsernameIsNew(editedUsername)
-            if(!isNew) return
-        } catch (e) {
-            return
-        }
-
-        try {
+        let isNew = await verifyUsernameIsNew(editedUsername)
+        
+        if(isNew){
             let data = await updateUsername(userId, editedUsername)
             console.log(data)
-        } catch (e) {
-            return
-        }
+    
             setUsername(editedUsername)
             setStoredUsername(editedUsername)
             localStorage.setItem('storedUsername', editedUsername)
             setShowEditNameInput(false)
+        }
+        setIsLoading(false)
     }
 
     const submitOrder = async () => {
@@ -234,66 +221,72 @@ const Order = () => {
 
         if(!hasStoredUserId){
             let isNewUsername = await verifyUsernameIsNew(trimmedUsername)
-            if(!isNewUsername) return
+            if(!isNewUsername){
+                setIsUsernameTaken(true)
+                return
+            }
 
             let data = await createUser(trimmedUsername)
-            if(!data?.user_id) return
-            setUserId(data.user_id)
-            localStorage.setItem(data.user_id)
+            if(!data?.user_id) throw Error('User not created')
             currentUserId = data.user_id
+            setUserId(data.user_id)
+            localStorage.setItem('userId', data.user_id)
+            localStorage.setItem('storedUsername', trimmedUsername)
+            localStorage.setItem('userId', currentUserId)
         }
-
-        let formData = {
+        
+        let orderData = {
                 user_id: currentUserId,
                 drinkTitle: drinkName,
                 drinkCost: drinkPrice,
                 quantity: drinkQuantity,
-                donationAmount: donationAmount,
+                tip_amount: donationAmount,
                 comments: `${comments.trim()}${customDrinkDescription ? ` (${customDrinkDescription.trim()})` : ''}` 
-            }
+        }
 
         try {
-            let data = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify(formData))
+            let data = await createOrder(orderData)
             console.log(data)
             localStorage.setItem('storedUsername', trimmedUsername)
-            setHasStoredUserId(true)
+            localStorage.setItem('userId', currentUserId)
             setIsLoading(false)
 
             navigate({
                 pathname: '/queue', 
-                search: createSearchParams({orderId: data?.order[0]?.order_id}).toString()
+                search: createSearchParams({orderId: data.order_id}).toString()
             })
         } catch (error) {
+            notify(error)
             console.log(error)
         }
     }
     
     return (
-        <React.Fragment >
+        <>
                 <Modal placement="center" isOpen={showNotPartyTimeModal} onClose={() => setShowNotPartyTimeModal(false)}>
                     <ModalContent>
-                    {(onClose) => (
-                        <>
-                        <ModalHeader className="font-fugaz text-2xl justify-center text-emerald-600">Son of a Nutcracker</ModalHeader>
-                        <ModalBody className="justify-center">
-                            <p className="text-center text-xl font-bold"> 
-                                Orders are open at the party on
-                            </p>
+                        {(onClose) => (
+                            <>
+                            <ModalHeader className="font-fugaz text-2xl justify-center text-emerald-600">Son of a Nutcracker</ModalHeader>
+                            <ModalBody className="justify-center">
+                                <p className="text-center text-xl font-bold"> 
+                                    Orders are open at the party on
+                                </p>
 
-                            <Link isBlock className="text-center self-center text-xl" underline="always" color="success" href={icsFile} download="d4k-party.ics">
-                                Saturday<br/>December 16<br/>6PM — Late
-                            </Link>
-                            <p className="pt-2 text-xl text-center"> 
-                                Mark your calendar
-                            </p>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button color="success" variant="light" onPress={onClose}>
-                            Close
-                            </Button>
-                        </ModalFooter>
-                        </>
-                    )}
+                                <Link isBlock className="text-center self-center text-xl" underline="always" color="success" href={icsFile} download="d4k-party.ics">
+                                    Saturday<br/>December 16<br/>6PM — Late
+                                </Link>
+                                <p className="pt-2 text-xl text-center"> 
+                                    Mark your calendar
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="success" variant="light" onPress={onClose}>
+                                Close
+                                </Button>
+                            </ModalFooter>
+                            </>
+                        )}
                     </ModalContent>
                 </Modal>
                 
@@ -619,7 +612,7 @@ const Order = () => {
                     </CardFooter>
                 </Card>
             </form>
-        </React.Fragment>
+        </>
     )
 }
 

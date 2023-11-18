@@ -12,33 +12,26 @@ const createOrder = async (req, res, next) => {
     let newOrder
 
     try {
-        const client = await pool.connect();
-        newOrder = await client.query(orderText, [user_id, drinkTitle || customDrinkTitle, quantity, total, tip_amount, comments])
-        client.release()
-
+        newOrder = await pool.query(orderText, [user_id, drinkTitle || customDrinkTitle, quantity, total, tip_amount, comments])
     } catch (error) {
         logger.error(`Error creating order`, error)
 
         return next(new HttpError(`Error Creating Order: ${error}`), 500)
     }
 
-    res.status(201).json({ message: "Created order!", order: newOrder.rows })
+    res.status(201).json(newOrder?.rows[0])
 }
 
 const getOrders = async (req, res, next) => {
-    const query = 'SELECT * FROM orders WHERE is_completed != true ORDER BY created_at ASC';
+    const query = 'SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE is_completed != true AND voided_at IS NULL ORDER BY created_at ASC';
 
     try {
         const client = await pool.connect();
         const result = await client.query(query);
         const orders = result.rows;
         client.release();
+        res.status(200).json(orders);
 
-        if (orders.length === 0) {
-            res.status(200).json({ results: 'empty' });
-        } else {
-            res.status(200).json({ results: orders });
-        }
     } catch (error) {
         logger.error('Error getting orders', error);
 
@@ -127,81 +120,30 @@ const updateCompleted = async (req, res, next) => {
 }
 
 const getOrdersAdmin = async (req, res, next) => {
-    let incompleteQuery = "SELECT * FROM orders WHERE is_completed = FALSE ORDER BY created_at ASC"
-
-    let completedQuery = "SELECT * FROM orders WHERE is_completed = TRUE ORDER BY created_at ASC"
-
-    let incompleteResponse, completeResponse
+    let query = `SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE voided_at IS NULL ORDER BY is_completed, created_at ASC`
+    let response
 
     try {
-        const client = await pool.connect()
-        incompleteResponse = await client.query(incompleteQuery)
-        client.release()
+        response = await pool.query(query)
     } catch (error) {
-
         logger.error(`Error getting incomplete orders. ${error}`, 500)
-
-        return next(
-            new HttpError(
-                "Error getting incomplete orders", 500
-            )
-        )
+        return next(new HttpError("Error getting incomplete orders", 500))
     }
-
-    try {
-        const client = await pool.connect()
-        completeResponse = await client.query(completedQuery)
-        client.release()
-    } catch (error) {
-
-        logger.error(`Error getting incomplete orders. ${error}`, 500)
-
-        return next(
-            new HttpError(
-                "Error getting incomplete orders", 500
-            )
-        )
-    }
-
-    res.status(200).json({ message: "Retrieved orders!", incompleteOrders: incompleteResponse.rows, completedOrders: completeResponse.rows })
+    res.status(200).json(response.rows)
 }
 
 const getOrdersGrouped = async (req, res, next) => {
-    let paidQuery = "SELECT * FROM user_totals WHERE amount_unpaid = 0"
-
-    let unpaidQuery = "SELECT * FROM user_totals WHERE amount_unpaid > 0"
-
-    let paidResponse, unpaidResponse
+    let query = "SELECT * FROM user_totals"
+    let response
 
     try {
-        const client = await pool.connect()
-        paidResponse = await client.query(paidQuery)
-        client.release()
+        response = await pool.query(query)
     } catch (error) {
-        logger.error(`Error getting orders grouped by usernames COMPLETE ${error}`, 500)
-
-        return next(
-            new HttpError(
-                "Error getting orders grouped by usernames COMPLETE", 500
-            )
-        )
+        logger.error(`Error getting orders grouped by usernames ${error}`, 500)
+        return next(new HttpError("Error getting orders grouped by usernames", 500))
     }
 
-    try {
-        const client = await pool.connect()
-        unpaidResponse = await client.query(unpaidQuery)
-        client.release()
-    } catch (error) {
-        logger.error(`Error getting orders grouped by usernames INCOMPLETE ${error}`, 500)
-
-        return next(
-            new HttpError(
-                "Error getting orders grouped by usernames INCOMPLETE", 500
-            )
-        )
-    }
-
-    res.status(200).json({ message: "Retrieved orders grouped by usernames!", paid: paidResponse.rows, unpaid: unpaidResponse.rows })
+    res.status(200).json(response.rows)
 }
 
 const getOrdersLeaderboard = async (req, res, next) => {
@@ -217,9 +159,7 @@ const getOrdersLeaderboard = async (req, res, next) => {
         client.release()
     } catch (error) {
         logger.error(`Error getting orders for leaderboard. ${error}`, 500)
-        return next(
-            new HttpError(`Error getting orders for leaderboard. ${error}`, 500)
-        )
+        return next(new HttpError(`Error getting orders for leaderboard. ${error}`, 500))
     }
 
     try {
@@ -229,9 +169,7 @@ const getOrdersLeaderboard = async (req, res, next) => {
     } catch (error) {
         logger.error(`Error getting orders for leaderboard. ${error}`, 500)
 
-        return next(
-            new HttpError(`Error getting overall total for leaderboard. ${error}`, 500)
-        )
+        return next(new HttpError(`Error getting overall total for leaderboard. ${error}`, 500))
     }
 
     if (response.rowCount === 0) {
@@ -258,10 +196,7 @@ const deleteOrder = async (req, res, next) => {
         client.release()
     } catch (error) {
         logger.error(`Error voiding order #${order_id}. ${error}`, 500)
-
-        return next(
-            new HttpError(`Error voiding order #${order_id}. ${error}`, 500)
-        )
+        return next(new HttpError(`Error voiding order #${order_id}. ${error}`, 500))
     }
 
     res.status(200).json({ message: `Voided order #${order_id}`, response: response })
@@ -279,12 +214,7 @@ const unvoidOrder = async (req, res, next) => {
         client.release()
     } catch (error) {
         logger.error(`Error unvoiding order #${order_id}`)
-
-        return next(
-            new HttpError(
-                `Error unvoiding order #${ order_id }`, 500
-            )
-        )
+        return next(new HttpError(`Error unvoiding order #${ order_id }`, 500))
     }
 
     res.status(200).json({ message: `Unvoided order #${ order_id }`, response: response })

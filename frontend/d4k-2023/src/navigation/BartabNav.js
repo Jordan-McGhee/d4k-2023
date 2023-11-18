@@ -1,59 +1,54 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-// import { useIsFocused } from '@react-navigation/native'
 import { useFetch } from "../hooks/useFetch";
 import { Link } from "react-router-dom";
 import "./BartabNav.css"
 import "./MobileNav.css"
-
-import { faCandyCane, faCocktail, faGift, faIgloo, faNoteSticky } from "@fortawesome/free-solid-svg-icons";
-import UserHasTab from "../components/payTab/UserHasTab";
+import { UserApi } from "../api/userApi";
 
 const BartabNav = (props) => {
     const { isLoading, sendRequest, hasError, clearError } = useFetch()
-    // const isFocused = useIsFocused()
     const [isChecked, setIsChecked] = useState(false);
     const [ data, setData ] = useState(null)
     const [ totalOwed, setTotalOwed ] = useState(0)
     const [ venmoUrl, setVenmoUrl ] = useState('https://venmo.com/jacobwebber')
     const [ paypalUrl, setPaypalUrl ] = useState('https://paypal.me/jacobwwebber')
     const location = useLocation();
+    const { getTab } = UserApi()
 
     useEffect(() => {
-        const username = localStorage.getItem('storedUsername')
-        if (username) {
-            const fetchUserTab = async () => {
+        const userId = localStorage.getItem('userId')
+        if (userId) {
+            const getUserTab = async () => {
                 try {
-                    const responseData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/${username}/pullTab`)
-                    setData(responseData.response[0])
-                    console.log(responseData.response[0])
+                    const responseData = await getTab(userId)
+                    setData(responseData)
+                    console.log(responseData)
                 } catch (error) {
                     console.log(error)
                 }
             }
-            fetchUserTab()
+            getUserTab()
         }
-        
-    }, [sendRequest, location ])
+    }, [ location ])
 
     useEffect(() => {
         if(data){
-            let total = parseInt(data.donations_total_unpaid || 0) + parseInt(data.orders_total_unpaid || 0)
-            setTotalOwed(total)
+            setTotalOwed(data.tab_total)
             
-            let note = `${data.username}-%20${data.drinks_ordered || 0}%20drinks%20$${data.orders_total_unpaid || 0}${data.donations_total_unpaid ? `,%20$${data.donations_total_unpaid} donation` : '' }`
+            let note = `${data.username}-%20${data.quantity || 0}%20drinks%20$${data.drink_cost_total}${data.tips_total ? `,%20$${data.tips_total} tip` : '' }`
             
-            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${total}&note=${note}`.replace(/ /g, '+')
+            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${data.tab_total}&note=${note}`.replace(/ /g, '+')
             setVenmoUrl(venmo)
 
-            let paypal = `https://paypal.me/jacobwwebber/${total}?&item_name=${note}`.replace(/ /g, '+')
+            let paypal = `https://paypal.me/jacobwwebber/${data.tab_total}?&item_name=${note}`.replace(/ /g, '+')
             setPaypalUrl(paypal)
         }
     }, [data]);
 
     return (
         <div>
-        { data && (data.orders_total_unpaid || data.donations_total_unpaid) && 
+        { data && (data.tab_total > 0) && 
             <div className={`outer-menu menu-left ${!isChecked ? 'animate-pulse' : ''}`}>
                 <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
                     onChange={(event) => setIsChecked(event.currentTarget.checked)}
@@ -71,19 +66,19 @@ const BartabNav = (props) => {
                         <li>          
                             <p className="text-xl flex justify-between">Drinks Ordered: 
                     <span className=" uppercase font-bold">
-                        {data.drinks_ordered ? data.drinks_ordered : 0}
+                        {data.quantity}
                     </span>
                 </p>
 
-                <p className="text-xl flex justify-between">Unpaid Tab: 
+                <p className="text-xl flex justify-between">Drinks:
                     <span className=" uppercase font-bold text-green-400">
-                        ${data.orders_total_unpaid ? data.orders_total_unpaid : 0}
+                        ${data.drink_cost_total}
                     </span>
                 </p>
 
-                <p className="text-xl flex justify-between">Added Donations: 
+                <p className="text-xl flex justify-between">Additional Tip: 
                     <span className=" uppercase font-bold text-green-400">
-                        ${data.donations_total_unpaid ? data.donations_total_unpaid : 0}
+                        ${data.tips_total}
                     </span>
                 </p>
 

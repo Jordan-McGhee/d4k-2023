@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import AdminTable from "./orders/AdminTable";
 import AdminTableBody from "./orders/AdminTableBody";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faMagnifyingGlass, faTrash, faX } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useFetch } from "../../hooks/useFetch";
 import ErrorModal from "../UIElements/ErrorModal";
 import convertDate from "../../Conversions/convertDateTime";
-
-import {Switch, Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
+import { OrderApi } from "../../api/orderApi";
+import {Switch, Spinner, Input, Button, ButtonGroup, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem,
+    Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 const AdminOrders = props => {
     const [ incompleteOrders, setIncompleteOrders ] = useState([])
     const [ completedOrders, setCompletedOrders ] = useState([])
@@ -15,21 +16,22 @@ const AdminOrders = props => {
     const [ allOrders, setAllOrders] = useState([])
     const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending" });
     const [filterValue, setFilterValue] = useState("");
-
+    const [statusFilter, setStatusFilter] = useState("all");
+    const statusOptions = ["paid", "complete"
+]
+    const { getOrdersAdmin } = OrderApi()
     useEffect(() => {
         const getOrders = async () => {
             try {
-                const responseData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/admin`, 'GET', { Accept: 'application/json' })
-                setIncompleteOrders(responseData.incompleteOrders)
-                setCompletedOrders(responseData.completedOrders)
-                setAllOrders(responseData.incompleteOrders.concat(responseData.completedOrders))
+                const response = await getOrdersAdmin()
+                setAllOrders(response)
             } catch(err) {
                 console.log(err)
             }
         }
         localStorage.setItem('showingOrders', 'true')
         getOrders()
-    }, [ sendRequest ])
+    }, [ ])
 
 
 
@@ -139,10 +141,21 @@ const AdminOrders = props => {
             }
     }, [])
 
-    const filteredOrders = useMemo(() =>{
-        if (filterValue.trim().length === 0) return allOrders
+    const filteredOrders = useMemo(() => {
+        let filterOrders = [...allOrders]
+        if (statusFilter !== "all") {
+            filterOrders = filterOrders.filter((order) => {
+                let show = true
+                let filters = Array.from(statusFilter)
+                if(!filters.includes('paid')) show = !order.is_paid
+                if(!filters.includes('complete')) show = !order.is_completed
+                return show
+            });
+        }
+
+        if (filterValue.trim().length === 0) return filterOrders
         return [...allOrders].filter(o => o.username.toLowerCase().includes(filterValue.trim().toLowerCase())
-        )}, [allOrders, filterValue])
+        )}, [allOrders, filterValue, statusFilter])
 
     const sortedOrders = useMemo(() => {
         return [...filteredOrders].sort((a, b) => {
@@ -158,7 +171,7 @@ const AdminOrders = props => {
 
       const topContent = useMemo(() => {
         return (
-          <div className="flex flex-col gap-4">
+          <div className="flex gap-4">
             <div className="flex justify-between gap-3 items-end">
               <Input
                 isClearable
@@ -171,9 +184,32 @@ const AdminOrders = props => {
                 onValueChange={setFilterValue}
               />
             </div>
-          </div>
+            <div className="flex gap-3">
+                <Dropdown>
+                    <DropdownTrigger className="hidden sm:flex">
+                        <Button endContent={<FontAwesomeIcon className="text-sm" icon={faChevronDown} />} variant="flat">
+                        Status
+                        </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                        disallowEmptySelection
+                        aria-label="Table Columns"
+                        closeOnSelect={false}
+                        selectedKeys={statusFilter}
+                        selectionMode="multiple"
+                        onSelectionChange={setStatusFilter}
+                    >
+                        {statusOptions.map((status) => (
+                        <DropdownItem key={status} className="capitalize">
+                            {status}
+                        </DropdownItem>
+                        ))}
+                    </DropdownMenu>
+                </Dropdown>
+            </div>
+          </div>       
         );
-      }, [ filterValue ]);
+      }, [ filterValue, statusOptions, statusFilter ]);
 
     return (
         <React.Fragment>
@@ -190,6 +226,7 @@ const AdminOrders = props => {
                         fullWidth isHeaderSticky 
                         classNames={{
                             wrapper: "max-h-[600px]",
+                            tr: "border-b-1 border-slate-500"
                           }}
                         className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
                             <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

@@ -5,19 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {NextUIProvider} from "@nextui-org/react";
 import { Spinner } from "@nextui-org/spinner";
 
-// IMPORTS
-// import Admin from "./pages/Admin"
-// import Tab from "./pages/Tab"
-// import FAQ from "./pages/FAQ"
 import HomePage from "./pages/HomePage"
-// import Menu from "./pages/Menu"
-// import Order from "./pages/Order"
-// import Queue from "./pages/Queue"
-// import Leaderboard from "./pages/Leaderboard"
-// import LargeLeaderBoard from "./components/leaderboard/Large/LargeLeaderBoard"
-// import Donate from "./pages/Donate"
-// import PayTab from "./pages/PayTab"
-// import NotFound from "./pages/NotFound"
 
 // LAYOUTS
 import UserLayout from "./components/layouts/UserLayout";
@@ -31,7 +19,6 @@ const Menu = React.lazy(() => import("./pages/Menu"))
 const Order = React.lazy(() => import("./pages/Order"))
 const Queue = React.lazy(() => import("./pages/Queue"))
 const Donate = React.lazy(() => import("./pages/Donate"))
-const PayTab = React.lazy(() => import("./pages/PayTab"))
 const Leaderboard = React.lazy(() => import("./pages/Leaderboard"))
 const Admin = React.lazy(() => import("./pages/Admin"))
 const AdminBarTabs = React.lazy(() => import("./pages/AdminBarTab"))
@@ -50,7 +37,6 @@ function App() {
           <Route path = "/order" element = { <Order />} />
           <Route path = "/queue" element = { <Queue />} />
           <Route path = "/donate" element = { <Donate />} />
-          <Route path= "/pay" element = { <PayTab /> } />
           <Route path = "/leaderboard" element = { <Leaderboard />} />
       </Route>
 

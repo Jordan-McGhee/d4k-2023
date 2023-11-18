@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import AdminOrders from "../components/admin/AdminOrders";
-import AdminDonations from "../components/admin/AdminDonations";
 import Button from "../components/FormElements/Button";
 import refresh from "../images/icons/refresh.png"
 import { useNavigate } from "react-router-dom";
@@ -8,17 +7,9 @@ import { useNavigate } from "react-router-dom";
 const Admin = () => {
 
     const navigate = useNavigate()
-
-    // PULL FROM LOCAL STORAGE ON WHETHER WE'RE SHOWING DONATIONS or ORDERS?
-    // ON PAGE REFRESH - WON'T DEFAULT TO DIFFERENT VIEW
-    const showingOrdersString = localStorage.getItem('showingOrders')
-    let showingOrdersBoolean
-    showingOrdersString === "true" ? showingOrdersBoolean = true : showingOrdersBoolean = false
-
-    const [ showOrders, setShowOrders ] = useState(showingOrdersBoolean)
-
+    const [ showOrders, setShowOrders ] = useState(true)
     return (
-        <React.Fragment>
+        <>
 
             <div className="flex items-center w-full justify-between px-1">
 
@@ -32,12 +23,12 @@ const Admin = () => {
                         className = "bg-green-600 button rounded-md shadow font-bold uppercase text-white mr-4"
                     />
 
-                    <Button
+                    {/* <Button
                         text = "Donations"
                         type = "button"
                         onClick = { showOrders ? () => setShowOrders(false) : null }
                         buttonSelected = { !showOrders ? true : null}
-                    />
+                    /> */}
                 </div>
 
                 <div className="flex items-center" onClick = { () => navigate(0) }>
@@ -46,13 +37,8 @@ const Admin = () => {
                 </div>
 
             </div>
-
-            
-                <AdminOrders />
-
-            
-
-        </React.Fragment>
+            <AdminOrders />
+        </>
     )
 }
 

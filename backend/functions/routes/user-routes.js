@@ -13,7 +13,7 @@ router.get("/all", userControllers.getAllUsers)
 
 router.patch("/:user_id", userControllers.changeUsername)
 
-router.get("/:user_id/pullTab", userControllers.pullUserTab)
+router.get("/:user_id/getTab", userControllers.getTab)
 
 router.post("/:user_id/closeTab", userControllers.closeTab)
 

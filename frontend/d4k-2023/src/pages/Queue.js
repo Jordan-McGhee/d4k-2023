@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import QueueList from "../components/queue/QueueList";
-import { useFetch } from "../hooks/useFetch";
 import ErrorModal from "../components/UIElements/ErrorModal"
-import refresh from "../images/icons/refresh.png"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRefresh } from '@fortawesome/free-solid-svg-icons'
 import EmptyQueue from "../components/queue/EmptyQueue";
 import { Spinner } from "@nextui-org/spinner";
 import { useSearchParams } from "react-router-dom";
+import { OrderApi } from "../api/orderApi";
 
 const Queue = () => {
     
-    // state for loaded queue from database
+    const { isLoading, hasError, clearError, getOrders } = OrderApi()
     const [ loadedQueue, setLoadedQueue ] = useState([])
     const [ searchParams ] = useSearchParams();
     const [ paramOrderId, setParamOrderId ] = useState('')
-
-    const { isLoading, hasError, sendRequest, clearError } = useFetch()
+    
     const fetchOrderQueue = async () => {
         try {
-            const responseData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/`)
-            responseData.results === "empty" ? setLoadedQueue([]) : setLoadedQueue(responseData.results)
+            const responseData = await getOrders()
+            setLoadedQueue(responseData)
         } catch (error) {
             console.log(error)
         }
@@ -26,14 +26,14 @@ const Queue = () => {
     useEffect(() => {
         const fetchOrderQueue = async () => {
             try {
-                const responseData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/`)
-                responseData.results === "empty" ? setLoadedQueue([]) : setLoadedQueue(responseData.results)
+                const responseData = await getOrders()
+                setLoadedQueue(responseData)
             } catch (error) {
                 console.log(error)
             }
         }
         fetchOrderQueue()
-    }, [ sendRequest ])
+    }, [ ])
 
     useEffect(() => {
         let orderIdParam = parseInt(searchParams.get("orderId"))
@@ -43,39 +43,45 @@ const Queue = () => {
         }
     }, [ loadedQueue, searchParams ])
 
-
     return (
-        <React.Fragment>
+        <>
             <ErrorModal error = { hasError } onClear = { clearError } />
-            {isLoading && <Spinner color="success" className="fixed top-2/4" style={{left:'calc(50% - 20px)'}} size="lg" />}
+            {isLoading && 
+                <Spinner 
+                    color="success"
+                    className="fixed top-1/4"
+                    style={{left:'calc(50% - 40px)', zIndex:100}}
+                    classNames={{
+                        wrapper: "w-20 h-20",
+                        circle1: "border-5",
+                        circle2: "border-5"
+                    }} />}
             <div className="m-auto lg:max-w-xl">
-                <div className="flex justify-between items-center">p
-                    <div className="flex items-center">
-                        {/* <img src={ queue } alt="queue icon" className="w-8 mr-3"/> */}
-                        <p className="text-4xl font-bungee text-center justify-center text-green-700">Queue</p>
+                    <div className="flex text-center justify-center items-center">
+                        <p className="text-4xl font-bungee text-center justify-center text-green-600">Queue</p>
                     </div>
-                    <div className="flex items-center" onClick = { fetchOrderQueue }>
-                        <img src={ refresh } alt="refresh icon" className="w-6 mr-3"/>
+                    <div className="flex justify-center text-white text-4xl pt-2" onClick = { fetchOrderQueue }>
+                        <FontAwesomeIcon icon={faRefresh} className="w-6 mr-2"/>
                         <p className="text-white text-lg">REFRESH</p>
                     </div>
-                </div>
                 {
                     loadedQueue.length === 0 && !isLoading ?
                         <EmptyQueue />
                     : !isLoading ? 
                     <div>
-                        <p className="text-white text-lg text-center my-5">All open drink orders will show here. Refresh to check your spot in the queue!</p>
+                        <p className="text-white text-lg text-center my-5">
+                            All open drink orders will show here. Refresh to check your spot in the queue
+                        </p>
                         <QueueList
                             queue = { loadedQueue }
                             orderId = { paramOrderId }
+                            deleteCallbackFunction = {fetchOrderQueue}
                         />
                     </div>
                     : <div></div>
                 }
-
             </div>
-
-        </React.Fragment>
+        </>
     )
 }
 
