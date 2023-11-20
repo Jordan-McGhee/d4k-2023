@@ -69,7 +69,7 @@ const adjustDonations = async (req, res, next) => {
         return next(new HttpError(`Error updating user #${user_id}'s donation amount`, 500))
     }
 
-    res.status(201).json({ message: `Updated user #${user_id}'s adjusted_donations amount to ${donation_amount}`})
+    res.status(201).json(true)
 }
 
 const getAllUsers = async (req, res, next) => {

@@ -52,6 +52,7 @@ export const OrderApi = () => {
         getOrders,
         updateOrderCompleted,
         updateOrderPaid,
+        updateOrderTip,
         getOrdersAdmin, 
         getOrdersAsTabs, 
         getOrdersLeaderboard, 

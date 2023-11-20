@@ -61,7 +61,7 @@ const updateTip = async (req, res, next) => {
         )
     }
 
-    res.status(201).json({ message: `Updated tip amount on order #${order_id} to ${tip_amount}`, response: response.rows[0]})
+    res.status(201).json(response.rows[0])
 }
 
 const updatePaid = async (req, res, next) => {

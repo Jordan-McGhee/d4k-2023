@@ -18,7 +18,11 @@ const Tab = () => {
     const [sortDescriptor, setSortDescriptor] = useState({column: "total_unpaid", direction: "descending" });
     const [filterValue, setFilterValue] = useState("");
     const { getOrdersAsTabs, isLoading, hasError, clearError } = OrderApi()
-    const { closeTab, isUserApiLoading } = UserApi()
+    const { closeTab, updateUserDonations, isUserApiLoading } = UserApi()
+    const [originalAdjustDonationValue, setOriginalAdjustDonationValue] = useState(0)
+
+
+
     useEffect(() => {
         const getTabs = async () => {
             try {
@@ -75,30 +79,51 @@ const Tab = () => {
         )
     }
 
-    const handleAdjustDonationsPress = (tab) => {
-        setSelectedTab(tab)
-        setShowAdjustDonationsModal(true)
-    }
-
     const renderCell = useCallback((tab, columnKey) => {
         const cellValue = tab[columnKey];
+
+        const handleAdjustDonations = async (tab, value) => {    
+            setAllTabs(allTabs.map(t => t.user_id === tab.user_id ? {...t ,adjusted_donations: parseInt(value) } : t));
+            console.log(tab)
+            console.log(value)
+        }
+
+        const onAdjustDonationInputBlur = async (tab) => {
+            if(tab.adjusted_donations === originalAdjustDonationValue) return
+
+            let success = await updateUserDonations(tab.user_id, tab.adjusted_donations )
+            if(!success){ setAllTabs(allTabs.map(t => t.user_id === tab.user_id ? {...t ,adjusted_donations: originalAdjustDonationValue } : t)) }
+        }
 
         switch (columnKey) {
             case "drink_cost_total":
             case "tab_total":
             case "tips_total":
-            case "amount_paid":
                 return `$${cellValue}`
             case "adjusted_donations":
-                return ( <Button variant="bordered" onPress={() => handleAdjustDonationsPress(tab)} >${tab.adjusted_donations}</Button>)
+                return (   <Input
+                    variant="faded"
+                    type="number"
+                    pattern="\d*"
+                    inputMode="decimal"
+                    min={0}
+                    max={1000}
+                    maxLength={4}
+                    value={tab.adjusted_donations}
+                    onFocus={() => setOriginalAdjustDonationValue(tab.adjusted_donations)}
+                    onBlur={() => onAdjustDonationInputBlur(tab)}
+                    onValueChange={(value) => handleAdjustDonations(tab, value)}
+                  />)
+            case "amount_paid":
+                return (<div className={cellValue > 0 ? 'text-green-600' : 'text-black'}>${cellValue}</div>)    
             case "amount_unpaid":
-                return (<div className="text-red-500">${cellValue}</div>)
+                return (<div className={cellValue > 0 ? 'text-red-500' : 'text-black'}>${cellValue}</div>)
             case "close_tab":
                 return ( <ButtonCloseTab userTab={tab} onCloseTabFunction={refreshTabs}/>)
             default:
                 return cellValue
             }
-    }, [])
+    }, [allTabs, originalAdjustDonationValue])
 
     const filteredTabs = useMemo(() =>{
         if (filterValue.trim().length === 0) return allTabs
@@ -128,7 +153,7 @@ const Tab = () => {
         <>
             <div className="w-full m-auto">
                 <ErrorModal error = { hasError } onClear = { clearError } />
-                { isLoading && <LoadingSpinner /> }
+                { (isLoading || isUserApiLoading) && <Spinner color="success" className="fixed top-2/4 z-50 w-50" style={{left:'calc(50% - 20px)'}} size="lg" /> }
                 {/* UNPAID TABS */}
                 <div>
                     <p className="my-5 text-4xl font-bold uppercase text-white">UNPAID TABS</p>
