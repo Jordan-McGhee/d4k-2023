@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCashRegister, faCheck, faMagnifyingGlass, faTrash, faX } from '@fortawesome/free-solid-svg-icons'
+import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX } from '@fortawesome/free-solid-svg-icons'
 import TabTable from "../components/tab/TabTable"
-import LoadingSpinner from "../components/UIElements/LoadingSpinner"
 import ErrorModal from "../components/UIElements/ErrorModal"
-import {Switch, Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+import { Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
     Modal, ModalBody, ModalContent , ModalHeader, ModalFooter,
 } from "@nextui-org/react";
 import { OrderApi } from "../api/orderApi";
@@ -101,7 +100,8 @@ const Tab = () => {
             case "tips_total":
                 return `$${cellValue}`
             case "adjusted_donations":
-                return (   <Input
+                return (   
+                <Input
                     variant="faded"
                     type="number"
                     pattern="\d*"
@@ -113,11 +113,12 @@ const Tab = () => {
                     onFocus={() => setOriginalAdjustDonationValue(tab.adjusted_donations)}
                     onBlur={() => onAdjustDonationInputBlur(tab)}
                     onValueChange={(value) => handleAdjustDonations(tab, value)}
+                    startContent={ <FontAwesomeIcon icon={faDollar} /> }
                   />)
             case "amount_paid":
-                return (<div className={cellValue > 0 ? 'text-green-600' : 'text-black'}>${cellValue}</div>)    
+                return (<div className={`font-bold ${cellValue > 0 ? 'text-green-600' : 'text-black'}`}>${cellValue}</div>)    
             case "amount_unpaid":
-                return (<div className={cellValue > 0 ? 'text-red-500' : 'text-black'}>${cellValue}</div>)
+                return (<div className={`font-bold ${cellValue > 0 ? 'text-red-500' : 'text-black'}`}>${cellValue}</div>)
             case "close_tab":
                 return ( <ButtonCloseTab userTab={tab} onCloseTabFunction={refreshTabs}/>)
             default:
@@ -166,12 +167,12 @@ const Tab = () => {
                                 }}
                                 className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
                             <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <TableColumn key="username" scope="col" className="py-3 w-3/12">NAME</TableColumn>
+                                <TableColumn key="username" scope="col" className="py-3 w-2/12">NAME</TableColumn>
                                 <TableColumn key="adjusted_donations" scope="col" className="py-3 w-1/12">Donation Adjust</TableColumn>
                                 <TableColumn key="quantity" scope="col" className="py-3 w-1/12">Quantity</TableColumn>
                                 <TableColumn key="drink_cost_total" scope="col" className="py-3 w-1/12">Drink $</TableColumn>
-                                <TableColumn key="tab_total" scope="col" className="py-3 w-1/12">Tab Total</TableColumn>
                                 <TableColumn key="tips_total" scope="col" className="py-3 w-1/12">Order Tips</TableColumn>
+                                <TableColumn key="tab_total" scope="col" className="py-3 w-1/12">Tab Total</TableColumn>
                                 <TableColumn key="amount_paid" scope="col" className="py-3 w-1/12">Total Paid</TableColumn>
                                 <TableColumn key="amount_unpaid" scope="col" className="py-3 w-1/12">Balance Due</TableColumn>
                                 <TableColumn key="close_tab" scope="col" className="py-3 w-1/12">Close Tab</TableColumn>

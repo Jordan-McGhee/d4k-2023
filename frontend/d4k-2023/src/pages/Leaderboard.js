@@ -6,17 +6,17 @@ import ErrorModal from "../components/UIElements/ErrorModal";
 import LoadingSpinner from "../components/UIElements/LoadingSpinner";
 import { useFetch } from "../hooks/useFetch";
 import { isMobile } from 'react-device-detect';
+import { OrderApi } from "../api/orderApi";
 
 const LeaderBoard = () => {
 
     const [ data, setData ] = useState([])
     const [ overallTotal, setOverallTotal ] = useState(0)
-
-    const { isLoading, hasError, clearError, sendRequest } = useFetch()
+    const { getOrdersLeaderboard, isLoading, hasError, clearError } = OrderApi()
 
     const fetchLeaderboard = useCallback(async () => {
         try {
-            const responseData = await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/leaderboard`)
+            const responseData = await getOrdersLeaderboard()
             if (responseData.response === "empty") {
                 setData([])
                 setOverallTotal(0)
@@ -27,7 +27,7 @@ const LeaderBoard = () => {
         } catch (error) {
             console.log(error)
         }
-    }, [ sendRequest ])
+    }, [ ])
 
     useEffect(() => {
         fetchLeaderboard()

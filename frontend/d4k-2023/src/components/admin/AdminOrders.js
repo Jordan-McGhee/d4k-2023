@@ -14,6 +14,7 @@ const AdminOrders = props => {
     const [ completedOrders, setCompletedOrders ] = useState([])
 
     const [originalTipValue, setOriginalTipValue] = useState(0)
+    const [ selectedOrder, setSelectedOrder] = useState({})
 
     const [ allOrders, setAllOrders] = useState([])
     const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending" })
@@ -36,7 +37,7 @@ const AdminOrders = props => {
         getOrders()
     }, [ ])
 
-    const getOrders = async () => {
+    const refreshOrders = async () => {
         try {
             const response = await getOrdersAdmin()
             setAllOrders(response)
@@ -45,12 +46,12 @@ const AdminOrders = props => {
         }
     }
 
-    const SwitchIsPaid = ({order}) => {
+    const SwitchIsPaid = ({order, onSwitchFunction}) => {
         const [isPaid, setIsPaid] = useState(false)
         useEffect(() => {
             setIsPaid(order.is_paid)
-          }, [ order ])
-
+          }, [])
+          
         const updatePaid = async (order) => {
             let response = null
             try {
@@ -60,8 +61,10 @@ const AdminOrders = props => {
             }
             if(!response?.newValue === null) return
             setIsPaid(response.newValue)
+            onSwitchFunction(order, response.newValue)
             console.log(`${order.order_id} isPaid: ${response.newValue}`)
         }
+
         return (
             <Switch className="w-100" size="lg" color="success" 
                 isDisabled={isLoading} isSelected={isPaid} onValueChange={() => updatePaid(order)}
@@ -72,11 +75,11 @@ const AdminOrders = props => {
     }
 
 
-    const SwitchIsCompleted = ({order}) => {
+    const SwitchIsCompleted = ({order, onSwitchFunction}) => {
         const [isCompleted, setIsCompleted] = useState(false)
         useEffect(() => {
-            setIsCompleted(order.is_completed)
-        }, [ order ])
+                setIsCompleted(order.is_completed)
+        }, [ order.is_completed ])
 
         const updateCompleted = async (order) => {
             let response = null
@@ -87,6 +90,7 @@ const AdminOrders = props => {
             }
             if(!response?.newValue === null) return
             setIsCompleted(response.newValue)
+            onSwitchFunction(order, response.newValue)
         }
         return (
             <Switch className="w-100" size="lg" color="warning" isDisabled={isLoading} isSelected={isCompleted} onValueChange={() => updateCompleted(order)}
@@ -133,18 +137,21 @@ const AdminOrders = props => {
         const removeRow = (orderId) => {
             setAllOrders((state) => state.filter(o => o.order_id !== orderId))
         }
-        const handleAdjustTip = async (order, value) => {    
-            setAllOrders(allOrders.map(o => o.order_id === order.order_id ? {...o ,tip_amount: parseInt(value) } : o));
-            console.log(order)
-            console.log(value)
+        const handleAdjustTip = async (order, value) => setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o ,tip_amount: parseInt(value) } : o))
+
+        const handleAdjustPaid = (order, value) => {
+            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , is_paid: value } : o))
+        }
+        const handleAdjustCompleted = (order, value) => {
+            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , is_completed: value } : o))
         }
 
         const onAdjustDonationInputBlur = async (order) => {
             if(order.tip_amount === originalTipValue) return
-
             let success = await updateOrderTip(order.order_id, order.tip_amount )
             if(!success){ setAllOrders(allOrders.map(o => o.order_id === order.order_id ? {...o , tip_amount: originalTipValue } : o)) }
         }
+
         switch (columnKey) {
             case "tip_amount":
                 return (   <Input
@@ -161,10 +168,16 @@ const AdminOrders = props => {
                     onValueChange={(value) => handleAdjustTip(order, value)}
                     startContent={ <FontAwesomeIcon icon={faDollar} /> }
                   />)
+            case "drink":
+                return (<div><div>{cellValue}</div><div className="text-slate-500 italic">{order.comments}</div></div>)
             case "is_paid":
-                return ( <SwitchIsPaid order={order}/> )
+                return ( <SwitchIsPaid order={order} onSwitchFunction={handleAdjustPaid}/> )
             case "is_completed":
-                return ( <SwitchIsCompleted order={order}/> )
+                return ( <SwitchIsCompleted order={order} onSwitchFunction={handleAdjustCompleted}/> )
+            case "total": 
+                return (<div>${order.total}</div>)
+            case "total_with_tip":
+                return (<div className="font-bold text-green-700">${order.total + order.tip_amount}</div>)
             case "created_at":
                 return convertDate(order.created_at)
             case "delete":
@@ -200,11 +213,9 @@ const AdminOrders = props => {
         });
       }, [sortDescriptor, filteredOrders]);
 
-
-
       const topContent = useMemo(() => {
         return (
-            <div className="flex gap-4">
+            <div className="flex gap-4 bg-slate-100 rounded-xl px-3 py-2">
                 <div className="flex justify-between gap-3 align-top ">
                     <Input
                         isClearable
@@ -242,8 +253,8 @@ const AdminOrders = props => {
                 </div>
                 <div className="flex justify-end flex-grow">
                    <Button isIconOnly size="lg" radius="full" variant="ghost" color="default"
-                   onPress={getOrders}>
-                        <FontAwesomeIcon className="text-2xl text-slate-600" icon={faRefresh} />
+                   onPress={refreshOrders}>
+                        <FontAwesomeIcon className="text-2xl text-blue-600" icon={faRefresh} />
                     </Button>
                 </div>
             </div>       
@@ -251,7 +262,7 @@ const AdminOrders = props => {
       }, [ filterValue, statusOptions, statusFilter ]);
 
     return (
-        <React.Fragment>
+        <>
             <div className="w-full m-auto">
                 <ErrorModal error = { hasError } onClear = { clearError } />
 
@@ -264,26 +275,25 @@ const AdminOrders = props => {
                                     circle1: "border-8",
                                     circle2: "border-8"
                                 }} /> }
-
-
                 <div>
                     <div className="rounded-lg shadow-md">
-                        <Table topContent={topContent} sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}  
+                        <Table topContent={topContent} topContentPlacement="outside" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}  
                         fullWidth isHeaderSticky 
                         classNames={{
-                            wrapper: "max-h-[600px]",
-                            tr: "border-b-1 border-slate-500"
+                            wrapper: "max-h-[700px]",
+                            tr: "border-b-1 border-slate-400"
                           }}
-                        className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
-                            <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <TableColumn key="username" scope="col" className="w-3/12">Name</TableColumn>
+                        className="w-full text-md text-left rounded-lg">
+                            <TableHeader className="text-xs bg-gray-50">
+                                <TableColumn key="username" scope="col" className="w-2/12">Name</TableColumn>
                                 <TableColumn key="drink" scope="col" className=" w-2/12">Drink</TableColumn>
-                                <TableColumn key="quantity" scope="col" className="w-1/12">Quantity</TableColumn>
+                                <TableColumn key="quantity" scope="col" className="w-1/12">Amount</TableColumn>
                                 <TableColumn key="total" scope="col" className="w-1/12">Cost</TableColumn>
                                 <TableColumn key="tip_amount" scope="col" className="w-1/12">Tip</TableColumn>
+                                <TableColumn key="total_with_tip" scope="col" className="w-1/12">Total</TableColumn>
                                 <TableColumn allowsSorting key="created_at" scope="col" className="w-1/12">Time</TableColumn>
-                                <TableColumn align="center" key="is_paid" scope="col" className="text-center w-1/12">Paid</TableColumn>
-                                <TableColumn align="center" key="is_completed" scope="col" className=" text-center w-1/12">Status</TableColumn>
+                                <TableColumn align="center" key="is_paid" scope="col" className="w-1/12">Paid</TableColumn>
+                                <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Status</TableColumn>
                                 <TableColumn align="center" key="delete" scope="col" className="text-center w-1/12"></TableColumn>
                             </TableHeader>
                             <TableBody items={sortedOrders}>
@@ -296,14 +306,8 @@ const AdminOrders = props => {
                         </Table>
                     </div>
                 </div>
-
-                {/* completed DIV */}
-                <div>
-                    <p className="my-5 text-4xl font-bold uppercase text-white">Completed</p>
-                    <AdminTable data = { completedOrders }/>
-                </div>
             </div>
-        </React.Fragment>
+        </>
     )
 }
 
