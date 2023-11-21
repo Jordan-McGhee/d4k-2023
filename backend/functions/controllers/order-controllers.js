@@ -78,16 +78,10 @@ const updatePaid = async (req, res, next) => {
     let response
 
     try {
-        const client = await pool.connect();
-        response = await client.query(text, [paidStatus, order_id]);
-        client.release()
-
+        response = await pool.query(text, [paidStatus, order_id]);
     } catch (error) {
         logger.error(`Error updating Order #${order_id}'s paid status. ${error}`, 500)
-
-        return next(
-            new HttpError(`Error updating Order #${order_id}'s paid status. ${error}`, 500)
-        )
+        return next(new HttpError(`Error updating Order #${order_id}'s paid status. ${error}`, 500))
     }
 
     res.status(201).json({ message: `Updated paidStatus of Order ${order_id} to ${paidStatus}`, newValue: paidStatus, response: response.rows[0] })
@@ -111,9 +105,7 @@ const updateCompleted = async (req, res, next) => {
     } catch (error) {
         logger.error(`Error updating Order #${order_id}'s completed status. ${error}`, 500)
 
-        return next(
-            new HttpError(`Error updating Order #${order_id}'s completed status. ${error}`, 500)
-        )
+        return next(new HttpError(`Error updating Order #${order_id}'s completed status. ${error}`, 500))
     }
 
     res.status(201).json({ message: `Updated completedStatus of Order ${order_id} to ${completedStatus}`, newValue: completedStatus, response: response.rows[0] })
@@ -147,7 +139,7 @@ const getOrdersGrouped = async (req, res, next) => {
 }
 
 const getOrdersLeaderboard = async (req, res, next) => {
-    let query = "SELECT user_id, username, amount_paid, adjusted_donations FROM user_totals WHERE amount_paid > 0 ORDER BY amount_paid DESC LIMIT 10;"
+    let query = "SELECT user_id, username, quantity, amount_paid, adjusted_donations FROM user_totals WHERE amount_paid > 0 ORDER BY amount_paid DESC LIMIT 10;"
 
     let sumQuery = "SELECT * FROM d4k_total"
 
@@ -172,15 +164,7 @@ const getOrdersLeaderboard = async (req, res, next) => {
         return next(new HttpError(`Error getting overall total for leaderboard. ${error}`, 500))
     }
 
-    if (response.rowCount === 0) {
-        response = "empty"
-        sumTotal = 0
-    } else {
-        response = response.rows
-        sumTotal = sumResponse.rows[0].d4k_total
-    }
-
-    res.status(200).json({ message: "Retrieved orders for leaderboard!", response: response, sumTotal: sumTotal })
+    res.status(200).json({ message: "Retrieved orders for leaderboard!", response: response.rows, sumTotal: sumResponse?.rows[0]?.d4k_total })
 }
 
 const deleteOrder = async (req, res, next) => {

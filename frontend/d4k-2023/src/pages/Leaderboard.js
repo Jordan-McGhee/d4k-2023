@@ -10,59 +10,21 @@ import { OrderApi } from "../api/orderApi";
 
 const LeaderBoard = () => {
 
-    const [ data, setData ] = useState([])
-    const [ overallTotal, setOverallTotal ] = useState(0)
-    const { getOrdersLeaderboard, isLoading, hasError, clearError } = OrderApi()
-
-    const fetchLeaderboard = useCallback(async () => {
-        try {
-            const responseData = await getOrdersLeaderboard()
-            if (responseData.response === "empty") {
-                setData([])
-                setOverallTotal(0)
-            } else {
-                setData(responseData.response)
-                setOverallTotal(parseInt(responseData.sumTotal))
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }, [ ])
-
-    useEffect(() => {
-        fetchLeaderboard()
-    }, [ fetchLeaderboard ])
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            fetchLeaderboard()
-        }, 30000)
-        return () => clearInterval(interval)
-    }, [ fetchLeaderboard ])
 
     return (
-        <React.Fragment>
-
-            <ErrorModal error = { hasError } onClear = { clearError } />
-
-            { isLoading && <LoadingSpinner />}
-
+        <>
             {
-                data.length === 0 && !isLoading ? 
-                    <MobileEmptyLeaderBoard total = { overallTotal } />
-                :
+                
                 <div className="lg:hidden">
-                    <MobileLeaderBoard data = { data } total = { overallTotal }/>
+                    <MobileLeaderBoard />
                 </div>
             }
 
-
             {
             <div className="hidden lg:block">
-                <LargeLeaderBoard data = { data } total = { overallTotal } />
+                <LargeLeaderBoard />
             </div>}
-
-        </React.Fragment>
+        </>
     )
 }
 
