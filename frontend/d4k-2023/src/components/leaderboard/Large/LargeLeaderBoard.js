@@ -6,7 +6,7 @@ import LargeTopThreeItem from "./LargeTopThreeItem";
 import LargeProgressBar from "./LargeProgressBar";
 import ErrorModal from "../../UIElements/ErrorModal";
 import LoadingSpinner from "../../UIElements/LoadingSpinner";
-import Spinner from "@nextui-org/react"
+import { Spinner} from "@nextui-org/react"
 import { useFetch } from "../../../hooks/useFetch";
 
 import bgImage from "../../../images/leaderboard.jpg"

@@ -2,10 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './styles/winterizeButton.css'
+import TagManager from 'react-gtm-module'
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom"
+
+
+const tagManagerArgs = {
+  gtmId: 'G-MTEKY82MMH'
+}
+
+TagManager.initialize(tagManagerArgs)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
