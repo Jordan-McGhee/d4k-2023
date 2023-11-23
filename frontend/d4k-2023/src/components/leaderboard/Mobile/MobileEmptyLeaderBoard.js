@@ -24,7 +24,7 @@ const MobileEmptyLeaderBoard = (props) => {
     return (
         <div className="my-4">
 
-            <MobileProgressBar total = { props.total } />
+            <MobileProgressBar total = { 0 } />
 
             <Card header = { "No Leader Yet!" } headerClass = "text-center font-bold text-3xl border-b-2 mb-4 py-2" footer = { cardFooter } footerClass = "" >
 

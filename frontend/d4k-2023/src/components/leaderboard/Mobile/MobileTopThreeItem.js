@@ -29,7 +29,7 @@ const MobileTopThreeItem = props => {
 
                         {/* DIV FOR TOTAL AND DRINK ORDERS */}
                         <div className="flex text-xl font-medium">
-                            <p className="mr-2">${ parseInt(props.donationTotal) + parseInt(props.orderTotal)} — { props.drinksOrdered} Drinks</p>
+                            <p className="mr-2">${ props.total } — { props.quantity} Drinks</p>
                         </div>
                     </div>
                 </div>
