@@ -23,8 +23,6 @@ const MobileLeaderBoard = props => {
             <div>
                 {/* SECTION FOR GOAL TRACKER */}
                 <MobileProgressBar total = { props.total } />
-                
-
                 <p className="text-center text-4xl text-white font-bold">Leaderboard</p>
 
                 {/* SECTION FOR TOP 3 */}

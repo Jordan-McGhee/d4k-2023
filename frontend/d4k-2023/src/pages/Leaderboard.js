@@ -14,16 +14,18 @@ import LargeEmptyLeaderBoard from "../components/leaderboard/Large/LargeEmptyLea
 
 const LeaderBoard = () => {
 
-    const [leaderboardData, SetLeaderboardData] = useState([])
+    const [leaderboard, setLeaderBoard] = useState([])
+    const [total, setTotal] = useState([])
 
     const { isLoading, hasError, clearError, getOrdersLeaderboard } = OrderApi()
 
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const responseData = await getOrdersLeaderboard()
-                console.log(responseData)
-                SetLeaderboardData(responseData)
+                const data = await getOrdersLeaderboard()
+                console.log(data)
+                setLeaderBoard(data.response)
+                setTotal(data.sumTotal)
             } catch (error) {
                 console.log(error)
             }
@@ -38,9 +40,8 @@ const LeaderBoard = () => {
             {/* ERROR MODAL AND LOADING CHECK */}
 
             <ErrorModal error={hasError} onClear={clearError} />
-            
             {
-                isLoading &&
+                isLoading ?
                 <Spinner
                     color="success"
                     className="fixed top-1/4"
@@ -51,27 +52,25 @@ const LeaderBoard = () => {
                         circle2: "border-5"
                     }} 
                 />
-            }
-
-            {/* MOBILE LEADERBOARD */}
-            {
-                leaderboardData.length === 0 && !isLoading ?
-                    <MobileEmptyLeaderBoard />
                 :
+                leaderboard.length === 0 && !isLoading ?
+                <>
                     <div className="lg:hidden">
-                        <MobileLeaderBoard data={leaderboardData.response} total={leaderboardData.sumTotal} />
+                        <MobileEmptyLeaderBoard />
                     </div>
-            }
-
-            {/* LARGE LEADERBOARD */}
-
-            {
-                leaderboardData.length === 0 && !isLoading ?
-                    <LargeEmptyLeaderBoard />
-                :
                     <div className="hidden lg:block">
-                        {/* <LargeLeaderBoard /> */}
+                        <LargeEmptyLeaderBoard />
                     </div>
+                    </>
+                :
+                <>
+                    <div className="lg:hidden">
+                        <MobileLeaderBoard data={leaderboard} total={total} />
+                    </div>
+                    <div className="hidden lg:block">
+                        <LargeLeaderBoard data={leaderboard} total={total} />
+                    </div>
+                </>
             }
         </>
     )
