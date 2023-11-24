@@ -21,9 +21,10 @@ const MobileLeaderBoard = props => {
     leaderboardLength > 0 ? content = (
         (
             <div>
+                <p className="text-center text-4xl font-bungee text-emerald-700 font-bold pb-4">Leaderboard</p>
+
                 {/* SECTION FOR GOAL TRACKER */}
                 <MobileProgressBar total = { props.total } />
-                <p className="text-center text-4xl text-white font-bold">Leaderboard</p>
 
                 {/* SECTION FOR TOP 3 */}
                 <MobileTopThree data = { topThree }/>
