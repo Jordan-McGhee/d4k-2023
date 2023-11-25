@@ -8,7 +8,7 @@ const MobileLeaderBoardItem = props => {
             <Card className = "flex flex-col p-4 rounded-lg border border-green-700 bg-white w-full shadow-lg my-5">
                 <div className="flex items-center justify-around">
                     {/* RANK */}
-                    <p className="text-4xl">{ props.rank}</p>
+                    <p className="text-4xl flex">{ props.rank}<span className="text-xl">th</span></p>
                     
                     {/* USER INFO */}
                     <div className="w-2/3">
@@ -16,7 +16,7 @@ const MobileLeaderBoardItem = props => {
 
                         {/* DIV FOR TOTAL AND DRINK ORDERS */}
                         <div className="flex text-xl font-medium">
-                            <p className="mr-2">${ parseInt(props.donationTotal) + parseInt(props.orderTotal)} — { props.drinksOrdered} Drinks</p>
+                            <p className="mr-2">${ props.total } — { props.quantity} Drinks</p>
                         </div>
                     </div>
                 </div>

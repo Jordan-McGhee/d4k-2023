@@ -19,22 +19,22 @@ const LargeLeaderBoardItem = props => {
                         <p className="text-4xl font-bold uppercase truncate mb-4">{ props.username }</p>
 
                         {/* DIV FOR TOTAL AND DRINK ORDERS */}
-                        <div className="text-4xl border-2 font-semibold w-4/5 flex items-center">
+                        <div className="text-4xl font-semibold w-4/5 flex items-center">
                             <div className="flex items-center mr-8">
 
-                            <FontAwesomeIcon className="mx-1 text-emerald-600" icon={faGlassMartini} />
+                            <FontAwesomeIcon className="mx-1 h-8 text-emerald-600" icon={faGlassMartini} />
 
-                                <p className="text-emerald-600">{ props.drinksOrdered}</p>
+                                <p className="text-emerald-600">{ props.quantity } Drinks</p>
                             </div>
-                            <div className="flex items-center ml-4">
+                            {/* <div className="flex items-center ml-4">
                             <FontAwesomeIcon className="mx-1 text-emerald-600" icon={faGift} />
 
                                 <p className="flex"><span className="text-emerald-700 font-semibold mr-2">${props.donationTotal}</span></p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
-                    <p className="font-bold text-6xl text-emerald-700">${ parseInt(props.donationTotal) + parseInt(props.orderTotal)} </p>
+                    <p className="font-bold text-6xl text-emerald-700">${ props.total } </p>
                 </div>
             </Card>
     )

@@ -7,14 +7,13 @@ import bgImage from "../../../images/leaderboard.jpg"
 const LargeLeaderBoard = props => {
     const topThree = props.data.slice(0,3)
     const fourThroughEight = props.data.slice(3,8)
-    console.log(fourThroughEight)
 
     const content = (
         <div className="flex flex-col justify-around items-center p-10 mx-auto">
                     <div className="uppercase flex items-center font-bold text-emerald-600 text-7xl font-bungee pb-10">Drink 4 The Kids 
                         <span className="font-fugaz text-rose-600 text-6xl pl-6">Leaderboard</span>
                     </div>
-            <div className="flex items-center w-full items-stretch">
+            <div className="flex w-full items-stretch">
                 <div className="flex flex-col w-1/12">
                     <LargeProgressBar total = { props.total } />
                 </div>
@@ -25,10 +24,9 @@ const LargeLeaderBoard = props => {
                                 id = {`large-leaderboard-topThree-${i}`}
                                 key = {`large-leaderboard-topThree-${i}`}
                                 username = { user.username }
-                                orderTotal = { user.quantity ? parseInt(user.quantity) : 0 }
-                                donationTotal = { user.amount_paid ? parseInt(user.amount_paid) : 0}
-                                drinksOrdered = { user.quantity ? user.quantity : 0}
-                                rank = { i + 1}
+                                quantity = { user.quantity ? user.quantity : 0 }
+                                total = { user.amount_paid + user.adjusted_donations }
+                                rank = { i + 1 }
                             />
                         )) }
                         </ul>
@@ -42,9 +40,8 @@ const LargeLeaderBoard = props => {
                                         id = { `large-leaderboard-${i}`}
                                         key = { `large-leaderboard-${i}`}
                                         username = { user.username }
-                                        orderTotal = { user.quantity ? parseInt(user.quantity) : 0 }
-                                        donationTotal = { user.donations_total ? parseInt(user.donations_total) : 0}
-                                        drinksOrdered = { user.drinks_ordered ? user.drinks_ordered : 0}
+                                        quantity = { user.quantity }
+                                        total = { user.amount_paid + user.adjusted_donations }
                                         rank = { i+ 4}
                                     />
                                 ))
@@ -57,7 +54,7 @@ const LargeLeaderBoard = props => {
 
     return (
         <>
-            <div className="bg-cover" style={{backgroundImage: `url(${bgImage})`, padding:0, margin:0}}>
+            <div className="bg-cover h-screen" style={{backgroundImage: `url(${bgImage})`, padding:0, margin:0}}>
                 <div>
                     { content }
                 </div>
