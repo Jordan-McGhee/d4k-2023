@@ -24,7 +24,7 @@ const MobileTopThreeItem = props => {
 
                 {/* USER INFO */}
                 <div className="w-2/3">
-                    <p className="text-2xl font-bold uppercase truncate">{props.username}</p>
+                    <p className="text-2xl font-bold truncate">{props.username}</p>
 
                     {/* DIV FOR TOTAL AND DRINK ORDERS */}
                     <div className="flex text-xl font-medium">

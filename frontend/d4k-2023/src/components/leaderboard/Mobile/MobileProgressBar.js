@@ -8,21 +8,21 @@ const MobileProgressBar = props => {
 
     return (
         <div className="mb-4">
-            <p className="text-center font-bold text-4xl text-white">Goal: $2000</p>
-
+            <p className="text-center font-bold text-3xl text-slate-200 font-fugaz">${goal} GOAL</p>
+            <div className="text-xl text-right font-semibold text-emerald-500 rounded-full " style = {{ width: `${percentage}%`}} >
+                {percentage}%
+            </div>
             {/* div for progress bar container */}
-            <div className="bg-green-300 h-[15px] w-full rounded-2xl my-4">
-                
+            <div className="bg-emerald-300/60 h-[45px] w-full rounded-full mb-6 mt-2 shadow-xl border-2 border-slate-800">
                 {/* div for progress bar */}
-                <div className={ 'progress-bar rounded-2xl h-full'} style = {{ width: `${percentage}%`}}>
+                <div className={'progress-bar rounded-full py-1 h-full'} style = {{ width: `${percentage}%`}}>
+                    { percentage >= 20 && 
+                    <div className="bg-white px-2 text-lg font-semibold text-emerald-600 text-center w-fit align-end rounded-full border-1 border-slate-400 float-right mr-2">
+                        ${currentTotal}
+                    </div>
+                    }
                 </div>
             </div>
-
-            <p
-                className="bg-white my-2 py-1 px-2 text-lg font-semibold text-green-700 text-center w-fit m-auto rounded-md"
-            >
-                ${currentTotal} — {percentage}%
-            </p>
         </div>
     )
 

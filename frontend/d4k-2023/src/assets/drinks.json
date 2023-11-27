@@ -70,6 +70,20 @@
         "price": 14
     },
     {
+        "id": 5,
+        "name": "Chai Hard",
+        "ingredients": [
+            "Vodka",
+            "Chai Masala",
+            "Cardamom",
+            "Lemon",
+            "Star Anise"
+        ],
+        "description": "It's a Christmas movie. Welcome to the party, pal",
+        "imageUrl": "/images/drinks/chai.jpg",
+        "price": 14
+    },
+    {
         "id": 6,
         "name": "Gin-ger Snap",
         "ingredients": [
@@ -84,13 +98,13 @@
     },
     {
         "id": 7,
-        "name": "YIPPyKIYAY-MUTHERFU",
+        "name": "Polar Espresso",
         "ingredients": [
             "Vodka",
             "Averna Amaro",
             "Espresso"
         ],
-        "description": "For those late nights climbing rooftops. Welcome to the party",
+        "description": "It's a one way ticket. Get in loser, we're going to the North Pole",
         "imageUrl": "/images/drinks/espresso.jpg",
         "price": 12
     }

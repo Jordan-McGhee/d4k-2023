@@ -4,16 +4,13 @@
 
 .progress-bar {
   box-shadow: 0px 0px 10px rgba(255, 50, 0, 0.8) inset;
-  background: repeating-linear-gradient(45deg, #FFFFEE, #FFFFEE 35px, #D33144 40px, #D33144 75px);
+  background: repeating-linear-gradient(45deg, #FFFFEE, #FFFFEE 35px, #b43544 40px, #ec4155 75px);
 }
 
 .gold {
   overflow: hidden;
-
   box-shadow: 0px 0px 10px rgba(255, 50, 0, 0.8) inset;
   background: repeating-linear-gradient(45deg, #FFFFEE, #FFFFEE 35px, #fcc100 40px, #e0aa35 75px);
-
-
 }
 
 .font-bungee {

@@ -9,6 +9,7 @@ dotenv.config();
 // route imports
 const orderRoutes = require("./routes/order-routes")
 const userRoutes = require('./routes/user-routes')
+const adminRoutes = require('./routes/admin-routes')
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 // route variables
 app.use("/order", orderRoutes)
 app.use("/user", userRoutes)
+app.use("/admin", adminRoutes)
 
 // ERROR ROUTE
 // middleware with 4 parameters is treated as a special middleware by express and will only be executed on requests that have an error associated with it

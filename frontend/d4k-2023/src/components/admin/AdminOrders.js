@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import AdminTable from "./orders/AdminTable";
-import AdminTableBody from "./orders/AdminTableBody";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar, faSlash, faRefresh } from '@fortawesome/free-solid-svg-icons'
 import { useFetch } from "../../hooks/useFetch";
@@ -10,9 +8,6 @@ import { OrderApi } from "../../api/orderApi";
 import {Switch, Spinner, Input, Button, ButtonGroup, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem,
     Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 const AdminOrders = props => {
-    const [ incompleteOrders, setIncompleteOrders ] = useState([])
-    const [ completedOrders, setCompletedOrders ] = useState([])
-
     const [originalTipValue, setOriginalTipValue] = useState(0)
     const [ selectedOrder, setSelectedOrder] = useState({})
 
@@ -33,7 +28,6 @@ const AdminOrders = props => {
                 console.log(err)
             }
         }
-        localStorage.setItem('showingOrders', 'true')
         getOrders()
     }, [ ])
 

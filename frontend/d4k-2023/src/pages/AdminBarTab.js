@@ -11,7 +11,6 @@ import { UserApi }  from "../api/userApi";
 
 const Tab = () => {
     const [ allTabs, setAllTabs] = useState([])
-    const [ paidTabs, setPaidTabs ] = useState([])
     const [ selectedTab, setSelectedTab ] = useState({})
     const [ showAdjustDonationsModal, setShowAdjustDonationsModal ] = useState(false)
     const [sortDescriptor, setSortDescriptor] = useState({column: "total_unpaid", direction: "descending" });
@@ -27,7 +26,6 @@ const Tab = () => {
             try {
                 const responseData = await getOrdersAsTabs()
                 setAllTabs(responseData)
-                setPaidTabs(responseData)
             } catch (error) {
                 console.log(error)
             }
@@ -39,7 +37,6 @@ const Tab = () => {
         try {
             const responseData = await getOrdersAsTabs()
             setAllTabs(responseData)
-            setPaidTabs(responseData)
         } catch (error) {
             console.log(error)
         }
@@ -83,8 +80,6 @@ const Tab = () => {
 
         const handleAdjustDonations = async (tab, value) => {    
             setAllTabs(allTabs.map(t => t.user_id === tab.user_id ? {...t ,adjusted_donations: parseInt(value) } : t));
-            console.log(tab)
-            console.log(value)
         }
 
         const onAdjustDonationInputBlur = async (tab) => {
@@ -162,8 +157,8 @@ const Tab = () => {
                         <Table topContent={topContent} sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}  
                                 fullWidth isHeaderSticky 
                                 classNames={{
-                                    wrapper: "max-h-[600px]",
-                                    tr: "border-b-1 border-slate-500"
+                                    wrapper: "max-h-[700px]",
+                                    tr: "border-b-1 last:border-b-0 border-slate-500"
                                 }}
                                 className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
                             <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -187,13 +182,6 @@ const Tab = () => {
                         </Table>
                     </div>
                 </div>
-
-                {/* PAID TABS */}
-                <div>
-                    <p className="my-5 text-4xl font-bold uppercase text-white">PAID TABS</p>
-                    <TabTable data = { paidTabs } />
-                </div>
-
             </div>
             <Modal isOpen={showAdjustDonationsModal} onClose={() => setShowAdjustDonationsModal(false)}>
                 <ModalContent>

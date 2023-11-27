@@ -1,5 +1,5 @@
-import React, { Suspense } from "react"
-import { Route, Routes } from "react-router-dom"
+import React, { Suspense,  } from "react"
+import { Route, Routes, Navigate } from "react-router-dom"
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import {NextUIProvider} from "@nextui-org/react";
@@ -22,6 +22,7 @@ const Donate = React.lazy(() => import("./pages/Donate"))
 const Leaderboard = React.lazy(() => import("./pages/Leaderboard"))
 const Admin = React.lazy(() => import("./pages/Admin"))
 const AdminBarTabs = React.lazy(() => import("./pages/AdminBarTab"))
+const AdminUsers = React.lazy(() => import("./pages/AdminUsers"))
 const LargeLeaderBoard = React.lazy(() => import("./components/leaderboard/Large/LargeLeaderBoard"))
 const NotFound = React.lazy(() => import("./pages/NotFound"))
 
@@ -42,8 +43,10 @@ function App() {
 
       {/* ADMIN LAYOUT AND PAGES */}
       <Route element = { <AdminLayout />} >
-        <Route path = "/admin" element = { <Admin /> } />
-        <Route path = "/tabs" element = { <AdminBarTabs />} />
+      <Route path = "/admin" element = { <Navigate to='/adminOrders' /> } />
+        <Route path = "/adminOrders" element = { <Admin /> } />
+        <Route path = "/adminTabs" element = { <AdminBarTabs />} />
+        <Route path = "/adminUsers" element = { <AdminUsers/>} />
       </Route>
 
       {/* NOT FOUND LAYOUT */}
