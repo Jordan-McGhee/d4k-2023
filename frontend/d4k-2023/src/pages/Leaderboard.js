@@ -29,22 +29,22 @@ const LeaderBoard = () => {
                 console.log(error)
             }
         }
-        
+
         fetchLeaderboard()
     }, [])
 
-    useEffect(() => {
-        const id = setInterval(async () => {
-            try {
-                const data = await getOrdersLeaderboard()
-                setLeaderBoard(data.response)
-                setTotal(data.sumTotal)
-            } catch (error) {
-                console.log(error)
-            }
-        }, 60000)
-        return () => clearInterval(id)
-    }, [])
+    // useEffect(() => {
+    //     const id = setInterval(async () => {
+    //         try {
+    //             const data = await getOrdersLeaderboard()
+    //             setLeaderBoard(data.response)
+    //             setTotal(data.sumTotal)
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     }, 60000)
+    //     return () => clearInterval(id)
+    // }, [])
 
 
     return (

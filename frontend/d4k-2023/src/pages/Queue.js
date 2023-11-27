@@ -56,7 +56,7 @@ const Queue = () => {
                         circle1: "border-5",
                         circle2: "border-5"
                     }} />}
-            <div className="m-auto lg:max-w-xl">
+            <div className="m-auto lg:max-w-xl mb-24">
                     <div className="flex text-center justify-center items-center">
                         <p className="text-4xl font-bungee text-center justify-center text-green-600">Queue</p>
                     </div>

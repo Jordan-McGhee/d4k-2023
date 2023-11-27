@@ -12,16 +12,16 @@ const FAQ = () => {
 
     const bodyCls = `pt-2 text-lg justify-center text-center`
     return (
-        <div class="max-w-2xl m-auto mb-16">
+        <div className="max-w-2xl m-auto mb-16">
             <div className="flex pb-4 text-4xl font-bungee text-center justify-center text-emerald-600">
                 Info
-                <FontAwesomeIcon className="pl-4" icon={faCandyCane}/>
+                <FontAwesomeIcon className="pl-4" icon={faCandyCane} />
             </div>
             <div>
                 <Card className={cardCls}>
                     <CardHeader className={headerCls}>
                         What Charity?
-                        </CardHeader>
+                    </CardHeader>
                     <CardBody className={bodyCls}>
                         The Nicholas House and Bethany Haven - charities with shelters for homeless families.
                         They assist families in the transition from homelessness to self-sufficiency
@@ -38,10 +38,10 @@ const FAQ = () => {
                         Order drinks on this site at the party! Press the
                         <span className="font-bold contents"> Pay Tab </span>button where
                         you can use your preferred payment method to complete your donation.
-                        <br/>We will  <span className="font-bold contents">double</span> your donation with a company match!
-                        <br/>Visit the
-                        <Link className="text-xl contents font-bold" href="/leaderboard" target = "_blank"> Leaderboard </Link><br/>
- to see the top donors.
+                        <br />We will  <span className="font-bold contents">double</span> your donation with a company match!
+                        <br />Visit the
+                        <Link className="text-xl contents font-bold" href="/leaderboard" target="_blank"> Leaderboard </Link><br />
+                        to see the top donors.
                     </CardBody>
                 </Card>
                 <Card className={cardCls}>
@@ -65,7 +65,15 @@ const FAQ = () => {
                         Can I BYOB?
                     </CardHeader>
                     <CardBody className={bodyCls}>
-                        Keep it to a minimum. <br/> We encourage you to swing by the bar to get served something worthy of your donations
+                        Keep it to a minimum. <br /> We encourage you to swing by the bar to get served something worthy of your donations
+                    </CardBody>
+                </Card>
+                <Card className={cardCls}>
+                    <CardHeader className={ headerCls }>
+                        Should I drive or Uber?
+                    </CardHeader>
+                    <CardBody className={ bodyCls }>
+                        We will be drinking at this party (duh), so taking an uber may be best. However, if you want to drive, there will be some street parking available. <span className="font-bold contents">We highly recommend carpooling, drinking responsibly, and having a designated driver.</span>
                     </CardBody>
                 </Card>
                 <Card className={cardCls}>
@@ -74,7 +82,7 @@ const FAQ = () => {
                     </CardHeader>
                     <CardBody className={bodyCls}>
                         <div className="font-bold">ABSOLUTELY</div>You can put a custom drink order in on the
-                        <Link className="text-xl contents font-bold" href="/order?drinkId=999" target = "_blank"> Order Page </Link><br/>
+                        <Link className="text-xl contents font-bold" href="/order?drinkId=999" target="_blank"> Order Page </Link><br />
                         And tell us what you'd like our bartenders to whip up!
                     </CardBody>
                 </Card>
@@ -84,7 +92,7 @@ const FAQ = () => {
                     </CardHeader>
                     <CardBody className={bodyCls}>
                         <div className="pb-2">37% of Georgia's homeless are families with children</div>
-                        
+
                         <div className="py-2">As of 2020, there are over 36,000 homeless children in Georgia</div>
                         <div className=" py-2 text-xl font-bold">Almost 40% of the homeless in the United States are under 18</div>
                         <div className="text-2xl font-fugaz text-emerald-600 italic pt-2">So do it for the kids</div>
