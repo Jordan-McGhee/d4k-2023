@@ -1,17 +1,5 @@
 [
     {
-        "id": 8,
-        "name": "Fire Cider",
-        "ingredients": [
-            "Rum or Whiskey",
-            "Mulled Cider",
-            "Winter Spices"
-        ],
-        "description": "Hot or cold, yes or no, in or out",
-        "imageUrl": "/images/drinks/mulled.jpg",
-        "price": 7
-    },
-    {
         "id": 9,
         "name": "Boozy Nog",
         "ingredients": [
@@ -25,5 +13,31 @@
         "description": "A dairy-free take on Alton Brown's aged recipe. It's eggsquisite.",
         "imageUrl": "/images/drinks/eggnog.jpg",
         "price": 10
+    },
+    {
+        "id": 4,
+        "name": "Santa's Little Helper",
+        "ingredients": [
+            "Bourbon",
+            "all-spice dram",
+            "angostura",
+            "orange zest",
+            "Luxardo cherry"
+        ],
+        "description": "Saint Nick's take on an old fashioned.",
+        "imageUrl": "/images/drinks/oldfashioned.jpg",
+        "price": 14
+    },
+    {
+        "id": 4,
+        "name": "Negroni",
+        "ingredients": [
+            "Gin",
+            "Cocchi Storico",
+            "Campari"
+        ],
+        "description": "Just Negroni",
+        "imageUrl": "/images/drinks/negroni.png",
+        "price": 14
     }
 ]

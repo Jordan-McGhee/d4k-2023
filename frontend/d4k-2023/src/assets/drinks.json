@@ -56,20 +56,6 @@
         "price": 14
     },
     {
-        "id": 4,
-        "name": "Santa's Little Helper",
-        "ingredients": [
-            "Bourbon",
-            "all-spice dram",
-            "angostura",
-            "orange zest",
-            "Luxardo cherry"
-        ],
-        "description": "Saint Nick's take on an old fashioned.",
-        "imageUrl": "/images/drinks/oldfashioned.jpg",
-        "price": 14
-    },
-    {
         "id": 5,
         "name": "Chai Hard",
         "ingredients": [

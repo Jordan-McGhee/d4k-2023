@@ -83,7 +83,7 @@ const QueueList = (props) => {
             }
             {
                 order.user_id === storedUserId && i > 2 &&
-                <Button className="absolute right-5 top-5" color="danger" radius="md" size="sm" isIconOnly onPress={() => handlePressDeleteModal(order)}>
+                <Button className="absolute z-10 right-5 top-5 bg-rose-600" color="danger" radius="md" size="sm" isIconOnly onPress={() => handlePressDeleteModal(order)}>
                     <FontAwesomeIcon className="text-lg" icon={faClose} />
                 </Button>
             }
@@ -111,8 +111,8 @@ const QueueList = (props) => {
                                     <br /> This cannot be undone
                                 </div>
                             </ModalBody>
-                            <ModalFooter>
-                                <Button color="danger" onPress={handleDelete}>
+                            <ModalFooter className="text-center justify-center" >
+                                <Button className="min-w-[200px]" radius="full" color="danger" onPress={handleDelete}>
                                     Delete
                                 </Button>
                             </ModalFooter>

@@ -48,7 +48,6 @@ const HomePage = () => {
     }, [])
 
 
-
     return (
         // WELCOME DIV
         <div className="text-white text-center">
@@ -75,7 +74,6 @@ const HomePage = () => {
             <div>
                 <p className="italic font-fugaz text-2x1">Welcome to the 4th Annual</p>
 
-                {/* DIV FOR NEW LOGO */}
                 <div>
                     <p className="text-6xl text-emerald-600 my-3 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
                         <br/><FontAwesomeIcon className="mt-4 title font-extrabold" icon={faChampagneGlasses}></FontAwesomeIcon>

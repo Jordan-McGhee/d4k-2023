@@ -1,8 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Card, CardBody, CardHeader, CardFooter, Link } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, CardFooter, Link, Button } from "@nextui-org/react";
 import { faCandyCane } from "@fortawesome/free-solid-svg-icons";
-
 const FAQ = () => {
 
     const cardCls = `border border-b-1 border-slate-300 rounded-t-none first:rounded-t-3xl
@@ -38,7 +37,7 @@ const FAQ = () => {
                         Order drinks on this site at the party! Press the
                         <span className="font-bold contents"> Pay Tab </span>button where
                         you can use your preferred payment method to complete your donation.
-                        <br />We will  <span className="font-bold contents">double</span> your donation with a company match!
+                        <br /><span className="font-bold contents">We will  double your donation with a company match!</span>
                         <br />Visit the
                         <Link className="text-xl contents font-bold" href="/leaderboard" target="_blank"> Leaderboard </Link><br />
                         to see the top donors.
@@ -70,10 +69,18 @@ const FAQ = () => {
                 </Card>
                 <Card className={cardCls}>
                     <CardHeader className={ headerCls }>
-                        Should I drive or Uber?
+                        Where is parking?
                     </CardHeader>
                     <CardBody className={ bodyCls }>
-                        We will be drinking at this party (duh), so taking an uber may be best. However, if you want to drive, there will be some street parking available. <span className="font-bold contents">We highly recommend carpooling, drinking responsibly, and having a designated driver.</span>
+                        We recommend uber if drinking. However, if you want to drive, there will be some street parking available. <span className="font-bold contents">We highly recommend carpooling, drinking responsibly, and having a designated driver.</span>
+                        <Button
+                        isExternal
+                        as={Link}
+                        size="sm"
+                        className=" bg-emerald-600 text-md px-2 py-3 border rounded-full font-fugaz text-white float-right"
+                        href="sms:6787361277?&body=drink4thekids%20Christmas%20party%20address%3F">
+                    Address
+                    </Button>
                     </CardBody>
                 </Card>
                 <Card className={cardCls}>
@@ -92,7 +99,6 @@ const FAQ = () => {
                     </CardHeader>
                     <CardBody className={bodyCls}>
                         <div className="pb-2">37% of Georgia's homeless are families with children</div>
-
                         <div className="py-2">As of 2020, there are over 36,000 homeless children in Georgia</div>
                         <div className=" py-2 text-xl font-bold">Almost 40% of the homeless in the United States are under 18</div>
                         <div className="text-2xl font-fugaz text-emerald-600 italic pt-2">So do it for the kids</div>

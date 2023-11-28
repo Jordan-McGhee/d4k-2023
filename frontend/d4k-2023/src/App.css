@@ -26,12 +26,14 @@
 }
 
 @keyframes pulseCustom {
-  0%, 100% {
-    background-color: rgb(167 243 208); 
+
+  0%,
+  100% {
+    background-color: rgb(70, 160, 118);
   }
 
   50% {
-    background-color: rgb(236 253 245);
+    background-color: rgb(112, 194, 155);
   }
 }
 
