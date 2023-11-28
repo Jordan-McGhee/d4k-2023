@@ -10,12 +10,14 @@ const EmptyQueue = () => {
                 text = "View Menu"
                 type = "button"
                 link = "/menu"
+                className = "bg-gradient-to-r from-green-800 to-emerald-400 shadow-lg hover:scale-105 font-bold uppercase text-white rounded-full px-4 py-2"
             />
 
             <Button
                 text = "PLACE ORDER"
                 type = "button"
                 link = "/order"
+                className = "bg-gradient-to-r from-green-800 to-emerald-400 shadow-lg hover:scale-105 font-bold uppercase text-white rounded-full px-4 py-2"
             />
         </div>
     )
