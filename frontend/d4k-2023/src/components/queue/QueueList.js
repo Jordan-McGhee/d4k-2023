@@ -42,10 +42,12 @@ const QueueList = (props) => {
         navigate({ pathname: '/order' })
     }
 
+    // ${props.orderId === order.order_id ? 'animate-pulse-custom testhere' : ''}
+
     let items = props.queue.map((order, i) => (
         <Card id={order.order_id} key={order.order_id} isFooterBlurred radius="none"
             className={`first:rounded-t-3xl last:rounded-b-3xl bg-white/80 backdrop-blur-lg border-b-3 border-slate-500 shadow-lg 
-            ${props.orderId === order.order_id ? 'bg-green-600 testhere' : ''}`}>
+            ${ storedUserId === order.user_id ? 'animate-pulse-custom testhere' : ''}`}>
             <CardHeader className="flex pl-4 py-2 pb-0">
                 <p className="text-xl text-grey-800 font-bold">{order.username}</p>
             </CardHeader>

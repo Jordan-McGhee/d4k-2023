@@ -3,8 +3,6 @@ import Card from "../../UIElements/Card";
 
 const MobileLeaderBoardItem = props => {
 
-    console.log(props.userID)
-
     return (
         <Card className={ props.userIDClass || "last:rounded-b-3xl flex flex-col p-4 border-b-2 bg-white/90 w-full backdrop-blur-lg border-slate-500 shadow-lg"}>
             <div className="flex items-center justify-around">

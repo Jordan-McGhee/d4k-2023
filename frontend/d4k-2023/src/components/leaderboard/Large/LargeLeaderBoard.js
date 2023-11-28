@@ -15,7 +15,6 @@ const LargeLeaderBoard = props => {
 
     const topThree = props.data.slice(0,3)
     const fourThroughEight = props.data.slice(3,8)
-    console.log(fourThroughEight)
 
     return (
         <>

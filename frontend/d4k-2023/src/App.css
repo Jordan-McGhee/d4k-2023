@@ -24,3 +24,17 @@
 .title {
   text-shadow: 1px 1px 6px rgb(0 0 0 / 92%), 4px 2px 7px rgb(0 0 0 / 80%);
 }
+
+@keyframes pulseCustom {
+  0%, 100% {
+    background-color: rgb(167 243 208); 
+  }
+
+  50% {
+    background-color: rgb(236 253 245);
+  }
+}
+
+.animate-pulse-custom {
+  animation: pulseCustom 2s infinite;
+}

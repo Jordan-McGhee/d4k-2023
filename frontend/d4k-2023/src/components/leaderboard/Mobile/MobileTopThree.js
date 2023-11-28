@@ -11,6 +11,7 @@ const MobileTopThree = props => {
             total = { user.amount_paid + user.adjusted_donations}
             rank = { i + 1}
             userID = { user.user_id }
+            userIDClass = { props.user === user.user_id ? props.userClass : null}
         />
     ))
 

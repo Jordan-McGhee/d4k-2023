@@ -17,7 +17,7 @@ const MobileTopThreeItem = props => {
     }
 
     return (
-        <Card className="flex flex-col p-4 first:rounded-t-3xl border-b-2 bg-white/90 w-full backdrop-blur-lg border-slate-500 shadow-lg">
+        <Card className={ props.userIDClass || "flex flex-col p-4 first:rounded-t-3xl border-b-2 bg-white/90 backdrop-blur-lg border-slate-500 shadow-lg"}>
             <div className="flex items-center">
                 {/* RANK */}
                 <img src={image} alt={props.rank} className="w-16 mr-7 mt-1" />
