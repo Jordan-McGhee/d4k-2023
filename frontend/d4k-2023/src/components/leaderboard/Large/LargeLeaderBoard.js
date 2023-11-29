@@ -26,7 +26,7 @@ const LargeLeaderBoard = props => {
                         </div>
                         <div className="flex w-full items-stretch">
                             <div className="flex flex-col w-1/12">
-                                <LargeProgressBar total = { props.overallTotal } />
+                                <LargeProgressBar total = { props.total } />
                             </div>
                                 <div className="flex flex-col w-8/12 mx-6 px-4 justify-around">
                                     <ul className="flex justify-center my-12  px-16 rounded-2xl">
@@ -35,9 +35,8 @@ const LargeLeaderBoard = props => {
                                             id = {`large-leaderboard-topThree-${i}`}
                                             key = {`large-leaderboard-topThree-${i}`}
                                             username = { user.username }
-                                            orderTotal = { user.quantity ? parseInt(user.quantity) : 0 }
-                                            donationTotal = { user.amount_paid ? parseInt(user.amount_paid) : 0}
-                                            drinksOrdered = { user.quantity ? user.quantity : 0}
+                                            total = { user.amount_paid + user.adjusted_donations}
+                                            quantity = { user.quantity ? user.quantity : 0}
                                             rank = { i + 1}
                                         />
                                     )) }
@@ -52,9 +51,8 @@ const LargeLeaderBoard = props => {
                                                     id = { `large-leaderboard-${i}`}
                                                     key = { `large-leaderboard-${i}`}
                                                     username = { user.username }
-                                                    orderTotal = { user.orders_total ? parseInt(user.orders_total) : 0 }
-                                                    donationTotal = { user.donations_total ? parseInt(user.donations_total) : 0}
-                                                    drinksOrdered = { user.drinks_ordered ? user.drinks_ordered : 0}
+                                                    total = { user.amount_paid + user.adjusted_donations}
+                                                    quantity = { user.quantity ? user.quantity : 0}
                                                     rank = { i+ 4}
                                                 />
                                             ))

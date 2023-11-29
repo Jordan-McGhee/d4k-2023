@@ -29,20 +29,20 @@ const LargeTopThreeItem = props => {
     return (
         <li className={ rankClass }>
 
-            <p className="uppercase text-purple text-6xl font-bold font-bungee">{ rankText }</p>
+            <p className="uppercase text-purple text-4xl font-bold font-bungee">{ rankText }</p>
             {/* image */}
             <div className="relative text-center">
                 <img src = { image } alt = {`user rank ${props.rank}`} className={ imageClass + " border-5 shadow-xl drop-shadow-xl rounded-full border-white" } />
-                <p className="text-5xl font-fugaz font-bold italic text-white absolute rounded-xl bg-emerald-800 bottom-0 inset-x-0 m-10 mb-0 py-4 uppercase">
+                <p className="text-4xl font-fugaz font-bold text-white absolute rounded-xl bg-emerald-800 bottom-0 inset-x-0 m-10 mb-0 py-4">
                     { props.username }
                 </p>
             </div>
             <div className="text-center mt-10 border-4 border-slate-500/20 backdrop-blur bg-black/40  p-4 rounded-3xl">
-                <p className="text-7xl font-fugaz font-bold text-emerald-400 mb-2">${ props.total }</p>
+                <p className="text-4xl font-fugaz font-bold text-emerald-400 mb-2">${ props.total }</p>
                 {/* <p className="text-5xl font-bold text-white mb-2">${props.donationTotal} extra donated</p> */}
                 <div className="flex items-center">
                     <FontAwesomeIcon className="mr-2 h-8 text-emerald-300" icon={faGlassMartini} />
-                    <p className="text-5xl text-white">{ props.quantity } Drinks</p>
+                    <p className="text-3xl text-white">{ props.quantity } Drinks</p>
                 </div>
             </div>
 

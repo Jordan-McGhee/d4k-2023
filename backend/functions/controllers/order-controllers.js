@@ -139,7 +139,7 @@ const getOrdersGrouped = async (req, res, next) => {
 }
 
 const getOrdersLeaderboard = async (req, res, next) => {
-    let query = "SELECT user_id, username, quantity, amount_paid, adjusted_donations FROM user_totals WHERE amount_paid > 0 ORDER BY amount_paid DESC LIMIT 10;"
+    let query = "SELECT user_id, username, quantity, amount_paid, adjusted_donations FROM user_totals WHERE amount_paid + adjusted_donations > 0 ORDER BY amount_paid + adjusted_donations DESC LIMIT 10;"
 
     let sumQuery = "SELECT * FROM d4k_total"
 
