@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChampagneGlasses } from '@fortawesome/free-solid-svg-icons'
+import { faCalendar, faChampagneGlasses, faEnvelope, faLocation, faLocationArrow, faLocationPin, faMapLocation, faMapLocationDot } from '@fortawesome/free-solid-svg-icons'
 import BuddyLogo from "../components/UIElements/BuddyLogo"
 import { toast } from 'react-toastify';
 import { Link, Button, useDisclosure, Modal, ModalHeader, ModalFooter, ModalBody, ModalContent } from "@nextui-org/react";
@@ -16,15 +16,20 @@ const HomePage = () => {
     const Msg = ({ closeToast, toastProps }) => (
         <div className=" z-50 grid place-content-center text-center">
             <div className="font-fugaz text-lg">Welcome to the party</div>
-            <div className="flex pt-3">
-                <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white float-right" target="_blank"
-                    onPress={() => openInNewTab("https://docs.google.com/forms/d/e/1FAIpQLSeaCqqYVV38URqfCGFvf9ZXw-fSHigXAe0c55kPU8N5iN0Jag/viewform")}>
-                    RSVP
-                    </Button>
-                    <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white float-right"
-                        onPress={() => openInNewTab("sms:6787361277?&body=drink4thekids%20Christmas%20party%20address%3F")}>
-                    Address
-                    </Button>
+            <div className="flex pt-3 justify-center text-center">
+                <Button winterize className="ml-1 bg-emerald-600 text-sm py-3 border rounded-full rounded-r-none font-fugaz text-white" target="_blank"
+                    onPress={() => {openInNewTab("https://docs.google.com/forms/d/e/1FAIpQLSeaCqqYVV38URqfCGFvf9ZXw-fSHigXAe0c55kPU8N5iN0Jag/viewform");
+                    closeToast()}}>
+                    RSVP <FontAwesomeIcon icon={faEnvelope}/>
+                </Button>
+                <Button winterize className="bg-emerald-600 text-sm py-3 border rounded-none font-fugaz text-white"
+                    onPress={() => {openInNewTab("sms:6787361277?&body=drink4thekids%20Christmas%20party%20address%3F"); closeToast()}}>
+                    Address <FontAwesomeIcon icon={faLocationArrow}/>
+                </Button>
+                <Button winterize className="mr-1 bg-emerald-600 text-sm py-3 border rounded-full rounded-l-none font-fugaz text-white"
+                    onPress={() => {onOpen(); closeToast()}}>
+                    Save Date<FontAwesomeIcon icon={faCalendar}/>
+                </Button>
             </div>
         </div>
     )
@@ -88,6 +93,10 @@ const HomePage = () => {
                         6PM — Late
                 </p>
                 <BuddyLogo />
+                <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
+                        onPress={() => openInNewTab("sms:6787361277?&body=drink4thekids%20Christmas%20party%20address%3F")}>
+                    Address <FontAwesomeIcon icon={faLocationArrow} />
+                </Button>
             </div>
 
         {/* EXPLAINER DIV */}
@@ -100,7 +109,7 @@ const HomePage = () => {
                 <div className="text-3xl font-bold font-fugaz">All donations are <span className="font-extrabold">doubled</span></div><div className="text-2xl">with a match and go to Bethany Haven & Nicholas House Family Homeless Shelter</div>
                 <br/>
                 <Button 
-                className="uk-button bg-emerald-600" 
+                className="uk-button bg-emerald-600 text-slate-200 font-fugaz" 
                 radius="full" as={Link} href="/FAQ" >
                     Read More
                 </Button>

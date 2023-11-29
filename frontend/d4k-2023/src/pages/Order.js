@@ -15,13 +15,15 @@ import { toast } from 'react-toastify';
 import cocktails from "../assets/drinks.json"
 import other from "../assets/other.json"
 import shots from "../assets/shots.json"
+import mocktails from "../assets/mocktails.json"
+
 import icsFile from '../assets/drink4thekidsparty.ics'
 
 const Order = () => {
     let navigate = useNavigate()
     const { updateUsername, getUserIdByUsername, createUser } = UserApi()
     const { createOrder } = OrderApi()
-    let allDrinksJson = cocktails.concat(other).concat(shots)
+    let allDrinksJson = cocktails.concat(other).concat(shots).concat(mocktails)
 
     const [username, setUsername] = useState('')
     const [storedUsername, setStoredUsername] = useState('')
@@ -200,8 +202,6 @@ const Order = () => {
 
         if (isNew) {
             let data = await updateUsername(userId, editedUsername)
-            console.log(data)
-
             setUsername(editedUsername)
             setStoredUsername(editedUsername)
             localStorage.setItem('storedUsername', editedUsername)
@@ -234,7 +234,6 @@ const Order = () => {
             setUserId(data.user_id)
             localStorage.setItem('userId', data.user_id)
             localStorage.setItem('storedUsername', trimmedUsername)
-            localStorage.setItem('userId', currentUserId)
         }
 
         let orderData = {
@@ -427,6 +426,13 @@ const Order = () => {
                                     ))
                                 }
                             </SelectSection>
+                            <SelectSection showDivider title="Batched">
+                                {
+                                    other.map((drink) => (
+                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                    ))
+                                }
+                            </SelectSection>
                             <SelectSection showDivider title="Shots">
                                 {
                                     shots.map((drink) => (
@@ -434,9 +440,9 @@ const Order = () => {
                                     ))
                                 }
                             </SelectSection>
-                            <SelectSection showDivider title="Batched">
+                            <SelectSection showDivider title="Mocktails">
                                 {
-                                    other.map((drink) => (
+                                    mocktails.map((drink) => (
                                         <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
                                     ))
                                 }
