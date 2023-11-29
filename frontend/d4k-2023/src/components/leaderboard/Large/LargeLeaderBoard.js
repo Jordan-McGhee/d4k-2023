@@ -35,9 +35,9 @@ const LargeLeaderBoard = props => {
                                             id = {`large-leaderboard-topThree-${i}`}
                                             key = {`large-leaderboard-topThree-${i}`}
                                             username = { user.username }
-                                            total = { user.amount_paid + user.adjusted_donations}
-                                            quantity = { user.quantity ? user.quantity : 0}
-                                            rank = { i + 1}
+                                            quantity = { user.quantity }
+                                            total = { user.amount_paid + user.adjusted_donations }
+                                            rank = { i + 1 }
                                         />
                                     )) }
                                     </ul>
@@ -51,9 +51,9 @@ const LargeLeaderBoard = props => {
                                                     id = { `large-leaderboard-${i}`}
                                                     key = { `large-leaderboard-${i}`}
                                                     username = { user.username }
-                                                    total = { user.amount_paid + user.adjusted_donations}
-                                                    quantity = { user.quantity ? user.quantity : 0}
-                                                    rank = { i+ 4}
+                                                    quantity = { user.quantity }
+                                                    total = { user.amount_paid + user.adjusted_donations }
+                                                    rank = { i + 4 }
                                                 />
                                             ))
                                         }
