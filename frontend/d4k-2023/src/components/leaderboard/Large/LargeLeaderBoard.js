@@ -11,7 +11,7 @@ const LargeLeaderBoard = props => {
 
     return (
         <>
-            <div className="bg-cover" style={{backgroundImage: `url(${bgImage})`, padding:0, margin:0}}>
+            <div className="bg-cover h-screen" style={{backgroundImage: `url(${bgImage})`, padding:0, margin:0}}>
                 <div>
                     <div className="flex flex-col justify-around items-center p-10 mx-auto">
                         <div className="uppercase flex items-center font-bold text-emerald-600 text-7xl font-bungee pb-10">Drink 4 The Kids 

@@ -22,7 +22,7 @@ const MobileEmptyLeaderBoard = (props) => {
     )
     
     return (
-        <div className="my-4">
+        <div className="my-4 w-11/12 m-auto">
 
             <MobileProgressBar total = { 0 } />
 
