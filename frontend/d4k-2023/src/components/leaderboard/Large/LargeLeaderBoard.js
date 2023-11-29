@@ -1,15 +1,8 @@
-import React, { useState, useEffect, useCallback }  from "react";
-// import HonorableMentions from "./HonorableMentions";
-import LargeLeaderBoardList from "./LargeLeaderBoardList";
+import React from "react";
 import LargeLeaderBoardItem from "./LargeLeaderBoardItem"
 import LargeTopThreeItem from "./LargeTopThreeItem";
 import LargeProgressBar from "./LargeProgressBar";
-import ErrorModal from "../../UIElements/ErrorModal";
-import LoadingSpinner from "../../UIElements/LoadingSpinner";
-import { useFetch } from "../../../hooks/useFetch";
-
 import bgImage from "../../../images/leaderboard.jpg"
-import LargeEmptyLeaderBoard from "./LargeEmptyLeaderBoard";
 
 const LargeLeaderBoard = props => {
 
@@ -62,7 +55,6 @@ const LargeLeaderBoard = props => {
                         </div>
                     </div>
                 </div>
-
             </div>
         </>
     )
