@@ -103,9 +103,9 @@ const Order = () => {
             updateDrinkState(parseInt(drinkIdParam))
         }
 
-        const isLocal = window.location.hostname.includes("localhost")
-        const isPartyDate = new Date() >= new Date('12/16/2023')
-        setIsOrderingEnabled(isLocal || isPartyDate)
+        // const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
+        // const isPartyDate = new Date() >= new Date('12/16/2023')
+        // setIsOrderingEnabled(isLocal || isPartyDate)
     }, [])
 
     useEffect(() => {
@@ -211,10 +211,10 @@ const Order = () => {
     }
 
     const submitOrder = async () => {
-        if (!isOrderingEnabled) {
-            setShowNotPartyTimeModal(true)
-            return
-        }
+        // if (!isOrderingEnabled) {
+        //     setShowNotPartyTimeModal(true)
+        //     return
+        // }
         if (isLoading) return
         setIsLoading(true)
 

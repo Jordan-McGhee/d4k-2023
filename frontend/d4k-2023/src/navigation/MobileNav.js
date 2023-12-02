@@ -6,10 +6,11 @@ import { faCandyCane, faCocktail, faGift, faIgloo, faPeopleGroup, faMedal } from
 
 const MainNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
-    const isLocal = window.location.hostname.includes("localhost")
+    const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
     const isPartyDate = new Date() >= new Date('12/16/2023')
-    const showOrderingNav = isLocal || isPartyDate
-    
+    // const showOrderingNav = isLocal || isPartyDate
+    const showOrderingNav = true
+
     return (
     <div className="outer-menu">
         <input id="nav-checkbox" 
