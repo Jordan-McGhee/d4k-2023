@@ -12,16 +12,16 @@ const LargeLeaderBoard = props => {
     return (
         <>
             <div className="bg-cover h-screen" style={{backgroundImage: `url(${bgImage})`, padding:0, margin:0}}>
-                <div>
                     <div className="flex flex-col justify-around items-center p-10 mx-auto">
-                        <div className="uppercase flex items-center font-bold text-emerald-600 text-7xl font-bungee pb-10">Drink 4 The Kids 
-                            <span className="font-fugaz text-slate-500 text-6xl pl-6">Leaderboard</span>
+                        <div className="uppercase flex items-center font-bold text-rose-600 text-8xl font-fugaz pb-2">Drink 4 The Kids
+                        <div className="font-bungee uppercase text-emerald-600 text-7xl pl-6">Leaderboard</div>
                         </div>
-                        <div className="flex w-full items-stretch">
-                            <div className="flex flex-col w-1/12">
+
+                        <div className="flex w-full items-stretch h-screen">
+                            <div className="flex pb-20 mb-20 w-1/12">
                                 <LargeProgressBar total = { props.total } />
                             </div>
-                                <div className="flex flex-col w-8/12 mx-6 px-4 justify-around">
+                                <div className="flex flex-col pt-20  w-8/12 mx-6 px-4">
                                     <ul className="flex justify-center my-12  px-16 rounded-2xl">
                                     { topThree.map((user, i) => (
                                         <LargeTopThreeItem
@@ -37,7 +37,7 @@ const LargeLeaderBoard = props => {
                                 </div>
                                 {
                                     fourThroughEight.length !== 0 && 
-                                    <div className="flex flex-col h-full mt-20 w-3/12">
+                                    <div className="flex flex-col mt-40 h-full w-4/12">
                                         {
                                             fourThroughEight.map((user, i) => (
                                                 <LargeLeaderBoardItem
@@ -54,7 +54,6 @@ const LargeLeaderBoard = props => {
                                 }
                         </div>
                     </div>
-                </div>
             </div>
         </>
     )
