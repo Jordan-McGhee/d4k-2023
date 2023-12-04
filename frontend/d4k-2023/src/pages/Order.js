@@ -499,7 +499,7 @@ const Order = () => {
                                 <SelectItem textValue="Make a Drink - $12" key={customDrinkId} value={customDrinkId}>
                                     <div className="flex flex-col">
                                         <span className="font-bold">Make a Drink — $12</span>
-                                        <span className="truncate text-xs italic capitalize text-slate-600">Make it magical</span>
+                                        <span className="truncate text-xs italic capitalize text-slate-600">Whatever you want</span>
                                     </div>
                                 </SelectItem>
                             </SelectSection>
