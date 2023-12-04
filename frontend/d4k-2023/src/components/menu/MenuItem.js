@@ -23,9 +23,9 @@ const MenuItem = props => {
 
                         {/* title/description/ingredients */}
                         <div className="">
-                            <p className="uppercase text-green-600 font-bold text-sm">{ props.name}</p>
-                            <p className="text-xs">{ props.description}</p>
-                            <p className="uppercase font-light text-[10px] my-2">{ props.ingredients.join(" * ")}</p>
+                            <p className="text-green-600 uppercase font-bold text-md">{ props.name}</p>
+                            <p className="text-xs italic">{ props.description}</p>
+                            <p className="uppercase  font-light text-[11px] my-2">{ props.ingredients.join(" * ")}</p>
                         </div>
 
                         {/* div for order button and price */}
@@ -34,7 +34,7 @@ const MenuItem = props => {
                                 type = "SUBMIT"
                                 radius="full"
                                 onPress={orderButtonPressed}
-                                className = "bg-gradient-to-r from-green-800 to-emerald-400 shadow-lg hover:scale-105 font-bold uppercase text-white">
+                                className = "font-fugaz tracking-widest	 bg-gradient-to-r from-emerald-800 to-emerald-400 shadow-lg hover:scale-105 font-bold text-slate-200 border-2 border-emerald-700">
                                     Order
                             </Button>
                             <span className="text-emerald-600 font-bungee text-xl">${ props.price }</span>

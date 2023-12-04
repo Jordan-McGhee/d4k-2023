@@ -10,7 +10,7 @@
             "vanilla",
             "nutmeg"
         ],
-        "description": "A dairy-free take on Alton Brown's aged recipe. It's eggsquisite.",
+        "description": "A dairy-free take on Alton Brown's aged recipe. Get it while it lasts, it's eggsquisite",
         "imageUrl": "/images/drinks/eggnog.jpg",
         "price": 10
     },
@@ -24,19 +24,19 @@
             "orange zest",
             "Luxardo cherry"
         ],
-        "description": "Saint Nick's take on an old fashioned.",
+        "description": "Saint Nick's night cap is a winter old fashioned",
         "imageUrl": "/images/drinks/oldfashioned.jpg",
         "price": 14
     },
     {
-        "id": 4,
+        "id": 19,
         "name": "Negroni",
         "ingredients": [
             "Gin",
             "Cocchi Storico",
             "Campari"
         ],
-        "description": "Just Negroni",
+        "description": "Just Negroni.",
         "imageUrl": "/images/drinks/negroni.png",
         "price": 14
     }

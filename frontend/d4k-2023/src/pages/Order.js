@@ -31,6 +31,7 @@ const Order = () => {
     const [editedUsername, setEditedUsername] = useState('')
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
     const [drinkName, setDrinkName] = useState(null)
+    const [selectedDrinkDescription, setSelectedDrinkDescription] = useState('')
     const [selectedDrinkId, setSelectedDrinkId] = useState(-1)
     const [selectValue, setSelectValue] = useState(new Set([]));
     const [drinkPrice, setDrinkPrice] = useState(0)
@@ -59,6 +60,10 @@ const Order = () => {
     const customDrinkId = 999
     const isCustomDrinkSelected = useMemo(() => {
         return selectedDrinkId === customDrinkId
+    }, [selectedDrinkId])
+
+    const isShot = useMemo(() => {
+        return shots.some(d => d.id === selectedDrinkId)
     }, [selectedDrinkId])
 
     const isInvalidCustomDrinkDescription = useMemo(() => {
@@ -103,9 +108,9 @@ const Order = () => {
             updateDrinkState(parseInt(drinkIdParam))
         }
 
-        // const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
-        // const isPartyDate = new Date() >= new Date('12/16/2023')
-        // setIsOrderingEnabled(isLocal || isPartyDate)
+        const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
+        const isPartyDate = new Date() >= new Date('12/16/2023')
+        setIsOrderingEnabled(isLocal || isPartyDate)
     }, [])
 
     useEffect(() => {
@@ -156,7 +161,8 @@ const Order = () => {
         setSelectValue(new Set([drinkId.toString()]))
         setSelectedDrinkId(drinkId)
         setDrinkName(selectedDrink?.name ?? "custom")
-        setDrinkPrice(parseInt(selectedDrink?.price || 10))
+        setSelectedDrinkDescription(selectedDrink?.description ?? '')
+        setDrinkPrice(parseInt(selectedDrink?.price || 12))
     }
 
     const drinkDropdownChanged = (e) => {
@@ -388,6 +394,12 @@ const Order = () => {
                         }
 
                         <Select
+                            showScrollIndicators
+                            scrollShadowProps={{
+                                hideScrollBar: false,
+                                size: 100
+                            }}
+                            className="pb-2"
                             variant="bordered"
                             selectionMode="single"
                             onSelectionChange={setSelectValue}
@@ -395,7 +407,7 @@ const Order = () => {
                             fullWidth
                             color="success"
                             radius="full"
-                            className="pb-5"
+
                             classNames={{
                                 label: "text-xl group-data-[filled=true]:-translate-y-4",
                                 trigger: "min-h-unit-16 bg-white",
@@ -411,7 +423,7 @@ const Order = () => {
                                     base: [
                                         "rounded-md",
                                         "data-[hover=true]:bg-default-100",
-                                        "data-[selectable=true]:focus:bg-emerald-600",
+                                        "data-[selectable=true]:focus:bg-emerald-600/50",
                                         "data-[focus-visible=true]:ring-default-500",
                                     ],
                                 },
@@ -419,38 +431,84 @@ const Order = () => {
                             label="Select a Drink"
                             selectedKeys={selectValue}
                         >
-                            <SelectSection showDivider title="Cocktails">
+                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Cocktails">
                                 {
                                     cocktails.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                            <div className="flex flex-col">
+                                              <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                                 <span className="text-sm truncate text-default-400">{
+                                                        drink.ingredients.map((ingredient, i) => (
+                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
+                                                    ))
+                                                 }</span>
+                                            </div>
+                                        </SelectItem>
                                     ))
                                 }
                             </SelectSection>
-                            <SelectSection showDivider title="Batched">
+                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Batched">
                                 {
                                     other.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                            <div className="flex flex-col">
+                                              <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                                 <span className="text-sm truncate text-default-400">{
+                                                        drink.ingredients.map((ingredient, i) => (
+                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
+                                                    ))
+                                                 }</span>
+                                            </div>
+                                        </SelectItem>
                                     ))
                                 }
                             </SelectSection>
-                            <SelectSection showDivider title="Shots">
+                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Shots">
                                 {
                                     shots.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                            <div className="flex flex-col">
+                                            <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                                <span className="text-sm truncate text-default-400">{
+                                                        drink.ingredients.map((ingredient, i) => (
+                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
+                                                    ))
+                                                }</span>
+                                            </div>
+                                        </SelectItem>
                                     ))
                                 }
                             </SelectSection>
-                            <SelectSection showDivider title="Mocktails">
+                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Mocktails">
                                 {
                                     mocktails.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id} >{drink.name} — ${drink.price}</SelectItem>
+                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                        <div className="flex flex-col">
+                                          <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                             <span className="text-sm truncate ">{
+                                                    drink.ingredients.map((ingredient, i) => (
+                                                    <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
+                                                ))
+                                             }</span>
+                                        </div>
+                                    </SelectItem>
                                     ))
                                 }
                             </SelectSection>
-                            <SelectSection showDivider title="Something Else">
-                                <SelectItem textValue="Custom Drink - $10" key={customDrinkId} value={customDrinkId}>Custom Drink — $10</SelectItem>
+                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Build Your Own">
+                                <SelectItem textValue="Make a Drink - $12" key={customDrinkId} value={customDrinkId}>
+                                    <div className="flex flex-col">
+                                        <span className="font-bold">Make a Drink — $12</span>
+                                        <span className="truncate text-xs italic capitalize text-slate-600">Make it magical</span>
+                                    </div>
+                                </SelectItem>
                             </SelectSection>
                         </Select>
+                        {
+                            selectedDrinkId && <div className="text-center text-xs justify-center italic text-slate-600 mx-1">
+                                   {selectedDrinkDescription}
+                                </div>
+                        }
                         { /** Custom Drink Dropdown */
                             selectedDrinkId > -1 && <div className="border-2 border-slate-200 p-2 rounded-3xl">
                                 {
@@ -488,7 +546,7 @@ const Order = () => {
                                     </Button>
                                     <span className="text-xl">{drinkQuantity}</span>
                                     <Button isIconOnly className="border-solid border-2 border-green-200  bg-emerald-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full ml-5"
-                                        isDisabled={drinkQuantity >= 5} type="button" onPress={incrementDrinkQuantity}>
+                                        isDisabled={drinkQuantity >= (isShot ? 8 : 5)} type="button" onPress={incrementDrinkQuantity}>
                                         <FontAwesomeIcon icon={faPlus} />
                                     </Button>
                                 </div>
@@ -602,7 +660,8 @@ const Order = () => {
                             onValueChange={setComments}
                             placeholder="Write us love letters"
                             classNames={{
-                                inputWrapper: "bg-white"
+                                inputWrapper: "bg-white",
+                                description: "italic",
                             }}
                         />
                     </CardBody>
@@ -610,7 +669,7 @@ const Order = () => {
                         <div className="flex justify-between w-full items-center pb-5">
                             <p className="font-bold text-xl">Total: ${orderTotal}</p>
                             <Button
-                                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-green-900 to-green-500 text-white  shadow-lg"
+                                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
                                 onPress={submitOrder}
                                 isDisabled={isLoading || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                             >Grab a Drink

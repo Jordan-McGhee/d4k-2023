@@ -7,7 +7,7 @@
             "basil",
             "lemon"
         ],
-        "description": "Just took a DNA test, turns out it’s mostly alcohol",
+        "description": "Just took a DNA test, turns out it's mostly alcohol",
         "imageUrl": "/images/drinks/ginbasilsmash.jpg",
         "price": 13
     },
@@ -23,7 +23,7 @@
         ],
         "description": "A crowd favorite. Reindeer Fuel baby",
         "imageUrl": "/images/drinks/whiskeysour.jpg",
-        "price": 13
+        "price": 12
     },
     {
         "id": 13,
@@ -37,21 +37,17 @@
         ],
         "description": "In Whoville they say this grew the Grinch's heart three sizes that day",
         "imageUrl": "/images/drinks/lychee.jpg",
-        "price": 13
+        "price": 12
     },
     {
         "id": 3,
         "name": "Feliz Navidad",
         "ingredients": [
             "tequila",
-            "cointreau",
-            "lime",
-            "(optional) coconut",
-            "jalapeno",
-            "berry",
-            "mezcal"
+            "pierre ferrand",
+            "lime"
         ],
-        "description": "Top shelf margaritas are never out of season.",
+        "description": "Top shelf margaritas are never out of season",
         "imageUrl": "/images/drinks/margarita.jpg",
         "price": 14
     },
@@ -90,7 +86,7 @@
             "Averna Amaro",
             "Espresso"
         ],
-        "description": "It's a one way ticket. Get in loser, we're going to the North Pole",
+        "description": "A one-way ticket. Wake up loser, we're going to the North Pole",
         "imageUrl": "/images/drinks/espresso.jpg",
         "price": 12
     }

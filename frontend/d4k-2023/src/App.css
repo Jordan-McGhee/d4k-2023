@@ -40,3 +40,8 @@
 .animate-pulse-custom {
   animation: pulseCustom 2s infinite;
 }
+
+select::-webkit-scrollbar {
+  width: 20px;
+  background-color: red;
+}
