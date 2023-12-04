@@ -62,7 +62,7 @@ const adjustDonations = async (req, res, next) => {
     let response
 
     try {
-        response = await pool.query(query, [ donation_amount, user_id ])
+        response = await pool.query(query, [donation_amount, user_id])
 
     } catch (error) {
         logger.error(`Error updating user #${user_id}'s donation amount`)
@@ -95,10 +95,10 @@ const changeUsername = async (req, res, next) => {
     let nameQueryResponse
 
     try {
-        nameQueryResponse = await pool.query(nameQuery, [ username ])
+        nameQueryResponse = await pool.query(nameQuery, [username])
     } catch (error) {
         logger.error(`Error checking if username is available: ${error}`)
-        return next(new HttpError(`Error checking if username is available: ${ error }`, 500)
+        return next(new HttpError(`Error checking if username is available: ${error}`, 500)
         )
     }
 
@@ -107,7 +107,7 @@ const changeUsername = async (req, res, next) => {
     } else {
         let query = "UPDATE users SET username = $1, updated_at = NOW() WHERE user_id = $2 RETURNING *"
         let response
-    
+
         try {
             response = await pool.query(query, [username, user_id])
         } catch (error) {
@@ -115,7 +115,7 @@ const changeUsername = async (req, res, next) => {
 
             return next(new HttpError(`Error changing User ${user_id}'s name to ${username}.`, 500))
         }
-    
+
         res.status(201).json(response.rows[0])
     }
 }
@@ -131,7 +131,24 @@ const getTab = async (req, res, next) => {
         logger.error(`Error getting user #${user_id}'s tab. ${error}`, 500)
         return next(new HttpError(`Error getting user #${user_id}'s tab. ${error}`, 500))
     }
-    res.status(200).json(response?.rows[0] ?? {})
+
+    let history = {}
+    let array = str.split(", ")
+
+    array.forEach(i => {
+        let splitArray = i.split('—')
+
+        console.log(splitArray)
+
+        if (history[splitArray[0]]) {
+            history[splitArray[0]] += parseInt(splitArray[1])
+        } else {
+            history[splitArray[0]] = parseInt(splitArray[1])
+        }
+    })
+
+
+    res.status(200).json({ tab: response.rows[0] ? response.rows[0] : {}, order_history: history })
 }
 
 const closeTab = async (req, res, next) => {

@@ -82,7 +82,7 @@ const Menu = () => {
                         id = { 999 }
                         key = { 999 }
                         image = { "/images/drinks/custom.png" }
-                        name = { "" }
+                        name = { "Custom Drink" }
                         description = { "Welcome to the Build-A-Drink Workshop" }
                         ingredients = { [] }
                         price = { 12 }
