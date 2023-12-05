@@ -7,7 +7,7 @@ const MobileLeaderBoard = props => {
 
     const [ storedUserID, setStoredUserId ] = useState(null)
 
-    const userClass = 'bg-green-200 last:rounded-b-3xl border-2 p-4 animate-pulse-custom'
+    const userClass = 'bg-green-200 border-2 p-4 animate-pulse-custom'
 
     // check for storedUserID and pass it through for highlighting in the leaderboard list
     useEffect(() => {
@@ -22,7 +22,7 @@ const MobileLeaderBoard = props => {
     let fourThroughTen = props.data.slice(3, 11)
 
     return (
-        <div className="w-11/12 mt-8 m-auto">
+        <div className="w-11/12 mt-8 mb-20 m-auto">
 
             <p className="text-center text-4xl font-bungee text-emerald-700 font-bold pb-4">Leaderboard</p>
 

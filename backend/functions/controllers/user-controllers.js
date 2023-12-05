@@ -133,7 +133,7 @@ const getTab = async (req, res, next) => {
     }
 
     let history = {}
-    let array = str.split(", ")
+    let array = response.rows[0].order_history.split(", ")
 
     array.forEach(i => {
         let splitArray = i.split('—')

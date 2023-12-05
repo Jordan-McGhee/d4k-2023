@@ -34,29 +34,30 @@ const MainNav = (props) => {
                         <FontAwesomeIcon className="mx-1" icon={faCandyCane} />Info
                     </NavLink>
 
-                    {showOrderingNav && <NavLink 
-                        className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} 
-                        onClick={() => setIsChecked(!isChecked)} to="/leaderboard">
-                        <FontAwesomeIcon className="mx-1" icon={faMedal} />Leaderboard
-                    </NavLink>}
-                
-                    {showOrderingNav && <NavLink 
-                        className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} 
-                        onClick={() => setIsChecked(!isChecked)} to="/queue">
-                        <FontAwesomeIcon className="mx-1" icon={faPeopleGroup} />Queue
-                    </NavLink>}
+                    <NavLink
+                        className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}
+                        onClick={() => setIsChecked(!isChecked)} to="/menu">
+                        <FontAwesomeIcon className="mx-1" icon={faCocktail} />Menu
+                    </NavLink>
             
                     <NavLink
                         className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}
                         onClick={() => setIsChecked(!isChecked)} to="/order">
                         <FontAwesomeIcon className="mx-1" icon={faGift} />Order
                     </NavLink>
-            
-                    <NavLink
-                        className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`}
-                        onClick={() => setIsChecked(!isChecked)} to="/menu">
-                        <FontAwesomeIcon className="mx-1" icon={faCocktail} />Menu
-                    </NavLink>
+
+                    {showOrderingNav && <NavLink 
+                        className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} 
+                        onClick={() => setIsChecked(!isChecked)} to="/queue">
+                        <FontAwesomeIcon className="mx-1" icon={faPeopleGroup} />Queue
+                    </NavLink>}
+
+                    {showOrderingNav && <NavLink 
+                        className={ ({isActive}) => `py-4 ${isActive ? "font-extrabold text-rose-500" : ""}`} 
+                        onClick={() => setIsChecked(!isChecked)} to="/leaderboard">
+                        <FontAwesomeIcon className="mx-1" icon={faMedal} />Leaderboard
+                    </NavLink>}
+                    
                 </div>
             </div>
         </div>

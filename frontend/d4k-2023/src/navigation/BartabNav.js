@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import { useFetch } from "../hooks/useFetch";
+import Button from "../components/FormElements/Button"
 import { Link } from "react-router-dom";
 import "./BartabNav.css"
 import "./MobileNav.css"
 import { UserApi } from "../api/userApi";
+import { ScrollShadow } from "@nextui-org/react";
 
 const BartabNav = (props) => {
-    const { isLoading, sendRequest, hasError, clearError } = useFetch()
     const [isChecked, setIsChecked] = useState(false);
-    const [ data, setData ] = useState(null)
-    const [ totalOwed, setTotalOwed ] = useState(0)
-    const [ venmoUrl, setVenmoUrl ] = useState('https://venmo.com/jacobwebber')
-    const [ paypalUrl, setPaypalUrl ] = useState('https://paypal.me/jacobwwebber')
+    const [showOrderHistory, setShowOrderHistory] = useState(false)
+    const [data, setData] = useState(null)
+    const [totalOwed, setTotalOwed] = useState(0)
+    const [venmoUrl, setVenmoUrl] = useState('https://venmo.com/jacobwebber')
+    const [paypalUrl, setPaypalUrl] = useState('https://paypal.me/jacobwwebber')
     const location = useLocation();
     const { getTab } = UserApi()
 
@@ -30,93 +31,121 @@ const BartabNav = (props) => {
             }
             getUserTab()
         }
-    }, [ location ])
+    }, [location])
 
     useEffect(() => {
-        if(data){
-            setTotalOwed(data.tab_total)
-            
-            let note = `${data.username}-%20${data.quantity || 0}%20drinks%20$${data.drink_cost_total}${data.tips_total ? `,%20$${data.tips_total} tip` : '' }`
-            
-            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${data.tab_total}&note=${note}`.replace(/ /g, '+')
+        if (data) {
+            setTotalOwed(data.tab.tab_total)
+
+            let note = `${data.tab.username}-%20${data.tab.quantity || 0}%20drinks%20$${data.tab.drink_cost_total}${data.tab.tips_total ? `,%20$${data.tab.tips_total} tip` : ''}`
+
+            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '+')
             setVenmoUrl(venmo)
 
-            let paypal = `https://paypal.me/jacobwwebber/${data.tab_total}?&item_name=${note}`.replace(/ /g, '+')
+            let paypal = `https://paypal.me/jacobwwebber/${data.tab.tab_total}?&item_name=${note}`.replace(/ /g, '+')
             setPaypalUrl(paypal)
         }
     }, [data]);
 
+    let orderHistoryList = []
+
+    if (data) {
+        let orderHistoryObj = data.order_history
+
+        Object.entries(orderHistoryObj).map(([ key, value]) => {
+            orderHistoryList.push(
+                <div key={`${key} - ${value}`} className="ml-4 text-sm my-0.5">
+                    {`${value} x ${key}s`}
+                </div>
+            )
+        })
+    }
+
     return (
         <div>
-        { data && (data.tab_total > 0) && 
-            <div className={`outer-menu menu-left ${!isChecked ? 'animate-pulse' : ''}`}>
-                <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
-                    onChange={(event) => setIsChecked(event.currentTarget.checked)}
-                />
-                <div className="bar-tab border-2 border-white border-solid rounded-full">
-                <div className="font-fugaz text-white tracking-widest">Pay Tab</div>
-                </div>
-                <div className="menu">
-                <div>
-                    <div>
-                    <ul>
-                        <li><div className="font-bungee text-4xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
-                        </li>
-                        <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.username}</div></li>
-                        <li>          
-                            <p className="text-xl flex justify-between">Drinks Ordered: 
-                    <span className=" uppercase font-bold">
-                        {data.quantity}
-                    </span>
-                </p>
+            {data && (data.tab.tab_total > 0) &&
+                <div className={`outer-menu menu-left ${!isChecked ? 'animate-pulse' : ''}`}>
+                    <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
+                        onChange={(event) => setIsChecked(event.currentTarget.checked)}
+                    />
+                    <div className="bar-tab border-2 border-white border-solid rounded-full">
+                        <div className="font-fugaz text-white tracking-widest">Pay Tab</div>
+                    </div>
+                    <div className="menu">
+                        <div>
+                            <div>
+                                <ul>
+                                    <li><div className="font-bungee text-4xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
+                                    </li>
+                                    <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.tab.username}</div></li>
 
-                <p className="text-xl flex justify-between">Drinks:
-                    <span className=" uppercase font-bold text-green-400">
-                        ${data.drink_cost_total}
-                    </span>
-                </p>
+                                    <li className="my-4">
+                                        {/* show history button */}
+                                        <Button winterize onClick = { () => setShowOrderHistory(!showOrderHistory) }>
+                                            { showOrderHistory ? 'Hide Order History' : 'Show Order History'}
+                                        </Button>
 
-                <p className="text-xl flex justify-between">Additional Tip: 
-                    <span className=" uppercase font-bold text-green-400">
-                        ${data.tips_total}
-                    </span>
-                </p>
-
-                <p className="text-2xl flex justify-between border-t-2 pt-4">Total Due: 
-                <span className="uppercase font-bold text-green-400">
-                    ${ totalOwed }
-                    </span></p>
+                                        { showOrderHistory &&
+                                            <ScrollShadow size={20} className="my-4 max-h-[8rem] overflow-y-scroll">
+                                                { orderHistoryList }
+                                            </ScrollShadow>
+                                        }
+                                    </li>
 
 
-                        </li>
-                        <li>
-                        <div className="justify-content-center mt-6">
-                            <div className="">
-                                {/* <hr className="hr-bold" /> */}
-                                <Link 
-                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 paypal"
-                                    target = "_blank"
-                                    to={paypalUrl}>
-                                </Link>
-                                <Link 
-                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 cashapp"
-                                    target = "_blank"
-                                    to={`https://cash.app/$wakejebber/${totalOwed}`}>    
-                                </Link>
-                                <Link 
-                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 venmo"
-                                    target = "_blank"
-                                    to={venmoUrl}>
-                                </Link>
+                                    <li>
+                                        <p className="text-xl flex justify-between">Drinks Ordered:
+                                            <span className=" uppercase font-bold">
+                                                {data.tab.quantity}
+                                            </span>
+                                        </p>
+
+                                        <p className="text-xl flex justify-between">Drinks:
+                                            <span className=" uppercase font-bold text-green-400">
+                                                ${data.tab.drink_cost_total}
+                                            </span>
+                                        </p>
+
+                                        <p className="text-xl flex justify-between">Additional Tip:
+                                            <span className=" uppercase font-bold text-green-400">
+                                                ${data.tab.tips_total}
+                                            </span>
+                                        </p>
+
+                                        <p className="text-2xl flex justify-between border-t-2 pt-4">Total Due:
+                                            <span className="uppercase font-bold text-green-400">
+                                                ${totalOwed}
+                                            </span>
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <div className="justify-content-center mt-6">
+                                            <div className="">
+                                                {/* <hr className="hr-bold" /> */}
+                                                <Link
+                                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 paypal"
+                                                    target="_blank"
+                                                    to={paypalUrl}>
+                                                </Link>
+                                                <Link
+                                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 cashapp"
+                                                    target="_blank"
+                                                    to={`https://cash.app/$wakejebber/${totalOwed}`}>
+                                                </Link>
+                                                <Link
+                                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 venmo"
+                                                    target="_blank"
+                                                    to={venmoUrl}>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
-                        </li>
-                    </ul>
                     </div>
                 </div>
-                </div>
-            </div> 
-        }
+            }
         </div>
     )
 }
