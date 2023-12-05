@@ -78,7 +78,7 @@ const BartabNav = (props) => {
                                     </li>
                                     <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.tab.username}</div></li>
 
-                                    <li className="my-1">
+                                    <li className="my-4">
                                         {/* show history button */}
                                         <Button className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" size="sm" onPress = { () => setShowOrderHistory(!showOrderHistory) }>
                                             { showOrderHistory ? 'Hide Orders' : 'Show Orders'}
@@ -99,7 +99,7 @@ const BartabNav = (props) => {
                                             </span>
                                         </p>
 
-                                        <p className="text-xl flex justify-between">Drinks:
+                                        <p className="text-xl flex justify-between">Drinks Total:
                                             <span className=" uppercase font-bold text-green-400">
                                                 ${data.tab.drink_cost_total}
                                             </span>
