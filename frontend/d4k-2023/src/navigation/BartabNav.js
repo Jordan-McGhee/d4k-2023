@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import Button from "../components/FormElements/Button"
 import { Link } from "react-router-dom";
 import "./BartabNav.css"
 import "./MobileNav.css"
 import { UserApi } from "../api/userApi";
-import { ScrollShadow } from "@nextui-org/react";
+import { ScrollShadow, Button } from "@nextui-org/react";
 
 const BartabNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
@@ -54,8 +53,8 @@ const BartabNav = (props) => {
 
         Object.entries(orderHistoryObj).map(([ key, value]) => {
             orderHistoryList.push(
-                <div key={`${key} - ${value}`} className="ml-4 text-sm my-0.5">
-                    {`${value} x ${key}s`}
+                <div key={`${key} - ${value}`} className="ml-2 text-xs my-0.5">
+                    {`${value} x ${key}`}
                 </div>
             )
         })
@@ -79,14 +78,14 @@ const BartabNav = (props) => {
                                     </li>
                                     <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.tab.username}</div></li>
 
-                                    <li className="my-4">
+                                    <li className="my-1">
                                         {/* show history button */}
-                                        <Button winterize onClick = { () => setShowOrderHistory(!showOrderHistory) }>
-                                            { showOrderHistory ? 'Hide Order History' : 'Show Order History'}
+                                        <Button className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" size="sm" onPress = { () => setShowOrderHistory(!showOrderHistory) }>
+                                            { showOrderHistory ? 'Hide Orders' : 'Show Orders'}
                                         </Button>
 
                                         { showOrderHistory &&
-                                            <ScrollShadow size={20} className="my-4 max-h-[8rem] overflow-y-scroll">
+                                            <ScrollShadow size={20} className="my-1 max-h-[8rem] overflow-y-scroll">
                                                 { orderHistoryList }
                                             </ScrollShadow>
                                         }
