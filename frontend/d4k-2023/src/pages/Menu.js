@@ -3,14 +3,33 @@ import { Button } from "@nextui-org/react";
 import MenuList from "../components/menu/MenuList";
 import MenuItem from "../components/menu/MenuItem";
 
-import cocktails from "../assets/drinks.json"
-import batched from "../assets/other.json"
-import shots from "../assets/shots.json"
-import mocktails from "../assets/mocktails.json"
+import { MenuApi } from "../api/menuApi";
 
 
 const Menu = () => {
+    const { getCocktails, getBatched, getShots, getMocktails } = MenuApi()
+    const [ cocktails, setCocktails] = useState([])
+    const [ shots, setShots] = useState([])
+    const [ batched, setBatched] = useState([])
+    const [ mocktails, setMocktails] = useState([])
 
+    useEffect(() => {
+        const getMenu = async () => {
+            try {
+                const drinksResponse = await getCocktails()
+                const shotsResponse = await getShots()
+                const batchedResponse = await getBatched()
+                const mocktailsResponse = await getMocktails()
+                setCocktails(drinksResponse)
+                setShots(shotsResponse)
+                setBatched(batchedResponse)
+                setMocktails(mocktailsResponse)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getMenu()
+    }, [ ])
     return (
         <div className="max-w-md m-auto">
 
