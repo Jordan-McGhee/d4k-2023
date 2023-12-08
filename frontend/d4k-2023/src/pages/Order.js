@@ -110,7 +110,7 @@ const Order = () => {
 
         const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
         const isPartyDate = new Date() >= new Date('12/16/2023')
-        setIsOrderingEnabled(isLocal || isPartyDate)
+        setIsOrderingEnabled(isLocal || isPartyDate || true)
     }, [])
 
     useEffect(() => {
