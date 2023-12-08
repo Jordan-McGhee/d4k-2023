@@ -36,9 +36,9 @@ const BartabNav = (props) => {
         if (data) {
             setTotalOwed(data.tab.tab_total)
 
-            let note = `${data.tab.username}-%20${data.tab.quantity || 0}%20drinks%20$${data.tab.drink_cost_total}${data.tab.tips_total ? `,%20$${data.tab.tips_total} tip` : ''}`
+            let note = `${data.tab.username}-%C2%A0${data.tab.quantity || 0}%C2%A0drinks%C2%A0$${data.tab.drink_cost_total}${data.tab.tips_total ? `,%C2%A0$${data.tab.tips_total}%C2%A0tip` : ''}`
 
-            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '+')
+            let venmo = `https://venmo.com/drink4thekids?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '+')
             setVenmoUrl(venmo)
 
             let paypal = `https://paypal.me/jacobwwebber/${data.tab.tab_total}?&item_name=${note}`.replace(/ /g, '+')
