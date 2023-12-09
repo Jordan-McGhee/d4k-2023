@@ -36,12 +36,12 @@ const BartabNav = (props) => {
         if (data) {
             setTotalOwed(data.tab.tab_total)
 
-            let note = `${data.tab.username}-%20${data.tab.quantity || 0}%20drinks%20$${data.tab.drink_cost_total}${data.tab.tips_total ? `,%20$${data.tab.tips_total} tip` : ''}`
+            let note = `(${data.tab.username}) ${data.tab.quantity || 0} drinks $${data.tab.drink_cost_total}${data.tab.tips_total ? `, and $${data.tab.tips_total} tip` : ''}`
 
-            let venmo = `https://venmo.com/jacobwebber?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '+')
+            let venmo = `https://venmo.com/drink4thekids?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '%C2%A0')
             setVenmoUrl(venmo)
-
-            let paypal = `https://paypal.me/jacobwwebber/${data.tab.tab_total}?&item_name=${note}`.replace(/ /g, '+')
+            let paypal = `https://www.paypal.com/qrcodes/managed/7266ecfe-5e85-4e91-b974-f1d35ff4711e?utm_source=consapp_download&amount=${data.tab.tab_total}&currency_code=USD&note=${note}`.replace(/ /g, '%C2%A0')
+            //let paypal = `https://paypal.me/jacobwwebber/${data.tab.tab_total}?&item_name=${note}`.replace(/ /g, '%C2%A0')
             setPaypalUrl(paypal)
         }
     }, [data]);
@@ -78,7 +78,7 @@ const BartabNav = (props) => {
                                     </li>
                                     <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.tab.username}</div></li>
 
-                                    <li className="my-1">
+                                    <li className="my-4">
                                         {/* show history button */}
                                         <Button className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" size="sm" onPress = { () => setShowOrderHistory(!showOrderHistory) }>
                                             { showOrderHistory ? 'Hide Orders' : 'Show Orders'}
@@ -99,7 +99,7 @@ const BartabNav = (props) => {
                                             </span>
                                         </p>
 
-                                        <p className="text-xl flex justify-between">Drinks:
+                                        <p className="text-xl flex justify-between">Drinks Total:
                                             <span className=" uppercase font-bold text-green-400">
                                                 ${data.tab.drink_cost_total}
                                             </span>
