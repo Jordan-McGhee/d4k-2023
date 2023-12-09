@@ -107,6 +107,7 @@ const Order = () => {
                 const shotsResponse = await getShots()
                 const batchedResponse = await getBatched()
                 const mocktailsResponse = await getMocktails()
+                setAllDrinksJson(drinksResponse.concat(shotsResponse).concat(batchedResponse).concat(mocktailsResponse))
                 setCocktails(drinksResponse)
                 setShots(shotsResponse)
                 setBatched(batchedResponse)
