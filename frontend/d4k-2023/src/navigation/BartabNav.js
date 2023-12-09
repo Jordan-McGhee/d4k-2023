@@ -40,7 +40,7 @@ const BartabNav = (props) => {
 
             let venmo = `https://venmo.com/drink4thekids?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '%C2%A0')
             setVenmoUrl(venmo)
-            let paypal = `https://www.paypal.com/qrcodes/managed/7266ecfe-5e85-4e91-b974-f1d35ff4711e?utm_source=consapp_download&amount=${data.tab.tab_total}&currency_code=USD&note=${note}`.replace(/ /g, '%C2%A0')
+            let paypal = `https://www.paypal.com/qrcodes/managed/7266ecfe-5e85-4e91-b974-f1d35ff4711e?utm_source=bizapp&amount=${data.tab.tab_total}&currency_code=USD&note=${note}`.replace(/ /g, '%C2%A0')
             //let paypal = `https://paypal.me/jacobwwebber/${data.tab.tab_total}?&item_name=${note}`.replace(/ /g, '%C2%A0')
             setPaypalUrl(paypal)
         }
