@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import MenuList from "../components/menu/MenuList";
 import MenuItem from "../components/menu/MenuItem";
 
@@ -32,7 +32,6 @@ const Menu = () => {
     }, [ ])
     return (
         <div className="max-w-md m-auto">
-
             {/* div for buttons */}
             <div className="flex m-auto justify-between text-white fixed top-0 inset-x-0 px-1 py-4 w-full text-sm z-10 backdrop-blur-md bg-slate-500/80 max-w-md border-b-2 border-emerald-500">
                 <Button
@@ -61,8 +60,18 @@ const Menu = () => {
                 </Button>
             </div>
 
+            {cocktails.length === 0 || shots.length === 0 || batched.length === 0 || mocktails.length === 0 ?
+                <Spinner 
+                    color="success"
+                    className="fixed top-1/4"
+                    style={{left:'calc(50% - 40px)', zIndex:100}}
+                    classNames={{
+                        wrapper: "w-20 h-20",
+                        circle1: "border-5",
+                        circle2: "border-5"
+                    }} />
+:
             <div className="mt-10 pt-10">
-                <p className="text-white text-center text-2xl"> <span className="font-fugaz italic">WORK IN PROGRESS</span></p>
                 {/* cocktails div */}
                 <div id="cocktails" className="scroll-mt-24">
                     <p className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz">Cocktails</p>
@@ -109,6 +118,7 @@ const Menu = () => {
                     </div>
                 </div>
             </div>
+            }
         </div>
     )
 }
