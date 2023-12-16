@@ -16,7 +16,7 @@ const LargeLeaderBoardItem = props => {
                     
                     {/* USER INFO */}
                     <div className="w-1/2">
-                        <p className="text-4xl font-bold truncate mb-4">{ props.username }</p>
+                        <p className="text-4xl font-bold mb-4">{ props.username }</p>
 
                         {/* DIV FOR TOTAL AND DRINK ORDERS */}
                         <div className="text-3xl font-semibold w-4/5 flex items-center">
