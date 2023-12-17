@@ -10,7 +10,10 @@ import { useSearchParams } from "react-router-dom";
 import { UserApi } from "../api/userApi"
 import { OrderApi } from "../api/orderApi"
 import { toast } from 'react-toastify';
-
+import cocktails from "../assets/drinks.json"
+import batched from "../assets/other.json"
+import shots from "../assets/shots.json"
+import mocktails from "../assets/mocktails.json"
 // DRINK IMPORTS
 
 import { MenuApi } from "../api/menuApi";
@@ -21,12 +24,14 @@ const Order = () => {
     let navigate = useNavigate()
     const { updateUsername, getUserIdByUsername, createUser } = UserApi()
     const { createOrder } = OrderApi()
+    let allDrinksJson = cocktails.concat(batched).concat(shots).concat(mocktails)
 
-    const [ cocktails, setCocktails] = useState([])
-    const [ shots, setShots] = useState([])
-    const [ batched, setBatched] = useState([])
-    const [ mocktails, setMocktails] = useState([])
-    const [ allDrinksJson, setAllDrinksJson] = useState([])
+
+    // const [ cocktails, setCocktails] = useState([])
+    // const [ shots, setShots] = useState([])
+    // const [ batched, setBatched] = useState([])
+    // const [ mocktails, setMocktails] = useState([])
+   // const [ allDrinksJson, setAllDrinksJson] = useState([])
     const { getCocktails, getBatched, getShots, getMocktails } = MenuApi()
 
     const [username, setUsername] = useState('')
@@ -101,22 +106,22 @@ const Order = () => {
 
     useEffect(() => {
 
-        const getMenu = async () => {
-            try {
-                const drinksResponse = await getCocktails()
-                const shotsResponse = await getShots()
-                const batchedResponse = await getBatched()
-                const mocktailsResponse = await getMocktails()
-                setAllDrinksJson(drinksResponse.concat(shotsResponse).concat(batchedResponse).concat(mocktailsResponse))
-                setCocktails(drinksResponse)
-                setShots(shotsResponse)
-                setBatched(batchedResponse)
-                setMocktails(mocktailsResponse)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getMenu()    
+        // const getMenu = async () => {
+        //     try {
+        //         const drinksResponse = await getCocktails()
+        //         const shotsResponse = await getShots()
+        //         const batchedResponse = await getBatched()
+        //         const mocktailsResponse = await getMocktails()
+        //         setAllDrinksJson(drinksResponse.concat(shotsResponse).concat(batchedResponse).concat(mocktailsResponse))
+        //         setCocktails(drinksResponse)
+        //         setShots(shotsResponse)
+        //         setBatched(batchedResponse)
+        //         setMocktails(mocktailsResponse)
+        //     } catch (error) {
+        //         console.log(error)
+        //     }
+        // }
+        // getMenu()    
 
         let storedUsername = localStorage.getItem('storedUsername')
         let storedUserId = localStorage.getItem('userId')
