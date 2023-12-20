@@ -23,20 +23,30 @@ const MenuItem = props => {
 
                         {/* title/description/ingredients */}
                         <div className="">
-                            <p className="text-green-600 uppercase font-bold text-md">{ props.name }</p>
+                            <p className={` uppercase font-bold text-md ` + (props.outOfStock ? 'text-slate-500' : 'text-emerald-600' )}>{ props.name }</p>
                             <p className="text-xs italic">{ props.description }</p>
                             <p className="uppercase  font-light text-[11px] my-2">{ props.ingredients.join(" * ") }</p>
                         </div>
 
                         {/* div for order button and price */}
                         <div className="flex items-center justify-between">
+                            { props.outOfStock ?
                             <Button
-                                type = "SUBMIT"
+                                isDisabled
                                 radius="full"
-                                onPress={orderButtonPressed}
-                                className = "font-fugaz tracking-widest	 bg-gradient-to-r from-emerald-800 to-emerald-400 shadow-lg hover:scale-105 font-bold text-slate-200 border-2 border-emerald-700">
-                                    Order
+                                className = "text-xs italic bg-gradient-to-r from-slate-700 to-slate-500 shadow-lg hover:scale-105 font-bold text-slate-200 border-2 border-slate-700">
+                                    Out of Stock
                             </Button>
+                            :
+                            <Button
+                            type = "SUBMIT"
+                            radius="full"
+                            onPress={orderButtonPressed}
+                            className = "font-fugaz tracking-widest	 bg-gradient-to-r from-emerald-800 to-emerald-400 shadow-lg hover:scale-105 font-bold text-slate-200 border-2 border-emerald-700">
+                                Order
+                            </Button>
+                            }
+
                             <span className="text-emerald-600 font-bungee text-xl">${ props.price }</span>
                         </div>
 

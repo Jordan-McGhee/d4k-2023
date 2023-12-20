@@ -83,7 +83,7 @@ const MainNav = (props) => {
                                 <p>Menu</p>
                             </NavLink>
                         </li>
-
+{/* 
                         <li className="ml-1.5 my-4 uppercase text-white">
                             <NavLink to="/order" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
                                 <img src={ order } alt = "faq-icon" className="w-7 mr-5"/>
@@ -110,7 +110,7 @@ const MainNav = (props) => {
                                 <img src={ leaderboard } alt = "faq-icon" className="w-7 mr-5"/>
                                 <p>Leaderboard</p>
                             </NavLink>
-                        </li>
+                        </li> */}
 
                         {/* <li className="border-b border-white ml-2 my-2 uppercase text-white">
                             <NavLink to="/admin">

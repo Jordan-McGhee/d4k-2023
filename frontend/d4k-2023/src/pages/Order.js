@@ -10,12 +10,13 @@ import { useSearchParams } from "react-router-dom";
 import { UserApi } from "../api/userApi"
 import { OrderApi } from "../api/orderApi"
 import { toast } from 'react-toastify';
-
-// DRINK IMPORTS
 import cocktails from "../assets/drinks.json"
-import other from "../assets/other.json"
+import batched from "../assets/other.json"
 import shots from "../assets/shots.json"
 import mocktails from "../assets/mocktails.json"
+// DRINK IMPORTS
+
+import { MenuApi } from "../api/menuApi";
 
 import icsFile from '../assets/drink4thekidsparty.ics'
 
@@ -23,7 +24,15 @@ const Order = () => {
     let navigate = useNavigate()
     const { updateUsername, getUserIdByUsername, createUser } = UserApi()
     const { createOrder } = OrderApi()
-    let allDrinksJson = cocktails.concat(other).concat(shots).concat(mocktails)
+    let allDrinksJson = cocktails.concat(batched).concat(shots).concat(mocktails)
+
+
+    // const [ cocktails, setCocktails] = useState([])
+    // const [ shots, setShots] = useState([])
+    // const [ batched, setBatched] = useState([])
+    // const [ mocktails, setMocktails] = useState([])
+   // const [ allDrinksJson, setAllDrinksJson] = useState([])
+    const { getCocktails, getBatched, getShots, getMocktails } = MenuApi()
 
     const [username, setUsername] = useState('')
     const [storedUsername, setStoredUsername] = useState('')
@@ -96,6 +105,24 @@ const Order = () => {
     }
 
     useEffect(() => {
+
+        // const getMenu = async () => {
+        //     try {
+        //         const drinksResponse = await getCocktails()
+        //         const shotsResponse = await getShots()
+        //         const batchedResponse = await getBatched()
+        //         const mocktailsResponse = await getMocktails()
+        //         setAllDrinksJson(drinksResponse.concat(shotsResponse).concat(batchedResponse).concat(mocktailsResponse))
+        //         setCocktails(drinksResponse)
+        //         setShots(shotsResponse)
+        //         setBatched(batchedResponse)
+        //         setMocktails(mocktailsResponse)
+        //     } catch (error) {
+        //         console.log(error)
+        //     }
+        // }
+        // getMenu()    
+
         let storedUsername = localStorage.getItem('storedUsername')
         let storedUserId = localStorage.getItem('userId')
         if (storedUsername && storedUserId) {
@@ -108,9 +135,11 @@ const Order = () => {
             updateDrinkState(parseInt(drinkIdParam))
         }
 
+
+
         const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
         const isPartyDate = new Date() >= new Date('12/16/2023')
-        setIsOrderingEnabled(isLocal || isPartyDate || true)
+        setIsOrderingEnabled(isLocal || isPartyDate)
     }, [])
 
     useEffect(() => {
@@ -449,7 +478,7 @@ const Order = () => {
                             </SelectSection>
                             <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Batched">
                                 {
-                                    other.map((drink) => (
+                                    batched.map((drink) => (
                                         <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
                                             <div className="flex flex-col">
                                               <span className="font-bold">{drink.name} — ${drink.price}</span>
