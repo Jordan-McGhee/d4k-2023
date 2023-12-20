@@ -20,6 +20,9 @@ const AdminNav = () => {
                     <NavLink to="/adminUsers" className={ ({isActive}) => isActive ? "my-2 uppercase text-white text-2xl mr-4 border-b border-white font-semibold" : "my-2 uppercase text-white/50 text-2xl mr-4"}>
                         <p>Users</p>
                     </NavLink>
+                    <NavLink to="/adminAnalytics" className={ ({isActive}) => isActive ? "my-2 uppercase text-white text-2xl mr-4 border-b border-white font-semibold" : "my-2 uppercase text-white/50 text-2xl mr-4"}>
+                        <p>Analytics</p>
+                    </NavLink>
                 </div>
             </div>
         </div>

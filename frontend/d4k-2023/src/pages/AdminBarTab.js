@@ -130,7 +130,7 @@ const Tab = () => {
 
     const topContent = useMemo(() => {
         return (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 bg-slate-100 rounded-xl px-3 py-2">
                 <div className="flex justify-between gap-3 items-end">
                     <Input
                         isClearable
@@ -154,9 +154,8 @@ const Tab = () => {
                 {(isLoading || isUserApiLoading) && <Spinner color="success" className="fixed top-2/4 z-50 w-50" style={{ left: 'calc(50% - 20px)' }} size="lg" />}
                 {/* UNPAID TABS */}
                 <div>
-                    <p className="my-5 text-4xl font-bold uppercase text-white">UNPAID TABS</p>
                     <div className="rounded-lg shadow-md">
-                        <Table topContent={topContent} sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}
+                        <Table topContent={topContent} topContentPlacement="outside" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}
                             fullWidth isHeaderSticky
                             classNames={{
                                 wrapper: "max-h-[700px]",

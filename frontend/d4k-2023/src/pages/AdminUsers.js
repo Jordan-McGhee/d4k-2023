@@ -161,7 +161,6 @@ const Tab = () => {
                 <ErrorModal error = { hasError } onClear = { clearError } />
                 { (isUserApiLoading) && <Spinner color="success" className="fixed top-2/4 z-50 w-50" style={{left:'calc(50% - 20px)'}} size="lg" /> }
                 <div>
-                    <p className="my-5 text-4xl font-bold uppercase text-white">Users</p>
                     <div className="rounded-lg shadow-md">
                         <Table topContent={topContent} topContentPlacement="outside" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}  
                                 fullWidth isHeaderSticky 
