@@ -28,8 +28,13 @@ const OrderAnalytics = props => {
       const options = {
         title: "Order Totals",
         subtitle: "2023",
-        bar: { groupWidth: "95%" },
         legend: { position: "none" },
+        hAxis: {
+          title: "Drink Orders"
+        },
+        vAxis: {
+          title: "Amount",
+        },
       };
 
     return (
@@ -40,7 +45,7 @@ const OrderAnalytics = props => {
                     <Chart
                         chartType="ColumnChart"
                         width="100%"
-                        height="400px"
+                        height="600px"
                         data={formattedData}
                         options={options}
                         />

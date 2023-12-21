@@ -47,7 +47,7 @@ const HomePage = () => {
 
             let now = new Date()
             let partyTime = new Date("2023-12-16")
-            if(now < partyTime){
+            if(now < partyTime || true){
                 notify();
             }
     }, [])
@@ -90,7 +90,7 @@ const HomePage = () => {
                 <p className="text-5xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
                     See you next year!
                 </p>
-                {/* <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
+                <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
                     Saturday<span className="my-2">
                         December 16th</span>
                         6PM — Late
@@ -99,7 +99,7 @@ const HomePage = () => {
                 <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
                         onPress={() => openInNewTab("sms:6787361277?&body=drink4thekids%20Christmas%20party%20address%3F")}>
                     Address <FontAwesomeIcon icon={faLocationArrow} />
-                </Button> */}
+                </Button>
             </div>
 
         {/* EXPLAINER DIV */}

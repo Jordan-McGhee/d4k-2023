@@ -6,39 +6,48 @@ const IngredientAnalytics = props => {
     const getColorType = (drinktype) => {
         switch (drinktype) {
             case 'liquor':
-              return '#529e64'
+              return '#BC5090'
             case 'liqueur':
-              return '#d6a033'
+              return '#FF6361'
             case 'juice':
-              return '#a33939'
+              return '#FFA600'
             default:
                 return 'grey'
           }
     }
 
-    var formattedData = props.data.map(x=> [x.name, x.ingredient_totals_ml, `${getColorType(x.type)}`, `${x.ingredient_totals_ml} mL`, `${Math.ceil(x.ingredient_totals_ml / 750)} bottles` ])
+    var formattedData = props.data.map(x=> [
+      x.name, 
+      x.ingredient_totals_ml,
+      `${getColorType(x.type)}`, 
+      `${x.ingredient_totals_ml} mL`,
+      Math.ceil(x.ingredient_totals_ml / 750) * 1000, 
+      `#2F3F9F`, 
+      `${Math.ceil(x.ingredient_totals_ml / 750)} Bottle${ x.ingredient_totals_ml > 750 ? 's' : ''}`,
+      `${Math.ceil(x.ingredient_totals_ml / 750)} Bottle${ x.ingredient_totals_ml > 750 ? 's' : ''}`
+    ])
+
     formattedData.unshift([
       'name', 
-      'mL', 
+      'mL',
       { role: "style", type: "string" }, 
-      { calc: "stringify", sourceColumn: 1, type: "string", role: "annotation" },
-      {type: 'string', role: 'annotationText'}])
+      { calc: "stringify", sourceColumn: 0, type: "string", role: "annotation" },
+      'Bottles',
+      { role: "style", type: "string" }, 
+      { calc: "stringify", sourceColumn: 0, type: "string", role: "annotation" },
+      { role: "tooltip", type: "string" }, 
+    ])
 
       const options = {
         title: "Ingredient Totals",
-        subtitle: "2023",
-        bar: { groupWidth: "95%" },
         legend: { position: "none" },
+        seriesType: "bars",
+        series: { 1: { type: "steppedArea" } },
         hAxis: {
           title: "Ingredient"
         },
         vAxis: {
           title: "mL Amount",
-        },
-        axes: {
-          x: {
-            0: { side: 'bottom', label: 'White to move'} // Top x-axis.
-          }
         },
       };
 
@@ -46,15 +55,13 @@ const IngredientAnalytics = props => {
         <>
             <div className="w-full m-auto">
                 <div>
-                    <div className="rounded-lg shadow-md">
                     <Chart
-                        chartType="ColumnChart"
+                        chartType="ComboChart"
                         width="100%"
-                        height="400px"
+                        height="600px"
                         data={formattedData}
                         options={options}
                         />
-                    </div>
                 </div>
             </div>
         </>
