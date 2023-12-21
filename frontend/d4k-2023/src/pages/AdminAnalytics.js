@@ -8,68 +8,50 @@ import { Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, T
 } from "@nextui-org/react";
 
 import { Chart } from "react-google-charts";
-
-
+import OrderAnalytics from "../components/admin/analytics/OrderAnalytics";
+import IngredientAnalytics from "../components/admin/analytics/IngredientAnalytics";
 import { UserApi }  from "../api/userApi";
+import { AnalyticsApi }  from "../api/analyticsApi";
 
 const Tab = () => {
-    const [ allUsers, setAllUsers] = useState([])
-    const { updateUserDonations, getAllUsers, createUser, getUserIdByUsername, isUserApiLoading, hasError, clearError } = UserApi()
+    const [ orderData, setOrderData] = useState([])
+    const [ ingredientData, setIngredientData] = useState([])
 
-
+    const { getDrinkData, getIngredientData, hasError, clearError, isLoading} = AnalyticsApi()
 
     useEffect(() => {
-        const getUsers = async () => {
+        const getData = async () => {
             try {
-                const responseData = await getAllUsers()
-                setAllUsers(responseData)
-                
+                const drinkResponseData = await getDrinkData()
+                setOrderData(drinkResponseData)
+                const ingredientResponseData = await getIngredientData()
+                setIngredientData(ingredientResponseData)
             } catch (error) {
                 console.log(error)
             }
         }
-        getUsers()
+        getData()
     }, [ ])
 
-    const refreshUsers = async () => {
+    const refreshData = async () => {
         try {
-            const responseData = await getAllUsers()
-            setAllUsers(responseData)
-            
+            const responseData = await getDrinkData()
+            setOrderData(responseData)
         } catch (error) {
             console.log(error)
         }
     }
 
-    const data = [
-        ["Year", "Sales", "Expenses", "Profit"],
-        ["2014", 1000, 400, 200],
-        ["2015", 1170, 460, 250],
-        ["2016", 660, 1120, 300],
-        ["2017", 1030, 540, 350],
-      ];
-      
-      const options = {
-        chart: {
-          title: "Company Performance",
-          subtitle: "Sales, Expenses, and Profit: 2014-2017",
-        },
-      };
-
     return (
         <>
             <div className="w-full m-auto">
                 <ErrorModal error = { hasError } onClear = { clearError } />
-                { (isUserApiLoading) && <Spinner color="success" className="fixed top-2/4 z-50 w-50" style={{left:'calc(50% - 20px)'}} size="lg" /> }
+                { (isLoading) && <Spinner color="success" className="fixed top-2/4 z-50 w-50" style={{left:'calc(50% - 20px)'}} size="lg" /> }
                 <div>
                     <div className="rounded-lg shadow-md">
-                    <Chart
-      chartType="Bar"
-      width="100%"
-      height="400px"
-      data={data}
-      options={options}
-    />
+                    <OrderAnalytics data={orderData}/>
+                    <IngredientAnalytics data={ingredientData}/>
+
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@ const analyticsControllers = require("../controllers/analytics-controllers")
 
 const router = express.Router()
 
-router.get("/analytics/getDrinkData", analyticsControllers.getDrinkData)
+router.get("/getDrinkData", analyticsControllers.getDrinkData)
+router.get("/getIngredientData", analyticsControllers.getIngredientData)
 
 module.exports = router

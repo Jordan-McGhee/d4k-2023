@@ -3,20 +3,30 @@ const pool = require("../db")
 const logger = require('firebase-functions/logger')
 
 const getDrinkData = async (req, res, next) => {
-
-    const { password } = req.params
-
-    let nameQuery = "SELECT * FROM admin_password WHERE password = $1"
+    let nameQuery = "SELECT * FROM order_totals"
     let response
-    logger.debug(password)
     try {
-        response = await pool.query(nameQuery, [password])
+        response = await pool.query(nameQuery)
     } catch (error) {
-        logger.error(`Error checking password: ${error}`)
-        return next(new HttpError(`Error checking password: ${error}`, 500))
+        logger.error(`${error}`)
+        return next(new HttpError(`Error: ${error}`, 500))
     }
 
-    res.status(201).json(response.rows.length > 0)
+    res.status(201).json(response.rows)
+}
+
+const getIngredientData = async (req, res, next) => {
+    let nameQuery = "SELECT * FROM ingredient_totals"
+    let response
+    try {
+        response = await pool.query(nameQuery)
+    } catch (error) {
+        logger.error(`${error}`)
+        return next(new HttpError(`Error: ${error}`, 500))
+    }
+
+    res.status(201).json(response.rows)
 }
 
 exports.getDrinkData = getDrinkData
+exports.getIngredientData = getIngredientData

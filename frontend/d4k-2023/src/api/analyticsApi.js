@@ -4,11 +4,15 @@ import { useFetch } from "../hooks/useFetch";
 export const AnalyticsApi = () => {
     const { isLoading, hasError, sendRequest, clearError } = useFetch()
 
-    const login = async (password) => {
+    const getDrinkData = async () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/analytics/getDrinkData`, "GET")
+    }
+    const getIngredientData = async () => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/analytics/getIngredientData`, "GET")
     }
 
     return { 
-        login,
+        getDrinkData,
+        getIngredientData,
         isLoading, hasError, clearError }
 }
