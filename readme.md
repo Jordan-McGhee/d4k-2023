@@ -24,64 +24,58 @@ This year's goal is to raise $2,000.
 - Redirects to Queue after order is submitted
 
 
-<img src="readme-stuff/order.png" width = "30%" />
-
-
-## Donate
-- Stores username in local storage after donation is submitted
-- Has front and backend validation to prevent incomplete/incorrect submissions
-- Has preset donation amounts and allows for users to submit their own amount
-
-<img src="readme-stuff/donate.gif" width = "30%" />
+<img src="readme-stuff/order.gif" width = "30%" />
 
 
 ## Queue
 - Shows what drinks are being worked on and where a user is in line
 - If a user's order is 3rd in line or later, allows a user to delete their order
 
-<img src="readme-stuff/queue.png" width = "30%" />
+<img src="readme-stuff/queue.gif" width = "30%" />
 
 
 ## Mobile Leaderboard
-- Shows goal (*$2000*), current total, and percentage of goal hit
+- Shows goal (*$2500*), current total, and percentage of goal hit
 - Automatically refreshes every 30 seconds
 
-<img src="readme-stuff/mobile-leaderboard.gif" width = "30%" />
+<img src="readme-stuff/mobile-leaderboard.png" width = "30%" />
 
 
 ## Large Leaderboard
 - Displayed on tv at party
-- Shows goal (*$2000*), current total, and percentage of goal hit
+- Shows goal (*$2500*), current total, and percentage of goal hit
 - Automatically refreshes every 30 seconds
 
-<img src="readme-stuff/large-leaderboard.png" />
+<img src="readme-stuff/main-leaderboard.png" />
 
 
 ## Closing Tabs
 - Aggregates user's orders and donations to a grand total
-- Auto-populates amount for different payment methods (CashApp, PayPal, Venmo)
+- Auto-populates amount, username, and active order details for the user 
+- Allows user to pay with 3 different payment methods (CashApp, PayPal, Venmo)
 
-<img src="readme-stuff/closing-tab.gif" width = "30%" />
+<img src="readme-stuff/tab.gif" width = "30%" />
 
 
 # Admin Pages
 
 ## Orders
-- Shows orders and donations, ordered by when they were submitted
+- Shows orders sorted by when they were submitted
 - Allows for admins to change order status in the database (complete/incomplete/paid/unpaid)
-- Admins can delete orders or update donation amounts
+- Admins can void orders or update tip amounts
 
-<img src="readme-stuff/admin-orders.gif" />
-
-
-## Donations
-
-<img src="readme-stuff/admin-donations.gif" />
+<img src="readme-stuff/admin-order-queue.png" />
 
 
 ## Tabs
 - Shows tab information for everyone at the party, grouped by username
-- Allows for admins to add donations to user tabs
-- Can mark tabs or donations as paid and set a user's tab to $0
+- Allows for admins to adjust overall donations on a user' tabs
+- Can mark tabs as paid and set a user's tab to $0
 
-<img src="readme-stuff/tabs.gif"/>
+<img src="readme-stuff/admin-tabs.png"/>
+
+
+## Analytics
+- Periodically queries the database to keep an accurate count of drink and ingredient totals
+
+<img src="readme-stuff/admin-analytics.png" />
