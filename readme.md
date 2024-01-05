@@ -1,9 +1,10 @@
-# DRINK 4 THE KIDS 2023 v1.0 [(Website)](https://d4k2k23.web.app/)
+# DRINK 4 THE KIDS 2023 v2.0 [(Website)](https://d4k2k23.web.app/)
 
-### *A web app to help celebrate the 4th annual D4K charity party.*<br><br>
+### *A web app to help celebrate the 4th annual D4K charity party.*<br>
 
-All proceeds will go directly to The Nicholas House — An Atlanta based charity that operates an emergency shelter, as well as apartment sites for homeless families.
-This year's goal is to raise $2,000.
+All proceeds went directly to The Nicholas House and Bethany Haven Shelter charities.
+<br><br>
+This year's goal was to raise $2,500 and we more than doubled that goal with a grand total of **$5,636!** raised. With corporate matches, we were able to donate nearly **$15,000** total.
 
 # Demo 
 
