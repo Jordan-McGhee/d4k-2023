@@ -19,7 +19,7 @@ const FAQ = () => {
             <div>
                 <Card className={cardCls}>
                     <CardHeader className={headerCls}>
-                        What Charity?
+                        What Charities?
                     </CardHeader>
                     <CardBody className={bodyCls}>
                         The Nicholas House shelters homeless families and assists them in the transition from homelessness to self-sufficiency.
