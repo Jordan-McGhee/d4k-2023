@@ -22,8 +22,8 @@ const FAQ = () => {
                         What Charity?
                     </CardHeader>
                     <CardBody className={bodyCls}>
-                        The Nicholas House and Bethany Haven - charities with shelters for homeless families.
-                        They assist families in the transition from homelessness to self-sufficiency
+                        The Nicholas House shelters homeless families and assists them in the transition from homelessness to self-sufficiency.
+                        True Change equips underserved youth with tools for character development, emotional intelligence, and career readiness.
                     </CardBody>
                     <CardFooter className="justify-center pt-0">
                         <Link className="text-xl font-bold text-blue-700" href="https://nicholashouse.org/about-us" target="_blank">Visit their site to read more</Link>
@@ -37,7 +37,7 @@ const FAQ = () => {
                         Order drinks on this site at the party! Press the
                         <span className="font-bold contents"> Pay Tab </span>button where
                         you can use your preferred payment method to complete your donation.
-                        <br /><span className="font-bold contents">We will  double your donation with a company match!</span>
+                        <br /><span className="font-bold contents">We will triple your donation with a company match!</span>
                         <br />Visit the
                         <Link className="text-xl contents font-bold" href="/leaderboard" target="_blank"> Leaderboard </Link><br />
                         to see the top donors.
