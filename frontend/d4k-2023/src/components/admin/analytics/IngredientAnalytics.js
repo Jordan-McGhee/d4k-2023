@@ -53,7 +53,7 @@ const IngredientAnalytics = props => {
 
     return (
         <>
-            <div className="w-full m-auto">
+            <div className="m-auto">
                 <div>
                     <Chart
                         chartType="ComboChart"

@@ -47,13 +47,11 @@ const Tab = () => {
             <div className="w-full m-auto">
                 <ErrorModal error = { hasError } onClear = { clearError } />
                 { (isLoading) && <Spinner color="success" className="fixed top-2/4 z-50 w-50" style={{left:'calc(50% - 20px)'}} size="lg" /> }
-                <div>
                     <div className="rounded-lg shadow-md">
                     <OrderAnalytics data={orderData}/>
                     <IngredientAnalytics data={ingredientData}/>
 
                     </div>
-                </div>
             </div>
         </>
     )

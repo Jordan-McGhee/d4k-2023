@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar, faSlash, faRefresh } from '@fortawesome/free-solid-svg-icons'
-import { useFetch } from "../../hooks/useFetch";
+import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh } from '@fortawesome/free-solid-svg-icons'
 import ErrorModal from "../UIElements/ErrorModal";
 import convertDate from "../../Conversions/convertDateTime";
 import { OrderApi } from "../../api/orderApi";
+import { BartenderApi } from "../../api/bartenderApi"
+
 import {Switch, Spinner, Input, Button, ButtonGroup, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem,
     Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 const AdminOrders = props => {
@@ -12,12 +13,13 @@ const AdminOrders = props => {
     const [ selectedOrder, setSelectedOrder] = useState({})
 
     const [ allOrders, setAllOrders] = useState([])
+    const [ bartenders, setBartenders] = useState([])
     const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending" })
     const [filterValue, setFilterValue] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
     
     const statusOptions = ["paid", "complete"]
-
+    const { getBartenders } = BartenderApi()
     const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, deleteOrder, isLoading, hasError, clearError } = OrderApi()
     useEffect(() => {
         const getOrders = async () => {
@@ -29,6 +31,19 @@ const AdminOrders = props => {
             }
         }
         getOrders()
+    }, [ ])
+
+    useEffect(() => {
+        const getBar = async () => {
+            try {
+                const response = await getBartenders()
+                setBartenders(response)
+                console.log(response)
+            } catch(err) {
+                console.log(err)
+            }
+        }
+        getBar()
     }, [ ])
 
     const refreshOrders = async () => {
@@ -60,7 +75,7 @@ const AdminOrders = props => {
         }
 
         return (
-            <Switch className="w-100" size="lg" color="success" 
+            <Switch className="w-100" size="md" color="success" 
                 isDisabled={isLoading} isSelected={isPaid} onValueChange={() => updatePaid(order)}
                 classNames={{base: "w-50"}} 
                 thumbIcon={ <FontAwesomeIcon icon={faDollar} /> }
@@ -87,7 +102,7 @@ const AdminOrders = props => {
             onSwitchFunction(order, response.newValue)
         }
         return (
-            <Switch className="w-100" size="lg" color="warning" isDisabled={isLoading} isSelected={isCompleted} onValueChange={() => updateCompleted(order)}
+            <Switch className="w-100" size="md" color="warning" isDisabled={isLoading} isSelected={isCompleted} onValueChange={() => updateCompleted(order)}
             thumbIcon={({ isSelected, className }) => isSelected ? (<FontAwesomeIcon className={className} icon={faCheck} />) : (<></>) }/>
             )
     }
@@ -107,7 +122,7 @@ const AdminOrders = props => {
         return (
             <div>
                 {!showConfirmDelete &&
-                <Button isIconOnly radius="sm" variant="bordered" color="danger" value={showConfirmDelete} onPress={() => setShowConfirmDelete(true)}>
+                <Button isIconOnly size="sm" radius="sm" variant="bordered" color="danger" value={showConfirmDelete} onPress={() => setShowConfirmDelete(true)}>
                     <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                 </Button>  
                 }
@@ -281,13 +296,13 @@ const AdminOrders = props => {
                             <TableHeader className="text-xs bg-gray-50">
                                 <TableColumn key="username" scope="col" className="w-2/12">Name</TableColumn>
                                 <TableColumn key="drink" scope="col" className=" w-2/12">Drink</TableColumn>
-                                <TableColumn key="quantity" scope="col" className="w-1/12">Amount</TableColumn>
+                                <TableColumn key="quantity" scope="col" className="w-1/12">Amt</TableColumn>
                                 <TableColumn key="total" scope="col" className="w-1/12">Cost</TableColumn>
                                 <TableColumn key="tip_amount" scope="col" className="w-1/12">Tip</TableColumn>
                                 <TableColumn key="total_with_tip" scope="col" className="w-1/12">Total</TableColumn>
                                 <TableColumn allowsSorting key="created_at" scope="col" className="w-1/12">Time</TableColumn>
                                 <TableColumn align="center" key="is_paid" scope="col" className="w-1/12">Paid</TableColumn>
-                                <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Status</TableColumn>
+                                <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Done</TableColumn>
                                 <TableColumn align="center" key="delete" scope="col" className="text-center w-1/12"></TableColumn>
                             </TableHeader>
                             <TableBody items={sortedOrders}>
