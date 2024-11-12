@@ -60,7 +60,7 @@ const AdminOrders = props => {
 
     const refreshOrders = async () => {
         try {
-            const response = await getOrdersAdmin()
+            const response = await getOrdersAdmin(selectedRowLimit)
             setAllOrders(response)
         } catch(err) {
             console.log(err)

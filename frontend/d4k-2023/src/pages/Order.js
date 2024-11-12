@@ -436,11 +436,11 @@ const Order = () => {
                                 listboxWrapper: "max-h-[400px]",
                             }}
                             listboxProps={{
-                                classNames: {
-                                    list: ["border-2", "bg-red-200", "border-black"],
-                                    base: ["border-2", "bg-red-200", "border-black"],
+                                // classNames: {
+                                //     list: ["border-2", "border-black"],
+                                //     base: ["border-2", "border-black"],
 
-                                },
+                                // },
                                 itemClasses: {
                                     base: [
                                         "rounded-md",
