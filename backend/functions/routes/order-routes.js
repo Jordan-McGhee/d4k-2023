@@ -14,7 +14,9 @@ router.patch("/:order_id/updatePaid", orderControllers.updatePaid)
 
 router.patch("/:order_id/updateCompleted", orderControllers.updateCompleted)
 
-router.get("/admin", orderControllers.getOrdersAdmin)
+router.patch("/:order_id/updateBartender", orderControllers.updateBartender)
+
+router.get("/admin/:limit", orderControllers.getOrdersAdmin)
 
 router.get("/grouped", orderControllers.getOrdersGrouped)
 

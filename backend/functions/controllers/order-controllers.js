@@ -64,6 +64,29 @@ const updateTip = async (req, res, next) => {
     res.status(201).json(response.rows[0])
 }
 
+
+const updateBartender = async (req, res, next) => {
+
+    const { order_id } = req.params
+    const { bartender_id } = req.body
+
+    let query = "UPDATE orders set bartender_id = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *"
+    let response
+    try {
+        const client = await pool.connect()
+        response = await client.query(query, [ bartender_id, order_id ])
+        client.release()
+    } catch (error) {
+        logger.error(`Error updating bartender on order #${order_id}`)
+
+        return next(
+            new HttpError(`Error updating bartender on order #${order_id}`, 500)
+        )
+    }
+
+    res.status(201).json(response.rows[0])
+}
+
 const updatePaid = async (req, res, next) => {
     // grab ID from url and paidStatus from req body
     const { order_id } = req.params
@@ -112,11 +135,12 @@ const updateCompleted = async (req, res, next) => {
 }
 
 const getOrdersAdmin = async (req, res, next) => {
-    let query = `SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE voided_at IS NULL ORDER BY is_completed, created_at ASC`
+    let { limit } = req.params
+    let query = `SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE voided_at IS NULL ORDER BY is_completed, created_at ASC LIMIT $1`
     let response
 
     try {
-        response = await pool.query(query)
+        response = await pool.query(query, [limit])
     } catch (error) {
         logger.error(`Error getting incomplete orders. ${error}`, 500)
         return next(new HttpError("Error getting incomplete orders", 500))
@@ -209,6 +233,7 @@ exports.getOrders = getOrders
 exports.updateTip = updateTip
 exports.updatePaid = updatePaid
 exports.updateCompleted = updateCompleted
+exports.updateBartender = updateBartender
 exports.getOrdersAdmin = getOrdersAdmin
 exports.getOrdersGrouped = getOrdersGrouped
 exports.getOrdersLeaderboard = getOrdersLeaderboard
