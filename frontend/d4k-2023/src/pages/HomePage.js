@@ -63,7 +63,7 @@ const HomePage = () => {
               <ModalHeader className="flex flex-col gap-1">Add To ...</ModalHeader>
               <ModalBody>
                 <Button color="success" radius="full" variant="shadow" 
-                    onPress={() => openInNewTab("https://www.google.com/calendar/render?action=TEMPLATE&text=Drink4TheKidsParty&dates=20231214T230000Z/20231215T080000Z&details=Christmas%20Cocktails%20for%20a%20Charitable%20Cause%0A6pm%20Saturday%20Dec%2014&location=195%20Arizona%20Ave%20NE&trp=true&sf=true&output=xml#f")}>
+                    onPress={() => openInNewTab("https://www.google.com/calendar/render?action=TEMPLATE&text=Drink4TheKidsParty&dates=20241214T230000Z/20241215T080000Z&details=Christmas%20Cocktails%20for%20a%20Charitable%20Cause%0A6pm%20Saturday%20Dec%2014&location=195%20Arizona%20Ave%20NE&trp=true&sf=true&output=xml#f")}>
                   Google Calendar
                 </Button>
                 <Button color="success" radius="full" variant="shadow">
@@ -109,8 +109,8 @@ const HomePage = () => {
                 <p className="text-2xl my-5">It's a holiday spirited pop up bar serving up <span className="italic font-bold">the best craft cocktails</span> and the worst puns for donations to a great cause</p>
 
                 <div className="text-3xl font-bold font-fugaz">all donations are <span className="font-extrabold text-4xl">TRIPLED</span></div><div className="text-2xl">with a match and go to <br/>
-                <a className="text-emerald-400" target="_blank" href="https://nicholashouse.org/">Nicholas House Family Homeless Shelter</a> &  
-                <a className="text-emerald-400" target="_blank" href="https://www.maketruechange.org/"> True Change</a> </div>
+                <a className="text-emerald-400" target="_blank" href="https://nicholashouse.org/" rel="noreferrer">Nicholas House Family Homeless Shelter</a> &  
+                <a className="text-emerald-400" target="_blank" href="https://www.maketruechange.org/" rel="noreferrer"> True Change</a> </div>
                 <br/>
                 <Button 
                 className="uk-button bg-emerald-600 text-slate-200 font-fugaz" 
