@@ -19,8 +19,8 @@ export const OrderApi = () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/`)
     }
 
-    const getOrdersAdmin = async () => {
-        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/admin`, 'GET', { Accept: 'application/json' })
+    const getOrdersAdmin = async (limit) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/admin/${limit}`, 'GET', { Accept: 'application/json' })
     }
 
     const getOrdersAsTabs = async () => {
@@ -46,6 +46,11 @@ export const OrderApi = () => {
             "PATCH", {'Content-Type': 'application/json'}, JSON.stringify({tip_amount: tipAmount}))
     }
 
+    const updateOrderBartender = async (orderId, bartenderId) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/${orderId}/updateBartender`, 
+            "PATCH", {'Content-Type': 'application/json'}, JSON.stringify({bartender_id: bartenderId}))
+    }
+
     return { 
         createOrder, 
         deleteOrder, 
@@ -53,6 +58,7 @@ export const OrderApi = () => {
         updateOrderCompleted,
         updateOrderPaid,
         updateOrderTip,
+        updateOrderBartender,
         getOrdersAdmin, 
         getOrdersAsTabs, 
         getOrdersLeaderboard, 

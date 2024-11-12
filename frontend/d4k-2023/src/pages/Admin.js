@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AdminOrders from "../components/admin/AdminOrders";
+import AdminOrders from "./AdminOrders";
 
 const Admin = () => {
     return (

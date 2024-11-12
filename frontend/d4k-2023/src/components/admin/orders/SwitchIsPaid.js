@@ -7,7 +7,7 @@ import {Switch, Spinner, Input, Button, ButtonGroup, Dropdown, DropdownMenu, Dro
     Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
 
 const SwitchIsPaid =  ({orderId, orderIsPaid, onSwitchFunction}) => {
-    const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, deleteOrder, isLoading, hasError, clearError } = OrderApi()
+    const { updateOrderPaid, isLoading, hasError, clearError } = OrderApi()
 
 
 

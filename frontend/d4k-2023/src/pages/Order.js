@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck, faMinus, faPlus, faChampagneGlasses, faEdit } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 import { UserApi } from "../api/userApi"
-import { BartenderApi } from "../api/bartenderApi"
 import { OrderApi } from "../api/orderApi"
 import { toast } from 'react-toastify';
 import cocktails from "../assets/drinks.json"
@@ -18,8 +17,10 @@ import mocktails from "../assets/mocktails.json"
 // DRINK IMPORTS
 
 import { MenuApi } from "../api/menuApi";
+import { DrinkApi } from "../api/drinkApi";
 
 import icsFile from '../assets/drink4thekidsparty.ics'
+import { getDrinks, getDrinksAdmin, isLoadingDrinksApi } from "../api/drinkApi";
 
 const Order = () => {
     let navigate = useNavigate()
@@ -34,9 +35,11 @@ const Order = () => {
     // const [ mocktails, setMocktails] = useState([])
    // const [ allDrinksJson, setAllDrinksJson] = useState([])
     const { getCocktails, getBatched, getShots, getMocktails } = MenuApi()
+    const { getDrinksAdmin } = DrinkApi
 
     const [username, setUsername] = useState('')
     const [storedUsername, setStoredUsername] = useState('')
+    const [allDrinks, setAllDrinks] = useState('')
     const [userId, setUserId] = useState('')
     const [editedUsername, setEditedUsername] = useState('')
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
@@ -106,6 +109,18 @@ const Order = () => {
     }
 
     useEffect(() => {
+        const getDrinksCall = async () => {
+            try {
+                const response = await getDrinksAdmin()
+                setAllDrinks(response)
+            } catch(err) {
+                console.log(err)
+            }
+        }
+        getDrinksCall()
+    }, [ ])
+
+    useEffect(() => {
 
         let storedUsername = localStorage.getItem('storedUsername')
         let storedUserId = localStorage.getItem('userId')
@@ -120,7 +135,7 @@ const Order = () => {
         }
 
         const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
-        const isPartyDate = new Date() >= new Date('12/16/2023')
+        const isPartyDate = new Date() >= new Date('12/14/2024')
         setIsOrderingEnabled(isLocal || isPartyDate)
     }, [])
 
@@ -228,10 +243,6 @@ const Order = () => {
     }
 
     const submitOrder = async () => {
-        // if (!isOrderingEnabled) {
-        //     setShowNotPartyTimeModal(true)
-        //     return
-        // }
         if (isLoading) return
         setIsLoading(true)
 
