@@ -424,7 +424,7 @@ const Order = () => {
                             className="pb-2"
                             variant="bordered"
                             selectionMode="single"
-                            onSelectionChange={setSelectValue}
+                            // onSelectionChange={setSelectValue}
                             onChange={(e) => drinkDropdownChanged(e)}
                             fullWidth
                             color="success"
