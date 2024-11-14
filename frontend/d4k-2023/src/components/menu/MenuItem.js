@@ -16,7 +16,7 @@ const MenuItem = props => {
 
     return (
                 <Card className = "flex px-4 py-3 justify-between border border-b-1 border-slate-500 first:rounded-t-3xl last:rounded-b-3xl bg-white/80 backdrop-blur-lg w-full overflow-hidden shadow-lg ">
-                    <img src = { props.image } alt = { `${ props.name }` } className = "border border-slate-500 shadow-lg h-40 w-1/3 rounded-xl" />
+                    <img src = { `/images/drinks/${props.imageFileName}` } alt = { `${ props.name }` } className = "border border-slate-500 shadow-lg h-40 w-1/3 rounded-xl" />
 
                     {/* div for full list item */}
                     <div className="w-7/12 flex flex-col justify-evenly">
@@ -47,7 +47,7 @@ const MenuItem = props => {
                             </Button>
                             }
 
-                            <span className="text-emerald-600 font-bungee text-xl">${ props.price }</span>
+                            <span className={(props.outOfStock ? 'text-slate-500' : 'text-emerald-600' ) + " font-bungee text-xl"}>${ props.cost }</span>
                         </div>
 
                     </div>

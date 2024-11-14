@@ -4,11 +4,18 @@ const logger = require('firebase-functions/logger')
 
 const getDrinks = async (req, res, next) => {
 
-    let nameQuery = "SELECT * FROM drinks WHERE out_of_stock = FALSE "
+    let query = 
+    `   SELECT * FROM drinks
+        WHERE out_of_stock = FALSE
+        ORDER BY
+        type = 'cocktail' desc,
+        type = 'batched' desc,
+        type = 'shot' desc,
+        type = 'mocktail' desc,
+        menu_order`
     let response
-    logger.debug(password)
     try {
-        response = await pool.query(nameQuery, [password])
+        response = await pool.query(query)
     } catch (error) {
         logger.error(`Error getting drinks: ${error}`)
         return next(new HttpError(`Error  getting drinks: ${error}`, 500))
@@ -19,10 +26,17 @@ const getDrinks = async (req, res, next) => {
 
 const getDrinksAdmin = async (req, res, next) => {
 
-    let nameQuery = "SELECT * FROM drinks"
+    let query = 
+    `   SELECT * FROM drinks
+        ORDER BY
+        type = 'cocktail' desc,
+        type = 'batched' desc,
+        type = 'shot' desc,
+        type = 'mocktail' desc,
+        menu_order`
     let response
     try {
-        response = await pool.query(nameQuery)
+        response = await pool.query(query)
     } catch (error) {
         logger.error(`Error getting admin drinks: ${error}`)
         return next(new HttpError(`Error getting admin drinks: ${error}`, 500))

@@ -5,14 +5,14 @@ const MenuList = props => {
 
     const items = props.drinks.map((drink) => (
         <MenuItem
-            id = { drink.id }
-            key = { drink.id }
-            image = { drink.imageUrl }
+            id = { drink.drink_id }
+            key = { drink.drink_id }
+            imageFileName = { drink.image_file_name }
             name = { drink.name }
             description = { drink.description }
             ingredients = { drink.ingredients }
-            price = { drink.price }
-            outOfStock = {drink.outOfStock }
+            cost = { drink.cost }
+            outOfStock = {drink.out_of_stock }
         />
     ))
 

@@ -1,0 +1,26 @@
+import React from "react";
+import { SelectItem, SelectSection } from "@nextui-org/react"
+
+const OrderDropdownItem = props => {
+
+    return (
+        <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Batched">
+            {
+                props.drinks.map((drink) => (
+                    <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                        <div className="flex flex-col">
+                        <span className="font-bold">{drink.name} — ${drink.price}</span>
+                            <span className="text-sm truncate text-default-400">{
+                                    drink.ingredients.map((ingredient, i) => (
+                                    <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
+                                ))
+                            }</span>
+                        </div>
+                    </SelectItem>
+                ))
+            }
+        </SelectSection>
+    )
+}
+
+export default OrderDropdownItem

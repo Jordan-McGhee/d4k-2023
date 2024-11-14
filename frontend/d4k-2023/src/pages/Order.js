@@ -20,26 +20,17 @@ import { MenuApi } from "../api/menuApi";
 import { DrinkApi } from "../api/drinkApi";
 
 import icsFile from '../assets/drink4thekidsparty.ics'
-import { getDrinks, getDrinksAdmin, isLoadingDrinksApi } from "../api/drinkApi";
 
 const Order = () => {
     let navigate = useNavigate()
     const { updateUsername, getUserIdByUsername, createUser } = UserApi()
     const { createOrder } = OrderApi()
-    let allDrinksJson = cocktails.concat(batched).concat(shots).concat(mocktails)
-
-
-    // const [ cocktails, setCocktails] = useState([])
-    // const [ shots, setShots] = useState([])
-    // const [ batched, setBatched] = useState([])
-    // const [ mocktails, setMocktails] = useState([])
-   // const [ allDrinksJson, setAllDrinksJson] = useState([])
-    const { getCocktails, getBatched, getShots, getMocktails } = MenuApi()
-    const { getDrinksAdmin } = DrinkApi
+    const { getDrinks, isLoadingDrinksApi } = DrinkApi()
 
     const [username, setUsername] = useState('')
     const [storedUsername, setStoredUsername] = useState('')
-    const [allDrinks, setAllDrinks] = useState('')
+    const [allDrinks, setAllDrinks] = useState([])
+    const [groupedDrinks, setGroupedDrinks] = useState([])
     const [userId, setUserId] = useState('')
     const [editedUsername, setEditedUsername] = useState('')
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
@@ -47,7 +38,7 @@ const Order = () => {
     const [selectedDrinkDescription, setSelectedDrinkDescription] = useState('')
     const [selectedDrinkId, setSelectedDrinkId] = useState(-1)
     const [selectValue, setSelectValue] = useState(new Set([]));
-    const [drinkPrice, setDrinkPrice] = useState(0)
+    const [drinkCost, setDrinkCost] = useState(0)
     const [drinkQuantity, setDrinkQuantity] = useState(1)
     const [donationAmount, _setDonationAmount] = useState(0)
     const setDonationAmount = (amount) => { _setDonationAmount(amount > 0 ? parseInt(amount) : 0) }
@@ -88,8 +79,8 @@ const Order = () => {
     }, [userId]);
 
     const orderTotal = useMemo(() => {
-        return (drinkPrice * drinkQuantity) + donationAmount
-    }, [drinkPrice, drinkQuantity, donationAmount]);
+        return (drinkCost * drinkQuantity) + donationAmount
+    }, [drinkCost, drinkQuantity, donationAmount]);
 
 
     const isInvalidUsername = useMemo(() => {
@@ -111,14 +102,32 @@ const Order = () => {
     useEffect(() => {
         const getDrinksCall = async () => {
             try {
-                const response = await getDrinksAdmin()
+                const response = await getDrinks()
+                
                 setAllDrinks(response)
+
+                const groupedMap = response.reduce(function(rv, x) {
+                    (rv[x.type] = rv[x.type] || []).push(x);
+                    return rv;
+                  }, {});
+
+                setGroupedDrinks(groupedMap)
             } catch(err) {
                 console.log(err)
             }
         }
         getDrinksCall()
     }, [ ])
+    
+
+    useEffect(() => {
+        if(allDrinks){
+            let drinkIdParam = searchParams.get("drinkId")
+            if (drinkIdParam) {
+                updateDrinkState(parseInt(drinkIdParam))
+            }
+        }
+    }, [allDrinks])
 
     useEffect(() => {
 
@@ -178,17 +187,19 @@ const Order = () => {
 
         if (drinkId < 0) {
             setDrinkName('')
-            setDrinkPrice(0)
+            setDrinkCost(0)
             setDrinkQuantity(1)
             setSelectedDrinkId(-1)
             return
         }
-        let selectedDrink = allDrinksJson.find(x => x.id === drinkId)
+        let selectedDrink = allDrinks.find(x=> x.drink_id === drinkId)
+        console.log(allDrinks)
+        //let selectedDrink = allDrinksJson.find(x => x.id === drinkId)
         setSelectValue(new Set([drinkId.toString()]))
         setSelectedDrinkId(drinkId)
         setDrinkName(selectedDrink?.name ?? "custom")
         setSelectedDrinkDescription(selectedDrink?.description ?? '')
-        setDrinkPrice(parseInt(selectedDrink?.price || 12))
+        setDrinkCost(parseInt(selectedDrink?.cost || 12))
     }
 
     const drinkDropdownChanged = (e) => {
@@ -267,7 +278,7 @@ const Order = () => {
         let orderData = {
             user_id: currentUserId,
             drinkTitle: drinkName,
-            drinkCost: drinkPrice,
+            drinkCost: drinkCost,
             quantity: drinkQuantity,
             tip_amount: donationAmount,
             comments: `${comments.trim()}${customDrinkDescription ? ` (${customDrinkDescription.trim()})` : ''}`
@@ -424,7 +435,6 @@ const Order = () => {
                             className="pb-2"
                             variant="bordered"
                             selectionMode="single"
-                            // onSelectionChange={setSelectValue}
                             onChange={(e) => drinkDropdownChanged(e)}
                             fullWidth
                             color="success"
@@ -455,13 +465,13 @@ const Order = () => {
                         >
                             <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Cocktails">
                                 {
-                                    cocktails.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                    allDrinks.filter(d=> d.type === 'cocktail').map((drink) => (
+                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
                                             <div className="flex flex-col">
-                                              <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                              <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                                  <span className="text-sm truncate text-default-400">{
                                                         drink.ingredients.map((ingredient, i) => (
-                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
+                                                        <span key={`${drink.drink_id}-${ingredient}`} className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
                                                     ))
                                                  }</span>
                                             </div>
@@ -471,10 +481,10 @@ const Order = () => {
                             </SelectSection>
                             <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Batched">
                                 {
-                                    batched.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                    allDrinks.filter(d=> d.type === 'batched').map((drink) => (
+                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
                                             <div className="flex flex-col">
-                                              <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                              <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                                  <span className="text-sm truncate text-default-400">{
                                                         drink.ingredients.map((ingredient, i) => (
                                                         <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
@@ -487,10 +497,10 @@ const Order = () => {
                             </SelectSection>
                             <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Shots">
                                 {
-                                    shots.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                    allDrinks.filter(d=> d.type === 'shot').map((drink) => (
+                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
                                             <div className="flex flex-col">
-                                            <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                            <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                                 <span className="text-sm truncate text-default-400">{
                                                         drink.ingredients.map((ingredient, i) => (
                                                         <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
@@ -503,10 +513,10 @@ const Order = () => {
                             </SelectSection>
                             <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Mocktails">
                                 {
-                                    mocktails.map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.price}`} key={drink.id} value={drink.id}>
+                                    allDrinks.filter(d=> d.type === 'mocktail').map((drink) => (
+                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
                                         <div className="flex flex-col">
-                                          <span className="font-bold">{drink.name} — ${drink.price}</span>
+                                          <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                              <span className="text-sm truncate ">{
                                                     drink.ingredients.map((ingredient, i) => (
                                                     <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
@@ -560,7 +570,7 @@ const Order = () => {
                                     />
                                 }
 
-                                <div className={`text-center transition-all ease-out ${drinkPrice !== 0 ? 'visible' : 'invisible'}`}>
+                                <div className={`text-center transition-all ease-out ${drinkCost !== 0 ? 'visible' : 'invisible'}`}>
                                     <label className="text-lg font-semibold mr-4 block text-center tracking-wide">How Many?</label>
                                     <Button isIconOnly className="border-solid border-2 border-green-200 bg-emerald-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5"
                                         isDisabled={drinkQuantity <= 1} type="button" onPress={decrementDrinkQuantity}>
@@ -693,7 +703,7 @@ const Order = () => {
                             <Button
                                 className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
                                 onPress={submitOrder}
-                                isDisabled={isLoading || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
+                                isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                             >Grab a Drink
                                 <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
                             </Button>
