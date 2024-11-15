@@ -5,7 +5,7 @@ import {
 } from "@nextui-org/react"
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose, faCheck, faMinus, faPlus, faChampagneGlasses, faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faClose, faCheck, faMinus, faPlus, faChampagneGlasses, faEdit, faX } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 import { UserApi } from "../api/userApi"
 import { OrderApi } from "../api/orderApi"
@@ -103,25 +103,25 @@ const Order = () => {
         const getDrinksCall = async () => {
             try {
                 const response = await getDrinks()
-                
+
                 setAllDrinks(response)
 
-                const groupedMap = response.reduce(function(rv, x) {
+                const groupedMap = response.reduce(function (rv, x) {
                     (rv[x.type] = rv[x.type] || []).push(x);
                     return rv;
-                  }, {});
+                }, {});
 
                 setGroupedDrinks(groupedMap)
-            } catch(err) {
+            } catch (err) {
                 console.log(err)
             }
         }
         getDrinksCall()
-    }, [ ])
-    
+    }, [])
+
 
     useEffect(() => {
-        if(allDrinks){
+        if (allDrinks) {
             let drinkIdParam = searchParams.get("drinkId")
             if (drinkIdParam) {
                 updateDrinkState(parseInt(drinkIdParam))
@@ -192,7 +192,7 @@ const Order = () => {
             setSelectedDrinkId(-1)
             return
         }
-        let selectedDrink = allDrinks.find(x=> x.drink_id === drinkId)
+        let selectedDrink = allDrinks.find(x => x.drink_id === drinkId)
         console.log(allDrinks)
         //let selectedDrink = allDrinksJson.find(x => x.id === drinkId)
         setSelectValue(new Set([drinkId.toString()]))
@@ -337,7 +337,7 @@ const Order = () => {
                     </CardHeader>
                     <CardBody>
                         {hasStoredUserId && !showEditNameInput &&
-                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <br/> <span className="font-bold text-emerald-900"> {username}</span>
+                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <br /> <span className="font-bold text-emerald-900">{username}</span>
                                 <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-xl text-emerald-600" icon={faEdit} /></Button> </div>
                         }
                         {hasStoredUserId && showEditNameInput &&
@@ -397,11 +397,11 @@ const Order = () => {
                                 <Input
                                     className="pb-5"
                                     classNames={{
-                                        label: "text-xl group-data-[filled=true]:-translate-y-4",
+                                        label: `text-xl group-data-[filled=true]:-translate-y-2 ${isInvalidUsername ? '-translate-y-2.5' : ''}`,
                                         trigger: "min-h-unit-16",
                                         listboxWrapper: "max-h-[400px]",
                                         inputWrapper: "bg-white",
-                                        errorMessage: "absolute italic bottom-2 left-4"
+                                        errorMessage: `${username ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-sm" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-sm"}`
                                     }}
                                     maxLength={30}
                                     autoFocus
@@ -419,7 +419,15 @@ const Order = () => {
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {
                                         ((isLoadingUsername && <Spinner color="success" />) ||
-                                            (!isInvalidUsername && !isLoadingUsername && <FontAwesomeIcon className="text-emerald-600" icon={faCheck} />))
+                                            (!isInvalidUsername && !isLoadingUsername &&
+                                                (isUsernameTaken ?
+                                                    // invalid username 
+                                                    <FontAwesomeIcon className="text-red-600" icon={faCheck} />
+                                                    :
+                                                    // valid username
+                                                    <FontAwesomeIcon className="text-emerald-600" icon={faCheck} />
+                                                )
+                                            ))
                                     }
                                     </div>
                                 }
@@ -432,7 +440,7 @@ const Order = () => {
                                 hideScrollBar: false,
                                 size: 100
                             }}
-                            className="pb-2"
+                            className="pb-2 mb-2"
                             variant="bordered"
                             selectionMode="single"
                             onChange={(e) => drinkDropdownChanged(e)}
@@ -441,7 +449,7 @@ const Order = () => {
                             radius="full"
 
                             classNames={{
-                                label: "text-xl group-data-[filled=true]:-translate-y-4",
+                                label: "text-xl group-data-[filled=true]:-translate-y-2",
                                 trigger: "min-h-unit-16 bg-white",
                                 listboxWrapper: "max-h-[400px]",
                             }}
@@ -463,47 +471,15 @@ const Order = () => {
                             label="Select a Drink"
                             selectedKeys={selectValue}
                         >
-                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Cocktails">
+                            <SelectSection classNames={{ heading: "font-bold text-sm text-emerald-600" }} showDivider title="Cocktails">
                                 {
-                                    allDrinks.filter(d=> d.type === 'cocktail').map((drink) => (
+                                    allDrinks.filter(d => d.type === 'cocktail').map((drink) => (
                                         <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
                                             <div className="flex flex-col">
-                                              <span className="font-bold">{drink.name} — ${drink.cost}</span>
-                                                 <span className="text-sm truncate text-default-400">{
-                                                        drink.ingredients.map((ingredient, i) => (
-                                                        <span key={`${drink.drink_id}-${ingredient}`} className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
-                                                    ))
-                                                 }</span>
-                                            </div>
-                                        </SelectItem>
-                                    ))
-                                }
-                            </SelectSection>
-                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Batched">
-                                {
-                                    allDrinks.filter(d=> d.type === 'batched').map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
-                                            <div className="flex flex-col">
-                                              <span className="font-bold">{drink.name} — ${drink.cost}</span>
-                                                 <span className="text-sm truncate text-default-400">{
-                                                        drink.ingredients.map((ingredient, i) => (
-                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
-                                                    ))
-                                                 }</span>
-                                            </div>
-                                        </SelectItem>
-                                    ))
-                                }
-                            </SelectSection>
-                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Shots">
-                                {
-                                    allDrinks.filter(d=> d.type === 'shot').map((drink) => (
-                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
-                                            <div className="flex flex-col">
-                                            <span className="font-bold">{drink.name} — ${drink.cost}</span>
+                                                <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                                 <span className="text-sm truncate text-default-400">{
-                                                        drink.ingredients.map((ingredient, i) => (
-                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
+                                                    drink.ingredients.map((ingredient, i) => (
+                                                        <span key={`${drink.drink_id}-${ingredient}`} className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
                                                     ))
                                                 }</span>
                                             </div>
@@ -511,23 +487,55 @@ const Order = () => {
                                     ))
                                 }
                             </SelectSection>
-                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Mocktails">
+                            <SelectSection classNames={{ heading: "font-bold text-sm text-emerald-600" }} showDivider title="Batched">
                                 {
-                                    allDrinks.filter(d=> d.type === 'mocktail').map((drink) => (
+                                    allDrinks.filter(d => d.type === 'batched').map((drink) => (
                                         <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
-                                        <div className="flex flex-col">
-                                          <span className="font-bold">{drink.name} — ${drink.cost}</span>
-                                             <span className="text-sm truncate ">{
+                                            <div className="flex flex-col">
+                                                <span className="font-bold">{drink.name} — ${drink.cost}</span>
+                                                <span className="text-sm truncate text-default-400">{
                                                     drink.ingredients.map((ingredient, i) => (
-                                                    <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length -1 ? ', ' : '' )}</span>
-                                                ))
-                                             }</span>
-                                        </div>
-                                    </SelectItem>
+                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
+                                                    ))
+                                                }</span>
+                                            </div>
+                                        </SelectItem>
                                     ))
                                 }
                             </SelectSection>
-                            <SelectSection classNames={{heading: "font-bold text-sm text-emerald-600"}} showDivider title="Build Your Own">
+                            <SelectSection classNames={{ heading: "font-bold text-sm text-emerald-600" }} showDivider title="Shots">
+                                {
+                                    allDrinks.filter(d => d.type === 'shot').map((drink) => (
+                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
+                                            <div className="flex flex-col">
+                                                <span className="font-bold">{drink.name} — ${drink.cost}</span>
+                                                <span className="text-sm truncate text-default-400">{
+                                                    drink.ingredients.map((ingredient, i) => (
+                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
+                                                    ))
+                                                }</span>
+                                            </div>
+                                        </SelectItem>
+                                    ))
+                                }
+                            </SelectSection>
+                            <SelectSection classNames={{ heading: "font-bold text-sm text-emerald-600" }} showDivider title="Mocktails">
+                                {
+                                    allDrinks.filter(d => d.type === 'mocktail').map((drink) => (
+                                        <SelectItem textValue={`${drink.name} — $${drink.cost}`} key={drink.drink_id} value={drink.drink_id}>
+                                            <div className="flex flex-col">
+                                                <span className="font-bold">{drink.name} — ${drink.cost}</span>
+                                                <span className="text-sm truncate ">{
+                                                    drink.ingredients.map((ingredient, i) => (
+                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
+                                                    ))
+                                                }</span>
+                                            </div>
+                                        </SelectItem>
+                                    ))
+                                }
+                            </SelectSection>
+                            <SelectSection classNames={{ heading: "font-bold text-sm text-emerald-600" }} title="Build Your Own">
                                 <SelectItem textValue="Make a Drink - $12" key={customDrinkId} value={customDrinkId}>
                                     <div className="flex flex-col">
                                         <span className="font-bold">Make a Drink — $12</span>
@@ -537,9 +545,9 @@ const Order = () => {
                             </SelectSection>
                         </Select>
                         {
-                            selectedDrinkId && <div className="text-center text-xs justify-center italic text-slate-600 mx-1">
-                                   {selectedDrinkDescription}
-                                </div>
+                            selectedDrinkId && <div className="text-center text-sm justify-center italic text-slate-600 mx-1">
+                                {selectedDrinkDescription}
+                            </div>
                         }
                         { /** Custom Drink Dropdown */
                             selectedDrinkId > -1 && <div className="border-2 border-slate-200 p-2 rounded-3xl">
@@ -571,7 +579,7 @@ const Order = () => {
                                 }
 
                                 <div className={`text-center transition-all ease-out ${drinkCost !== 0 ? 'visible' : 'invisible'}`}>
-                                    <label className="text-lg font-semibold mr-4 block text-center tracking-wide">How Many?</label>
+                                    <label className="text-lg font-semibold block text-center tracking-wide">How Many?</label>
                                     <Button isIconOnly className="border-solid border-2 border-green-200 bg-emerald-600 disabled:bg-gray-400 w-12 h-12 text-white rounded-full mr-5"
                                         isDisabled={drinkQuantity <= 1} type="button" onPress={decrementDrinkQuantity}>
                                         <FontAwesomeIcon icon={faMinus} />
@@ -583,7 +591,7 @@ const Order = () => {
                                     </Button>
                                 </div>
                                 <div className="my-2">
-                                    <label className="text-lg text-center font-semibold mr-4 block">
+                                    <label className="text-lg text-center font-semibold block">
                                         Additional Tip / Donation
                                     </label>
 
@@ -697,17 +705,15 @@ const Order = () => {
                             }}
                         />
                     </CardBody>
-                    <CardFooter>
-                        <div className="flex justify-between w-full items-center pb-5">
-                            <p className="font-bold text-xl">Total: ${orderTotal}</p>
-                            <Button
-                                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
-                                onPress={submitOrder}
-                                isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
-                            >Grab a Drink
-                                <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
-                            </Button>
-                        </div>
+                    <CardFooter className="flex justify-between w-full items-center -mb-2">
+                        <p className="font-bold text-xl">Total: ${orderTotal}</p>
+                        <Button
+                            className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
+                            onPress={submitOrder}
+                            isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
+                        >Grab a Drink
+                            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+                        </Button>
                     </CardFooter>
                 </Card>
             </form>
