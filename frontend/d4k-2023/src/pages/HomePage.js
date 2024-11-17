@@ -14,7 +14,7 @@ const HomePage = () => {
     }
 
     const Msg = ({ closeToast, toastProps }) => (
-        <div className=" z-50 grid place-content-center text-center">
+        <div className=" z-50 grid place-content-center text-center w-100">
             <div className="font-fugaz text-lg">Welcome to the party</div>
             <div className="flex pt-3 justify-center text-center">
                 <Button winterize className="ml-1 bg-emerald-600 text-sm py-3 border rounded-full rounded-r-none font-fugaz text-white" target="_blank"

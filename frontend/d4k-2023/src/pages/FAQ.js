@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Card, CardBody, CardHeader, CardFooter, Link, Button } from "@nextui-org/react";
-import { faCandyCane } from "@fortawesome/free-solid-svg-icons";
+import { faCandyCane, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 const FAQ = () => {
 
     const cardCls = `border border-b-1 border-slate-300 rounded-t-none first:rounded-t-3xl
@@ -73,14 +73,13 @@ const FAQ = () => {
                     </CardHeader>
                     <CardBody className={ bodyCls }>
                         We recommend uber if drinking. However, if you want to drive, there will be some street parking available. <span className="font-bold contents">We highly recommend carpooling, drinking responsibly, and having a designated driver.</span>
-                        <Button
-                        isExternal
-                        as={Link}
-                        size="sm"
-                        className=" bg-emerald-600 text-md px-2 py-3 border rounded-full font-fugaz text-white float-right"
-                        href="sms:6787361277?&body=drink4thekids%20Christmas%20party%20address%3F">
-                    Address
-                    </Button>
+                        <Button size="md" winterize className="ml-1 bg-emerald-600 text-sm py-3 border rounded-full font-fugaz text-white">
+                            <Link isExternal className="text-xl font-bold text-white-700" href="https://partiful.com/e/HQP8KHQVUtxTTBQdNYgJ">
+                            RSVP For Address  
+                            <FontAwesomeIcon className="pl-2" icon={faEnvelope}/>
+                            </Link>
+
+                </Button>
                     </CardBody>
                 </Card>
                 <Card className={cardCls}>

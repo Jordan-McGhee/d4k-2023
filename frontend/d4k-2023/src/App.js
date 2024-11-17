@@ -74,7 +74,7 @@ function App() {
       }>
         { routes }
       </Suspense>
-      <ToastContainer transition={Zoom} />
+      <ToastContainer style={{width: '100%'}} transition={Zoom} />
     </NextUIProvider>
   );
 }
