@@ -8,6 +8,8 @@ router.post("/", orderControllers.createOrder)
 
 router.get("/", orderControllers.getOrders)
 
+router.get("/:order_id", orderControllers.getOrder)
+
 router.patch("/:order_id/updateTip", orderControllers.updateTip)
 
 router.patch("/:order_id/updatePaid", orderControllers.updatePaid)

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
     Button, Card, CardBody, Chip, CardFooter, CardHeader, Divider,
-    Modal, ModalBody, ModalContent, ModalHeader, ModalFooter
+    Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Spinner
 } from "@nextui-org/react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { faClose, faChampagneGlasses, faMartiniGlassCitrus } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
 import { OrderApi } from "../../api/orderApi"
 import { useNavigate } from "react-router-dom";
@@ -13,14 +13,32 @@ const QueueList = (props) => {
     const [searchParams] = useSearchParams();
     const [storedUserId, setStoredUserId] = useState('')
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showOrderReadyModal, setShowOrderReadyModal] = useState(false)
     const [selectedOrder, setSelectedOrder] = useState({})
-    const { deleteOrder } = OrderApi()
+    const [paramOrder, setParamOrder] = useState({})
+    const { deleteOrder, getOrder, isLoadingOrderApi } = OrderApi()
     const navigate = useNavigate()
 
+
     useEffect(() => {
-        let paramOrderId = searchParams.get("orderId")
-        if (paramOrderId && props.queue.length > 0 && props.queue.find(o => o.order_id === paramOrderId)) {
-            document.getElementById(paramOrderId).scrollIntoView({ behavior: 'smooth' })
+        const fetchOrder = async (orderId) => {
+            try {
+                const responseData = await getOrder(orderId)
+                setParamOrder(responseData)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        let orderId = searchParams.get("orderId")
+        if (orderId && props.queue.length > 0 && props.queue.find(o => o.order_id === orderId)) {
+            document.getElementById(orderId).scrollIntoView({ behavior: 'smooth' })
+        }
+
+        // Order marked done, display order ready modal
+        if(!props.queue.find(o => o.order_id === orderId)){
+            fetchOrder(orderId)
+            setShowOrderReadyModal(true)
         }
 
         let storedUserId = localStorage.getItem('userId')
@@ -42,12 +60,10 @@ const QueueList = (props) => {
         navigate({ pathname: '/order' })
     }
 
-    // ${props.orderId === order.order_id ? 'animate-pulse-custom testhere' : ''}
-
     let items = props.queue.map((order, i) => (
         <Card id={order.order_id} key={order.order_id} isFooterBlurred radius="none"
             className={`first:rounded-t-3xl last:rounded-b-3xl bg-white/80 backdrop-blur-lg border-b-3 border-slate-500 shadow-lg 
-            ${ storedUserId === order.user_id ? 'animate-pulse-custom testhere' : ''}`}>
+            ${ storedUserId === order.user_id ? 'animate-pulse-custom' : ''}`}>
             <CardHeader className="flex pl-4 py-2 pb-0">
                 <p className="text-xl text-grey-800 font-bold">{order.username}</p>
             </CardHeader>
@@ -62,8 +78,8 @@ const QueueList = (props) => {
                                 <span className="flex">
                                     <Chip className="font-bold text-md ml-3 justify-right" variant="shadow"
                                         classNames={{
-                                            base: "bg-gradient-to-br from-indigo-800/50 to-rose-500/50 border-small border-white/50 ",
-                                            content: "drop-shadow shadow-black text-white",
+                                            base: "bg-gradient-to-br from-indigo-800/30 to-rose-500/30 border-small border-white/50 ",
+                                            content: "drop-shadow shadow-black text-black",
                                         }}>x{order.quantity}
                                     </Chip>
                                 </span>
@@ -82,23 +98,26 @@ const QueueList = (props) => {
                 </div>
             }
             {
-                order.user_id === storedUserId && i > 2 &&
+                order.user_id === storedUserId && i > 2 && order.bartender_id === null && 
                 <Button className="absolute z-10 right-5 top-5 bg-rose-600" color="danger" radius="md" size="sm" isIconOnly onPress={() => handlePressDeleteModal(order)}>
                     <FontAwesomeIcon className="text-lg" icon={faClose} />
                 </Button>
             }
+            {
+                order.bartender_id !== null && 
+                <div className="absolute font-fugaz z-10 right-5 top-5 text-right">
+                    Working <br></br>on it
+                    <FontAwesomeIcon className="pl-2"  size="lg" icon={faMartiniGlassCitrus}></FontAwesomeIcon>
+                </div>
+            }
+            
         </Card>
     ))
 
     return (
         <>
-            <p className="text-2xl font-bold font-fugaz text-center text-green-600 pb-2">Working On It</p>
             <div>
-                {items.slice(0, 1)}
-            </div>
-            <p className="text-2xl font-bold font-fugaz text-center text-green-600 pb-2 pt-5">Up Next</p>
-            <div>
-                {items.slice(1)}
+                {items}
             </div>
             <Modal placement="center" isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
                 <ModalContent>
@@ -116,6 +135,40 @@ const QueueList = (props) => {
                                     Delete
                                 </Button>
                             </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+
+            <Modal className="m-5" placement="center" isOpen={showOrderReadyModal} onClose={() => setShowOrderReadyModal(false)}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="font-fugaz text-2xl justify-center text-emerald-600">Order Is Ready</ModalHeader>
+                            <ModalBody className="justify-center pb-5">
+                                {isLoadingOrderApi && 
+                                    <Spinner 
+                                        color="success"
+                                        style={{zIndex:100}}
+                                        classNames={{
+                                            wrapper: "w-10 h-10",
+                                            circle1: "border-5",
+                                            circle2: "border-5"
+                                        }} />
+                                }
+                                {!isLoadingOrderApi && 
+                                    <div className="text-center text-gray-800 font-fugaz text-xl">
+                                        Come grab your 
+                                        <div>{paramOrder.drink}
+                                        {paramOrder.quantity === 1 &&
+                                            <span> x{paramOrder.quantity}</span>}
+                                        </div>
+                                        at the bar
+                                        </div>
+                                     
+                                } 
+                            <FontAwesomeIcon className="pl-2 text-gray-800"  size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+                            </ModalBody>
                         </>
                     )}
                 </ModalContent>

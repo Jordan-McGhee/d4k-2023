@@ -20,7 +20,7 @@ const UserLayout = () => {
             {/* <div className="fixed bottom-0 left-0 right-0 bg-slate-100/90 pt-16 z-50 backdrop-blur-md border-solid border-t-2 border-gray-500"></div> */}
             <div className={`App overflow-hidden  bg-cover bg-center bg-fixed bg-no-repeat bg-top ${!isMobile && !isLeaderboard ? 'mt-20' : ''}`} style={{backgroundImage: `url(${backgroundImage2})`}}>
                 <div className="min-h-screen ">
-                    <div className={`main-container ${isLeaderboard ? 'm-0 p-0' : 'm-5' }`}>
+                    <div className={`main-container ${isLeaderboard ? 'm-0 p-0' : 'p-5' }`}>
                         <Outlet />
                     </div>
                 </div>

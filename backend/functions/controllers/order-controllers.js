@@ -26,11 +26,30 @@ const getOrders = async (req, res, next) => {
     const query = 'SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE is_completed != true AND voided_at IS NULL ORDER BY created_at ASC';
 
     try {
-        const client = await pool.connect();
-        const result = await client.query(query);
+        const result = await pool.query(query);
         const orders = result.rows;
-        client.release();
         res.status(200).json(orders);
+
+    } catch (error) {
+        logger.error('Error getting orders', error);
+        return next(new HttpError(`Error getting orders: ${error}`, 500));
+    }
+}
+
+const getOrder = async (req, res, next) => {
+    const { order_id } = req.params
+
+    const query = `
+    SELECT u.username, o.* 
+    FROM orders o 
+    JOIN users u ON u.user_id = o.user_id 
+    WHERE o.order_id = $1
+        AND voided_at IS NULL ORDER BY created_at ASC`;
+
+    try {
+        const result = await pool.query(query, [order_id]);
+        const response = result.rows;
+        res.status(200).json(response[0]);
 
     } catch (error) {
         logger.error('Error getting orders', error);
@@ -48,9 +67,9 @@ const updateTip = async (req, res, next) => {
 
     let response
     try {
-        const client = await pool.connect()
-        response = await client.query(query, [ tip_amount, order_id ])
-        client.release()
+        //const client = await pool.connect()
+        response = await pool.query(query, [ tip_amount, order_id ])
+        //client.release()
     } catch (error) {
         logger.error(`Error updating tip amount on order #${order_id}`)
 
@@ -73,9 +92,7 @@ const updateBartender = async (req, res, next) => {
     let query = "UPDATE orders set bartender_id = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *"
     let response
     try {
-        const client = await pool.connect()
-        response = await client.query(query, [ bartender_id, order_id ])
-        client.release()
+        response = await pool.query(query, [ bartender_id, order_id ])
     } catch (error) {
         logger.error(`Error updating bartender on order #${order_id}`)
 
@@ -119,17 +136,17 @@ const updateCompleted = async (req, res, next) => {
     let text = "UPDATE orders SET is_completed = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *"
 
     let response
+    const client = await pool.connect()
 
     try {
-        const client = await pool.connect()
         response = await client.query(text, [completedStatus, order_id])
-        client.release()
 
     } catch (error) {
         logger.error(`Error updating Order #${order_id}'s completed status. ${error}`, 500)
 
         return next(new HttpError(`Error updating Order #${order_id}'s completed status. ${error}`, 500))
     }
+    client.release()
 
     res.status(201).json({ message: `Updated completedStatus of Order ${order_id} to ${completedStatus}`, newValue: completedStatus, response: response.rows[0] })
 }
@@ -170,18 +187,14 @@ const getOrdersLeaderboard = async (req, res, next) => {
     let response, sumResponse, sumTotal
 
     try {
-        const client = await pool.connect()
-        response = await client.query(query)
-        client.release()
+        response = await pool.query(query)
     } catch (error) {
         logger.error(`Error getting orders for leaderboard. ${error}`, 500)
         return next(new HttpError(`Error getting orders for leaderboard. ${error}`, 500))
     }
 
     try {
-        const client = await pool.connect()
-        sumResponse = await client.query(sumQuery)
-        client.release()
+        sumResponse = await pool.query(sumQuery)
     } catch (error) {
         logger.error(`Error getting orders for leaderboard. ${error}`, 500)
 
@@ -199,9 +212,7 @@ const deleteOrder = async (req, res, next) => {
     let response
 
     try {
-        const client = await pool.connect()
-        response = await client.query(text, [order_id])
-        client.release()
+        response = await pool.query(text, [order_id])
     } catch (error) {
         logger.error(`Error voiding order #${order_id}. ${error}`, 500)
         return next(new HttpError(`Error voiding order #${order_id}. ${error}`, 500))
@@ -217,9 +228,7 @@ const unvoidOrder = async (req, res, next) => {
     let response 
 
     try {
-        const client = await pool.connect()
-        response = await client.query(text, [ order_id ])
-        client.release()
+        response = await pool.query(text, [ order_id ])
     } catch (error) {
         logger.error(`Error unvoiding order #${order_id}`)
         return next(new HttpError(`Error unvoiding order #${ order_id }`, 500))
@@ -229,6 +238,7 @@ const unvoidOrder = async (req, res, next) => {
 }
 
 exports.createOrder = createOrder
+exports.getOrder = getOrder
 exports.getOrders = getOrders
 exports.updateTip = updateTip
 exports.updatePaid = updatePaid

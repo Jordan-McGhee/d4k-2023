@@ -2,7 +2,7 @@ import { useFetch } from "../hooks/useFetch";
 
 /** Order API */
 export const OrderApi = () => {
-    const { isLoading, hasError, sendRequest, clearError } = useFetch()
+    const { isLoadingOrderApi: isLoading, hasError, sendRequest, clearError } = useFetch()
 
     /** Create an order.  
      * @param {Object} orderData user_id, drinkTitle, drinkCost, quantity, tip_amount, comments */
@@ -13,6 +13,10 @@ export const OrderApi = () => {
 
     const deleteOrder = async (orderId) => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/${orderId}`, "DELETE")
+    }
+
+    const getOrder = async (orderId) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/${orderId}`, 'GET')
     }
 
     const getOrders = async () => {
@@ -53,7 +57,8 @@ export const OrderApi = () => {
 
     return { 
         createOrder, 
-        deleteOrder, 
+        deleteOrder,
+        getOrder,
         getOrders,
         updateOrderCompleted,
         updateOrderPaid,

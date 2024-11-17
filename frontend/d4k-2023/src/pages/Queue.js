@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
+
 import QueueList from "../components/queue/QueueList";
 import ErrorModal from "../components/UIElements/ErrorModal"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRefresh } from '@fortawesome/free-solid-svg-icons'
 import EmptyQueue from "../components/queue/EmptyQueue";
-import { Spinner } from "@nextui-org/spinner";
+import { Button, Spinner } from "@nextui-org/react";
 import { useSearchParams } from "react-router-dom";
 import { OrderApi } from "../api/orderApi";
 
 const Queue = () => {
     
-    const { isLoading, hasError, clearError, getOrders } = OrderApi()
+    const { isLoadingOrderApi, hasError, clearError, getOrders } = OrderApi()
     const [ loadedQueue, setLoadedQueue ] = useState([])
     const [ searchParams ] = useSearchParams();
     const [ paramOrderId, setParamOrderId ] = useState('')
@@ -46,7 +47,7 @@ const Queue = () => {
     return (
         <>
             <ErrorModal error = { hasError } onClear = { clearError } />
-            {isLoading && 
+            {isLoadingOrderApi && 
                 <Spinner 
                     color="success"
                     className="fixed top-1/4"
@@ -56,21 +57,21 @@ const Queue = () => {
                         circle1: "border-5",
                         circle2: "border-5"
                     }} />}
-            <div className="m-auto lg:max-w-xl mb-24">
+            <div className="m-auto lg:max-w-xl mb-24 justify-center text-center">
                     <div className="flex text-center justify-center items-center">
-                        <p className="text-4xl font-bungee text-center justify-center text-green-600">Queue</p>
+                        <p className="text-4xl font-bungee text-center justify-center text-emerald-600">Queue</p>
                     </div>
-                    <div className="flex justify-center text-white text-4xl pt-2" onClick = { fetchOrderQueue }>
-                        <FontAwesomeIcon icon={faRefresh} className="w-6 mr-2"/>
-                        <p className="text-white text-lg">REFRESH</p>
-                    </div>
+                    <Button radius="full" className="mt-3 text-center justify-center text-white p-4 bg-emerald-600" onPress = { fetchOrderQueue }>
+                        <p className="text-white font-bungee text-lg">Refresh</p>
+                        <FontAwesomeIcon icon={faRefresh} size="lg" className="ml-2"/>
+                    </Button>
                 {
-                    loadedQueue.length === 0 && !isLoading ?
+                    loadedQueue.length === 0 && !isLoadingOrderApi ?
                         <EmptyQueue />
-                    : !isLoading ? 
+                    : !isLoadingOrderApi ? 
                     <div>
-                        <p className="text-white text-lg text-center my-5">
-                            All open drink orders will show here. Refresh to check your spot in the queue
+                        <p className="text-white text-lg font-fugaz text-center my-5">
+                            Open drink orders will show here <br/> Refresh to check your spot in the queue
                         </p>
                         <QueueList
                             queue = { loadedQueue }

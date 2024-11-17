@@ -411,7 +411,7 @@ const Order = () => {
                                     variant="bordered"
                                     radius="full"
                                     color={(isInvalidUsername && !usernameFocused) || isUsernameTaken ? "danger" : "success"}
-                                    label="Your Name"
+                                    label="Your Full Name"
                                     isInvalid={(isInvalidUsername && !usernameFocused) || isUsernameTaken}
                                     onValueChange={setUsername}
                                     errorMessage={(isInvalidUsername && !usernameFocused) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
@@ -422,7 +422,7 @@ const Order = () => {
                                             (!isInvalidUsername && !isLoadingUsername &&
                                                 (isUsernameTaken ?
                                                     // invalid username 
-                                                    <FontAwesomeIcon className="text-red-600" icon={faCheck} />
+                                                    <FontAwesomeIcon className="text-red-600" icon={faX} />
                                                     :
                                                     // valid username
                                                     <FontAwesomeIcon className="text-emerald-600" icon={faCheck} />
@@ -470,6 +470,9 @@ const Order = () => {
                             }}
                             label="Select a Drink"
                             selectedKeys={selectValue}
+                            endContent={
+                                isLoadingDrinksApi && <Spinner style={{bottom: '8px', zIndex:100}} color="success" />
+                            }
                         >
                             <SelectSection classNames={{ heading: "font-bold text-sm text-emerald-600" }} showDivider title="Cocktails">
                                 {
@@ -545,7 +548,7 @@ const Order = () => {
                             </SelectSection>
                         </Select>
                         {
-                            selectedDrinkId && <div className="text-center text-sm justify-center italic text-slate-600 mx-1">
+                            selectedDrinkId && <div className="text-center text-xs justify-center italic text-slate-600 mx-1">
                                 {selectedDrinkDescription}
                             </div>
                         }
@@ -689,7 +692,7 @@ const Order = () => {
                         }
                         <Textarea
                             name="comments"
-                            minRows="3"
+                            minRows="2"
                             maxRows="6"
                             variant="bordered"
                             color="success"
@@ -712,7 +715,7 @@ const Order = () => {
                             onPress={submitOrder}
                             isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                         >Grab a Drink
-                            <FontAwesomeIcon size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+                            <FontAwesomeIcon beat style={{animationDuration:'2s'}} size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
                         </Button>
                     </CardFooter>
                 </Card>
