@@ -2,7 +2,7 @@ import { useFetch } from "../hooks/useFetch";
 
 /** Order API */
 export const OrderApi = () => {
-    const { isLoadingOrderApi: isLoading, hasError, sendRequest, clearError } = useFetch()
+    const { isLoading, hasError, sendRequest, clearError } = useFetch()
 
     /** Create an order.  
      * @param {Object} orderData user_id, drinkTitle, drinkCost, quantity, tip_amount, comments */
@@ -67,5 +67,5 @@ export const OrderApi = () => {
         getOrdersAdmin, 
         getOrdersAsTabs, 
         getOrdersLeaderboard, 
-        isLoading, hasError, clearError }
+        isLoadingOrderApi: isLoading, hasError, clearError }
 }

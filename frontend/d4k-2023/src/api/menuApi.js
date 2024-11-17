@@ -1,6 +1,4 @@
-import { useFetch } from "../hooks/useFetch";
-
-/** Admin API */
+/** DEPRECATED - use drinkApi */
 export const MenuApi = () => {
 
     const getCocktails = async () => {
