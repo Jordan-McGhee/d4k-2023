@@ -1,7 +1,7 @@
 import React from "react";
-import Button from "../FormElements/Button";
-import Card from "../UIElements/Card";
-
+import {
+    Button, Card, CardBody, CardHeader, Link, 
+} from "@nextui-org/react"
 const EmptyQueue = () => {
 
     const cardFooter = (
@@ -24,12 +24,25 @@ const EmptyQueue = () => {
     
     return (
         <div className="my-4">
-            <Card header = { "No Orders Yet!" } headerClass = "text-center font-bold text-3xl border-b-2 mb-4 py-2"  footer = { cardFooter } footerClass = "" >
-
-                <p className="text-2xl text-center my-2">Looks like the queue is empty!</p>
-
-                <p className="text-2xl text-center my-2">Why don't you be the first person to submit an order!</p>
-
+            <Card>
+                <CardHeader className="flex justify-around font-fugaz text-2xl text-gray-800 text-center pl-4 py-2 pb-4">
+                   No Orders Yet
+                </CardHeader>
+                <CardBody className="text-center text-md pl-4 pt-0 pb-2 font-bungee">
+                  Be The first
+                  <span className="pt-4">
+                  <Button size="md" winterize className="ml-1 bg-emerald-600 text-sm py-3 border rounded-full font-bungee text-white">
+                            <Link className="text-xl font-bold text-white-700" href="/menu">
+                            Menu
+                            </Link>
+                    </Button>
+                    <Button size="md" winterize className="ml-1 bg-emerald-600 text-sm py-3 border rounded-full font-bungee text-white">
+                            <Link className="text-xl font-bold text-white-700" href="/order">
+                            Order                           
+                            </Link>
+                    </Button>
+                    </span>
+                </CardBody>
             </Card>
         </div>
     )

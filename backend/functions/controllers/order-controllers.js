@@ -49,7 +49,12 @@ const getOrder = async (req, res, next) => {
     try {
         const result = await pool.query(query, [order_id]);
         const response = result.rows;
-        res.status(200).json(response[0]);
+        if(result.rows > 0){
+            res.status(200).json(response[0])
+        }
+        else{
+            res.status(200).json(null)
+        }
 
     } catch (error) {
         logger.error('Error getting orders', error);
@@ -180,11 +185,16 @@ const getOrdersGrouped = async (req, res, next) => {
 }
 
 const getOrdersLeaderboard = async (req, res, next) => {
-    let query = "SELECT user_id, username, quantity, amount_paid, adjusted_donations FROM user_totals WHERE amount_paid + adjusted_donations > 0 ORDER BY amount_paid + adjusted_donations DESC LIMIT 10;"
+    let query = `
+        SELECT user_id, username, quantity, amount_paid, adjusted_donations 
+        FROM user_totals 
+        WHERE amount_paid + adjusted_donations > 0 
+        ORDER BY amount_paid + adjusted_donations DESC 
+        LIMIT 10`
 
-    let sumQuery = "SELECT * FROM d4k_total"
+    let sumQuery = `SELECT * FROM d4k_total`
 
-    let response, sumResponse, sumTotal
+    let response, sumResponse
 
     try {
         response = await pool.query(query)

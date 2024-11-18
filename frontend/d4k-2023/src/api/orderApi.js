@@ -16,7 +16,7 @@ export const OrderApi = () => {
     }
 
     const getOrder = async (orderId) => {
-        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/${orderId}`, 'GET')
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/single/${orderId}`, 'GET')
     }
 
     const getOrders = async () => {

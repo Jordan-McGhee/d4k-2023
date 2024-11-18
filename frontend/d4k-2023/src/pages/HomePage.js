@@ -87,7 +87,7 @@ const HomePage = () => {
 
                 <p className="text-3xl italic font-fugaz mt-2">Christmas Cocktails <br/> for a Charitable Cause</p>
 
-                <p className="text-5xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
+                <p className="text-5xl mt-1 mb-8 font-bold font-bungee flex flex-col tracking-wider">
                 </p>
                 <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
                     Saturday<span className="my-2">

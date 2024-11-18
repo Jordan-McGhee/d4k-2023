@@ -24,27 +24,35 @@ const QueueList = (props) => {
         const fetchOrder = async (orderId) => {
             try {
                 const responseData = await getOrder(orderId)
+                if(!responseData) return
+                
                 setParamOrder(responseData)
+                setShowOrderReadyModal(true)
             } catch (error) {
                 console.log(error)
             }
-        }
-
-        let orderId = searchParams.get("orderId")
-        if (orderId && props.queue.length > 0 && props.queue.find(o => o.order_id === orderId)) {
-            document.getElementById(orderId).scrollIntoView({ behavior: 'smooth' })
-        }
-
-        // Order marked done, display order ready modal
-        if(!props.queue.find(o => o.order_id === orderId)){
-            fetchOrder(orderId)
-            setShowOrderReadyModal(true)
         }
 
         let storedUserId = localStorage.getItem('userId')
         if (storedUserId) {
             setStoredUserId(parseInt(storedUserId))
         }
+
+        let orderIdParam = searchParams.get("orderId")
+        if(!orderIdParam) return
+        let orderId = Number(orderIdParam)
+        if (props.queue.length > 0 && props.queue.find(o => o.order_id === orderId)) {
+            document.getElementById(orderId).scrollIntoView({ behavior: 'smooth' })
+        }
+
+        // Order marked done, display order ready modal
+        if(!props.queue.find(o => o.order_id === orderId)){
+            fetchOrder(orderId)
+        }
+        
+
+
+
     }, [])
 
     const handlePressDeleteModal = (order) => {

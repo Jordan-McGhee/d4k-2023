@@ -10,11 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import { UserApi } from "../api/userApi"
 import { OrderApi } from "../api/orderApi"
 import { toast } from 'react-toastify';
-import cocktails from "../assets/drinks.json"
-import batched from "../assets/other.json"
 import shots from "../assets/shots.json"
-import mocktails from "../assets/mocktails.json"
-// DRINK IMPORTS
 
 import { MenuApi } from "../api/menuApi";
 import { DrinkApi } from "../api/drinkApi";
@@ -30,7 +26,6 @@ const Order = () => {
     const [username, setUsername] = useState('')
     const [storedUsername, setStoredUsername] = useState('')
     const [allDrinks, setAllDrinks] = useState([])
-    const [groupedDrinks, setGroupedDrinks] = useState([])
     const [userId, setUserId] = useState('')
     const [editedUsername, setEditedUsername] = useState('')
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
@@ -111,7 +106,6 @@ const Order = () => {
                     return rv;
                 }, {});
 
-                setGroupedDrinks(groupedMap)
             } catch (err) {
                 console.log(err)
             }
@@ -714,7 +708,8 @@ const Order = () => {
                             className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
                             onPress={submitOrder}
                             isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
-                        >Grab a Drink
+                        >
+                            Grab a Drink
                             <FontAwesomeIcon beat style={{animationDuration:'2s'}} size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
                         </Button>
                     </CardFooter>

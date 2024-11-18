@@ -1,11 +1,11 @@
 #christmas {
-    background: #162a4e;
+    background: #4b6cb4;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
-    background-image: url('../../images/buddy.png');
+    background-image: url('../../images/cocktailsanta.png');
     background-size: 100%;
-    border: 2px solid #aaa;
+    border: 3px solid hsl(0, 0%, 90%);
     position: relative;
     width: 220px;
     height: 220px;
@@ -22,7 +22,7 @@
     border-top-right-radius: 130px 40px;
     position: absolute;
     width: 133px;
-    height: 61px;
+    height: 55px;
     left: 0;
     bottom: 0;
     background: white;
@@ -41,18 +41,6 @@
     background: white;
 }
 
-#christmas .ground:after {
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
-    content: " ";
-    position: absolute;
-    width: 70px;
-    height: 70px;
-    top: 5px;
-    right: -75px;
-    background: white;
-}
 
 #christmas .tree {
     position: absolute;
