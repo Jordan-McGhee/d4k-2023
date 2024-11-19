@@ -23,7 +23,7 @@ const BartabNav = (props) => {
                 try {
                     const responseData = await getTab(userId)
                     setData(responseData)
-                    console.log(responseData)
+                    // console.log(responseData)
                 } catch (error) {
                     console.log(error)
                 }

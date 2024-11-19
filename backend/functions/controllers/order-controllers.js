@@ -46,20 +46,20 @@ const getOrder = async (req, res, next) => {
     WHERE o.order_id = $1
         AND voided_at IS NULL ORDER BY created_at ASC`;
 
-    try {
-        const result = await pool.query(query, [order_id]);
-        const response = result.rows;
-        if(result.rows > 0){
-            res.status(200).json(response[0])
-        }
-        else{
-            res.status(200).json(null)
-        }
+    let orderResponse
 
+    try {
+        orderResponse = await pool.query(query, [order_id])
     } catch (error) {
         logger.error('Error getting orders', error);
 
         return next(new HttpError(`Error getting orders: ${error}`, 500));
+    }
+
+    if (orderResponse.rows.length > 0) {
+        res.status(200).json({message: `Found order info for order #${order_id}`, response: orderResponse.rows[0]})
+    } else {
+        res.status(200).json({message: `No orders found with id ${order_id}`, response: null})
     }
 }
 
@@ -73,7 +73,7 @@ const updateTip = async (req, res, next) => {
     let response
     try {
         //const client = await pool.connect()
-        response = await pool.query(query, [ tip_amount, order_id ])
+        response = await pool.query(query, [tip_amount, order_id])
         //client.release()
     } catch (error) {
         logger.error(`Error updating tip amount on order #${order_id}`)
@@ -97,7 +97,7 @@ const updateBartender = async (req, res, next) => {
     let query = "UPDATE orders set bartender_id = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *"
     let response
     try {
-        response = await pool.query(query, [ bartender_id, order_id ])
+        response = await pool.query(query, [bartender_id, order_id])
     } catch (error) {
         logger.error(`Error updating bartender on order #${order_id}`)
 
@@ -235,16 +235,16 @@ const unvoidOrder = async (req, res, next) => {
     const { order_id } = req.params
     let text = "UPDATE orders SET voided_at = NULL, updated_at = NOW() WHERE order_id = $1"
 
-    let response 
+    let response
 
     try {
-        response = await pool.query(text, [ order_id ])
+        response = await pool.query(text, [order_id])
     } catch (error) {
         logger.error(`Error unvoiding order #${order_id}`)
-        return next(new HttpError(`Error unvoiding order #${ order_id }`, 500))
+        return next(new HttpError(`Error unvoiding order #${order_id}`, 500))
     }
 
-    res.status(200).json({ message: `Unvoided order #${ order_id }`, response: response })
+    res.status(200).json({ message: `Unvoided order #${order_id}`, response: response })
 }
 
 exports.createOrder = createOrder
