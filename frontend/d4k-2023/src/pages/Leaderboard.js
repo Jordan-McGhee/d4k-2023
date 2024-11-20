@@ -19,6 +19,7 @@ const LeaderBoard = () => {
 
     const { isLoading, hasError, clearError, getOrdersLeaderboard } = OrderApi()
 
+    // leaderboard data fetching
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
@@ -33,6 +34,8 @@ const LeaderBoard = () => {
         fetchLeaderboard()
     }, [])
 
+
+    // leaderboard refresh
     useEffect(() => {
         const id = setInterval(async () => {
             try {
@@ -54,35 +57,35 @@ const LeaderBoard = () => {
             <ErrorModal error={hasError} onClear={clearError} />
             {
                 isLoading ?
-                <Spinner
-                    color="success"
-                    className="fixed top-1/4"
-                    style={{ left: 'calc(50% - 40px)', zIndex: 100 }}
-                    classNames={{
-                        wrapper: "w-20 h-20",
-                        circle1: "border-5",
-                        circle2: "border-5"
-                    }} 
-                />
-                :
-                leaderboard.length === 0 && !isLoading ?
-                <>
-                    <div className="lg:hidden">
-                        <MobileEmptyLeaderBoard />
-                    </div>
-                    <div className="hidden lg:block">
-                        <LargeEmptyLeaderBoard />
-                    </div>
-                    </>
-                :
-                <>
-                    <div className="lg:hidden">
-                        <MobileLeaderBoard data={leaderboard} total={total} />
-                    </div>
-                    <div className="hidden lg:block">
-                        <LargeLeaderBoard data={leaderboard} total={total} />
-                    </div>
-                </>
+                    <Spinner
+                        color="success"
+                        className="fixed top-1/4"
+                        style={{ left: 'calc(50% - 40px)', zIndex: 100 }}
+                        classNames={{
+                            wrapper: "w-20 h-20",
+                            circle1: "border-5",
+                            circle2: "border-5"
+                        }}
+                    />
+                    :
+                    leaderboard.length === 0 && !isLoading ?
+                        <>
+                            <div className="lg:hidden">
+                                <MobileEmptyLeaderBoard />
+                            </div>
+                            <div className="hidden lg:block">
+                                <LargeEmptyLeaderBoard />
+                            </div>
+                        </>
+                        :
+                        <>
+                            <div className="lg:hidden">
+                                <MobileLeaderBoard data={leaderboard} total={total} />
+                            </div>
+                            <div className="hidden lg:block">
+                                <LargeLeaderBoard data={leaderboard} total={total} />
+                            </div>
+                        </>
             }
         </>
     )

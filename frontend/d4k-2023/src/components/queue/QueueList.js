@@ -110,7 +110,7 @@ const QueueList = (props) => {
                 <div>
                     <Divider />
 
-                    <CardFooter className="bottom-0 border-t-1 border-zinc-100/50 justify-between w-full py-2">
+                    <CardFooter className="bottom-0 border-t-1 border-zinc-100/50 justify-between w-full pt-2 pb-3">
                         <div className="italic text-gray-700">{order.comments}</div>
                     </CardFooter>
                 </div>
