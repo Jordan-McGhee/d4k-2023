@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import "./BartabNav.css"
 import "./MobileNav.css"
 import { UserApi } from "../api/userApi";
 import { ScrollShadow, Button } from "@nextui-org/react";
+import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../firebase/firebase"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCameraRetro } from '@fortawesome/free-solid-svg-icons'
 
 const BartabNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
@@ -15,6 +19,56 @@ const BartabNav = (props) => {
     const [paypalUrl, setPaypalUrl] = useState('https://paypal.me/jacobwwebber')
     const location = useLocation();
     const { getTab } = UserApi()
+    const fileInputRef = useRef();
+
+        // set initial state for the object from db here
+        const [imageData, setImageData] = useState({ img: "" });
+        const [file, setFile] = useState(null);
+
+    function handleChange(e) {
+        if (e.target.files[0])
+            setFile(e.target.files[0]);
+      }
+
+      
+      const uploadFile = () => {
+        const storageRef = ref(storage, data.tab.username)
+        const uploadTask = uploadBytesResumable(storageRef, file)
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log("upload is" + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload paused");
+                break
+              case "running":
+                console.log("Upload running");
+                break
+              default:
+                break
+            }
+          },
+          (error) => {
+            console.log(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadedURL) => {
+              // persist to database for user
+              setImageData((prev) => ({ ...prev, img: downloadedURL }));
+            })
+          }
+        )
+      }
+
+      useEffect(() => {
+        if (file) {
+            uploadFile()
+        }
+    }, [file])
+    
 
     useEffect(() => {
         const userId = localStorage.getItem('userId')
@@ -23,7 +77,6 @@ const BartabNav = (props) => {
                 try {
                     const responseData = await getTab(userId)
                     setData(responseData)
-                    // console.log(responseData)
                 } catch (error) {
                     console.log(error)
                 }
@@ -64,6 +117,7 @@ const BartabNav = (props) => {
         <div>
             {data && (data.tab.tab_total > 0) &&
                 <div className={`outer-menu menu-left ${!isChecked ? 'animate-pulse' : ''}`}>
+                    
                     <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
                         onChange={(event) => setIsChecked(event.currentTarget.checked)}
                     />
@@ -74,6 +128,17 @@ const BartabNav = (props) => {
                         <div>
                             <div>
                                 <ul>
+                                    <li>
+
+                                    <form className="top-0" onSubmit={uploadFile}>
+                                        <input className="hidden" ref={fileInputRef} type="file" onChange={handleChange} />
+                                        <Button radius="full" size="lg" isIconOnly className="z-[1000] float-right bg-white border-2" onPress={()=>fileInputRef.current.click()}>
+                                            { imageData.img ? <img alt="Profile Pic" src={imageData.img}/> :
+                                            <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
+                                        }
+                                        </Button>
+                                    </form>
+                                    </li>
                                     <li><div className="font-bungee text-4xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
                                     </li>
                                     <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.tab.username}</div></li>
