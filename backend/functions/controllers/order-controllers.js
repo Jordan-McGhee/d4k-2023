@@ -186,7 +186,7 @@ const getOrdersGrouped = async (req, res, next) => {
 
 const getOrdersLeaderboard = async (req, res, next) => {
     let query = `
-        SELECT user_id, username, quantity, amount_paid, adjusted_donations 
+        SELECT user_id, photo_url, username, quantity, amount_paid, adjusted_donations 
         FROM user_totals 
         WHERE amount_paid + adjusted_donations > 0 
         ORDER BY amount_paid + adjusted_donations DESC 

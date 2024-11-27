@@ -7,9 +7,14 @@ router.post("/", userControllers.createUser)
 
 router.get("/verify/:username", userControllers.getUserIDByUsername)
 
+
 router.patch("/:user_id/adjustDonations", userControllers.adjustDonations)
 
+router.patch("/:user_id/changePhotoUrl", userControllers.changePhotoUrl)
+
 router.get("/all", userControllers.getAllUsers)
+
+router.get("/:user_id", userControllers.getUserById)
 
 router.patch("/:user_id", userControllers.changeUsername)
 

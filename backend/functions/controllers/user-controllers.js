@@ -54,6 +54,22 @@ const getUserIDByUsername = async (req, res, next) => {
     res.status(200).json({ user_id: response?.rows[0]?.user_id })
 }
 
+/** Get a user by user_id */
+const getUserById = async (req, res, next) => {
+    const { user_id } = req.params
+    // check if any case variation of that username exists
+    let query = "SELECT * FROM users WHERE user_id = $1"
+    let response
+
+    try {
+        response = await pool.query(query, [user_id])
+    } catch (error) {
+        logger.error(`Error searching for user_id ${user_id} ${error}`)
+        return next(new HttpError(`Error searching for user_id ${user_id}.`, 500))
+    }
+    res.status(200).json(response.rows[0])
+}
+
 const adjustDonations = async (req, res, next) => {
     const { donation_amount } = req.body
     const { user_id } = req.params
@@ -120,6 +136,23 @@ const changeUsername = async (req, res, next) => {
     }
 }
 
+const changePhotoUrl = async (req, res, next) => {
+    const { user_id } = req.params
+    const { photo_url } = req.body
+
+    let query = "UPDATE users SET photo_url = $1 WHERE user_id = $2 RETURNING *"
+    let response
+
+    try {
+        response = await pool.query(query, [photo_url, user_id])
+    } catch (error) {
+        logger.error(`Error changing User ${user_id}'s photo_url to ${photo_url}. ${error}`)
+
+        return next(new HttpError(`Error changing User ${user_id}'s photo_url to ${photo_url}.`, 500))
+    }
+    res.status(201).json(response.rows[0])
+}
+
 const getTab = async (req, res, next) => {
     const { user_id } = req.params
     let text = "SELECT * FROM tab_totals WHERE user_id = $1"
@@ -169,8 +202,10 @@ const closeTab = async (req, res, next) => {
 
 exports.createUser = createUser
 exports.getUserIDByUsername = getUserIDByUsername
+exports.getUserById = getUserById
 exports.adjustDonations = adjustDonations
 exports.getAllUsers = getAllUsers
 exports.changeUsername = changeUsername
+exports.changePhotoUrl = changePhotoUrl
 exports.getTab = getTab
 exports.closeTab = closeTab

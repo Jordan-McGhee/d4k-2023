@@ -79,7 +79,7 @@ const FAQ = () => {
                             <FontAwesomeIcon className="pl-2" icon={faEnvelope}/>
                             </Link>
 
-                </Button>
+                        </Button>
                     </CardBody>
                 </Card>
                 <Card className={cardCls}>

@@ -31,6 +31,7 @@ const LargeLeaderBoard = props => {
                                             quantity = { user.quantity }
                                             total = { user.amount_paid + user.adjusted_donations }
                                             rank = { i + 1 }
+                                            photoUrl = { user.photo_url }
                                         />
                                     )) }
                                     </ul>
@@ -47,6 +48,7 @@ const LargeLeaderBoard = props => {
                                                     quantity = { user.quantity }
                                                     total = { user.amount_paid + user.adjusted_donations }
                                                     rank = { i + 4 }
+                                                    photoUrl = { user.photo_url }
                                                 />
                                             ))
                                         }

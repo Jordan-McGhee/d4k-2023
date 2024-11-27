@@ -17,7 +17,7 @@ const LeaderBoard = () => {
     const [leaderboard, setLeaderBoard] = useState([])
     const [total, setTotal] = useState([])
 
-    const { isLoading, hasError, clearError, getOrdersLeaderboard } = OrderApi()
+    const { isLoadingOrderApi, hasError, clearError, getOrdersLeaderboard } = OrderApi()
 
     // leaderboard data fetching
     useEffect(() => {
@@ -56,7 +56,7 @@ const LeaderBoard = () => {
 
             <ErrorModal error={hasError} onClear={clearError} />
             {
-                isLoading ?
+                isLoadingOrderApi ?
                     <Spinner
                         color="success"
                         className="fixed top-1/4"
@@ -68,7 +68,7 @@ const LeaderBoard = () => {
                         }}
                     />
                     :
-                    leaderboard.length === 0 && !isLoading ?
+                    leaderboard.length === 0 && !isLoadingOrderApi ?
                         <>
                             <div className="lg:hidden">
                                 <MobileEmptyLeaderBoard />

@@ -32,7 +32,7 @@ const LargeTopThreeItem = props => {
             <p className="uppercase font-bold font-bungee">{ rankText }</p>
             {/* image */}
             <div className="relative text-center pt-0 mt-0">
-                <img src = { image } alt = {`user rank ${props.rank}`} className={ imageClass + " border-5 shadow-xl drop-shadow-xl rounded-full border-white" } />
+                <img src = { props.photoUrl ? props.photoUrl : image } alt = {`user rank ${props.rank}`} className={ imageClass + " border-5 shadow-xl drop-shadow-xl rounded-full border-white" } />
                 <p className="text-4xl font-fugaz font-bold text-white absolute rounded-xl bg-emerald-800 bottom-0 inset-x-0 m-10 mb-0 py-4">
                     { props.username }
                 </p>

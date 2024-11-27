@@ -12,27 +12,58 @@ import { faCameraRetro } from '@fortawesome/free-solid-svg-icons'
 
 const BartabNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
+    const [user, setUser] = useState(null)
     const [showOrderHistory, setShowOrderHistory] = useState(false)
     const [data, setData] = useState(null)
     const [totalOwed, setTotalOwed] = useState(0)
     const [venmoUrl, setVenmoUrl] = useState('https://venmo.com/jacobwebber')
     const [paypalUrl, setPaypalUrl] = useState('https://paypal.me/jacobwwebber')
     const location = useLocation();
-    const { getTab } = UserApi()
+    const { getTab, updateUserPhoto, getUserById } = UserApi()
     const fileInputRef = useRef();
 
-        // set initial state for the object from db here
-        const [imageData, setImageData] = useState({ img: "" });
-        const [file, setFile] = useState(null);
+    // set initial state for the object from db here
+    const [imageData, setImageData] = useState({ img: "" });
+    const [file, setFile] = useState(null);
 
     function handleChange(e) {
         if (e.target.files[0])
             setFile(e.target.files[0]);
-      }
+      } 
 
-      
-      const uploadFile = () => {
-        const storageRef = ref(storage, data.tab.username)
+    useEffect(() => {
+        const localStorageUserId = localStorage.getItem('userId')
+        if (localStorageUserId) {
+            const getUserTab = async () => {
+                try {
+                    const responseData = await getTab(localStorageUserId)
+                    setData(responseData)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            getUserTab()
+        }
+    }, [location])
+
+    useEffect(() => {
+        const localStorageUserId = localStorage.getItem('userId')
+        if (localStorageUserId) {
+            const getUser = async () => {
+                try {
+                    const userResponse = await getUserById(localStorageUserId)
+                    setUser(userResponse)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            getUser()
+            
+        }
+    }, [])
+
+    const uploadFile = async () => {
+        const storageRef = ref(storage, `user-${data.tab.userId}`)
         const uploadTask = uploadBytesResumable(storageRef, file)
         uploadTask.on(
           "state_changed",
@@ -54,36 +85,33 @@ const BartabNav = (props) => {
           (error) => {
             console.log(error);
           },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadedURL) => {
-              // persist to database for user
-              setImageData((prev) => ({ ...prev, img: downloadedURL }));
+          async () => {
+            await getDownloadURL(uploadTask.snapshot.ref).then(async (downloadedURL) => {
+
+                setUser(prevState => ({
+                        ...prevState,
+                        photo_url: downloadedURL
+                    }))
+                setImageData((prev) => ({ ...prev, img: downloadedURL }));
             })
           }
         )
-      }
+    }
 
-      useEffect(() => {
+    useEffect(() => {
         if (file) {
             uploadFile()
         }
     }, [file])
-    
 
     useEffect(() => {
-        const userId = localStorage.getItem('userId')
-        if (userId) {
-            const getUserTab = async () => {
-                try {
-                    const responseData = await getTab(userId)
-                    setData(responseData)
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-            getUserTab()
+        const updateImg = async () => {
+            await updateUserPhoto(user.user_id, imageData.img)
         }
-    }, [location])
+        if(imageData.img){
+            updateImg()
+        }
+    }, [imageData])
 
     useEffect(() => {
         if (data) {
@@ -93,7 +121,6 @@ const BartabNav = (props) => {
 
             let venmo = `https://venmo.com/drink4thekids?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '%C2%A0')
             setVenmoUrl(venmo)
-            //let paypal = `https://www.paypal.com/qrcodes/managed/7266ecfe-5e85-4e91-b974-f1d35ff4711e?utm_source=bizapp&amount=${data.tab.tab_total}&currency_code=USD&note=${note}`.replace(/ /g, '%C2%A0')
             let paypal = `https://paypal.me/jacobwwebber/${data.tab.tab_total}?&item_name=${note}`.replace(/ /g, '%C2%A0')
             setPaypalUrl(paypal)
         }
@@ -133,7 +160,7 @@ const BartabNav = (props) => {
                                     <form className="top-0" onSubmit={uploadFile}>
                                         <input className="hidden" ref={fileInputRef} type="file" onChange={handleChange} />
                                         <Button radius="full" size="lg" isIconOnly className="z-[1000] float-right bg-white border-2" onPress={()=>fileInputRef.current.click()}>
-                                            { imageData.img ? <img alt="Profile Pic" src={imageData.img}/> :
+                                            { user && user.photo_url ? <img alt="Profile Pic" src={user.photo_url}/> :
                                             <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
                                         }
                                         </Button>

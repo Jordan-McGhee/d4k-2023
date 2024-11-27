@@ -14,6 +14,10 @@ export const UserApi = () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/verify/${username}`, "GET")
     }
 
+    const getUserById = async (userId) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}`, "GET")
+    }
+
     const getAllUsers = async () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/all`, "GET")
     }
@@ -35,13 +39,20 @@ export const UserApi = () => {
             "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({donation_amount: donationAmount}))
     }
 
+    const updateUserPhoto = async (userId, photoUrl) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}/changePhotoUrl`, 
+            "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({photo_url: photoUrl}))
+    }
+
     return { 
         updateUsername,
         getUserIdByUsername,
+        getUserById,
         createUser,
         getAllUsers,
         getTab,
         closeTab,
         updateUserDonations,
+        updateUserPhoto,
         isUserApiLoading: isLoading, hasError, clearError }
 }

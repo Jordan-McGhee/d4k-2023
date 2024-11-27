@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 .progress-bar {
+  z-index: 1000;
   box-shadow: 0px 0px 10px rgba(255, 50, 0, 0.8) inset;
   background: repeating-linear-gradient(45deg, #FFFFEE, #FFFFEE 35px, #b43544 40px, #ec4155 75px);
 }
