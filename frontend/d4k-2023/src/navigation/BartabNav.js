@@ -63,7 +63,7 @@ const BartabNav = (props) => {
     }, [])
 
     const uploadFile = async () => {
-        const storageRef = ref(storage, `user-${data.tab.userId}`)
+        const storageRef = ref(storage, `user-${data.tab.user_id}`)
         const uploadTask = uploadBytesResumable(storageRef, file)
         uploadTask.on(
           "state_changed",

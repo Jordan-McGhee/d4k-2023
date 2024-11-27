@@ -7,7 +7,7 @@ const MobileLeaderBoard = props => {
 
     const [ storedUserID, setStoredUserId ] = useState(null)
 
-    const userClass = 'bg-green-200 border-2 p-4 animate-pulse-custom'
+    const userClass = 'bg-green-200 border-2 p-4 animate-pulse-custom first:rounded-t-3xl '
 
     // check for storedUserID and pass it through for highlighting in the leaderboard list
     useEffect(() => {
