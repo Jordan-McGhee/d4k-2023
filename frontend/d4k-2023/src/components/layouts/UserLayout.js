@@ -16,7 +16,7 @@ const UserLayout = () => {
     return (
         <div>
             {nav}
-            {!isLeaderboard && !isMobile && <BartabNav />}
+            {<BartabNav />}
             <div className={`App overflow-hidden  bg-cover bg-center bg-fixed bg-no-repeat bg-top ${!isMobile && !isLeaderboard ? 'mt-20' : ''}`} style={{backgroundImage: `url(${backgroundImage2})`}}>
                 <div className="min-h-screen ">
                     <div className={`main-container ${isLeaderboard ? 'm-0 p-0' : 'p-5' }`}>

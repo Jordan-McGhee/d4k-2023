@@ -44,6 +44,9 @@ const BartabNav = (props) => {
             }
             getUserTab()
         }
+        if(location.hash === "#bartab"){
+            setIsChecked(true)
+        }
     }, [location])
 
     useEffect(() => {
