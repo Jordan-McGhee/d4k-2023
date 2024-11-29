@@ -1,8 +1,8 @@
-import React, { Suspense,  } from "react"
+import React, { Suspense, } from "react"
 import { Route, Routes, Navigate } from "react-router-dom"
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
-import {NextUIProvider} from "@nextui-org/react";
+import { NextUIProvider } from "@nextui-org/react";
 import { Spinner } from "@nextui-org/spinner";
 
 import HomePage from "./pages/HomePage"
@@ -25,7 +25,7 @@ const AdminBarTabs = React.lazy(() => import("./pages/AdminBarTab"))
 const AdminUsers = React.lazy(() => import("./pages/AdminUsers"))
 const AdminAnalytics = React.lazy(() => import("./pages/AdminAnalytics"))
 const AdminInventory = React.lazy(() => import("./pages/AdminInventory"))
-const LargeLeaderBoard = React.lazy(() => import("./components/leaderboard/Large/LargeLeaderBoard"))
+const NewLeaderboard = React.lazy(() => import("./pages/NewLeaderboard"))
 const NotFound = React.lazy(() => import("./pages/NotFound"))
 
 function App() {
@@ -33,30 +33,31 @@ function App() {
     <Routes>
 
       {/* USER LAYOUT PAGES */}
-      <Route element = { <UserLayout />}>
-          <Route path = "/" element = { <HomePage />} />
-          <Route path= "/faq" element = { <FAQ /> } />
-          <Route path = "/menu" element = { <Menu />} />
-          <Route path = "/order" element = { <Order />} />
-          <Route path = "/queue" element = { <Queue />} />
-          <Route path = "/donate" element = { <Donate />} />
-          <Route path = "/leaderboard" element = { <Leaderboard />} />
+      <Route element={<UserLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/order" element={<Order />} />
+        <Route path="/queue" element={<Queue />} />
+        <Route path="/donate" element={<Donate />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/jumbotron" element={<NewLeaderboard />} />
       </Route>
 
       {/* ADMIN LAYOUT AND PAGES */}
-      <Route element = { <AdminLayout />} >
-      <Route path = "/admin" element = { <Navigate to='/admin/Orders' /> } />
-        <Route path = "/admin/Orders" element = { <Admin /> } />
-        <Route path = "/admin/Tabs" element = { <AdminBarTabs />} />
-        <Route path = "/admin/Users" element = { <AdminUsers/>} />
-        <Route path = "/admin/Analytics" element = { <AdminAnalytics/>} />
-        <Route path = "/admin/Inventory" element = { <AdminInventory/>} />
+      <Route element={<AdminLayout />} >
+        <Route path="/admin" element={<Navigate to='/admin/Orders' />} />
+        <Route path="/admin/Orders" element={<Admin />} />
+        <Route path="/admin/Tabs" element={<AdminBarTabs />} />
+        <Route path="/admin/Users" element={<AdminUsers />} />
+        <Route path="/admin/Analytics" element={<AdminAnalytics />} />
+        <Route path="/admin/Inventory" element={<AdminInventory />} />
 
       </Route>
 
       {/* NOT FOUND LAYOUT */}
-      <Route element = { <NotFoundLayout />}>
-        <Route path = "*" element = { <NotFound />} />
+      <Route element={<NotFoundLayout />}>
+        <Route path="*" element={<NotFound />} />
       </Route>
 
     </Routes>
@@ -64,14 +65,14 @@ function App() {
 
   return (
     <NextUIProvider>
-      <Suspense fallback = {
+      <Suspense fallback={
         <div>
-          <Spinner color="success" className="fixed top-2/4" style={{left:'calc(50% - 20px)'}} size="lg" />
+          <Spinner color="success" className="fixed top-2/4" style={{ left: 'calc(50% - 20px)' }} size="lg" />
         </div>
       }>
-        { routes }
+        {routes}
       </Suspense>
-      <ToastContainer style={{width: '100%'}} transition={Zoom} />
+      <ToastContainer style={{ width: '100%' }} transition={Zoom} />
     </NextUIProvider>
   );
 }

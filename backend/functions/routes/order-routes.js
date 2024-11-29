@@ -27,4 +27,6 @@ router.delete("/:order_id", orderControllers.deleteOrder)
 
 router.patch(`/:order_id/unvoid`, orderControllers.unvoidOrder)
 
+router.get("/stats", orderControllers.getLeaderboardStats)
+
 module.exports = router
