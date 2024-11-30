@@ -1,18 +1,40 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import faq from "../images/icons/FAQ.png"
-import menu from "../images/icons/menu.png"
-import order from "../images/icons/order.png"
-import donate from "../images/icons/donate.png"
-import queue from "../images/icons/queue.png"
-import leaderboard from "../images/icons/leaderboard.png"
-import closeTab from "../images/icons/closeTab.png"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCandyCane, faCocktail, faGift, faIgloo, faPeopleGroup, faMedal } from "@fortawesome/free-solid-svg-icons";
+
+import {Link, Image, Navbar, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarBrand} from "@nextui-org/react";
 
 const MainNav = (props) => {
 
-    // retrieve username from localStorage if there
     let localStorageUsername = localStorage.getItem('storedUsername')
-
+    const menuItems = [
+      {
+          title: "Info",
+          link: "/faq",
+          icon: faCandyCane
+      },
+      {
+          title: "Menu",
+          link: "/menu",
+          icon: faCocktail
+      },
+      {
+          title: "Order",
+          link: "/order",
+          icon: faGift
+      },
+      {
+          title: "Queue",
+          link: "queue",
+          icon: faPeopleGroup
+      },
+      {
+          title: "Leaderboard",
+          link: "leaderboard",
+          icon: faMedal
+      }
+  ]
     const [ hamburgerOpen, setHamburgerOpen ] = useState(false)
 
     const hamburgerHandler = () =>{
@@ -20,77 +42,34 @@ const MainNav = (props) => {
     }
 
     return (
-        <div className= { props.navClass ? props.navClass : "nav-container bg-green-600 p-5 top-0 fixed w-full z-50"}>
+        <>
+ <Navbar className="nav-container bg-emerald-600 h-20" >
+      {/* <NavbarBrand>
+        <AcmeLogo />
+        <p className="font-bold text-inherit">ACME</p>
+      </NavbarBrand> */}
+      <NavbarBrand>
+        <NavLink to="/"  className="absolute inline-flex hover:animate-ping">
+        <Image className="" width={70} height={70} src="../images/santaicon.png"></Image> <span className="font-fugaz text-4xl text-slate-200 pt-4">D4K</span>
+        </NavLink>
+        <NavLink className="inline-flex">
+      <Image className="" width={70} height={70} src="../images/santaicon.png"></Image> <span className="font-fugaz text-4xl text-slate-200 pt-4">D4K</span>
+      </NavLink>
+      </NavbarBrand>
+        <NavbarContent className="hidden sm:flex " justify="center">
+              {menuItems.map((item, index) => (
+              <NavbarItem key={`${item}-${index}`} className="text-xl font-bungee text-slate-200 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:text-white duration-200">
+                  <NavLink to={item.link} 
+                  className={ ({isActive}) => isActive ? "my-2 text-emerald-600 px-3 py-2 rounded-full  border-b bg-slate-200 border-white font-semibold" : "px-3 py-2 text-gray/50 "}>
+                    <FontAwesomeIcon className="mx-1" icon={item.icon} />
 
-            <div className="m-auto max-w-md">
-
-                {/* CLOSED HAMBURGER */}
-
-            {
-                !hamburgerOpen &&
-                <div className="flex items-center">
-
-                    <div className="space-y-2 mr-6 justify-start" onClick={ hamburgerHandler } >
-                        <span className="block h-0.5 w-8 bg-white"></span>
-                        <span className="block h-0.5 w-8 bg-white"></span>
-                        <span className="block h-0.5 w-8 bg-white"></span>
-                    </div>
-
-                    <NavLink to="/" className=''>
-                        <h1 className="text-4xl font-bold text-white">D4K</h1>
-                    </NavLink>
-                </div>
-            }
-
-            {/* OPEN HAMBURGER */}
-
-            {
-                hamburgerOpen &&
-                <div className=""  onClick={ hamburgerHandler }>
-
-                    <div className="flex items-center">
-
-                        <svg
-                            className="h-8 w-8 text-white"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
-
-                        <NavLink to="/" className='ml-5'>
-                            <h1 className="text-4xl font-bold text-white">D4K</h1>
-                        </NavLink>
-                    </div>
-
-                    <ul className="NAVIGATION-MOBILE-OPEN flex flex-col items-start justify-between">
-
-                        <li className="ml-1.5 my-4 uppercase text-white">
-                            <NavLink to="/faq" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
-                                <img src={ faq } alt = "faq-icon" className="w-7 mr-5"/>
-                                <p>FAQ</p>
-                            </NavLink>
-                        </li>
-
-                        <li className="ml-1.5 my-4 uppercase text-white">
-                            <NavLink to="/menu" className={ ({isActive}) => isActive ? "flex items-center font-extrabold text-lg" : "flex items-center"}>
-                                <img src={ menu } alt = "faq-icon" className="w-7 mr-5"/>
-                                <p>Menu</p>
-                            </NavLink>
-                        </li>
-                    </ul>
-
-                </div>
-            }
-
-            </div>
-
-        </div>
+                      {item.title}
+                  </NavLink>
+              </NavbarItem>
+              ))}
+        </NavbarContent>
+    </Navbar>
+        </>
     )
 }
 

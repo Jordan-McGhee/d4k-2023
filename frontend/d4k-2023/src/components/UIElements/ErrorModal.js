@@ -1,23 +1,27 @@
 import React from 'react';
 
-import Modal from './Modal';
-import Button from '../FormElements/Button';
+import {Button, Modal, ModalHeader, ModalFooter, ModalBody, ModalContent} from "@nextui-org/react";
 
 const ErrorModal = props => {
     return (
         <Modal
             onCancel={props.onClear}
-            header="An Error Occurred!"
-            show={!!props.error}
-            footer={
-                <Button
-                    type = "button"
-                    text = "Okay"
-                    onClick={ props.onClear }
-                />
-            }
+            isOpen={!!props.error}
         >
-            <p>{props.error}</p>
+            <ModalContent>
+            {(onClose) => (
+                <>
+                    <ModalHeader className="flex flex-col gap-1 font-bungee">Son of a Nutcracker!</ModalHeader>
+                    <ModalBody>
+                        {props.error}
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button className='font-fugaz text-white bg-emerald-600' onPress={ props.onClear }
+                        >Close</Button>
+                    </ModalFooter>
+                </>
+            )}
+            </ModalContent>
         </Modal>
     );
 };

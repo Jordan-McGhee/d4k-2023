@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 // import MobileEmptyLeaderBoard from "../components/leaderboard/Mobile/MobileEmptyLeaderBoard";
 import MobileLeaderBoard from "../components/leaderboard/Mobile/MobileLeaderBoard";
 import LargeLeaderBoard from "../components/leaderboard/Large/LargeLeaderBoard"
-// import ErrorModal from "../components/UIElements/ErrorModal";
-// import LoadingSpinner from "../components/UIElements/LoadingSpinner";
-// import { useFetch } from "../hooks/useFetch";
-// import { isMobile } from 'react-device-detect';
 import { OrderApi } from "../api/orderApi";
 import ErrorModal from "../components/UIElements/ErrorModal";
 import { Spinner } from "@nextui-org/react";
