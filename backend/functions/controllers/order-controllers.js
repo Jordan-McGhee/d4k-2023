@@ -254,8 +254,8 @@ const getLeaderboardStats = async (req, res, next) => {
 
     // top 10 users
     let topTenQuery = `
-        SELECT user_id, photo_url, username, quantity, amount_paid, adjusted_donations 
-        FROM user_totals 
+        SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations 
+        FROM leaderboard_totals 
         WHERE amount_paid + adjusted_donations > 0 
         ORDER BY amount_paid + adjusted_donations DESC 
         LIMIT 10`
@@ -311,17 +311,21 @@ const getLeaderboardStats = async (req, res, next) => {
         return next (new HttpError(`Error getting ingredient totals for leaderboard. ${error}`, 500))
     }
 
-    let drinksResponse, shotsResponse
+    let drinksResponse, drinkQuantity = 0, shotsResponse, shotQuantity = 0
     drinksResponse = drinkCountResponse.rows.filter(drink => drink.type !== "shot")
+    drinksResponse.forEach((drink) => drinkQuantity += drink.total_orders)
     shotsResponse = drinkCountResponse.rows.filter(drink => drink.type === "shot")
+    shotsResponse.forEach((drink) => shotQuantity += drink.total_orders)
 
     res.status(200).json({ 
         message: "Retrieved leaderboard data!",
         topTen: topTenResponse.rows,
         sumTotal: sumResponse?.rows[0]?.d4k_total,
         drinkCount: drinksResponse,
-        ingredientCount: ingredientResponse.rows,
-        shots: shotsResponse
+        drinkQuantity: drinkQuantity,
+        shots: shotsResponse,
+        shotQuantity: shotQuantity,
+        ingredientCount: ingredientResponse.rows
     })
 }
 

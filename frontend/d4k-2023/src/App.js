@@ -41,7 +41,6 @@ function App() {
         <Route path="/queue" element={<Queue />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/jumbotron" element={<NewLeaderboard />} />
       </Route>
 
       {/* ADMIN LAYOUT AND PAGES */}
@@ -52,8 +51,10 @@ function App() {
         <Route path="/admin/Users" element={<AdminUsers />} />
         <Route path="/admin/Analytics" element={<AdminAnalytics />} />
         <Route path="/admin/Inventory" element={<AdminInventory />} />
-
       </Route>
+
+      {/* jumbotron */}
+      <Route path="/jumbotron" element={<NewLeaderboard />} />
 
       {/* NOT FOUND LAYOUT */}
       <Route element={<NotFoundLayout />}>
