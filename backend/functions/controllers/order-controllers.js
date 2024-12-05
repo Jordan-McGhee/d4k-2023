@@ -250,18 +250,18 @@ const unvoidOrder = async (req, res, next) => {
 const getLeaderboardStats = async (req, res, next) => {
 
     // responses
-    let topTenResponse, sumResponse, drinkCountResponse, ingredientResponse
+    let topUsersResponse, sumResponse, drinkCountResponse, ingredientResponse
 
     // top 10 users
-    let topTenQuery = `
+    let topUsersQuery = `
         SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations 
         FROM leaderboard_totals 
         WHERE amount_paid + adjusted_donations > 0 
         ORDER BY amount_paid + adjusted_donations DESC 
-        LIMIT 10`
+        LIMIT 11`
 
     try {
-        topTenResponse = await pool.query(topTenQuery)
+        topUsersResponse = await pool.query(topUsersQuery)
     } catch (error) {
         logger.error(`Error getting top ten for leaderboard. ${error}`, 500)
         return next(new HttpError(`Error getting top ten for leaderboard. ${error}`, 500))
@@ -286,7 +286,7 @@ const getLeaderboardStats = async (req, res, next) => {
     let drinkCountQuery = `
         SELECT *
         FROM order_totals
-        ORDER BY type, total_orders DESC
+        ORDER BY total_orders DESC
         `
 
     try {
@@ -319,7 +319,7 @@ const getLeaderboardStats = async (req, res, next) => {
 
     res.status(200).json({ 
         message: "Retrieved leaderboard data!",
-        topTen: topTenResponse.rows,
+        topUsers: topUsersResponse.rows,
         sumTotal: sumResponse?.rows[0]?.d4k_total,
         drinkCount: drinksResponse,
         drinkQuantity: drinkQuantity,

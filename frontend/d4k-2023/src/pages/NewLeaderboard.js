@@ -9,7 +9,7 @@ import { Spinner } from "@nextui-org/react"
 
 // component imports
 import Jumbotron from "../components/leaderboard/New/Large/Jumbotron"
-
+import LargeEmptyLeaderBoard from "../components/leaderboard/Large/LargeEmptyLeaderBoard"
 
 // mobile component imports
 
@@ -19,19 +19,34 @@ const NewLeaderboard = () => {
     const { isLoadingOrderApi, hasError, clearError, getNewLeaderboard } = OrderApi()
 
     // states for top ten users, overallTotal for d4k, drinkCount, ingredientCount, shotCount, and total drinks/shots ordered
-    const [topTen, setTopTen] = useState([])
+    const [topUsers, setTopUsers] = useState([])
     const [total, setTotal] = useState(0)
     const [drinkCount, setDrinkCount] = useState({})
     const [ingredientCount, setIngredientCount] = useState({})
     const [shotCount, setShotCount] = useState({})
     const [drinkTotals, setDrinkTotals] = useState([])
 
+
+    const fetchLeaderboard = async () => {
+        try {
+            const data = await getNewLeaderboard()
+            setTopUsers(data.topUsers)
+            setTotal(data.sumTotal)
+            setDrinkCount(data.drinkCount)
+            setShotCount(data.shots)
+            setIngredientCount(data.ingredientCount)
+            setDrinkTotals([data.drinkQuantity, data.shotQuantity])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     // fetch data
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
                 const data = await getNewLeaderboard()
-                setTopTen(data.topTen)
+                setTopUsers(data.topUsers)
                 setTotal(data.sumTotal)
                 setDrinkCount(data.drinkCount)
                 setShotCount(data.shots)
@@ -51,7 +66,7 @@ const NewLeaderboard = () => {
     // useEffect(() => {
     //     const id = setInterval(async () => {
     //         fetchLeaderboard()
-    //     }, 300000)
+    //     }, 300000) // 5 minutes
 
     //     return () => clearInterval(id)
     // }, [])
@@ -75,10 +90,10 @@ const NewLeaderboard = () => {
                     />
 
                     :
-                    topTen.length > 0 && total && drinkCount && shotCount && ingredientCount && drinkTotals ?
+                    topUsers.length > 0 && total && drinkCount && shotCount && ingredientCount && drinkTotals ?
                         <>
                             <Jumbotron
-                                topTen={topTen}
+                                topUsers={topUsers}
                                 total={total}
                                 drinkCount={drinkCount}
                                 ingredientCount={ingredientCount}
@@ -89,7 +104,7 @@ const NewLeaderboard = () => {
 
                         :
 
-                        <></>
+                        <LargeEmptyLeaderBoard />
             }
 
 
