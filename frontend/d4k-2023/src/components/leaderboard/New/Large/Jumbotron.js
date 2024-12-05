@@ -9,6 +9,7 @@ import bgImageOriginal from "../../../../images/leaderboard.jpg"
 import LargeProgressBar from "../../Large/LargeProgressBar";
 import LargeTopThreeItem from "./LargeTopThreeItem";
 import LargeTopTen from "./LargeTopTen";
+import JumbotronStats from "./JumbotronStats";
 
 const Jumbotron = props => {
 
@@ -29,11 +30,13 @@ const Jumbotron = props => {
             <div className="flex justify-between h-screen pb-20">
 
                 {/* progress bar */}
-                <LargeProgressBar total={props.total} />
+                <div className="w-1/6">
+                    <LargeProgressBar total={props.total} />
+                </div>
 
                 {/* main content - top ten */}
 
-                <div className="w-1/2 mx-6 px-4">
+                <div className="w-2/3 mx-6 px-4">
                     {/* top three */}
                     <ul className="flex justify-center my-12 px-16 rounded-2xl">
                         {
@@ -59,7 +62,7 @@ const Jumbotron = props => {
 
 
                 {/* right side */}
-
+                <JumbotronStats drinkTotals={props.drinkTotals} ingredientCount={props.ingredientCount} drinkCount={props.drinkCount} total={props.total} shotCount={props.shotCount} className="w-1/4" />
             </div>
         </div>
     )

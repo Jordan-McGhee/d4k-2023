@@ -75,9 +75,21 @@ const NewLeaderboard = () => {
                     />
 
                     :
-                    <>
-                        <Jumbotron topTen={topTen} total={total} drinkCount={drinkCount} ingredientCount={ingredientCount} shotCount={shotCount} drinkTotals={drinkTotals} />
-                    </>
+                    topTen.length > 0 && total && drinkCount && shotCount && ingredientCount && drinkTotals ?
+                        <>
+                            <Jumbotron
+                                topTen={topTen}
+                                total={total}
+                                drinkCount={drinkCount}
+                                ingredientCount={ingredientCount}
+                                shotCount={shotCount}
+                                drinkTotals={drinkTotals}
+                            />
+                        </>
+
+                        :
+
+                        <></>
             }
 
 

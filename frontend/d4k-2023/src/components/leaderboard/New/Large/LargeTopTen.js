@@ -1,14 +1,13 @@
 import React from "react";
 
 // ui elements
-import Card from "../../../UIElements/Card"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserAlt, faGlassMartini, faGlassWhiskey } from "@fortawesome/free-solid-svg-icons";
 
 const TopTenItem = props => {
 
     return (
-        <div className="rounded-3xl bg-slate-100/50 shadow-xl border-emerald-600 w-[45%] h-36 grid grid-cols-9 items-center">
+        <div className="rounded-3xl bg-slate-100/50 shadow-xl border-emerald-600 w-[45%] h-36 grid grid-cols-9 items-center px-8">
 
             {/* image & rank */}
             <div className="flex items-baseline col-span-2">
@@ -23,7 +22,7 @@ const TopTenItem = props => {
 
             {/* username & drink count */}
             <div className="col-span-5 flex flex-col gap-y-4">
-                <p className="text-5xl font-bold">{props.username}</p>
+                <p className="text-4xl font-bold">{props.username}</p>
 
                 <div className="flex gap-x-4">
                     {/* drink count */}
@@ -52,7 +51,7 @@ const TopTenItem = props => {
 const LargeTopTen = props => {
 
     return (
-        <div className="bg-white/20 w-full h-1/2 p-8">
+        <div className=" w-full h-1/2 p-8">
 
             {/* 4 through 10 */}
             {

@@ -34,7 +34,7 @@ const LargeTopThreeItem = props => {
             {/* image */}
             <div className="relative text-center pt-0 mt-0">
                 <img src={image} alt={`user rank: ${props.rank}`} className={imageClass + "border-5 shadow-xl drop-shadow-xl rounded-full border-white aspect-square object-cover"} />
-                <p className="-bottom-4 w-full text-3xl font-bold text-center text-white absolute bg-emerald-600 mb-0 py-4 px-6 rounded-full">{props.username}</p>
+                <p className="-bottom-4 w-full text-5xl font-bold text-center text-white absolute bg-emerald-600 mb-0 py-4 px-6 rounded-full">{props.username}</p>
 
             </div>
 
