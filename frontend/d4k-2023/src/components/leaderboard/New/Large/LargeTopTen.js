@@ -92,7 +92,7 @@ const LargeTopTen = props => {
             <div className="flex mx-auto gap-x-8 w-fit mt-8 pb-8">
                 <div className="flex items-center gap-x-4">
                     <FontAwesomeIcon className="h-12 text-emerald-600" icon={faUserAlt} />
-                    <p className="text-4xl text-emerald-600 font-black">91</p>
+                    <p className="text-4xl text-emerald-600 font-black">{props.user_quantity}</p>
                 </div>
 
                 <div className="flex items-center gap-x-4">

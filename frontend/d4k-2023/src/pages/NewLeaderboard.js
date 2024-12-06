@@ -20,6 +20,7 @@ const NewLeaderboard = () => {
 
     // states for top ten users, overallTotal for d4k, drinkCount, ingredientCount, shotCount, and total drinks/shots ordered
     const [topUsers, setTopUsers] = useState([])
+    const [totalUsers, setTotalUsers] = useState(0)
     const [total, setTotal] = useState(0)
     const [drinkCount, setDrinkCount] = useState({})
     const [ingredientCount, setIngredientCount] = useState({})
@@ -31,6 +32,7 @@ const NewLeaderboard = () => {
         try {
             const data = await getNewLeaderboard()
             setTopUsers(data.topUsers)
+            setTotalUsers(+data.totalUsers)
             setTotal(data.sumTotal)
             setDrinkCount(data.drinkCount)
             setShotCount(data.shots)
@@ -47,6 +49,7 @@ const NewLeaderboard = () => {
             try {
                 const data = await getNewLeaderboard()
                 setTopUsers(data.topUsers)
+                setTotalUsers(+data.totalUsers)
                 setTotal(data.sumTotal)
                 setDrinkCount(data.drinkCount)
                 setShotCount(data.shots)
@@ -90,10 +93,11 @@ const NewLeaderboard = () => {
                     />
 
                     :
-                    topUsers.length > 0 && total && drinkCount && shotCount && ingredientCount && drinkTotals ?
+                    topUsers.length > 0 && total && totalUsers && drinkCount && shotCount && ingredientCount && drinkTotals ?
                         <>
                             <Jumbotron
                                 topUsers={topUsers}
+                                totalUsers={totalUsers}
                                 total={total}
                                 drinkCount={drinkCount}
                                 ingredientCount={ingredientCount}

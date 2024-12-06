@@ -60,6 +60,7 @@ const Jumbotron = props => {
                         {/* 4 through 11 */}
                         <LargeTopTen
                             users={restOfUsers}
+                            user_quantity={props.totalUsers}
                             drink_quantity={props.drinkTotals[0]}
                             shot_quantity={props.drinkTotals[1]}
                         />

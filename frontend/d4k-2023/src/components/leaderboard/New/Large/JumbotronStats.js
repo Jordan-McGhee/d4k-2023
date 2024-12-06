@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 // ui imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserAlt, faGlassMartini, faGlassWhiskey, faGlassCheers } from "@fortawesome/free-solid-svg-icons";
+import { faUserAlt, faGlassMartini, faGlassWhiskey, faGlassCheers, faMoneyBill, faMoneyBill1, faMoneyBill1Wave, faMoneyCheckDollar } from "@fortawesome/free-solid-svg-icons";
 
 const ShotCard = props => {
 
@@ -22,7 +22,7 @@ const ShotCard = props => {
             </div>
 
             {/* content */}
-            <div className="bg-slate-100/50 p-8 w-full rounded-2xl">
+            <div className="bg-slate-100/60 p-8 w-full rounded-2xl">
                 {
                     naughty.total_orders >= nice.total_orders ?
                         <>
@@ -124,7 +124,7 @@ const StatCarousel = props => {
             <p className="text-5xl font-bold text-emerald-600 uppercase text-center mb-4">{titles[currentIndex]}</p>
 
             {/* ranking */}
-            <ul className="bg-slate-100/50 p-8 w-full flex flex-col gap-y-8 rounded-2xl">
+            <ul className="bg-slate-100/60 p-8 w-full flex flex-col gap-y-8 rounded-2xl">
                 {
                     content[currentIndex].data.map((item, i) => (
                         <li className="grid grid-cols-7 items-center" key={`${item.name}, Rank: ${i + 1}`}>
@@ -136,8 +136,7 @@ const StatCarousel = props => {
 
                             {/* name/description */}
                             <div className="col-span-4 pl-4">
-                                <p className="text-3xl font-bold capitalize">{item[content[currentIndex].name]}</p>
-                                {/* <p className="">{item.description || null}</p> */}
+                                <p className="text-3xl font-bold capitalize text-nowrap">{item[content[currentIndex].name]}</p>
                             </div>
 
                             {/* total */}
@@ -174,29 +173,49 @@ const LastYearStats = () => {
                 <p className="text-5xl font-bold text-emerald-600 uppercase">2023 D4K Stats</p>
             </div>
 
-            <div className="bg-slate-100/50 p-8 w-full flex justify-between gap-x-6 rounded-2xl">
+            <div className="bg-slate-100/60 p-8 w-full flex flex-wrap justify-between gap-4 rounded-2xl">
 
                 {/* last year total */}
-                <div className="flex flex-col items-center">
-                    <p className="text-emerald-600 text-4xl font-black">$5636</p>
-                    <p className="italic -mt-1 text-sm">Money Raised</p>
+                <div className="grid grid-cols-3 items-center w-[48%]">
+                    <div className="col-span-1 flex justify-center items-center">
+                        <FontAwesomeIcon icon={faMoneyBill1Wave} className="size-12 object-contain text-emerald-600" />
+                    </div>
+                    <div className="col-span-2 flex flex-col items-center justify-center">
+                        <p className="text-emerald-600 text-4xl font-black">$5636</p>
+                        <p className="italic -mt-1 text-xl">Money Raised</p>
+                    </div>
                 </div>
 
                 {/* last year guests */}
-                <div className="flex items-center gap-x-4">
-                    <FontAwesomeIcon icon={faUserAlt} className="size-12 object-contain text-emerald-600" />
-                    <div className="flex flex-col items-center">
-                        <p className="text-emerald-600 text-4xl font-black">136?</p>
-                        <p className="italic -mt-1 text-sm">Guests</p>
+                <div className="grid grid-cols-3 items-center w-[48%]">
+                    <div className="col-span-1 flex justify-center items-center">
+                        <FontAwesomeIcon icon={faUserAlt} className="size-12 object-contain text-emerald-600" />
+                    </div>
+                    <div className="col-span-2 flex flex-col items-center justify-center">
+                        <p className="text-emerald-600 text-4xl font-black">90</p>
+                        <p className="italic -mt-1 text-xl">Guests</p>
                     </div>
                 </div>
 
                 {/* last year drinks ordered */}
-                <div className="flex items-center gap-x-4">
-                    <FontAwesomeIcon icon={faGlassMartini} className="size-12 object-contain text-emerald-600" />
-                    <div className="flex flex-col items-center">
-                        <p className="text-emerald-600 text-4xl font-black">232?</p>
-                        <p className="italic -mt-1 text-sm">Drinks Made</p>
+                <div className="grid grid-cols-3 items-center w-[48%]">
+                    <div className="col-span-1 flex justify-center items-center">
+                        <FontAwesomeIcon icon={faGlassMartini} className="size-12 object-contain text-emerald-600" />
+                    </div>
+                    <div className="col-span-2 flex flex-col items-center justify-center">
+                        <p className="text-emerald-600 text-4xl font-black">275</p>
+                        <p className="italic -mt-1 text-xl">Drinks Made</p>
+                    </div>
+                </div>
+
+                {/* last year shots ordered */}
+                <div className="grid grid-cols-3 items-center w-[48%]">
+                    <div className="col-span-1 flex justify-center items-center">
+                        <FontAwesomeIcon icon={faGlassWhiskey} className="size-12 object-contain text-emerald-600" />
+                    </div>
+                    <div className="col-span-2 flex flex-col items-center justify-center">
+                        <p className="text-emerald-600 text-4xl font-black">134</p>
+                        <p className="italic -mt-1 text-xl">Shots Made</p>
                     </div>
                 </div>
             </div>
@@ -209,7 +228,7 @@ const JumbotronStats = props => {
 
 
     return (
-        <div className={"flex flex-col gap-y-16 items-center mr-24 w-[20%]"}>
+        <div className={"flex flex-col gap-y-20 items-center mt-6 mr-24 w-[20%]"}>
 
             <ShotCard shotCount={props.shotCount} />
 
