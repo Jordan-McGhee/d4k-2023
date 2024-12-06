@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useLocation } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import "./BartabNav.css"
@@ -14,7 +14,7 @@ const BartabNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
     const [user, setUser] = useState(null)
     const [showOrderHistory, setShowOrderHistory] = useState(false)
-    const [data, setData] = useState(null)
+    const [tabData, setTabData] = useState(null)
     const [totalOwed, setTotalOwed] = useState(0)
     const [venmoUrl, setVenmoUrl] = useState('https://venmo.com/jacobwebber')
     const [paypalUrl, setPaypalUrl] = useState('https://paypal.me/jacobwwebber')
@@ -31,13 +31,13 @@ const BartabNav = (props) => {
             setFile(e.target.files[0]);
       } 
 
-    useEffect(() => {
+      useLayoutEffect(() => {
         const localStorageUserId = localStorage.getItem('userId')
         if (localStorageUserId) {
             const getUserTab = async () => {
                 try {
                     const responseData = await getTab(localStorageUserId)
-                    setData(responseData)
+                    setTabData(responseData)
                 } catch (error) {
                     console.log(error)
                 }
@@ -49,7 +49,7 @@ const BartabNav = (props) => {
         }
     }, [location])
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         const localStorageUserId = localStorage.getItem('userId')
         if (localStorageUserId) {
             const getUser = async () => {
@@ -63,10 +63,10 @@ const BartabNav = (props) => {
             getUser()
             
         }
-    }, [])
+    }, [location])
 
     const uploadFile = async () => {
-        const storageRef = ref(storage, `user-${data.tab.user_id}`)
+        const storageRef = ref(storage, `user-${user.user_id}`)
         const uploadTask = uploadBytesResumable(storageRef, file)
         uploadTask.on(
           "state_changed",
@@ -117,22 +117,22 @@ const BartabNav = (props) => {
     }, [imageData])
 
     useEffect(() => {
-        if (data) {
-            setTotalOwed(data.tab.tab_total)
+        if (tabData) {
+            setTotalOwed(tabData.tab.tab_total)
 
-            let note = `(${data.tab.username}) ${data.tab.quantity || 0} drinks $${data.tab.drink_cost_total}${data.tab.tips_total ? `, and $${data.tab.tips_total} tip` : ''}`
+            let note = `(${tabData.tab.username}) ${tabData.tab.quantity || 0} drinks $${tabData.tab.drink_cost_total}${tabData.tab.tips_total ? `, and $${tabData.tab.tips_total} tip` : ''}`
 
-            let venmo = `https://venmo.com/drink4thekids?txn=pay&amount=${data.tab.tab_total}&note=${note}`.replace(/ /g, '%C2%A0')
+            let venmo = `https://venmo.com/drink4thekids?txn=pay&amount=${tabData.tab.tab_total}&note=${note}`.replace(/ /g, '%C2%A0')
             setVenmoUrl(venmo)
-            let paypal = `https://paypal.me/jacobwwebber/${data.tab.tab_total}?&item_name=${note}`.replace(/ /g, '%C2%A0')
+            let paypal = `https://paypal.me/jacobwwebber/${tabData.tab.tab_total}?&item_name=${note}`.replace(/ /g, '%C2%A0')
             setPaypalUrl(paypal)
         }
-    }, [data]);
+    }, [tabData]);
 
     let orderHistoryList = []
 
-    if (data) {
-        let orderHistoryObj = data.order_history
+    if (tabData) {
+        let orderHistoryObj = tabData.order_history
 
         Object.entries(orderHistoryObj).map(([ key, value]) => {
             orderHistoryList.push(
@@ -145,7 +145,7 @@ const BartabNav = (props) => {
 
     return (
         <div>
-            {data && (data.tab.tab_total > 0) &&
+            {user && 
                 <div className={`outer-menu menu-left ${!isChecked ? 'animate-pulse' : ''}`}>
                     
                     <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
@@ -155,7 +155,7 @@ const BartabNav = (props) => {
                         <div className="font-fugaz text-white tracking-widest">Pay Tab</div>
                     </div>
                     <div className="menu">
-                        <div>
+                        <div style={{ height: '150%' }}>
                             <div>
                                 <ul>
                                     <li>
@@ -169,9 +169,9 @@ const BartabNav = (props) => {
                                         </Button>
                                     </form>
                                     </li>
-                                    <li><div className="font-bungee text-4xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
+                                    <li><div className="font-bungee text-3xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
                                     </li>
-                                    <li><div className="font-bungee text-xl mb-4" id="bar-tab-name">{data.tab.username}</div></li>
+                                    <li><div className="font-bungee text-lg mb-4" id="bar-tab-name">{user.username}</div></li>
 
                                     <li className="my-4">
                                         {/* show history button */}
@@ -186,23 +186,23 @@ const BartabNav = (props) => {
                                         }
                                     </li>
 
-
+                                    { tabData &&
                                     <li>
                                         <p className="text-xl flex justify-between">Drinks Ordered:
                                             <span className=" uppercase font-bold">
-                                                {data.tab.quantity}
+                                                {tabData.tab.quantity}
                                             </span>
                                         </p>
 
                                         <p className="text-xl flex justify-between">Drinks Total:
                                             <span className=" uppercase font-bold text-green-400">
-                                                ${data.tab.drink_cost_total}
+                                                ${tabData.tab.drink_cost_total}
                                             </span>
                                         </p>
 
                                         <p className="text-xl flex justify-between">Additional Tip:
                                             <span className=" uppercase font-bold text-green-400">
-                                                ${data.tab.tips_total}
+                                                ${tabData.tab.tips_total}
                                             </span>
                                         </p>
 
@@ -212,6 +212,7 @@ const BartabNav = (props) => {
                                             </span>
                                         </p>
                                     </li>
+                                    }
                                     <li>
                                         <div className="justify-content-center mt-6">
                                             <div className="">
