@@ -162,10 +162,9 @@ const BartabNav = (props) => {
                                     <form className="top-0" onSubmit={uploadFile}>
                                         <input className="hidden" ref={fileInputRef} type="file" onChange={handleChange} />
                                         <Button 
-                                        style={{right: "260px", top: "400px"}}
                                         radius="full" 
                                         size="lg" 
-                                        isIconOnly className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full absolute" 
+                                        isIconOnly className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full" 
                                         onPress={()=>fileInputRef.current.click()}>
                                             { user && user.photo_url ? <img alt="Profile Pic" src={user.photo_url}/> :
                                             <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
