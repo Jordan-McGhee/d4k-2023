@@ -374,7 +374,7 @@ const Order = () => {
                                     label="Edit Your Name"
                                     variant="bordered"
                                     radius="full"
-                                    maxLength={30}
+                                    maxLength={20}
                                     color={isInvalidEditedUsername || isUsernameTaken ? "danger" : "success"}
                                     value={editedUsername}
                                     onValueChange={setEditedUsername}
