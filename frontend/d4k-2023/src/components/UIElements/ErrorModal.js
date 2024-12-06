@@ -4,7 +4,8 @@ import {Button, Modal, ModalHeader, ModalFooter, ModalBody, ModalContent} from "
 
 const ErrorModal = props => {
     return (
-        <Modal
+        <Modal placement="center"
+            className="items-center"
             onCancel={props.onClear}
             isOpen={!!props.error}
         >
