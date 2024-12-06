@@ -133,7 +133,7 @@ const BartabNav = (props) => {
 
     if (tabData) {
         let orderHistoryObj = tabData.order_history
-
+ 
         Object.entries(orderHistoryObj).map(([ key, value]) => {
             orderHistoryList.push(
                 <div key={`${key} - ${value}`} className="ml-2 text-xs my-0.5">
@@ -156,38 +156,43 @@ const BartabNav = (props) => {
                     </div>
                     <div className="menu">
                         <div style={{ height: '150%' }}>
-                            <div>
-                                <ul>
-                                    <li>
+                                <div>
+                                    <div>
 
                                     <form className="top-0" onSubmit={uploadFile}>
                                         <input className="hidden" ref={fileInputRef} type="file" onChange={handleChange} />
-                                        <Button radius="full" size="lg" isIconOnly className="z-[1000] float-right bg-white border-2" onPress={()=>fileInputRef.current.click()}>
+                                        <Button 
+                                        style={{right: "260px", top: "400px"}}
+                                        radius="full" 
+                                        size="lg" 
+                                        isIconOnly className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full absolute" 
+                                        onPress={()=>fileInputRef.current.click()}>
                                             { user && user.photo_url ? <img alt="Profile Pic" src={user.photo_url}/> :
                                             <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
                                         }
                                         </Button>
                                     </form>
-                                    </li>
-                                    <li><div className="font-bungee text-3xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
-                                    </li>
-                                    <li><div className="font-bungee text-lg mb-4" id="bar-tab-name">{user.username}</div></li>
+                                    </div>
+                                    <div><div className="font-bungee text-3xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
+                                    </div>
+                                    <div><div className="font-bungee text-xl mb-4" id="bar-tab-name">{user.username}</div></div>
+                                    {orderHistoryList.length > 0 &&
+                                        <div className="my-4 text-lg">
+                                            {/* show history button */}
+                                            <Button className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" size="sm" onPress = { () => setShowOrderHistory(!showOrderHistory) }>
+                                                { showOrderHistory ? 'Hide Orders' : 'Show Orders'}
+                                            </Button>
 
-                                    <li className="my-4">
-                                        {/* show history button */}
-                                        <Button className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" size="sm" onPress = { () => setShowOrderHistory(!showOrderHistory) }>
-                                            { showOrderHistory ? 'Hide Orders' : 'Show Orders'}
-                                        </Button>
-
-                                        { showOrderHistory &&
-                                            <ScrollShadow size={20} className="my-1 max-h-[8rem] overflow-y-scroll">
-                                                { orderHistoryList }
-                                            </ScrollShadow>
-                                        }
-                                    </li>
+                                            { showOrderHistory &&
+                                                <ScrollShadow size={20} className="my-1 max-h-[8rem] overflow-y-scroll">
+                                                    { orderHistoryList }
+                                                </ScrollShadow>
+                                            }
+                                        </div>
+                                    }
 
                                     { tabData &&
-                                    <li>
+                                    <div>
                                         <p className="text-xl flex justify-between">Drinks Ordered:
                                             <span className=" uppercase font-bold">
                                                 {tabData.tab.quantity}
@@ -195,25 +200,25 @@ const BartabNav = (props) => {
                                         </p>
 
                                         <p className="text-xl flex justify-between">Drinks Total:
-                                            <span className=" uppercase font-bold text-green-400">
+                                            <span className=" uppercase font-bold text-emerald-400">
                                                 ${tabData.tab.drink_cost_total}
                                             </span>
                                         </p>
 
                                         <p className="text-xl flex justify-between">Additional Tip:
-                                            <span className=" uppercase font-bold text-green-400">
+                                            <span className=" uppercase font-bold text-emerald-400">
                                                 ${tabData.tab.tips_total}
                                             </span>
                                         </p>
 
                                         <p className="text-2xl flex justify-between border-t-2 pt-4">Total Due:
-                                            <span className="uppercase font-bold text-green-400">
+                                            <span className="uppercase font-bold text-emerald-400">
                                                 ${totalOwed}
                                             </span>
                                         </p>
-                                    </li>
+                                    </div>
                                     }
-                                    <li>
+                                    <div>
                                         <div className="justify-content-center mt-6">
                                             <div className="">
                                                 {/* <hr className="hr-bold" /> */}
@@ -234,9 +239,13 @@ const BartabNav = (props) => {
                                                 </Link>
                                             </div>
                                         </div>
-                                    </li>
-                                </ul>
-                            </div>
+                                    </div>
+                                    {
+                                    <div className="pt-4">
+                                        <div className="text-lg font-bungee">Your Donations:<span className="pl-2 text-emerald-400">${tabData.tab.total_donated} </span></div>
+                                    </div>
+                                    }
+                                </div>
                         </div>
                     </div>
                 </div>
