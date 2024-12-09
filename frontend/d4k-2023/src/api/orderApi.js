@@ -55,6 +55,10 @@ export const OrderApi = () => {
             "PATCH", {'Content-Type': 'application/json'}, JSON.stringify({bartender_id: bartenderId}))
     }
 
+    const getNewLeaderboard = async () => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/stats`, 'GET',{Accept: 'application/json'})
+    }
+
     return { 
         createOrder, 
         deleteOrder,
@@ -66,6 +70,7 @@ export const OrderApi = () => {
         updateOrderBartender,
         getOrdersAdmin, 
         getOrdersAsTabs, 
-        getOrdersLeaderboard, 
+        getOrdersLeaderboard,
+        getNewLeaderboard,
         isLoadingOrderApi: isLoading, hasError, clearError }
 }

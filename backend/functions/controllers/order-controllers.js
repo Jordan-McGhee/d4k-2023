@@ -57,9 +57,9 @@ const getOrder = async (req, res, next) => {
     }
 
     if (orderResponse.rows.length > 0) {
-        res.status(200).json({message: `Found order info for order #${order_id}`, response: orderResponse.rows[0]})
+        res.status(200).json({ message: `Found order info for order #${order_id}`, response: orderResponse.rows[0] })
     } else {
-        res.status(200).json({message: `No orders found with id ${order_id}`, response: null})
+        res.status(200).json({ message: `No orders found with id ${order_id}`, response: null })
     }
 }
 
@@ -247,6 +247,78 @@ const unvoidOrder = async (req, res, next) => {
     res.status(200).json({ message: `Unvoided order #${order_id}`, response: response })
 }
 
+const getLeaderboardStats = async (req, res, next) => {
+    // responses
+    let topUsersResponse, sumResponse, drinkCountResponse, ingredientResponse
+
+    // top 10 users
+    let topUsersQuery = `
+        WITH user_leaderboard AS (SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations, (SELECT COUNT(*) FROM user_totals) AS total_users FROM leaderboard_totals WHERE amount_paid + adjusted_donations > 0 ORDER BY amount_paid + adjusted_donations DESC LIMIT 11) SELECT *, total_users FROM user_leaderboard`
+
+    try {
+        topUsersResponse = await pool.query(topUsersQuery)
+    } catch (error) {
+        logger.error(`Error getting top ten for leaderboard. ${error}`, 500)
+        return next(new HttpError(`Error getting top ten for leaderboard. ${error}`, 500))
+    }
+
+    // d4k total
+    let sumQuery = `SELECT * FROM d4k_total`
+
+    try {
+        sumResponse = await pool.query(sumQuery)
+    } catch (error) {
+        logger.error(`Error getting sum total for leaderboard. ${error}`, 500)
+        return next(new HttpError(`Error getting overall total for leaderboard. ${error}`, 500))
+    }
+
+    // Combined query for drinks and shots
+    let drinkCountQuery = `WITH drink_counts AS (SELECT *, SUM(CASE WHEN type != 'shot' THEN total_orders ELSE 0 END) OVER () AS drink_quantity, SUM(CASE WHEN type = 'shot' THEN total_orders ELSE 0 END) OVER () AS shot_quantity FROM order_totals) SELECT *, drink_quantity, shot_quantity FROM drink_counts ORDER BY total_orders DESC`
+
+    try {
+        drinkCountResponse = await pool.query(drinkCountQuery)
+    } catch (error) {
+        logger.error(`Error getting drink counts for leaderboard. ${error}`, 500)
+        return next(new HttpError(`Error getting drink counts for leaderboard. ${error}`, 500))
+    }
+
+    // ingredient totals
+    let ingredientQuery = `
+        SELECT *
+        FROM ingredient_totals
+        ORDER BY type, ingredient_totals_ml DESC
+    `
+
+    try {
+        ingredientResponse = await pool.query(ingredientQuery)
+    } catch (error) {
+        logger.error(`Error getting ingredient totals for leaderboard. ${error}`, 500)
+        return next(new HttpError(`Error getting ingredient totals for leaderboard. ${error}`, 500))
+    }
+
+    // Separate the results
+    const drinksResponse = drinkCountResponse.rows.filter(drink => drink.type !== "shot")
+    const shotsResponse = drinkCountResponse.rows.filter(drink => drink.type === "shot")
+
+    // grab total count for drinks and shots
+    const drinkQuantity = drinkCountResponse.rows[0]?.drink_quantity || 0
+    const shotQuantity = drinkCountResponse.rows[0]?.shot_quantity || 0
+
+    res.status(200).json({
+        message: "Retrieved leaderboard data!",
+        topUsers: topUsersResponse.rows,
+        totalUsers: topUsersResponse.rows[0].total_users,
+        sumTotal: sumResponse?.rows[0]?.d4k_total,
+        drinkCount: drinksResponse,
+        drinkQuantity: drinkQuantity,
+        shots: shotsResponse,
+        shotQuantity: shotQuantity,
+        ingredientCount: ingredientResponse.rows
+    })
+}
+
+
+
 exports.createOrder = createOrder
 exports.getOrder = getOrder
 exports.getOrders = getOrders
@@ -259,3 +331,4 @@ exports.getOrdersGrouped = getOrdersGrouped
 exports.getOrdersLeaderboard = getOrdersLeaderboard
 exports.deleteOrder = deleteOrder
 exports.unvoidOrder = unvoidOrder
+exports.getLeaderboardStats = getLeaderboardStats

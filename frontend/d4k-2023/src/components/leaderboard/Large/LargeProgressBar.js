@@ -7,7 +7,7 @@ const LargeProgressBar = props => {
 
     return (
         <>
-            <div className="flex justify-center h-full pl-20">
+            <div className="flex justify-center h-[97%] pl-20">
                 <span className="text-3xl text-white bg-slate-400  px-4 py-2 rounded-full text-center font-bold align-bottom absolute top-10">
                     Goal ${goal}
                 </span>

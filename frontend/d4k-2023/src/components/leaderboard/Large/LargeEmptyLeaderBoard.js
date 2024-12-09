@@ -1,5 +1,7 @@
 import React from "react";
 
+import bgImage from "../../../images/leaderboard.jpg"
+
 const LargeEmptyLeaderBoard = () => {
 
     return (
