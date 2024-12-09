@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 // ui imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserAlt, faGlassMartini, faGlassWhiskey, faGlassCheers, faMoneyBill, faMoneyBill1, faMoneyBill1Wave, faMoneyCheckDollar } from "@fortawesome/free-solid-svg-icons";
+import { faUserAlt, faGlassMartini, faGlassWhiskey, faGlassCheers, faMoneyBill1Wave } from "@fortawesome/free-solid-svg-icons";
 
 const ShotCard = props => {
 
@@ -22,16 +22,16 @@ const ShotCard = props => {
             </div>
 
             {/* content */}
-            <div className="bg-slate-100/60 p-8 w-full rounded-2xl">
+            <div className="bg-slate-100/60 p-6 w-full rounded-2xl">
                 {
                     naughty.total_orders >= nice.total_orders ?
                         <>
                             <div className="w-full grid grid-cols-7 items-center gap-x-4 mb-4">
-                                <p className="col-span-2 uppercase text-2xl font-bold text-rose-600">Naughty</p>
+                                <p className="col-span-2 uppercase text-xl font-bold text-rose-600 text-right">Naughty</p>
 
                                 {/* bar graph */}
                                 <div
-                                    className="h-8 col-span-4 bg-rose-600"
+                                    className="h-8 col-span-4 bg-rose-600 rounded-full"
                                     style={{ width: '100%' }}
                                 />
 
@@ -39,10 +39,10 @@ const ShotCard = props => {
                             </div>
 
                             <div className="w-full grid grid-cols-7 items-center gap-x-4">
-                                <p className="col-span-2 uppercase text-2xl font-bold text-emerald-600">Nice</p>
+                                <p className="col-span-2 uppercase text-xl font-bold text-emerald-600 text-right">Nice</p>
 
                                 {/* bar graph */}
-                                <div className="h-8 col-span-4 bg-emerald-600" style={{ width: `${percentage}%` }} />
+                                <div className="h-8 col-span-4 bg-emerald-600 rounded-full" style={{ width: `${percentage}%` }} />
 
                                 <p className="text-4xl col-span-1 text-emerald-600 font-black">{nice.total_orders}</p>
                             </div>
@@ -86,7 +86,7 @@ const StatCarousel = props => {
             setCurrentIndex((prevIndex) =>
                 (prevIndex + 1) % 2
             );
-        }, 30000); // 30 seconds
+        }, 30000000); // 30 seconds 30000
 
         // Cleanup interval on component unmount
         return () => clearInterval(interval);
@@ -109,12 +109,7 @@ const StatCarousel = props => {
             data: props.popularSpirits.slice(0, 5),
             name: "name",
             iterator: "ingredient_totals_ml"
-        },
-        // {
-        //     data: props.popularIngredients.slice(0, 5),
-        //     name: "name",
-        //     iterator: "ingredient_totals_ml"
-        // }
+        }
     ]
 
 
@@ -130,13 +125,13 @@ const StatCarousel = props => {
                         <li className="grid grid-cols-7 items-center" key={`${item.name}, Rank: ${i + 1}`}>
 
                             {/* rank */}
-                            <div className={`text-white bg-emerald-600 rounded-full p-4 col-span-1`}>
-                                <p className="text-3xl text-center font-black italic">{i + 1}</p>
+                            <div className={`text-white bg-emerald-600 rounded-full p-3 col-span-1`}>
+                                <p className="text-3xl text-center font-black  italic">{i + 1}</p>
                             </div>
 
                             {/* name/description */}
                             <div className="col-span-4 pl-4">
-                                <p className="text-3xl font-bold capitalize text-nowrap">{item[content[currentIndex].name]}</p>
+                                <p className="text-3xl font-bold capitalize text-gray-800  text-nowrap">{item[content[currentIndex].name]}</p>
                             </div>
 
                             {/* total */}
@@ -145,13 +140,13 @@ const StatCarousel = props => {
                                 content[currentIndex].iterator === "total_orders" ?
 
                                     // case for total orders
-                                    <p className="text-4xl col-span-2 text-right font-black text-emerald-600">
+                                    <p className="text-4xl col-span-2 text-right font-black text-gray-800 ">
                                         {item[content[currentIndex].iterator]}
                                     </p>
                                     :
 
                                     // case for milliliters
-                                    <p className="text-4xl col-span-2 text-right font-black text-emerald-600">
+                                    <p className="text-4xl col-span-2 text-right font-black text-gray-800 ">
                                         {(item[content[currentIndex].iterator] / 1000).toFixed(1)} L
                                     </p>
                             }
@@ -178,10 +173,10 @@ const LastYearStats = () => {
                 {/* last year total */}
                 <div className="grid grid-cols-3 items-center w-[48%]">
                     <div className="col-span-1 flex justify-center items-center">
-                        <FontAwesomeIcon icon={faMoneyBill1Wave} className="size-12 object-contain text-emerald-600" />
+                        <FontAwesomeIcon icon={faMoneyBill1Wave} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-emerald-600 text-4xl font-black">$5636</p>
+                        <p className="text-4xl text-gray-800 font-black">$5636</p>
                         <p className="italic -mt-1 text-xl">Money Raised</p>
                     </div>
                 </div>
@@ -189,10 +184,10 @@ const LastYearStats = () => {
                 {/* last year guests */}
                 <div className="grid grid-cols-3 items-center w-[48%]">
                     <div className="col-span-1 flex justify-center items-center">
-                        <FontAwesomeIcon icon={faUserAlt} className="size-12 object-contain text-emerald-600" />
+                        <FontAwesomeIcon icon={faUserAlt} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-emerald-600 text-4xl font-black">90</p>
+                        <p className="text-gray-800 text-4xl font-black">90</p>
                         <p className="italic -mt-1 text-xl">Guests</p>
                     </div>
                 </div>
@@ -200,10 +195,10 @@ const LastYearStats = () => {
                 {/* last year drinks ordered */}
                 <div className="grid grid-cols-3 items-center w-[48%]">
                     <div className="col-span-1 flex justify-center items-center">
-                        <FontAwesomeIcon icon={faGlassMartini} className="size-12 object-contain text-emerald-600" />
+                        <FontAwesomeIcon icon={faGlassMartini} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-emerald-600 text-4xl font-black">275</p>
+                        <p className="text-gray-800 text-4xl font-black">275</p>
                         <p className="italic -mt-1 text-xl">Drinks Made</p>
                     </div>
                 </div>
@@ -211,10 +206,10 @@ const LastYearStats = () => {
                 {/* last year shots ordered */}
                 <div className="grid grid-cols-3 items-center w-[48%]">
                     <div className="col-span-1 flex justify-center items-center">
-                        <FontAwesomeIcon icon={faGlassWhiskey} className="size-12 object-contain text-emerald-600" />
+                        <FontAwesomeIcon icon={faGlassWhiskey} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-emerald-600 text-4xl font-black">134</p>
+                        <p className="text-gray-800 text-4xl font-black">134</p>
                         <p className="italic -mt-1 text-xl">Shots Made</p>
                     </div>
                 </div>

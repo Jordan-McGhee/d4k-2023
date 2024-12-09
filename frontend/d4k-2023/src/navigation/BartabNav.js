@@ -199,19 +199,19 @@ const BartabNav = (props) => {
                                         </p>
 
                                         <p className="text-xl flex justify-between">Drinks Total:
-                                            <span className=" uppercase font-bold text-emerald-400">
+                                            <span className=" uppercase font-bold">
                                                 ${tabData.tab.drink_cost_total}
                                             </span>
                                         </p>
 
                                         <p className="text-xl flex justify-between">Additional Tip:
-                                            <span className=" uppercase font-bold text-emerald-400">
+                                            <span className=" uppercase font-bold ">
                                                 ${tabData.tab.tips_total}
                                             </span>
                                         </p>
 
                                         <p className="text-2xl flex justify-between border-t-2 pt-4">Total Due:
-                                            <span className="uppercase font-bold text-emerald-400">
+                                            <span className="uppercase font-bold">
                                                 ${totalOwed}
                                             </span>
                                         </p>
@@ -241,7 +241,7 @@ const BartabNav = (props) => {
                                     </div>
                                     {
                                     <div className="pt-4">
-                                        <div className="text-lg font-bungee">Your Donations:<span className="pl-2 text-emerald-400">${tabData.tab.total_donated} </span></div>
+                                        <div className="text-lg font-bungee">Your Donations:<span className="pl-2">${tabData.tab.total_donated} </span></div>
                                     </div>
                                     }
                                 </div>

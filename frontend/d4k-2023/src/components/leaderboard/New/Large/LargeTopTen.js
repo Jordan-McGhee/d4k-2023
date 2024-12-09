@@ -7,7 +7,7 @@ import { faUserAlt, faGlassMartini, faGlassWhiskey } from "@fortawesome/free-sol
 const TopTenItem = props => {
 
     return (
-        <div className="rounded-3xl bg-slate-100/50 shadow-xl border-emerald-600 w-[45%] h-fit grid grid-cols-5 items-center px-8 py-3.5">
+        <div className="rounded-full bg-slate-100 shadow-xl border-emerald-600 w-[45%] h-fit grid grid-cols-5 items-center px-6 py-3.5">
 
             {/* image & rank */}
             <div className="relative flex items-center col-span-1">
@@ -42,14 +42,14 @@ const TopTenItem = props => {
                 <div className="flex gap-x-4">
                     {/* drink count */}
                     <div className="flex items-center">
-                        <FontAwesomeIcon className="mr-2 h-8 text-slate-800" icon={faGlassMartini} />
-                        <p className="text-3xl text-emerald-600 italic font-bold">{props.drink_quantity} Drinks</p>
+                        <FontAwesomeIcon className="mr-2 h-8 text-slate-600" icon={faGlassMartini} />
+                        <p className="text-3xl text-slate-600  italic font-bold">{props.drink_quantity} Drinks</p>
                     </div>
 
                     {/* shot count */}
                     <div className="flex items-center">
-                        <FontAwesomeIcon className="mr-2 h-8 text-slate-800" icon={faGlassWhiskey} />
-                        <p className="text-3xl text-emerald-600 italic font-bold">{props.shot_quantity} Shots</p>
+                        <FontAwesomeIcon className="mr-2 h-8 text-slate-600" icon={faGlassWhiskey} />
+                        <p className="text-3xl text-slate-600 italic font-bold">{props.shot_quantity} Shots</p>
                     </div>
                 </div>
 
@@ -58,7 +58,7 @@ const TopTenItem = props => {
 
 
             {/* amount spent/donated */}
-            <p className="col-span-1 text-5xl font-bold italic text-emerald-600 text-right">${props.total}</p>
+            <p className="col-span-1 text-5xl font-bold text-slate-800 text-right">${props.total}</p>
         </div >
     )
 }

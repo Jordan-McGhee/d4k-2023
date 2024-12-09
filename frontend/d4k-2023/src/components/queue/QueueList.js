@@ -24,7 +24,7 @@ const QueueList = (props) => {
         const fetchOrder = async (orderId) => {
             try {
                 const responseData = await getOrder(orderId)
-                if (!responseData) return
+                if (!responseData || !responseData.response) return
 
                 setParamOrder(responseData.response)
                 setShowOrderReadyModal(true)

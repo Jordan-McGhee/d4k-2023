@@ -29,7 +29,7 @@ const LargeTopThreeItem = props => {
     return (
         <li className={rankClass}>
 
-            <p className="uppercase font-bold mb-2">{rankText}</p>
+            <p className="uppercase font-bold font-fugaz mb-2">{rankText}</p>
 
             {/* image */}
             <div className="flex flex-col items-center pt-0 mt-0">
@@ -42,19 +42,19 @@ const LargeTopThreeItem = props => {
             <div className="flex flex-col items-center gap-y-2 pt-4 border-slate-500 rounded-full">
 
                 {/* total spent/donated */}
-                <p className="text-8xl italic font-bold text-rose-600 mb-2">${props.total}</p>
+                <p className="text-8xl italic font-bold text-slate-800 mb-2">${props.total}</p>
 
                 <div className="flex gap-x-4">
                     {/* drink count */}
-                    <div className="flex items-center">
-                        <FontAwesomeIcon className="mr-2 h-10 text-emerald-600" icon={faGlassMartini} />
-                        <p className="text-4xl text-emerald-600 italic">{props.drink_quantity} Drinks</p>
+                    <div className="flex items-center text-slate-700">
+                        <FontAwesomeIcon className="mr-2 h-10 " icon={faGlassMartini} />
+                        <p className="text-4xl italic">{props.drink_quantity} Drinks</p>
                     </div>
 
                     {/* shot count */}
-                    <div className="flex items-center">
-                        <FontAwesomeIcon className="mr-2 h-10 text-emerald-600" icon={faGlassWhiskey} />
-                        <p className="text-4xl text-emerald-600 italic">{props.shot_quantity} Shots</p>
+                    <div className="flex items-center text-slate-700">
+                        <FontAwesomeIcon className="mr-2 h-10" icon={faGlassWhiskey} />
+                        <p className="text-4xl italic">{props.shot_quantity} Shots</p>
                     </div>
                 </div>
             </div>
