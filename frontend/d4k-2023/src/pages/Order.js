@@ -7,13 +7,12 @@ import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck, faMinus, faPlus, faChampagneGlasses, faEdit, faX } from '@fortawesome/free-solid-svg-icons'
 import { useSearchParams } from "react-router-dom";
-import { UserApi } from "../api/userApi"
 import { OrderApi } from "../api/orderApi"
 import { toast } from 'react-toastify';
 import shots from "../assets/shots.json"
 
-import { MenuApi } from "../api/menuApi";
 import { DrinkApi } from "../api/drinkApi";
+import { UserApi } from "../api/userApi"
 
 import icsFile from '../assets/drink4thekidsparty.ics'
 
@@ -21,9 +20,11 @@ const Order = () => {
     let navigate = useNavigate()
     const { updateUsername, getUserIdByUsername, createUser } = UserApi()
     const { createOrder } = OrderApi()
+    const { getUserById, isUserApiLoading } = UserApi()
     const { getDrinks, isLoadingDrinksApi } = DrinkApi()
 
     const [username, setUsername] = useState('')
+    const [user, setUser] = useState(null)
     const [storedUsername, setStoredUsername] = useState('')
     const [allDrinks, setAllDrinks] = useState([])
     const [userId, setUserId] = useState('')
@@ -124,14 +125,23 @@ const Order = () => {
     }, [allDrinks])
 
     useEffect(() => {
-
-        let storedUsername = localStorage.getItem('storedUsername')
-        let storedUserId = localStorage.getItem('userId')
-        if (storedUsername && storedUserId) {
-            setUsername(storedUsername)
-            setUserId(parseInt(storedUserId))
-            setStoredUsername(storedUsername)
+        const localStorageUserId = localStorage.getItem('userId')
+        if (localStorageUserId) {
+            const getUser = async () => {
+                try {
+                    const userResponse = await getUserById(localStorageUserId)
+                    setUser(userResponse)
+                    setUsername(userResponse.username)
+                    setStoredUsername(userResponse.username)
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            getUser()
+            setUserId(parseInt(localStorageUserId))
+            
         }
+
         let drinkIdParam = searchParams.get("drinkId")
         if (drinkIdParam) {
             updateDrinkState(parseInt(drinkIdParam))
@@ -140,7 +150,27 @@ const Order = () => {
         const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
         const isPartyDate = new Date() >= new Date('12/14/2024')
         setIsOrderingEnabled(isLocal || isPartyDate)
+
     }, [])
+
+    // useEffect(() => {
+
+    //     //let storedUsername = localStorage.getItem('storedUsername')
+    //     let storedUserId = localStorage.getItem('userId')
+    //     if (storedUsername && storedUserId) {
+    //         setUsername(storedUsername)
+    //         setUserId(parseInt(storedUserId))
+    //         setStoredUsername(storedUsername)
+    //     }
+    //     let drinkIdParam = searchParams.get("drinkId")
+    //     if (drinkIdParam) {
+    //         updateDrinkState(parseInt(drinkIdParam))
+    //     }
+
+    //     const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
+    //     const isPartyDate = new Date() >= new Date('12/14/2024')
+    //     setIsOrderingEnabled(isLocal || isPartyDate)
+    // }, [])
 
     useEffect(() => {
         if (showCustomDonation) setDonationAmount(0)
@@ -239,6 +269,8 @@ const Order = () => {
 
         if (isNew) {
             let data = await updateUsername(userId, editedUsername)
+            let userResponse = await getUserById(userId)
+            setUser(userResponse)
             setUsername(editedUsername)
             setStoredUsername(editedUsername)
             localStorage.setItem('storedUsername', editedUsername)
@@ -342,7 +374,7 @@ const Order = () => {
                                     label="Edit Your Name"
                                     variant="bordered"
                                     radius="full"
-                                    maxLength={30}
+                                    maxLength={20}
                                     color={isInvalidEditedUsername || isUsernameTaken ? "danger" : "success"}
                                     value={editedUsername}
                                     onValueChange={setEditedUsername}

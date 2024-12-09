@@ -96,7 +96,7 @@
     visibility: visible;
   }
   .outer-menu .checkbox-toggle:checked ~ .menu > div {
-    transform: scale(1.25);
+    transform: scale(1.00);
     transition-duration: 0.75s;
   }
   .outer-menu .checkbox-toggle:checked ~ .menu > div > div {

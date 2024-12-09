@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX } from '@fortawesome/free-solid-svg-icons'
-import TabTable from "../components/tab/TabTable"
 import ErrorModal from "../components/UIElements/ErrorModal"
 import {
     Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,

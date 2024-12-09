@@ -20,7 +20,7 @@ const LargeProgressBar = props => {
                         </div>
                     </div>
                 </div>
-                { currentTotal >= goal && <span class="-z-5 animate-pulse absolute inline-flex h-[89%] w-36 pb-6 mb-6 rounded-full bg-white opacity-75"></span> }
+                { currentTotal >= goal && <span className="-z-5 animate-pulse absolute inline-flex h-[89%] w-36 pb-6 mb-6 rounded-full bg-white opacity-75"></span> }
             </div>
         </>
     )

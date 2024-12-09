@@ -155,7 +155,10 @@ const changePhotoUrl = async (req, res, next) => {
 
 const getTab = async (req, res, next) => {
     const { user_id } = req.params
-    let text = "SELECT * FROM tab_totals WHERE user_id = $1"
+    let text = `SELECT t.user_id, t.username, t.quantity, t.drink_cost_total, t.tips_total, t.tab_total, t.order_history, u.amount_paid + u.adjusted_donations as total_donated
+                FROM tab_totals t
+                LEFT JOIN user_totals u ON u.user_id = t.user_id
+                WHERE t.user_id = $1`
     let response
 
     try {
@@ -166,19 +169,22 @@ const getTab = async (req, res, next) => {
     }
 
     let history = {}
-    let array = response.rows[0].order_history.split(", ")
+    if(response.rows[0].order_history){
+        let array = response.rows[0].order_history.split(", ")
 
-    array.forEach(i => {
-        let splitArray = i.split('—')
+        array.forEach(i => {
+            let splitArray = i.split('—')
+    
+            console.log(splitArray)
+    
+            if (history[splitArray[0]]) {
+                history[splitArray[0]] += parseInt(splitArray[1])
+            } else {
+                history[splitArray[0]] = parseInt(splitArray[1])
+            }
+        })
+    }
 
-        console.log(splitArray)
-
-        if (history[splitArray[0]]) {
-            history[splitArray[0]] += parseInt(splitArray[1])
-        } else {
-            history[splitArray[0]] = parseInt(splitArray[1])
-        }
-    })
 
 
     res.status(200).json({ tab: response.rows[0] ? response.rows[0] : {}, order_history: history })
