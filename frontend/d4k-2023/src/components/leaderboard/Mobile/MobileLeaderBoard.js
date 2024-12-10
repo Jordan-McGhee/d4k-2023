@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from "react";
 import MobileLeaderBoardList from "./MobileLeaderBoardList";
-import MobileTopThree from "./MobileTopThree";
+// import MobileTopThree from "./MobileTopThree";
 import MobileProgressBar from "./MobileProgressBar";
 
+// ui elements
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserAlt, faGlassMartini, faGlassWhiskey } from "@fortawesome/free-solid-svg-icons";
+
 const MobileLeaderBoard = props => {
-
-    const [ storedUserID, setStoredUserID ] = useState(null)
-
-    const userClass = 'bg-green-200 border-2 p-2 grid grid-cols-5 items-center border-b-2 w-full animate-pulse-custom first:rounded-t-3xl last:rounded-b-3xl'
-
-    // check for storedUserID and pass it through for highlighting in the leaderboard list
-    useEffect(() => {
-        let storedID = localStorage.getItem(`userId`)
-
-        if (storedID) {
-            setStoredUserID(parseInt(storedID))
-        }
-    }, [])
 
     return (
         <div className="w-11/12 mt-8 mb-20 m-auto">
@@ -26,11 +17,32 @@ const MobileLeaderBoard = props => {
             {/* SECTION FOR GOAL TRACKER */}
             <MobileProgressBar total={props.total} />
 
+            {/* party metrics */}
+            {
+                props.partyMetrics &&
+                <div className="flex justify-evenly gap-x-2 w-full p-4 bg-slate-100/90 rounded-xl my-4">
+                    <div className="flex items-center gap-x-2">
+                        <FontAwesomeIcon className="size-8 text-emerald-600" icon={faUserAlt} />
+                        <p className="text-2xl text-emerald-600 font-black">{props.partyMetrics[0]}</p>
+                    </div>
+
+                    <div className="flex items-center gap-x-4">
+                        <FontAwesomeIcon className="size-8 text-emerald-600" icon={faGlassMartini} />
+                        <p className="text-2xl text-emerald-600 font-black">{props.partyMetrics[1]}</p>
+                    </div>
+
+                    <div className="flex items-center gap-x-4">
+                        <FontAwesomeIcon className="size-8 text-emerald-600" icon={faGlassWhiskey} />
+                        <p className="text-2xl text-emerald-600 font-black">{props.partyMetrics[2]}</p>
+                    </div>
+                </div>
+            }
+
             {/* SECTION FOR TOP 3 */}
             {/* <MobileTopThree data={topThree} user = { storedUserID } userClass = { userClass }/> */}
 
             {/* SECTION FOR REST OF LEADERBOARD (4-10) */}
-            <MobileLeaderBoardList topUsers={props.topUsers} user={props.user}  userClass = { userClass } />
+            <MobileLeaderBoardList topUsers={props.topUsers} user={props.user} />
 
         </div>
     )

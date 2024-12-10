@@ -14,6 +14,7 @@ const LeaderBoard = () => {
     const [total, setTotal] = useState([])
     const [storedUserData, setStoredUserData] = useState()
     const [storedUserID, setStoredUserID] = useState()
+    const [partyMetrics, setPartyMetrics] = useState()
 
     const { isLoadingOrderApi, hasError, clearError, getOrdersLeaderboard } = OrderApi()
 
@@ -34,15 +35,16 @@ const LeaderBoard = () => {
                 setTopUsers(data.topUsers)
                 setTotal(data.sumTotal)
                 setStoredUserData(data.userRank)
+                setPartyMetrics([data.totalUsers, data.drinkQuantity, data.shotQuantity])
             } catch (error) {
                 console.log(error)
             }
         }
 
         fetchLeaderboard()
-    }, [ storedUserID ])
+    }, [storedUserID])
 
-    console.log(topUsers, total, storedUserID, storedUserData)
+    // console.log(topUsers, total, storedUserID, storedUserData, partyMetrics)
 
     // leaderboard refresh
     useEffect(() => {
@@ -52,12 +54,13 @@ const LeaderBoard = () => {
                 setTopUsers(data.topUsers)
                 setTotal(data.sumTotal)
                 setStoredUserData(data.userRank)
+                setPartyMetrics([data.totalUsers, data.drinkQuantity, data.shotQuantity])
             } catch (error) {
                 console.log(error)
             }
         }, 300000)
         return () => clearInterval(id)
-    }, [])
+    }, [getOrdersLeaderboard, storedUserID])
 
 
     return (
@@ -78,7 +81,7 @@ const LeaderBoard = () => {
                         }}
                     />
                     :
-                    topUsers.length === 0 && !isLoadingOrderApi ?
+                    topUsers.length === 0 && total && partyMetrics && !isLoadingOrderApi ?
                         <>
                             <div className="lg:hidden">
                                 <MobileEmptyLeaderBoard />
@@ -90,7 +93,7 @@ const LeaderBoard = () => {
                         :
                         <>
                             <div className="lg:hidden">
-                                <MobileLeaderBoard topUsers={topUsers} user={storedUserData} total={total} />
+                                <MobileLeaderBoard topUsers={topUsers} user={storedUserData} total={total} partyMetrics={partyMetrics} />
                             </div>
                             <div className="hidden lg:block">
                                 <LargeLeaderBoard data={topUsers} total={total} />

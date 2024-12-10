@@ -7,6 +7,18 @@ import { faUserAlt, faGlassMartini, faGlassWhiskey } from "@fortawesome/free-sol
 
 const MobileLeaderBoardItem = props => {
 
+    let rankColor = "bg-emerald-600 border-white";
+
+    if (props.rank === 1) {
+        rankColor = "bg-gradient-to-r from-[rgb(255,215,0)] via-white to-[rgb(255,215,0)] bg-[length:200%_100%] animate-sheen"; // Gold
+    } else if (props.rank === 2) {
+        rankColor = "bg-gradient-to-r from-[rgb(192,192,192)] via-white to-[rgb(192,192,192)] bg-[length:200%_100%] animate-sheen"; // Silver
+    } else if (props.rank === 3) {
+        rankColor = "bg-gradient-to-r from-[rgb(205,127,50)] via-white to-[rgb(205,127,50)] bg-[length:200%_100%] animate-sheen"; // Bronze
+    }
+
+
+
     return (
         <Card className={props.userIDClass || "first:rounded-t-3xl last:rounded-b-3xl grid grid-cols-5 items-center border-b-2 bg-slate-100/90 w-full border-slate-500 p-2"}>
 
@@ -32,7 +44,7 @@ const MobileLeaderBoardItem = props => {
                 </div>
 
                 {/* rank circle */}
-                <div className="absolute -bottom-1 -right-2 bg-emerald-600 text-white rounded-full size-8 flex items-center justify-center border-1 border-white shadow-lg text-xl font-bold italic"
+                <div className={`${rankColor} absolute -bottom-1 -right-2 text-white rounded-full size-8 flex items-center justify-center border-1 shadow-lg text-xl font-bold italic`}
                 >
                     {props.rank}
                 </div>
@@ -46,13 +58,13 @@ const MobileLeaderBoardItem = props => {
                     {/* drink count */}
                     <div className="flex items-center">
                         <FontAwesomeIcon className="mr-1 h-4 text-slate-800" icon={faGlassMartini} />
-                        <p className={props.drinkClass ? props.drinkClass : "text-sm text-emerald-600 italic font-bold"}>{props.drink_quantity} Drinks</p>
+                        <p className={`${props.drinkClass || "text-emerald-600"} text-sm italic font-bold`}>{props.drink_quantity} Drinks</p>
                     </div>
 
                     {/* shot count */}
                     <div className="flex items-center">
                         <FontAwesomeIcon className="mr-1 h-4 text-slate-800" icon={faGlassWhiskey} />
-                        <p className={props.drinkClass ? props.drinkClass : "text-sm text-emerald-600 italic font-bold"}>{props.shot_quantity} Shots</p>
+                        <p className={`${props.drinkClass || "text-emerald-600"} text-sm italic font-bold`}>{props.shot_quantity} Shots</p>
                     </div>
                 </div>
 
@@ -60,7 +72,7 @@ const MobileLeaderBoardItem = props => {
             </div>
 
             {/* money raised */}
-            <p className="col-span-1 text-xl font-bold italic text-emerald-600 text-center">${props.total}</p>
+            <p className={`${props.drinkClass || "text-emerald-600"} col-span-1 text-xl font-bold italic text-center`}>${props.total}</p>
         </Card>
     )
 }

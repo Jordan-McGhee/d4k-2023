@@ -7,13 +7,13 @@ const MobileProgressBar = props => {
     const percentage = Math.floor((currentTotal / goal) * 100)
 
     return (
-        <div className="mb-4">
+        <div className="">
             <p className="text-center font-bold text-3xl text-slate-200 font-fugaz">${goal} GOAL</p>
             <div className="text-xl text-right font-semibold text-emerald-500 rounded-full max-w-[100%]" style = {{ width: `${percentage}%`}} >
                 {percentage}%
             </div>
             {/* div for progress bar container */}
-            <div className="bg-emerald-300/60 h-[45px] w-full rounded-full mb-6 mt-2 shadow-xl border-2 border-slate-800">
+            <div className="bg-emerald-300/60 h-[45px] w-full rounded-full my-2 shadow-xl border-2 border-slate-800">
                 {/* div for progress bar */}
                 <div className={'progress-bar rounded-full py-1 h-full max-w-[100%]'} style = {{ width: `${percentage}%`}}>
                     { percentage >= 20 && 

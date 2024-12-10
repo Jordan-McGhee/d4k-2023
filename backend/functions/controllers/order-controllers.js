@@ -189,13 +189,10 @@ const getOrdersLeaderboard = async (req, res, next) => {
     const { userId } = req.query;
 
     // Query for the top 10 users
-    let topUsersQuery = `
-        SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations 
-        FROM leaderboard_totals 
-        WHERE amount_paid + adjusted_donations > 0 
-        ORDER BY amount_paid + adjusted_donations DESC 
-        LIMIT 10
-    `;
+    let topUsersQuery =
+        "WITH user_leaderboard AS (SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations, (SELECT COUNT(*) FROM user_totals) AS total_users FROM leaderboard_totals WHERE amount_paid + adjusted_donations > 0 ORDER BY amount_paid + adjusted_donations DESC LIMIT 10) SELECT *, total_users FROM user_leaderboard";
+
+
 
     // Query for the rank of a specific user
     let userRankQuery = `
@@ -230,11 +227,28 @@ const getOrdersLeaderboard = async (req, res, next) => {
         }
     }
 
+    // Combined query for drinks and shots
+    let drinkCountQuery = `WITH drink_counts AS (SELECT *, SUM(CASE WHEN type != 'shot' THEN total_orders ELSE 0 END) OVER () AS drink_quantity, SUM(CASE WHEN type = 'shot' THEN total_orders ELSE 0 END) OVER () AS shot_quantity FROM order_totals) SELECT *, drink_quantity, shot_quantity FROM drink_counts ORDER BY total_orders DESC`
+
+    try {
+        drinkCountResponse = await pool.query(drinkCountQuery)
+    } catch (error) {
+        logger.error(`Error getting drink counts for leaderboard. ${error}`, 500)
+        return next(new HttpError(`Error getting drink counts for leaderboard. ${error}`, 500))
+    }
+
+    // grab total count for drinks and shots
+    const drinkQuantity = drinkCountResponse.rows[0]?.drink_quantity || 0
+    const shotQuantity = drinkCountResponse.rows[0]?.shot_quantity || 0
+
     res.status(200).json({
         message: "Retrieved orders for leaderboard!",
         topUsers: topUsersResponse.rows,
         userRank: userRankResponse ? userRankResponse.rows[0] : null,
         sumTotal: sumResponse?.rows[0]?.d4k_total,
+        totalUsers: topUsersResponse.rows[0].total_users,
+        drinkQuantity: drinkQuantity,
+        shotQuantity: shotQuantity
     });
 };
 

@@ -164,9 +164,9 @@ const BartabNav = (props) => {
                                         <Button 
                                         radius="full" 
                                         size="lg" 
-                                        isIconOnly className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full" 
+                                        isIconOnly className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full ml-2" 
                                         onPress={()=>fileInputRef.current.click()}>
-                                            { user && user.photo_url ? <img alt="Profile Pic" src={user.photo_url}/> :
+                                            { user && user.photo_url ? <img alt="Profile Pic" className="" src={user.photo_url}/> :
                                             <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
                                         }
                                         </Button>
@@ -241,7 +241,7 @@ const BartabNav = (props) => {
                                     </div>
                                     {
                                     <div className="pt-4">
-                                        <div className="text-lg font-bungee">Your Donations:<span className="pl-2 text-emerald-400">${tabData.tab.total_donated} </span></div>
+                                        <div className="text-lg font-bungee">Your Donations:<span className="pl-2 text-emerald-400">${tabData?.tab.total_donated} </span></div>
                                     </div>
                                     }
                                 </div>
