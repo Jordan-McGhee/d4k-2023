@@ -10,40 +10,57 @@ import LargeEmptyLeaderBoard from "../components/leaderboard/Large/LargeEmptyLea
 
 const LeaderBoard = () => {
 
-    const [leaderboard, setLeaderBoard] = useState([])
+    const [topUsers, setTopUsers] = useState([])
     const [total, setTotal] = useState([])
+    const [storedUserData, setStoredUserData] = useState()
+    const [storedUserID, setStoredUserID] = useState()
+    const [partyMetrics, setPartyMetrics] = useState()
 
     const { isLoadingOrderApi, hasError, clearError, getOrdersLeaderboard } = OrderApi()
+
+    // check for local storage user id
+    useEffect(() => {
+        let storedID = localStorage.getItem(`userId`)
+
+        if (storedID) {
+            setStoredUserID(parseInt(storedID))
+        }
+    }, [])
 
     // leaderboard data fetching
     useEffect(() => {
         const fetchLeaderboard = async () => {
             try {
-                const data = await getOrdersLeaderboard()
-                setLeaderBoard(data.response)
+                const data = await getOrdersLeaderboard(storedUserID)
+                setTopUsers(data.topUsers)
                 setTotal(data.sumTotal)
+                setStoredUserData(data.userRank)
+                setPartyMetrics([data.totalUsers, data.drinkQuantity, data.shotQuantity])
             } catch (error) {
                 console.log(error)
             }
         }
 
         fetchLeaderboard()
-    }, [])
+    }, [storedUserID])
 
+    // console.log(topUsers, total, storedUserID, storedUserData, partyMetrics)
 
     // leaderboard refresh
     useEffect(() => {
         const id = setInterval(async () => {
             try {
-                const data = await getOrdersLeaderboard()
-                setLeaderBoard(data.response)
+                const data = await getOrdersLeaderboard(storedUserID)
+                setTopUsers(data.topUsers)
                 setTotal(data.sumTotal)
+                setStoredUserData(data.userRank)
+                setPartyMetrics([data.totalUsers, data.drinkQuantity, data.shotQuantity])
             } catch (error) {
                 console.log(error)
             }
         }, 300000)
         return () => clearInterval(id)
-    }, [])
+    }, [getOrdersLeaderboard, storedUserID])
 
 
     return (
@@ -64,7 +81,7 @@ const LeaderBoard = () => {
                         }}
                     />
                     :
-                    leaderboard.length === 0 && !isLoadingOrderApi ?
+                    topUsers.length === 0 && total && partyMetrics && !isLoadingOrderApi ?
                         <>
                             <div className="lg:hidden">
                                 <MobileEmptyLeaderBoard />
@@ -76,10 +93,10 @@ const LeaderBoard = () => {
                         :
                         <>
                             <div className="lg:hidden">
-                                <MobileLeaderBoard data={leaderboard} total={total} />
+                                <MobileLeaderBoard topUsers={topUsers} user={storedUserData} total={total} partyMetrics={partyMetrics} />
                             </div>
                             <div className="hidden lg:block">
-                                <LargeLeaderBoard data={leaderboard} total={total} />
+                                <LargeLeaderBoard data={topUsers} total={total} />
                             </div>
                         </>
             }
