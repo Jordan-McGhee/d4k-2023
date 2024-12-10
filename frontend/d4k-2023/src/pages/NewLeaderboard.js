@@ -66,13 +66,13 @@ const NewLeaderboard = () => {
     }, [])
 
     // leaderboard refresh
-    // useEffect(() => {
-    //     const id = setInterval(async () => {
-    //         fetchLeaderboard()
-    //     }, 300000) // 5 minutes
+    useEffect(() => {
+        const id = setInterval(async () => {
+            fetchLeaderboard()
+        }, 300000) // 5 minutes
 
-    //     return () => clearInterval(id)
-    // }, [])
+        return () => clearInterval(id)
+    }, [])
 
     return (
         <>

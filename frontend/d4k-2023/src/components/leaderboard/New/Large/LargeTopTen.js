@@ -28,7 +28,7 @@ const TopTenItem = props => {
                     )}
                 </div>
 
-                {/* Rank circle - now outside the image container */}
+                {/* Rank circle */}
                 <div className="absolute -bottom-3 right-8 bg-emerald-600 text-white rounded-full w-12 h-12 flex items-center justify-center border-4 border-white shadow-lg text-2xl font-bold italic"
                 >
                     {props.rank}
