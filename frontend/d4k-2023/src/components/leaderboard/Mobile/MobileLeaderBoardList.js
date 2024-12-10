@@ -25,8 +25,8 @@ const MobileLeaderBoardList = (props) => {
             photoUrl={user.photo_url}
             total={user.amount_paid + user.adjusted_donations}
             rank={i + 1}
-            userIDClass={props.user?.user_id === user.user_id ? userClass : null}
-            drinkClass={props.user?.user_id === user.user_id ? "text-white" : null}
+            userIDClass={userData?.user_id === user.user_id ? userClass : null}
+            drinkClass={userData?.user_id === user.user_id ? "text-white" : null}
         />
     ));
 
@@ -42,7 +42,7 @@ const MobileLeaderBoardList = (props) => {
                 photoUrl={userData.photo_url}
                 total={userData.amount_paid + userData.adjusted_donations}
                 rank={+userData.rank}
-                userIDClass={props.userClass}
+                userIDClass={userClass}
                 drinkClass={"text-white"}
             />
         );
