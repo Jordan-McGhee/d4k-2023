@@ -5,93 +5,100 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserAlt, faGlassMartini, faGlassWhiskey, faGlassCheers, faMoneyBill, faMoneyBill1, faMoneyBill1Wave, faMoneyCheckDollar } from "@fortawesome/free-solid-svg-icons";
 
 const ShotCard = props => {
+    const naughty = props.shotCount.find((drink) => drink.drink === "naughty shot");
+    const nice = props.shotCount.find((drink) => drink.drink === "nice shot");
 
-    const naughty = props.shotCount.filter((drink) => drink.drink === "naughty shot")[0]
-    const nice = props.shotCount.filter((drink) => drink.drink === "nice shot")[0]
-
-    let maxShotCount, minShotCount, percentage
+    let maxShotCount = 0;
+    let minShotCount = 0;
+    let percentage = 0;
 
     if (naughty && nice) {
-        maxShotCount = Math.max(naughty.total_orders, nice.total_orders)
-        minShotCount = Math.min(naughty.total_orders, nice.total_orders)
-        percentage = +((minShotCount / maxShotCount) * 100).toFixed(0)
+        const naughtyOrders = naughty.total_orders || 0;
+        const niceOrders = nice.total_orders || 0;
+
+        maxShotCount = Math.max(naughtyOrders, niceOrders);
+        minShotCount = Math.min(naughtyOrders, niceOrders);
+        percentage = maxShotCount > 0
+            ? +((minShotCount / maxShotCount) * 100).toFixed(0)
+            : 0;
     }
+
+    const renderShotCounts = () => {
+        if (!naughty && !nice) {
+            return <p className="text-center text-4xl font-bold py-8">No shots ordered yet!</p>;
+        }
+
+        // Determine which shot type has more orders
+        const hasMoreNaughty = !nice || (naughty && naughty.total_orders >= (nice.total_orders || 0));
+
+        return (
+            <>
+                {hasMoreNaughty ? (
+                    <>
+                        <div className="w-full grid grid-cols-7 items-center gap-x-4 mb-4">
+                            <p className="col-span-2 uppercase text-2xl font-bold text-rose-600">Naughty</p>
+                            <div
+                                className="h-8 col-span-4 bg-rose-600"
+                                style={{ width: '100%' }}
+                            />
+                            <p className="text-4xl col-span-1 text-rose-600 font-black">
+                                {naughty ? naughty.total_orders : 0}
+                            </p>
+                        </div>
+
+                        <div className="w-full grid grid-cols-7 items-center gap-x-4">
+                            <p className="col-span-2 uppercase text-2xl font-bold text-emerald-600">Nice</p>
+                            <div
+                                className="h-8 col-span-4 bg-emerald-600"
+                                style={{ width: `${percentage}%` }}
+                            />
+                            <p className="text-4xl col-span-1 text-emerald-600 font-black">
+                                {nice ? nice.total_orders : 0}
+                            </p>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="w-full grid grid-cols-7 items-center gap-x-4 mb-4">
+                            <p className="col-span-2 uppercase text-2xl font-bold text-emerald-600">Nice</p>
+                            <div
+                                className="h-8 col-span-4 bg-emerald-600"
+                                style={{ width: '100%' }}
+                            />
+                            <p className="text-4xl col-span-1 text-emerald-600 font-black">
+                                {nice ? nice.total_orders : 0}
+                            </p>
+                        </div>
+
+                        <div className="w-full grid grid-cols-7 items-center gap-x-4">
+                            <p className="col-span-2 uppercase text-2xl font-bold text-rose-600">Naughty</p>
+                            <div
+                                className="h-8 col-span-4 bg-rose-600"
+                                style={{ width: `${percentage}%` }}
+                            />
+                            <p className="text-4xl col-span-1 text-rose-600 font-black">
+                                {naughty ? naughty.total_orders : 0}
+                            </p>
+                        </div>
+                    </>
+                )}
+            </>
+        );
+    };
 
     return (
         <div className="w-full">
-            {/* title */}
             <div className="flex items-center justify-center gap-x-4 mb-4">
                 <FontAwesomeIcon className="h-12 text-emerald-600" icon={faGlassWhiskey} />
                 <p className="text-5xl font-bold text-emerald-600 uppercase">Shot Count</p>
             </div>
 
-            {/* content */}
             <div className="bg-slate-100/60 p-8 w-full rounded-2xl">
-
-                {
-                    naughty || nice ?
-
-                        <>
-                            {
-                                naughty.total_orders >= nice.total_orders ?
-                                    <>
-                                        <div className="w-full grid grid-cols-7 items-center gap-x-4 mb-4">
-                                            <p className="col-span-2 uppercase text-2xl font-bold text-rose-600">Naughty</p>
-
-                                            {/* bar graph */}
-                                            <div
-                                                className="h-8 col-span-4 bg-rose-600"
-                                                style={{ width: '100%' }}
-                                            />
-
-                                            <p className="text-4xl col-span-1 text-rose-600 font-black">{naughty.total_orders}</p>
-                                        </div>
-
-                                        <div className="w-full grid grid-cols-7 items-center gap-x-4">
-                                            <p className="col-span-2 uppercase text-2xl font-bold text-emerald-600">Nice</p>
-
-                                            {/* bar graph */}
-                                            <div className="h-8 col-span-4 bg-emerald-600" style={{ width: `${percentage}%` }} />
-
-                                            <p className="text-4xl col-span-1 text-emerald-600 font-black">{nice.total_orders || 0}</p>
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                        <div className="w-full grid grid-cols-7 items-center gap-x-4 mb-4">
-                                            <p className="col-span-2 uppercase text-2xl font-bold text-emerald-600">nice</p>
-
-                                            {/* bar graph */}
-                                            <div
-                                                className="h-8 col-span-4 bg-emerald-600"
-                                                style={{ width: '100%' }}
-                                            />
-
-                                            <p className="text-4xl col-span-1 text-emerald-600 font-black">{nice.total_orders || 0}</p>
-                                        </div>
-
-                                        <div className="w-full grid grid-cols-7 items-center gap-x-4">
-                                            <p className="col-span-2 uppercase text-2xl font-bold text-rose-600">naughty</p>
-
-                                            {/* bar graph */}
-                                            <div className="h-8 col-span-4 bg-rose-600" style={{ width: `${percentage}%` }} />
-
-                                            <p className="text-4xl col-span-1 text-rose-600 font-black">{naughty.total_orders || 0}</p>
-                                        </div>
-                                    </>
-                            }
-                        </>
-                        :
-
-                        <>
-                            <p className="text-center text-4xl font-bold py-8">No shots ordered yet!</p>
-                        </>
-                }
-
+                {renderShotCounts()}
             </div>
         </div>
-    )
-}
+    );
+};
 
 const StatCarousel = props => {
 
