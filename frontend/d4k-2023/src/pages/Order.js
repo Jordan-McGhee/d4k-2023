@@ -322,7 +322,7 @@ const Order = () => {
 
         try {
             let data = await createOrder(orderData)
-            console.log(data)
+            
             localStorage.setItem('storedUsername', trimmedUsername)
             localStorage.setItem('userId', currentUserId)
             setIsLoading(false)
@@ -772,7 +772,7 @@ const Order = () => {
                         <Button
                             className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
                             onPress={submitOrder}
-                            isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || isInvalidPhoneNumber || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
+                            isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || (isInvalidPhoneNumber && !storedUsername) || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                         >
                             Grab a Drink
                             <FontAwesomeIcon beat style={{animationDuration:'2s'}} size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
