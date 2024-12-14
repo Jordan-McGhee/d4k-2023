@@ -70,8 +70,9 @@ const LargeTopTen = props => {
 
             {/* 4 through 10 */}
             {
-                props.users.length !== 0 &&
-                <div className="flex flex-wrap justify-center items-center flex-1 gap-4">
+                props.users.length !== 0 ?
+
+                <div className="flex flex-wrap justify-center items-center flex-1 gap-4 min-h-96">
                     {
                         props.users.map((user, i) => (
                             <TopTenItem
@@ -86,7 +87,13 @@ const LargeTopTen = props => {
                             />
                         ))
                     }
-                </div>}
+                </div>
+                :
+                <div className="min-h-96 bg-slate-100/60 w-full rounded-3xl my-8 text-center flex flex-col items-center justify-center gap-y-4">
+                    <p className="text-4xl font-bold text-emerald-600">Want to see your name up here?</p>
+                    <p className="text-6xl font-fugaz text-emerald-600">Spend some money and make it happen!</p>
+                </div>
+            }
 
             {/* totals */}
             <div className="flex mx-auto gap-x-8 w-fit mt-8 pb-8">
