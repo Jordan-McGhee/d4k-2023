@@ -17,7 +17,12 @@ export const DrinkApi = () => {
             "PATCH", {'Content-Type': 'application/json'},JSON.stringify({isOutOfStock}))
     }
 
+    const updateIsHidden = async (drinkId, isHidden) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/drinks/${drinkId}/updateHidden`, 
+            "PATCH", {'Content-Type': 'application/json'},JSON.stringify({isHidden}))
+    }
+
     return { 
-        getDrinks, getDrinksAdmin, updateOutOfStock,
+        getDrinks, getDrinksAdmin, updateOutOfStock, updateIsHidden,
         isLoadingDrinksApi: isLoading, hasError, clearError }
 }

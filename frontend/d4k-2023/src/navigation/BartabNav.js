@@ -8,7 +8,7 @@ import { ScrollShadow, Button } from "@nextui-org/react";
 import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../firebase/firebase"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCameraRetro } from '@fortawesome/free-solid-svg-icons'
+import { faCameraRetro, faInfo, faInfoCircle, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 const BartabNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
@@ -29,9 +29,9 @@ const BartabNav = (props) => {
     function handleChange(e) {
         if (e.target.files[0])
             setFile(e.target.files[0]);
-      } 
+    }
 
-      useLayoutEffect(() => {
+    useLayoutEffect(() => {
         const localStorageUserId = localStorage.getItem('userId')
         if (localStorageUserId) {
             const getUserTab = async () => {
@@ -44,7 +44,7 @@ const BartabNav = (props) => {
             }
             getUserTab()
         }
-        if(location.hash === "#bartab"){
+        if (location.hash === "#bartab") {
             setIsChecked(true)
         }
     }, [location])
@@ -61,7 +61,7 @@ const BartabNav = (props) => {
                 }
             }
             getUser()
-            
+
         }
     }, [location])
 
@@ -69,35 +69,35 @@ const BartabNav = (props) => {
         const storageRef = ref(storage, `user-${user.user_id}`)
         const uploadTask = uploadBytesResumable(storageRef, file)
         uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            console.log("upload is" + progress + "% done");
-            switch (snapshot.state) {
-              case "paused":
-                console.log("Upload paused");
-                break
-              case "running":
-                console.log("Upload running");
-                break
-              default:
-                break
-            }
-          },
-          (error) => {
-            console.log(error);
-          },
-          async () => {
-            await getDownloadURL(uploadTask.snapshot.ref).then(async (downloadedURL) => {
+            "state_changed",
+            (snapshot) => {
+                const progress =
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                console.log("upload is" + progress + "% done");
+                switch (snapshot.state) {
+                    case "paused":
+                        console.log("Upload paused");
+                        break
+                    case "running":
+                        console.log("Upload running");
+                        break
+                    default:
+                        break
+                }
+            },
+            (error) => {
+                console.log(error);
+            },
+            async () => {
+                await getDownloadURL(uploadTask.snapshot.ref).then(async (downloadedURL) => {
 
-                setUser(prevState => ({
+                    setUser(prevState => ({
                         ...prevState,
                         photo_url: downloadedURL
                     }))
-                setImageData((prev) => ({ ...prev, img: downloadedURL }));
-            })
-          }
+                    setImageData((prev) => ({ ...prev, img: downloadedURL }));
+                })
+            }
         )
     }
 
@@ -111,7 +111,7 @@ const BartabNav = (props) => {
         const updateImg = async () => {
             await updateUserPhoto(user.user_id, imageData.img)
         }
-        if(imageData.img){
+        if (imageData.img) {
             updateImg()
         }
     }, [imageData])
@@ -133,8 +133,8 @@ const BartabNav = (props) => {
 
     if (tabData) {
         let orderHistoryObj = tabData.order_history
- 
-        Object.entries(orderHistoryObj).map(([ key, value]) => {
+
+        Object.entries(orderHistoryObj).map(([key, value]) => {
             orderHistoryList.push(
                 <div key={`${key} - ${value}`} className="ml-2 text-xs my-0.5">
                     {`${value} x ${key}`}
@@ -145,9 +145,9 @@ const BartabNav = (props) => {
 
     return (
         <div>
-            {user && 
+            {user &&
                 <div className={`outer-menu menu-left ${!isChecked ? 'animate-pulse' : ''}`}>
-                    
+
                     <input id="nav-checkbox" className="checkbox-toggle" type="checkbox"
                         onChange={(event) => setIsChecked(event.currentTarget.checked)}
                     />
@@ -156,41 +156,41 @@ const BartabNav = (props) => {
                     </div>
                     <div className="menu">
                         <div style={{ height: '150%' }}>
+                            <div>
                                 <div>
-                                    <div>
 
                                     <form className="top-0" onSubmit={uploadFile}>
                                         <input className="hidden" ref={fileInputRef} type="file" onChange={handleChange} />
-                                        <Button 
-                                        radius="full" 
-                                        size="lg" 
-                                        isIconOnly className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full ml-2" 
-                                        onPress={()=>fileInputRef.current.click()}>
-                                            { user && user.photo_url ? <img alt="Profile Pic" className="" src={user.photo_url}/> :
-                                            <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
-                                        }
+                                        <Button
+                                            radius="full"
+                                            size="lg"
+                                            isIconOnly className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full ml-2"
+                                            onPress={() => fileInputRef.current.click()}>
+                                            {user && user.photo_url ? <img alt="Profile Pic" className="" src={user.photo_url} /> :
+                                                <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
+                                            }
                                         </Button>
                                     </form>
-                                    </div>
-                                    <div><div className="font-bungee text-3xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
-                                    </div>
-                                    <div><div className="font-bungee text-xl mb-4" id="bar-tab-name">{user.username}</div></div>
-                                    {orderHistoryList.length > 0 &&
-                                        <div className="my-4 text-lg">
-                                            {/* show history button */}
-                                            <Button className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" size="sm" onPress = { () => setShowOrderHistory(!showOrderHistory) }>
-                                                { showOrderHistory ? 'Hide Orders' : 'Show Orders'}
-                                            </Button>
+                                </div>
+                                <div><div className="font-bungee text-3xl"><span className="fas fa-cocktail"></span>BAR TAB<span className="fas fa-glass-whiskey"></span> </div>
+                                </div>
+                                <div><div className="font-bungee text-xl mb-4" id="bar-tab-name">{user.username}</div></div>
+                                {orderHistoryList.length > 0 &&
+                                    <div className="my-4 text-lg">
+                                        {/* show history button */}
+                                        <Button className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" size="sm" onPress={() => setShowOrderHistory(!showOrderHistory)}>
+                                            {showOrderHistory ? 'Hide Orders' : 'Show Orders'}
+                                        </Button>
 
-                                            { showOrderHistory &&
-                                                <ScrollShadow size={20} className="my-1 max-h-[8rem] overflow-y-scroll">
-                                                    { orderHistoryList }
-                                                </ScrollShadow>
-                                            }
-                                        </div>
-                                    }
+                                        {showOrderHistory &&
+                                            <ScrollShadow size={20} className="my-1 max-h-[8rem] overflow-y-scroll">
+                                                {orderHistoryList}
+                                            </ScrollShadow>
+                                        }
+                                    </div>
+                                }
 
-                                    { tabData &&
+                                {tabData &&
                                     <div>
                                         <p className="text-xl flex justify-between">Drinks Ordered:
                                             <span className=" uppercase font-bold">
@@ -216,35 +216,41 @@ const BartabNav = (props) => {
                                             </span>
                                         </p>
                                     </div>
-                                    }
-                                    <div>
-                                        <div className="justify-content-center mt-6">
-                                            <div className="">
-                                                {/* <hr className="hr-bold" /> */}
-                                                <Link
-                                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 paypal"
-                                                    target="_blank"
-                                                    to={paypalUrl}>
-                                                </Link>
-                                                <Link
-                                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 cashapp"
-                                                    target="_blank"
-                                                    to={`https://cash.app/$wakejebber/${totalOwed}`}>
-                                                </Link>
-                                                <Link
-                                                    className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 venmo"
-                                                    target="_blank"
-                                                    to={venmoUrl}>
-                                                </Link>
-                                            </div>
+                                }
+                                <div>
+                                    <div className="justify-content-center mt-6">
+                                        <div className="flex justify-between">
+                                            {/* <hr className="hr-bold" /> */}
+                                            <Link
+                                                className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 paypal"
+                                                target="_blank"
+                                                to={paypalUrl}>
+                                            </Link>
+                                            <Link
+                                                className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 cashapp"
+                                                target="_blank"
+                                                to={`https://cash.app/$wakejebber/${totalOwed}`}>
+                                            </Link>
+                                            <Link
+                                                className="w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 venmo"
+                                                target="_blank"
+                                                to={venmoUrl}>
+                                            </Link>
                                         </div>
                                     </div>
-                                    {
-                                    <div className="pt-4">
-                                        <div className="text-lg font-bungee">Your Donations:<span className="pl-2 text-emerald-400">${tabData?.tab.total_donated} </span></div>
-                                    </div>
-                                    }
                                 </div>
+                                {
+                                    <div className="pt-4">
+                                        <div className="text-lg font-bungee text-center">Your Donations:<span className="pl-2 text-emerald-400">${tabData?.tab.total_donated} </span></div>
+                                    </div>
+                                }
+
+                                <div className="flex flex-col items-center text-center text-white my-4 gap-y-2 max-w-72 font-fugaz">
+                                    <FontAwesomeIcon icon={faInfoCircle} className="h-8" />
+                                    <p>Please be patient as we mark your tab as paid. It should update soon!</p>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
