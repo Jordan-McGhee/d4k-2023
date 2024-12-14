@@ -43,13 +43,13 @@ const TopTenItem = props => {
                     {/* drink count */}
                     <div className="flex items-center">
                         <FontAwesomeIcon className="mr-2 h-8 text-slate-800" icon={faGlassMartini} />
-                        <p className="text-3xl text-emerald-600 italic font-bold">{props.drink_quantity} Drinks</p>
+                        <p className="text-3xl text-slate-800 italic font-bold">{props.drink_quantity} Drinks</p>
                     </div>
 
                     {/* shot count */}
                     <div className="flex items-center">
                         <FontAwesomeIcon className="mr-2 h-8 text-slate-800" icon={faGlassWhiskey} />
-                        <p className="text-3xl text-emerald-600 italic font-bold">{props.shot_quantity} Shots</p>
+                        <p className="text-3xl text-slate-800 italic font-bold">{props.shot_quantity} Shots</p>
                     </div>
                 </div>
 
