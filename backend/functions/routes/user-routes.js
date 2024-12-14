@@ -5,6 +5,8 @@ const router = express.Router()
 
 router.post("/", userControllers.createUser)
 
+router.post("/withPhone", userControllers.createUserWithPhone)
+
 router.get("/verify/:username", userControllers.getUserIDByUsername)
 
 router.patch("/:user_id/adjustDonations", userControllers.adjustDonations)

@@ -18,12 +18,13 @@ import icsFile from '../assets/drink4thekidsparty.ics'
 
 const Order = () => {
     let navigate = useNavigate()
-    const { updateUsername, getUserIdByUsername, createUser } = UserApi()
+    const { updateUsername, getUserIdByUsername, createUserWithPhone } = UserApi()
     const { createOrder } = OrderApi()
     const { getUserById, isUserApiLoading } = UserApi()
     const { getDrinks, isLoadingDrinksApi } = DrinkApi()
 
     const [username, setUsername] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')    
     const [user, setUser] = useState(null)
     const [storedUsername, setStoredUsername] = useState('')
     const [allDrinks, setAllDrinks] = useState([])
@@ -45,8 +46,11 @@ const Order = () => {
     const [isLoadingUsername, setIsLoadingUsername] = useState(false)
     const [searchParams] = useSearchParams();
     const [usernameFocused, setUsernameFocused] = useState(false)
+    const [phoneNumberFocused, setPhoneNumberFocused] = useState(false)
     const onUsernameFocus = () => setUsernameFocused(true)
     const onUsernameBlur = () => setUsernameFocused(false)
+    const onPhoneNumberFocus = () => setPhoneNumberFocused(true)
+    const onPhoneNumberBlur = () => setPhoneNumberFocused(false)
     const [customDrinkDescription, setCustomDrinkDescription] = useState('')
     const [customDrinkDescriptionFocused, setCustomDrinkDescriptionFocused] = useState(false)
     const onCustomDrinkDescriptionFocus = () => setCustomDrinkDescriptionFocused(true)
@@ -82,6 +86,11 @@ const Order = () => {
     const isInvalidUsername = useMemo(() => {
         return (!username || username.trim().length < 3)
     }, [username]);
+
+    const isInvalidPhoneNumber = useMemo(() => {
+        let regexp = /[a-zA-Z]/g
+        return (!phoneNumber || phoneNumber.trim().length < 10 || phoneNumber.trim().length > 12 || regexp.test(phoneNumber)) 
+    }, [phoneNumber]);
 
     const isInvalidEditedUsername = useMemo(() => {
         return (!editedUsername || editedUsername.trim().length < 3)
@@ -285,6 +294,7 @@ const Order = () => {
 
         let currentUserId = userId
         var trimmedUsername = username.trim()
+        var trimmedPhoneNumber = phoneNumber.trim()
 
         if (!hasStoredUserId) {
             let isNewUsername = await verifyUsernameIsNew(trimmedUsername)
@@ -293,7 +303,7 @@ const Order = () => {
                 return
             }
 
-            let data = await createUser(trimmedUsername)
+            let data = await createUserWithPhone(trimmedUsername, trimmedPhoneNumber)
             if (!data?.user_id) throw Error('User not created')
             currentUserId = data.user_id
             setUserId(data.user_id)
@@ -457,6 +467,29 @@ const Order = () => {
                                     }
                                     </div>
                                 }
+                                <Input
+                                    className="pb-5"
+                                    classNames={{
+                                        label: `text-xl group-data-[filled=true]:-translate-y-2 ${isInvalidPhoneNumber ? '-translate-y-2.5' : ''}`,
+                                        trigger: "min-h-unit-16",
+                                        listboxWrapper: "max-h-[400px]",
+                                        inputWrapper: "bg-white",
+                                        errorMessage: `${phoneNumber ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-sm" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-sm"}`
+                                    }}
+                                    maxLength={15}
+                                    type="tel"
+                                    name="phone"
+                                    onFocus={onPhoneNumberFocus}
+                                    onBlur={onPhoneNumberBlur}
+                                    value={phoneNumber}
+                                    variant="bordered"
+                                    radius="full"
+                                    color={(isInvalidPhoneNumber && !phoneNumberFocused) ? "danger" : "success"}
+                                    label="Your Phone Number"
+                                    isInvalid={(isInvalidPhoneNumber && !phoneNumberFocused)}
+                                    onValueChange={setPhoneNumber}
+                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused) ? "We'll need a valid number" : false}
+                                />
                             </div>
                         }
 
@@ -739,7 +772,7 @@ const Order = () => {
                         <Button
                             className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
                             onPress={submitOrder}
-                            isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
+                            isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || isUsernameTaken || isInvalidPhoneNumber || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
                         >
                             Grab a Drink
                             <FontAwesomeIcon beat style={{animationDuration:'2s'}} size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>

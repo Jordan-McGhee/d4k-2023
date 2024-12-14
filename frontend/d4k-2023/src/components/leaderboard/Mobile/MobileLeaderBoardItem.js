@@ -52,19 +52,19 @@ const MobileLeaderBoardItem = props => {
 
             {/* username and drink/shot count */}
             <div className="col-span-3 flex flex-col gap-y-1 ml-4">
-                <p className="text-xl font-bold truncate text-slate-600">{props.username}</p>
+                <p className="text-xl font-bold truncate text-slate-800">{props.username}</p>
 
                 <div className="flex gap-x-2">
                     {/* drink count */}
                     <div className="flex items-center">
                         <FontAwesomeIcon className="mr-1 h-4 text-slate-600" icon={faGlassMartini} />
-                        <p className={`${props.drinkClass || "text-emerald-600"} text-sm italic font-bold`}>{props.drink_quantity} Drinks</p>
+                        <p className={`${props.drinkClass || "text-slate-600"} text-sm italic font-bold`}>{props.drink_quantity} Drinks</p>
                     </div>
 
                     {/* shot count */}
                     <div className="flex items-center">
                         <FontAwesomeIcon className="mr-1 h-4 text-slate-600" icon={faGlassWhiskey} />
-                        <p className={`${props.drinkClass || "text-emerald-600"} text-sm italic font-bold`}>{props.shot_quantity} Shots</p>
+                        <p className={`${props.drinkClass || "text-slate-600"} text-sm italic font-bold`}>{props.shot_quantity} Shots</p>
                     </div>
                 </div>
 
@@ -72,7 +72,7 @@ const MobileLeaderBoardItem = props => {
             </div>
 
             {/* money raised */}
-            <p className={`${props.drinkClass || "text-emerald-600"} col-span-1 text-xl font-bold italic text-center`}>${props.total}</p>
+            <p className={`${props.drinkClass || "text-emerald-700"} col-span-1 text-xl font-bold italic text-center`}>${props.total}</p>
         </Card>
     )
 }

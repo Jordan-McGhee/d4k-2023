@@ -26,6 +26,10 @@ export const UserApi = () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify({username: username}))
     }
 
+    const createUserWithPhone = async (username, phone) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/withPhone`, "POST", { 'Content-Type': 'application/json' }, JSON.stringify({username: username, phoneNumber: phone}))
+    }
+
     const getTab = async (userId) => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}/getTab`, "GET")
     }
@@ -49,6 +53,7 @@ export const UserApi = () => {
         getUserIdByUsername,
         getUserById,
         createUser,
+        createUserWithPhone,
         getAllUsers,
         getTab,
         closeTab,

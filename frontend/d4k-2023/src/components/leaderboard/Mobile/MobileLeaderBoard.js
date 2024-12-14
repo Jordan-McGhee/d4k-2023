@@ -20,20 +20,20 @@ const MobileLeaderBoard = props => {
             {/* party metrics */}
             {
                 props.partyMetrics &&
-                <div className="flex justify-evenly gap-x-2 w-full p-4 bg-slate-100/90 rounded-xl my-4">
-                    <div className="flex items-center gap-x-2">
-                        <FontAwesomeIcon className="size-8 text-emerald-600" icon={faUserAlt} />
-                        <p className="text-2xl text-emerald-600 font-black">{props.partyMetrics[0]}</p>
+                <div className="flex justify-evenly gap-x-2 w-full p-2 bg-slate-100/90 rounded-full my-4">
+                    <div className="flex items-center gap-x-2 text-slate-800">
+                        <FontAwesomeIcon className="size-6" icon={faUserAlt} />
+                        <p className="text-2xl font-black">{props.partyMetrics[0]}</p>
                     </div>
 
-                    <div className="flex items-center gap-x-4">
-                        <FontAwesomeIcon className="size-8 text-emerald-600" icon={faGlassMartini} />
-                        <p className="text-2xl text-emerald-600 font-black">{props.partyMetrics[1]}</p>
+                    <div className="flex items-center gap-x-4 text-slate-800">
+                        <FontAwesomeIcon className="size-6 " icon={faGlassMartini} />
+                        <p className="text-2xl  font-black">{props.partyMetrics[1]}</p>
                     </div>
 
-                    <div className="flex items-center gap-x-4">
-                        <FontAwesomeIcon className="size-8 text-emerald-600" icon={faGlassWhiskey} />
-                        <p className="text-2xl text-emerald-600 font-black">{props.partyMetrics[2]}</p>
+                    <div className="flex items-center gap-x-4 text-slate-800">
+                        <FontAwesomeIcon className="size-6 " icon={faGlassWhiskey} />
+                        <p className="text-2xl font-black">{props.partyMetrics[2]}</p>
                     </div>
                 </div>
             }

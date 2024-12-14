@@ -38,6 +38,41 @@ const createUser = async (req, res, next) => {
     }
 }
 
+const createUserWithPhone = async (req, res, next) => {
+
+    // pull data from body
+    const { username, phoneNumber } = req.body
+
+    // query database to see if that username is already taken
+    let nameQuery = "SELECT * FROM users WHERE UPPER(username) = UPPER($1)"
+    let response
+
+    try {
+        response = await pool.query(nameQuery, [username])
+    } catch (error) {
+        logger.error(`Error checking if username is available: ${error}`)
+        return next(new HttpError(`Error checking if username is available: ${error}`, 500))
+    }
+
+    if (response.rows.length > 0) {
+        res.status(409).json({ message: "This username is taken!", user_id: response.rows[0].user_id })
+    } else {
+        // query for inserting into database
+        let query = "INSERT INTO users(username, phone_number, created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING *"
+        let response
+
+        try {
+            response = await pool.query(query, [username, phoneNumber])
+
+        } catch (error) {
+            logger.error(`Error creating user with phone number: ${error}`)
+            return next(new HttpError("Error creating user with phone number.", 500))
+        }
+
+        res.status(201).json(response.rows[0])
+    }
+}
+
 /** check if username is taken already */
 const getUserIDByUsername = async (req, res, next) => {
     const { username } = req.params
@@ -207,6 +242,7 @@ const closeTab = async (req, res, next) => {
 }
 
 exports.createUser = createUser
+exports.createUserWithPhone = createUserWithPhone
 exports.getUserIDByUsername = getUserIDByUsername
 exports.getUserById = getUserById
 exports.adjustDonations = adjustDonations
