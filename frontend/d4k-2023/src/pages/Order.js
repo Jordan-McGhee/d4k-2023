@@ -135,6 +135,7 @@ const Order = () => {
 
     useEffect(() => {
         const localStorageUserId = localStorage.getItem('userId')
+        console.log(localStorageUserId)
         if (localStorageUserId) {
             const getUser = async () => {
                 try {
