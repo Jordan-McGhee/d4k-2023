@@ -91,11 +91,14 @@ const HomePage = () => {
 
                 <p className="text-5xl mt-1 mb-8 font-bold font-bungee flex flex-col tracking-wider">
                 </p>
-                <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
+                <p className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
+                    See you all next year!
+                </p>
+                {/* <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
                     Saturday<span className="my-2">
                         December 14th</span>
                     6PM — Late
-                </p>
+                </p> */}
                 <BuddyLogo />
                 <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
                     onPress={() => openInNewTab("https://partiful.com/e/HQP8KHQVUtxTTBQdNYgJ")}>
