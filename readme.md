@@ -5,7 +5,10 @@ This year, we partnered with two Atlanta based charities, The Nicholas House and
 
 ### **206 Unique Users, 494 Orders Placed, 624 Drinks Made**
 
-## Tech Stack
+## Tech Stack PERN
+- React Frontend
+- Express & Node Backend
+- Google Cloud SQL Database
 
 ## Demo
 
