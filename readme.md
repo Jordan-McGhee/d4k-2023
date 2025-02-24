@@ -8,7 +8,7 @@ This year, we partnered with two Atlanta based charities, The Nicholas House and
 ## Tech Stack PERN
 - React Frontend
 - Express & Node Backend
-- Google Cloud PostgreSQL Database
+- Supabase PostgreSQL Database
 
 ## Demo
 
