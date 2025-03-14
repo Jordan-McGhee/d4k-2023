@@ -3,7 +3,7 @@
 
 This year, we partnered with two Atlanta based charities, The Nicholas House and True Change. We raised our goal from $2,500 to $4,000 this year and, once again, we doubled our goal with a grand total of **$9,808** raised! With corporate matches, we were able to donate more than **$27,000** in total.
 
-### **206 Unique Users, 494 Orders Placed, 624 Drinks Made**
+### **150 Unique Users, 494 Orders Placed, 624 Drinks Made**
 
 ## Tech Stack PERN
 - React Frontend
