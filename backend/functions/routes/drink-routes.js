@@ -10,4 +10,6 @@ router.get("/getAdmin", drinkControllers.getDrinksAdmin)
 
 router.patch("/:drink_id/updateOutOfStock", drinkControllers.updateOutOfStock)
 
+router.patch("/:drink_id/updateHidden", drinkControllers.updateDrinkIsHidden)
+
 module.exports = router

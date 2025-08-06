@@ -18,7 +18,7 @@ const Jumbotron = props => {
 
     return (
 
-        <div className="bg-cover w-full" style={{ backgroundImage: `url(${bgImageOriginal})`, padding: 0, margin: 0 }}>
+        <div className="bg-cover w-full h-screen" style={{ backgroundImage: `url(${bgImageOriginal})`, padding: 0, margin: 0 }}>
             <div className="w-[95%] mx-auto">
 
                 {/* title */}
@@ -28,7 +28,7 @@ const Jumbotron = props => {
                 </div>
 
 
-                <div className="flex justify-evenly mx-auto">
+                <div className="flex justify-evenly mx-auto h-full">
 
                     {/* progress bar */}
                     <div className="w-[10%]">

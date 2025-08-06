@@ -46,15 +46,15 @@ const LargeTopThreeItem = props => {
 
                 <div className="flex gap-x-4">
                     {/* drink count */}
-                    <div className="flex items-center text-slate-700">
-                        <FontAwesomeIcon className="mr-2 h-10 " icon={faGlassMartini} />
-                        <p className="text-4xl italic">{props.drink_quantity} Drinks</p>
+                    <div className="flex items-center">
+                        <FontAwesomeIcon className="mr-2 h-10 text-slate-800" icon={faGlassMartini} />
+                        <p className="text-4xl text-slate-800 italic">{props.drink_quantity} Drinks</p>
                     </div>
 
                     {/* shot count */}
-                    <div className="flex items-center text-slate-700">
-                        <FontAwesomeIcon className="mr-2 h-10" icon={faGlassWhiskey} />
-                        <p className="text-4xl italic">{props.shot_quantity} Shots</p>
+                    <div className="flex items-center">
+                        <FontAwesomeIcon className="mr-2 h-10 text-slate-800" icon={faGlassWhiskey} />
+                        <p className="text-4xl text-slate-800 italic">{props.shot_quantity} Shots</p>
                     </div>
                 </div>
             </div>

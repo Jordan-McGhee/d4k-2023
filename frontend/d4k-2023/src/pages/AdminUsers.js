@@ -5,6 +5,7 @@ import ErrorModal from "../components/UIElements/ErrorModal"
 import convertDate from "../Conversions/convertDateTime";
 import { Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
     Modal, ModalBody, ModalContent , ModalHeader, ModalFooter,
+    Link,
 } from "@nextui-org/react";
 import { OrderApi } from "../api/orderApi";
 import { UserApi }  from "../api/userApi";
@@ -100,6 +101,10 @@ const Tab = () => {
         }
 
         switch (columnKey) {
+            case "phone_number":
+                return (
+                <Link to={`tel:${user.phone_number}`}>{user.phone_number}</Link>
+            )
             case "adjusted_donations":
                 return (   
                 <Input
@@ -170,11 +175,11 @@ const Tab = () => {
                                 }}
                                 className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
                             <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <TableColumn key="username" scope="col" className="py-3 w-2/12">NAME</TableColumn>
+                                <TableColumn key="username" scope="col" className="py-3 w-2/12">Name</TableColumn>
+                                <TableColumn key="phone_number" scope="col" className="py-3 w-2/12">Phone</TableColumn>
                                 <TableColumn key="adjusted_donations" scope="col" className="py-3 w-1/12">Donation Adjust</TableColumn>
                                 <TableColumn key="created_at" scope="col" className="py-3 w-1/12">Created</TableColumn>
                                 <TableColumn key="updated_at" scope="col" className="py-3 w-1/12">Updated</TableColumn>
-
                             </TableHeader>
                             <TableBody items={filteredTabs}>
                                 {(item) => (

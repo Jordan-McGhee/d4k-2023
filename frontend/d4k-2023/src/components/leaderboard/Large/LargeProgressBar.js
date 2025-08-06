@@ -2,7 +2,7 @@ import React from "react";
 
 const LargeProgressBar = props => {
     const currentTotal = props.total
-    const goal = 2500
+    const goal = 4000
     const percentage = Math.floor((currentTotal / goal) * 100)
 
     return (

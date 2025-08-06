@@ -38,6 +38,41 @@ const createUser = async (req, res, next) => {
     }
 }
 
+const createUserWithPhone = async (req, res, next) => {
+
+    // pull data from body
+    const { username, phoneNumber } = req.body
+
+    // query database to see if that username is already taken
+    let nameQuery = "SELECT * FROM users WHERE UPPER(username) = UPPER($1)"
+    let response
+
+    try {
+        response = await pool.query(nameQuery, [username])
+    } catch (error) {
+        logger.error(`Error checking if username is available: ${error}`)
+        return next(new HttpError(`Error checking if username is available: ${error}`, 500))
+    }
+
+    if (response.rows.length > 0) {
+        res.status(409).json({ message: "This username is taken!", user_id: response.rows[0].user_id })
+    } else {
+        // query for inserting into database
+        let query = "INSERT INTO users(username, phone_number, created_at, updated_at) VALUES ($1, $2, NOW(), NOW()) RETURNING *"
+        let response
+
+        try {
+            response = await pool.query(query, [username, phoneNumber])
+
+        } catch (error) {
+            logger.error(`Error creating user with phone number: ${error}`)
+            return next(new HttpError("Error creating user with phone number.", 500))
+        }
+
+        res.status(201).json(response.rows[0])
+    }
+}
+
 /** check if username is taken already */
 const getUserIDByUsername = async (req, res, next) => {
     const { username } = req.params
@@ -67,7 +102,8 @@ const getUserById = async (req, res, next) => {
         logger.error(`Error searching for user_id ${user_id} ${error}`)
         return next(new HttpError(`Error searching for user_id ${user_id}.`, 500))
     }
-    res.status(200).json(response.rows[0])
+    console.log(response.rows[0])
+    res.status(200).json({user: response.rows[0]})
 }
 
 const adjustDonations = async (req, res, next) => {
@@ -169,13 +205,13 @@ const getTab = async (req, res, next) => {
     }
 
     let history = {}
-    if(response.rows[0].order_history){
-        let array = response.rows[0].order_history.split(", ")
 
+    if(response !== null && response.rows > 0 && response.rows[0].order_history !== null){
+        let array = response.rows[0].order_history.split(", ")
         array.forEach(i => {
             let splitArray = i.split('—')
     
-            console.log(splitArray)
+            console.log("split: " + splitArray)
     
             if (history[splitArray[0]]) {
                 history[splitArray[0]] += parseInt(splitArray[1])
@@ -185,6 +221,7 @@ const getTab = async (req, res, next) => {
         })
     }
 
+    console.log("HISTORYYYYYYYYY: " + history)
 
 
     res.status(200).json({ tab: response.rows[0] ? response.rows[0] : {}, order_history: history })
@@ -207,6 +244,7 @@ const closeTab = async (req, res, next) => {
 }
 
 exports.createUser = createUser
+exports.createUserWithPhone = createUserWithPhone
 exports.getUserIDByUsername = getUserIDByUsername
 exports.getUserById = getUserById
 exports.adjustDonations = adjustDonations

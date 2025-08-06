@@ -9,7 +9,7 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "16"
+    "node": ">=16.0.0"
   },
   "main": "index.js",
   "dependencies": {
@@ -20,7 +20,8 @@
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.0",
     "nodemon": "^2.0.22",
-    "pg": "^8.11.0"
+    "pg": "^8.11.0",
+    "twilio": "^5.8.0"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0"

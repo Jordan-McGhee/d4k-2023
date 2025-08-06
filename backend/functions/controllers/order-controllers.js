@@ -158,7 +158,11 @@ const updateCompleted = async (req, res, next) => {
 
 const getOrdersAdmin = async (req, res, next) => {
     let { limit } = req.params
-    let query = `SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE voided_at IS NULL ORDER BY is_completed, created_at ASC LIMIT $1`
+    let query = `SELECT u.username, o.* 
+                FROM orders o 
+                JOIN users u ON u.user_id = o.user_id 
+                WHERE voided_at IS NULL 
+                ORDER BY is_completed, created_at desc LIMIT $1`
     let response
 
     try {
@@ -185,34 +189,73 @@ const getOrdersGrouped = async (req, res, next) => {
 }
 
 const getOrdersLeaderboard = async (req, res, next) => {
-    let query = `
-        SELECT user_id, photo_url, username, quantity, amount_paid, adjusted_donations 
-        FROM user_totals 
-        WHERE amount_paid + adjusted_donations > 0 
-        ORDER BY amount_paid + adjusted_donations DESC 
-        LIMIT 10`
+    // Grab user_id from query params if given
+    const { userId } = req.query;
 
-    let sumQuery = `SELECT * FROM d4k_total`
+    // Query for the top 10 users
+    let topUsersQuery =
+        "WITH user_leaderboard AS (SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations, (SELECT COUNT(*) FROM user_totals) AS total_users FROM leaderboard_totals WHERE amount_paid + adjusted_donations > 0 ORDER BY amount_paid + adjusted_donations DESC LIMIT 10) SELECT *, total_users FROM user_leaderboard";
 
-    let response, sumResponse
+
+
+    // Query for the rank of a specific user
+    let userRankQuery = `
+        SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations, rank FROM ( SELECT user_id, photo_url, username, drink_quantity, shot_quantity, amount_paid, adjusted_donations, RANK() OVER (ORDER BY amount_paid + adjusted_donations DESC) AS rank FROM leaderboard_totals ) ranked WHERE user_id = $1 `;
+
+    // Query for the total donations sum
+    let sumQuery = `SELECT * FROM d4k_total`;
+
+    let topUsersResponse, userRankResponse, sumResponse;
 
     try {
-        response = await pool.query(query)
+        topUsersResponse = await pool.query(topUsersQuery);
     } catch (error) {
-        logger.error(`Error getting orders for leaderboard. ${error}`, 500)
-        return next(new HttpError(`Error getting orders for leaderboard. ${error}`, 500))
+        logger.error(`Error getting top users for leaderboard. ${error}`, 500);
+        return next(new HttpError(`Error getting top users for leaderboard. ${error}`, 500));
     }
 
     try {
-        sumResponse = await pool.query(sumQuery)
+        sumResponse = await pool.query(sumQuery);
     } catch (error) {
-        logger.error(`Error getting orders for leaderboard. ${error}`, 500)
-
-        return next(new HttpError(`Error getting overall total for leaderboard. ${error}`, 500))
+        logger.error(`Error getting overall total for leaderboard. ${error}`, 500);
+        return next(new HttpError(`Error getting overall total for leaderboard. ${error}`, 500));
     }
 
-    res.status(200).json({ message: "Retrieved orders for leaderboard!", response: response.rows, sumTotal: sumResponse?.rows[0]?.d4k_total })
-}
+    // Check if user_id is provided to calculate their rank
+    if (userId) {
+        try {
+            userRankResponse = await pool.query(userRankQuery, [userId]);
+        } catch (error) {
+            logger.error(`Error getting rank for user. ${error}`, 500);
+            return next(new HttpError(`Error getting rank for user. ${error}`, 500));
+        }
+    }
+
+    // Combined query for drinks and shots
+    let drinkCountQuery = `WITH drink_counts AS (SELECT *, SUM(CASE WHEN type != 'shot' THEN total_orders ELSE 0 END) OVER () AS drink_quantity, SUM(CASE WHEN type = 'shot' THEN total_orders ELSE 0 END) OVER () AS shot_quantity FROM order_totals) SELECT *, drink_quantity, shot_quantity FROM drink_counts ORDER BY total_orders DESC`
+
+    try {
+        drinkCountResponse = await pool.query(drinkCountQuery)
+    } catch (error) {
+        logger.error(`Error getting drink counts for leaderboard. ${error}`, 500)
+        return next(new HttpError(`Error getting drink counts for leaderboard. ${error}`, 500))
+    }
+
+    // grab total count for drinks and shots
+    const drinkQuantity = drinkCountResponse.rows[0]?.drink_quantity || 0
+    const shotQuantity = drinkCountResponse.rows[0]?.shot_quantity || 0
+
+    res.status(200).json({
+        message: "Retrieved orders for leaderboard!",
+        topUsers: topUsersResponse.rows,
+        userRank: userRankResponse ? userRankResponse.rows[0] : null,
+        sumTotal: sumResponse?.rows[0]?.d4k_total,
+        totalUsers: topUsersResponse.rows[0].total_users,
+        drinkQuantity: drinkQuantity,
+        shotQuantity: shotQuantity
+    });
+};
+
 
 const deleteOrder = async (req, res, next) => {
     const { order_id } = req.params
