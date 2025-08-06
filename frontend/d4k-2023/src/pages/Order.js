@@ -1,227 +1,101 @@
-import React, { useEffect, useState, useMemo, useRef } from "react";
+import React, { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import {
     Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter,
     Spinner, Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Link
 } from "@nextui-org/react"
-import { useNavigate, createSearchParams } from "react-router-dom";
+import { useNavigate, createSearchParams, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faCheck, faMinus, faPlus, faChampagneGlasses, faEdit, faX } from '@fortawesome/free-solid-svg-icons'
-import { useSearchParams } from "react-router-dom";
-import { OrderApi } from "../api/orderApi"
 import { toast } from 'react-toastify';
-import shots from "../assets/shots.json"
 
+import { OrderApi } from "../api/orderApi"
 import { DrinkApi } from "../api/drinkApi";
 import { UserApi } from "../api/userApi"
-
+import shots from "../assets/shots.json"
 import icsFile from '../assets/drink4thekidsparty.ics'
 
+// Constants
+const CUSTOM_DRINK_ID = 999;
+const DONATION_AMOUNTS = [2, 5, 10];
+const VALIDATION_RULES = {
+    MIN_USERNAME_LENGTH: 3,
+    MIN_PHONE_LENGTH: 10,
+    MAX_PHONE_LENGTH: 12,
+    MIN_CUSTOM_DESCRIPTION_LENGTH: 3,
+    MAX_DONATION: 1000,
+    MAX_USERNAME_LENGTH: 30,
+    MAX_CUSTOM_DESCRIPTION_LENGTH: 200,
+    MAX_COMMENTS_LENGTH: 120
+};
+
 const Order = () => {
-    let navigate = useNavigate()
-    const { updateUsername, getUserIdByUsername, createUserWithPhone } = UserApi()
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
+    
+    // API hooks
+    const { updateUsername, getUserIdByUsername, createUserWithPhone, getUserById } = UserApi()
     const { createOrder } = OrderApi()
-    const { getUserById, isUserApiLoading } = UserApi()
     const { getDrinks, isLoadingDrinksApi } = DrinkApi()
 
+    // User state
     const [username, setUsername] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')    
-    const [user, setUser] = useState(null)
     const [storedUsername, setStoredUsername] = useState('')
-    const [allDrinks, setAllDrinks] = useState([])
     const [userId, setUserId] = useState('')
     const [editedUsername, setEditedUsername] = useState('')
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
+    
+    // Drink state
+    const [allDrinks, setAllDrinks] = useState([])
     const [drinkName, setDrinkName] = useState(null)
     const [selectedDrinkDescription, setSelectedDrinkDescription] = useState('')
     const [selectedDrinkId, setSelectedDrinkId] = useState(-1)
-    const [selectValue, setSelectValue] = useState(new Set([]));
+    const [selectValue, setSelectValue] = useState(new Set([]))
     const [drinkCost, setDrinkCost] = useState(0)
     const [drinkQuantity, setDrinkQuantity] = useState(1)
+    const [customDrinkDescription, setCustomDrinkDescription] = useState('')
+    
+    // Order state
     const [donationAmount, _setDonationAmount] = useState(0)
-    const setDonationAmount = (amount) => { _setDonationAmount(amount > 0 ? parseInt(amount) : 0) }
+    const [comments, setComments] = useState('')
+    
+    // UI state
     const [showCustomDonation, setShowCustomDonation] = useState(false)
     const [showEditNameInput, setShowEditNameInput] = useState(false)
-    const [comments, setComments] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isLoadingUsername, setIsLoadingUsername] = useState(false)
-    const [searchParams] = useSearchParams();
+    const [showNotPartyTimeModal, setShowNotPartyTimeModal] = useState(false)
+    
+    // Focus state
     const [usernameFocused, setUsernameFocused] = useState(false)
     const [phoneNumberFocused, setPhoneNumberFocused] = useState(false)
+    const [customDrinkDescriptionFocused, setCustomDrinkDescriptionFocused] = useState(false)
+    
+    // Refs
+    const customDrinkDescriptionRef = useRef(null)
+    const editUsernameInputRef = useRef(null)
+
+    // Helper functions
+    const setDonationAmount = (amount) => _setDonationAmount(amount > 0 ? parseInt(amount) : 0)
+    
     const onUsernameFocus = () => setUsernameFocused(true)
     const onUsernameBlur = () => setUsernameFocused(false)
     const onPhoneNumberFocus = () => setPhoneNumberFocused(true)
     const onPhoneNumberBlur = () => setPhoneNumberFocused(false)
-    const [customDrinkDescription, setCustomDrinkDescription] = useState('')
-    const [customDrinkDescriptionFocused, setCustomDrinkDescriptionFocused] = useState(false)
     const onCustomDrinkDescriptionFocus = () => setCustomDrinkDescriptionFocused(true)
     const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
-    const [isOrderingEnabled, setIsOrderingEnabled] = useState(false)
-    const [showNotPartyTimeModal, setShowNotPartyTimeModal] = useState(false)
 
-    const customDrinkDescriptionRef = useRef(null);
-    const editUsernameInputRef = useRef(null);
-
-    const customDrinkId = 999
-    const isCustomDrinkSelected = useMemo(() => {
-        return selectedDrinkId === customDrinkId
-    }, [selectedDrinkId])
-
-    const isShot = useMemo(() => {
-        return shots.some(d => d.id === selectedDrinkId)
-    }, [selectedDrinkId])
-
-    const isInvalidCustomDrinkDescription = useMemo(() => {
-        return (!customDrinkDescription || customDrinkDescription.trim().length < 3) && isCustomDrinkSelected
-    }, [isCustomDrinkSelected, customDrinkDescription]);
-
-    const hasStoredUserId = useMemo(() => {
-        return (!!userId)
-    }, [userId]);
-
-    const orderTotal = useMemo(() => {
-        return (drinkCost * drinkQuantity) + donationAmount
-    }, [drinkCost, drinkQuantity, donationAmount]);
-
-
-    const isInvalidUsername = useMemo(() => {
-        return (!username || username.trim().length < 3)
-    }, [username]);
-
-    const isInvalidPhoneNumber = useMemo(() => {
-        let regexp = /[a-zA-Z]/g
-        return (!phoneNumber || phoneNumber.trim().length < 10 || phoneNumber.trim().length > 12 || regexp.test(phoneNumber)) 
-    }, [phoneNumber]);
-
-    const isInvalidEditedUsername = useMemo(() => {
-        return (!editedUsername || editedUsername.trim().length < 3)
-    }, [editedUsername]);
-
-    const isInvalidDonationAmount = useMemo(() => {
-        return donationAmount < 0 || donationAmount > 1000
-    }, [donationAmount]);
-
-    const notify = (error) => {
-        toast.error(`UH OH! ${error}`, { position: toast.POSITION.BOTTOM_CENTER });
-    }
-
-    useEffect(() => {
-        const getDrinksCall = async () => {
-            try {
-                const response = await getDrinks()
-
-                setAllDrinks(response)
-
-                const groupedMap = response.reduce(function (rv, x) {
-                    (rv[x.type] = rv[x.type] || []).push(x);
-                    return rv;
-                }, {});
-
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        getDrinksCall()
-    }, [])
-
-
-    useEffect(() => {
-        if (allDrinks) {
-            let drinkIdParam = searchParams.get("drinkId")
-            if (drinkIdParam) {
-                updateDrinkState(parseInt(drinkIdParam))
-            }
-        }
-    }, [allDrinks])
-
-    useEffect(() => {
-        const localStorageUserId = localStorage.getItem('userId')
-        console.log(localStorageUserId)
-        if (localStorageUserId) {
-            const getUser = async () => {
-                try {
-                    const userResponse = await getUserById(localStorageUserId)
-                    if(!userResponse.user){
-                        setStoredUsername(null)
-                        setUsername(null)
-                    }else{
-                        setUserId(parseInt(localStorageUserId))
-                        setUser(userResponse.user)
-                        setUsername(userResponse.user.username)
-                        setStoredUsername(userResponse.user.username)
-                    }
-                } catch (error) {
-                    console.log(error)
-                }
-            }
-            getUser()
-            
-        }
-
-        let drinkIdParam = searchParams.get("drinkId")
-        if (drinkIdParam) {
-            updateDrinkState(parseInt(drinkIdParam))
-        }
-
-        const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
-        
-        setIsOrderingEnabled(false)
-
-    }, [])
-
-    // useEffect(() => {
-
-    //     //let storedUsername = localStorage.getItem('storedUsername')
-    //     let storedUserId = localStorage.getItem('userId')
-    //     if (storedUsername && storedUserId) {
-    //         setUsername(storedUsername)
-    //         setUserId(parseInt(storedUserId))
-    //         setStoredUsername(storedUsername)
-    //     }
-    //     let drinkIdParam = searchParams.get("drinkId")
-    //     if (drinkIdParam) {
-    //         updateDrinkState(parseInt(drinkIdParam))
-    //     }
-
-    //     const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
-    //     const isPartyDate = new Date() >= new Date('12/14/2024')
-    //     setIsOrderingEnabled(isLocal || isPartyDate)
-    // }, [])
-
-    useEffect(() => {
-        if (showCustomDonation) setDonationAmount(0)
-    }, [showCustomDonation])
-
-    useEffect(() => {
-        if (isCustomDrinkSelected) customDrinkDescriptionRef.current.focus()
-    }, [isCustomDrinkSelected])
-
-    useEffect(() => {
-        if (showEditNameInput) editUsernameInputRef.current.focus()
-    }, [showEditNameInput])
-
-    useEffect(() => {
-        setIsUsernameTaken(false)
-    }, [editedUsername])
-
-    const verifyUsernameIsNew = async (uname) => {
+    const verifyUsernameIsNew = useCallback(async (uname) => {
         setIsLoadingUsername(true)
-        let data = await getUserIdByUsername(uname)
+        const data = await getUserIdByUsername(uname)
         if (data?.user_id) {
             setIsUsernameTaken(true)
         }
         setIsLoadingUsername(false)
         return !data?.user_id
-    }
+    }, [getUserIdByUsername])
 
-    useEffect(() => {
-        setIsUsernameTaken(false)
-        if (!isInvalidUsername && !usernameFocused && username !== storedUsername) {
-            verifyUsernameIsNew(username);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [usernameFocused]);
-
-    const updateDrinkState = (drinkId) => {
+    const updateDrinkState = useCallback((drinkId) => {
         if (drinkId === null) return
 
         if (drinkId < 0) {
@@ -231,18 +105,127 @@ const Order = () => {
             setSelectedDrinkId(-1)
             return
         }
-        let selectedDrink = allDrinks.find(x => x.drink_id === drinkId)
-        console.log(allDrinks)
-        //let selectedDrink = allDrinksJson.find(x => x.id === drinkId)
+        
+        const selectedDrink = allDrinks.find(x => x.drink_id === drinkId)
         setSelectValue(new Set([drinkId.toString()]))
         setSelectedDrinkId(drinkId)
         setDrinkName(selectedDrink?.name ?? "custom")
         setSelectedDrinkDescription(selectedDrink?.description ?? '')
         setDrinkCost(parseInt(selectedDrink?.cost || 12))
+    }, [allDrinks])
+
+    // Computed values
+    const isCustomDrinkSelected = useMemo(() => selectedDrinkId === CUSTOM_DRINK_ID, [selectedDrinkId])
+    const isShot = useMemo(() => shots.some(d => d.id === selectedDrinkId), [selectedDrinkId])
+    const hasStoredUserId = useMemo(() => !!userId, [userId])
+    const orderTotal = useMemo(() => (drinkCost * drinkQuantity) + donationAmount, [drinkCost, drinkQuantity, donationAmount])
+
+    // Validation
+    const isInvalidUsername = useMemo(() => 
+        !username || username.trim().length < VALIDATION_RULES.MIN_USERNAME_LENGTH, [username])
+    
+    const isInvalidPhoneNumber = useMemo(() => {
+        const regexp = /[a-zA-Z]/g
+        return !phoneNumber || 
+               phoneNumber.trim().length < VALIDATION_RULES.MIN_PHONE_LENGTH || 
+               phoneNumber.trim().length > VALIDATION_RULES.MAX_PHONE_LENGTH || 
+               regexp.test(phoneNumber)
+    }, [phoneNumber])
+    
+    const isInvalidEditedUsername = useMemo(() => 
+        !editedUsername || editedUsername.trim().length < VALIDATION_RULES.MIN_USERNAME_LENGTH, [editedUsername])
+    
+    const isInvalidCustomDrinkDescription = useMemo(() => 
+        (!customDrinkDescription || customDrinkDescription.trim().length < VALIDATION_RULES.MIN_CUSTOM_DESCRIPTION_LENGTH) && isCustomDrinkSelected, 
+        [isCustomDrinkSelected, customDrinkDescription])
+    
+    const isInvalidDonationAmount = useMemo(() => 
+        donationAmount < 0 || donationAmount > VALIDATION_RULES.MAX_DONATION, [donationAmount])
+
+    const notify = (error) => {
+        toast.error(`UH OH! ${error}`, { position: toast.POSITION.BOTTOM_CENTER });
     }
 
+    // Effects
+    useEffect(() => {
+        const getDrinksCall = async () => {
+            try {
+                const response = await getDrinks()
+                setAllDrinks(response)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getDrinksCall()
+    }, [getDrinks])
+
+    useEffect(() => {
+        if (allDrinks.length > 0) {
+            const drinkIdParam = searchParams.get("drinkId")
+            if (drinkIdParam) {
+                updateDrinkState(parseInt(drinkIdParam))
+            }
+        }
+    }, [allDrinks, searchParams, updateDrinkState])
+
+    useEffect(() => {
+        const localStorageUserId = localStorage.getItem('userId')
+        console.log(localStorageUserId)
+        
+        if (localStorageUserId) {
+            const getUser = async () => {
+                try {
+                    const userResponse = await getUserById(localStorageUserId)
+                    if (!userResponse.user) {
+                        setStoredUsername(null)
+                        setUsername(null)
+                    } else {
+                        setUserId(parseInt(localStorageUserId))
+                        setUsername(userResponse.user.username)
+                        setStoredUsername(userResponse.user.username)
+                    }
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            getUser()
+        }
+
+        const drinkIdParam = searchParams.get("drinkId")
+        if (drinkIdParam) {
+            updateDrinkState(parseInt(drinkIdParam))
+        }
+    }, [getUserById, searchParams, updateDrinkState])
+
+    useEffect(() => {
+        if (showCustomDonation) setDonationAmount(0)
+    }, [showCustomDonation])
+
+    useEffect(() => {
+        if (isCustomDrinkSelected && customDrinkDescriptionRef.current) {
+            customDrinkDescriptionRef.current.focus()
+        }
+    }, [isCustomDrinkSelected])
+
+    useEffect(() => {
+        if (showEditNameInput && editUsernameInputRef.current) {
+            editUsernameInputRef.current.focus()
+        }
+    }, [showEditNameInput])
+
+    useEffect(() => {
+        setIsUsernameTaken(false)
+    }, [editedUsername])
+
+    useEffect(() => {
+        setIsUsernameTaken(false)
+        if (!isInvalidUsername && !usernameFocused && username !== storedUsername) {
+            verifyUsernameIsNew(username);
+        }
+    }, [usernameFocused, isInvalidUsername, username, storedUsername, verifyUsernameIsNew])
+
     const drinkDropdownChanged = (e) => {
-        let currentDrinkId = parseInt(e.target.value)
+        const currentDrinkId = parseInt(e.target.value)
         updateDrinkState(currentDrinkId)
     }
 
@@ -280,12 +263,10 @@ const Order = () => {
         if (isLoading || storedUsername === editedUsername) return
         setIsLoading(true)
 
-        let isNew = await verifyUsernameIsNew(editedUsername)
+        const isNew = await verifyUsernameIsNew(editedUsername)
 
         if (isNew) {
-            let data = await updateUsername(userId, editedUsername)
-            let userResponse = await getUserById(userId)
-            setUser(userResponse)
+            await updateUsername(userId, editedUsername)
             setUsername(editedUsername)
             setStoredUsername(editedUsername)
             localStorage.setItem('storedUsername', editedUsername)
@@ -299,17 +280,18 @@ const Order = () => {
         setIsLoading(true)
 
         let currentUserId = userId
-        var trimmedUsername = username.trim()
-        var trimmedPhoneNumber = phoneNumber.trim()
+        const trimmedUsername = username.trim()
+        const trimmedPhoneNumber = phoneNumber.trim()
 
         if (!hasStoredUserId) {
-            let isNewUsername = await verifyUsernameIsNew(trimmedUsername)
+            const isNewUsername = await verifyUsernameIsNew(trimmedUsername)
             if (!isNewUsername) {
                 setIsUsernameTaken(true)
+                setIsLoading(false)
                 return
             }
 
-            let data = await createUserWithPhone(trimmedUsername, trimmedPhoneNumber)
+            const data = await createUserWithPhone(trimmedUsername, trimmedPhoneNumber)
             if (!data?.user_id) throw Error('User not created')
             currentUserId = data.user_id
             setUserId(data.user_id)
@@ -317,7 +299,7 @@ const Order = () => {
             localStorage.setItem('storedUsername', trimmedUsername)
         }
 
-        let orderData = {
+        const orderData = {
             user_id: currentUserId,
             drinkTitle: drinkName,
             drinkCost: drinkCost,
@@ -327,7 +309,7 @@ const Order = () => {
         }
 
         try {
-            let data = await createOrder(orderData)
+            const data = await createOrder(orderData)
             
             localStorage.setItem('storedUsername', trimmedUsername)
             localStorage.setItem('userId', currentUserId)
@@ -340,6 +322,7 @@ const Order = () => {
         } catch (error) {
             notify(error)
             console.log(error)
+            setIsLoading(false)
         }
     }
 
@@ -390,7 +373,7 @@ const Order = () => {
                                     label="Edit Your Name"
                                     variant="bordered"
                                     radius="full"
-                                    maxLength={20}
+                                    maxLength={VALIDATION_RULES.MAX_USERNAME_LENGTH}
                                     color={isInvalidEditedUsername || isUsernameTaken ? "danger" : "success"}
                                     value={editedUsername}
                                     onValueChange={setEditedUsername}
@@ -445,7 +428,7 @@ const Order = () => {
                                         inputWrapper: "bg-white",
                                         errorMessage: `${username ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-sm" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-sm"}`
                                     }}
-                                    maxLength={30}
+                                    maxLength={VALIDATION_RULES.MAX_USERNAME_LENGTH}
                                     autoFocus
                                     onFocus={onUsernameFocus}
                                     onBlur={onUsernameBlur}
@@ -604,7 +587,7 @@ const Order = () => {
                                 }
                             </SelectSection>
                             <SelectSection classNames={{ heading: "font-bold text-sm text-emerald-600" }} title="Build Your Own">
-                                <SelectItem textValue="Make a Drink - $12" key={customDrinkId} value={customDrinkId}>
+                                <SelectItem textValue="Make a Drink - $12" key={CUSTOM_DRINK_ID} value={CUSTOM_DRINK_ID}>
                                     <div className="flex flex-col">
                                         <span className="font-bold">Make a Drink / Bartender's Choice — $12</span>
                                         <span className="truncate text-xs italic capitalize text-slate-600">Whatever you want, or whatever we want</span>
@@ -628,7 +611,7 @@ const Order = () => {
                                         radius="full"
                                         variant="bordered"
                                         className="pb-5"
-                                        maxLength={200}
+                                        maxLength={VALIDATION_RULES.MAX_CUSTOM_DESCRIPTION_LENGTH}
                                         onFocus={onCustomDrinkDescriptionFocus}
                                         onBlur={onCustomDrinkDescriptionBlur}
                                         value={customDrinkDescription}
@@ -665,31 +648,22 @@ const Order = () => {
 
                                     {/* DIV OF BUTTONS FOR DIFFERENT DONATION AMOUNTS */}
                                     <div className="flex justify-between my-2">
-                                        <Button
-                                            isIconOnly
-                                            radius="full"
-                                            className={`border-2 font-bold border-emerald-600 bg-white ${donationAmount === 2 ? "text-slate-200 bg-emerald-700" : "text-emerald-700"}`}
-                                            onPress={donationAmount === 2 ? () => donationHandler(0) : () => donationHandler(2)}
-                                        >$2</Button>
-                                        <Button
-                                            isIconOnly
-                                            radius="full"
-                                            className={`border-2 font-bold border-emerald-600 bg-white ${donationAmount === 5 ? "text-slate-200 bg-emerald-700" : "text-emerald-700"}`}
-                                            onPress={donationAmount === 5 ? () => donationHandler(0) : () => donationHandler(5)}
-                                        >$5</Button>
-                                        <Button
-                                            isIconOnly
-                                            radius="full"
-                                            className={`border-2 font-bold border-emerald-600 bg-white ${donationAmount === 10 ? "text-slate-200 bg-emerald-700" : "text-emerald-700"}`}
-                                            onPress={donationAmount === 10 ? () => donationHandler(0) : () => donationHandler(10)}
-                                        >$10</Button>
+                                        {DONATION_AMOUNTS.map(amount => (
+                                            <Button
+                                                key={amount}
+                                                isIconOnly
+                                                radius="full"
+                                                className={`border-2 font-bold border-emerald-600 bg-white ${donationAmount === amount ? "text-slate-200 bg-emerald-700" : "text-emerald-700"}`}
+                                                onPress={donationAmount === amount ? () => donationHandler(0) : () => donationHandler(amount)}
+                                            >${amount}</Button>
+                                        ))}
                                         <Button
                                             radius="full"
                                             className={`border-2 font-bold bg-white border-emerald-600  ${showCustomDonation || (donationAmount > 0 &&
-                                                donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10) ? "text-slate-200 bg-emerald-700" : "text-emerald-700"}`}
-                                            onPress={donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10 ? () => donationHandler(0) : () => setShowCustomDonation(true)}
+                                                !DONATION_AMOUNTS.includes(donationAmount)) ? "text-slate-200 bg-emerald-700" : "text-emerald-700"}`}
+                                            onPress={donationAmount > 0 && !DONATION_AMOUNTS.includes(donationAmount) ? () => donationHandler(0) : () => setShowCustomDonation(true)}
                                         >
-                                            {(donationAmount > 0 && donationAmount !== 2 && donationAmount !== 5 && donationAmount !== 10) ? `$${donationAmount}` : 'Custom'}
+                                            {(donationAmount > 0 && !DONATION_AMOUNTS.includes(donationAmount)) ? `$${donationAmount}` : 'Custom'}
                                         </Button>
                                     </div>
                                     {
@@ -705,7 +679,7 @@ const Order = () => {
                                                 pattern="\d*"
                                                 inputMode="decimal"
                                                 min={0}
-                                                max={1000}
+                                                max={VALIDATION_RULES.MAX_DONATION}
                                                 maxLength={4}
                                                 onKeyDown={limitKeyPress}
                                                 color={isInvalidDonationAmount ? "danger" : "success"}
@@ -762,7 +736,7 @@ const Order = () => {
                             variant="bordered"
                             color="success"
                             fullWidth
-                            maxLength="120"
+                            maxLength={VALIDATION_RULES.MAX_COMMENTS_LENGTH}
                             label="Comments"
                             value={comments}
                             onValueChange={setComments}

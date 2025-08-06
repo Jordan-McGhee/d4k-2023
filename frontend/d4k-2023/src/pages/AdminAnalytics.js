@@ -1,60 +1,105 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX, faPlus, faUser } from '@fortawesome/free-solid-svg-icons'
-import ErrorModal from "../components/UIElements/ErrorModal"
-import convertDate from "../Conversions/convertDateTime";
-import { Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Modal, ModalBody, ModalContent , ModalHeader, ModalFooter,
-} from "@nextui-org/react";
+import React, { useState, useEffect, useCallback } from "react";
+import { Spinner, Button } from "@nextui-org/react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRefresh } from '@fortawesome/free-solid-svg-icons';
 
-import { Chart } from "react-google-charts";
+import ErrorModal from "../components/UIElements/ErrorModal"
 import OrderAnalytics from "../components/admin/analytics/OrderAnalytics";
 import IngredientAnalytics from "../components/admin/analytics/IngredientAnalytics";
-import { UserApi }  from "../api/userApi";
-import { AnalyticsApi }  from "../api/analyticsApi";
+import { AnalyticsApi } from "../api/analyticsApi";
 
-const Tab = () => {
-    const [ orderData, setOrderData] = useState([])
-    const [ ingredientData, setIngredientData] = useState([])
+// Constants
+const SPINNER_STYLES = {
+    left: 'calc(50% - 20px)'
+};
 
-    const { getDrinkData, getIngredientData, hasError, clearError, isLoading} = AnalyticsApi()
+/**
+ * AdminAnalytics Component
+ * 
+ * Displays analytics data for orders and ingredients.
+ * Fetches data from the analytics API and renders charts/visualizations.
+ */
+const AdminAnalytics = () => {
+    // API hooks
+    const { getDrinkData, getIngredientData, hasError, clearError, isLoading } = AnalyticsApi()
 
-    useEffect(() => {
-        const getData = async () => {
-            try {
-                const drinkResponseData = await getDrinkData()
-                setOrderData(drinkResponseData)
-                const ingredientResponseData = await getIngredientData()
-                setIngredientData(ingredientResponseData)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getData()
-    }, [ ])
+    // Data state
+    const [orderData, setOrderData] = useState([])
+    const [ingredientData, setIngredientData] = useState([])
 
-    const refreshData = async () => {
+    // Data fetching functions
+    const fetchAnalyticsData = useCallback(async () => {
         try {
-            const responseData = await getDrinkData()
-            setOrderData(responseData)
+            const [drinkResponseData, ingredientResponseData] = await Promise.all([
+                getDrinkData(),
+                getIngredientData()
+            ])
+            setOrderData(drinkResponseData)
+            setIngredientData(ingredientResponseData)
         } catch (error) {
-            console.log(error)
+            console.error('Error fetching analytics data:', error)
         }
-    }
+    }, [getDrinkData, getIngredientData])
+
+    // Effects
+    useEffect(() => {
+        fetchAnalyticsData()
+    }, [fetchAnalyticsData])
 
     return (
-        <>
-            <div className="w-full m-auto">
-                <ErrorModal error = { hasError } onClear = { clearError } />
-                { (isLoading) && <Spinner color="success" className="fixed top-2/4 z-50 w-50" style={{left:'calc(50% - 20px)'}} size="lg" /> }
-                    <div className="rounded-lg shadow-md">
-                    <OrderAnalytics data={orderData}/>
-                    <IngredientAnalytics data={ingredientData}/>
-
-                    </div>
+        <div className="w-full m-auto">
+            <ErrorModal error={hasError} onClear={clearError} />
+            
+            {isLoading && (
+                <Spinner 
+                    color="success" 
+                    className="fixed top-2/4 z-50 w-50" 
+                    style={SPINNER_STYLES} 
+                    size="lg" 
+                />
+            )}
+            
+            {/* Header with refresh button */}
+            <div className="flex justify-between items-center mb-4">
+                <h1 className="text-2xl font-bold text-gray-800">Analytics Dashboard</h1>
+                <Button
+                    isIconOnly
+                    size="lg"
+                    radius="full"
+                    variant="ghost"
+                    color="default"
+                    isLoading={isLoading}
+                    onPress={fetchAnalyticsData}
+                    className="text-blue-600"
+                >
+                    <FontAwesomeIcon icon={faRefresh} className="text-xl" />
+                </Button>
             </div>
-        </>
+            
+            <div className="rounded-lg shadow-md space-y-6">
+                {orderData.length > 0 && (
+                    <OrderAnalytics data={orderData} />
+                )}
+                {ingredientData.length > 0 && (
+                    <IngredientAnalytics data={ingredientData} />
+                )}
+                
+                {!isLoading && orderData.length === 0 && ingredientData.length === 0 && (
+                    <div className="p-8 text-center text-gray-500">
+                        <p>No analytics data available.</p>
+                        <Button
+                            className="mt-4"
+                            color="primary"
+                            variant="flat"
+                            onPress={fetchAnalyticsData}
+                        >
+                            Retry Loading Data
+                        </Button>
+                    </div>
+                )}
+            </div>
+        </div>
     )
 }
 
-export default Tab
+export default AdminAnalytics

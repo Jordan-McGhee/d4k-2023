@@ -33,14 +33,15 @@ const Tab = () => {
         getTabs()
     }, [])
 
-    const refreshTabs = async () => {
+    const refreshTabs = useCallback(async () => {
         try {
             const responseData = await getOrdersAsTabs()
             setAllTabs(responseData)
         } catch (error) {
             console.log(error)
         }
-    }
+    }, [getOrdersAsTabs]);
+    
     const ButtonCloseTab = ({ userTab, onCloseTabFunction }) => {
         const [showConfirmCloseTab, setShowConfirmCloseTab] = useState(false)
 
@@ -119,7 +120,7 @@ const Tab = () => {
             default:
                 return cellValue
         }
-    }, [allTabs, originalAdjustDonationValue])
+    }, [allTabs, originalAdjustDonationValue, refreshTabs, updateUserDonations])
 
     const filteredTabs = useMemo(() => {
         if (filterValue.trim().length === 0) return allTabs

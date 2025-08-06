@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import MobileLeaderBoardList from "./MobileLeaderBoardList";
-// import MobileTopThree from "./MobileTopThree";
 import MobileProgressBar from "./MobileProgressBar";
 
 // ui elements
@@ -38,10 +37,6 @@ const MobileLeaderBoard = props => {
                 </div>
             }
 
-            {/* SECTION FOR TOP 3 */}
-            {/* <MobileTopThree data={topThree} user = { storedUserID } userClass = { userClass }/> */}
-
-            {/* SECTION FOR REST OF LEADERBOARD (4-10) */}
             <MobileLeaderBoardList topUsers={props.topUsers} user={props.user} />
 
         </div>

@@ -3,14 +3,12 @@ import { Button, Spinner } from "@nextui-org/react";
 import MenuList from "../components/menu/MenuList";
 import MenuItem from "../components/menu/MenuItem";
 
-import { MenuApi } from "../api/menuApi";
 import { DrinkApi } from "../api/drinkApi";
 
 
 const Menu = () => {
     const { getDrinksAdmin } = DrinkApi()
 
-    // const { getCocktails, getBatched, getShots, getMocktails } = MenuApi()
     const [ cocktails, setCocktails] = useState([])
     const [ shots, setShots] = useState([])
     const [ batched, setBatched] = useState([])

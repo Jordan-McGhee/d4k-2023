@@ -1,86 +1,127 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX, faPlus, faUser } from '@fortawesome/free-solid-svg-icons'
+import { 
+    faCheck, faMagnifyingGlass, faDollar, faPlus, faUser 
+} from '@fortawesome/free-solid-svg-icons'
+import {
+    Spinner, Input, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
+    Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Link
+} from "@nextui-org/react";
+
 import ErrorModal from "../components/UIElements/ErrorModal"
 import convertDate from "../Conversions/convertDateTime";
-import { Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Modal, ModalBody, ModalContent , ModalHeader, ModalFooter,
-    Link,
-} from "@nextui-org/react";
-import { OrderApi } from "../api/orderApi";
-import { UserApi }  from "../api/userApi";
+import { UserApi } from "../api/userApi";
 
-const Tab = () => {
-    const [ allUsers, setAllUsers] = useState([])
-    const [ showAddUserModal, setshowAddUserModal ] = useState(false)
-    const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending" });
-    const [filterValue, setFilterValue] = useState("");
-    const { updateUserDonations, getAllUsers, createUser, getUserIdByUsername, isUserApiLoading, hasError, clearError } = UserApi()
+// Constants
+const VALIDATION_RULES = {
+    MIN_USERNAME_LENGTH: 3,
+    MAX_USERNAME_LENGTH: 30,
+    MAX_DONATION: 1000,
+    MAX_INPUT_LENGTH: 4
+};
+
+const TABLE_COLUMNS = [
+    { key: "username", label: "Name", className: "w-2/12" },
+    { key: "phone_number", label: "Phone", className: "w-2/12" },
+    { key: "adjusted_donations", label: "Donation Adjust", className: "w-1/12" },
+    { key: "created_at", label: "Created", className: "w-1/12" },
+    { key: "updated_at", label: "Updated", className: "w-1/12" }
+];
+
+const AdminUsers = () => {
+    // API hooks
+    const { 
+        updateUserDonations, 
+        getAllUsers, 
+        createUser, 
+        getUserIdByUsername, 
+        isUserApiLoading, 
+        hasError, 
+        clearError 
+    } = UserApi()
+
+    // User data state
+    const [allUsers, setAllUsers] = useState([])
     const [originalAdjustDonationValue, setOriginalAdjustDonationValue] = useState(0)
-
+    
+    // UI state
+    const [showAddUserModal, setShowAddUserModal] = useState(false)
+    const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending"})
+    const [filterValue, setFilterValue] = useState("")
+    
+    // New user form state
     const [username, setUsername] = useState('')
     const [usernameFocused, setUsernameFocused] = useState(false)
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
     const [isLoadingUsername, setIsLoadingUsername] = useState(false)
+
+    // Focus handlers
     const onUsernameFocus = () => setUsernameFocused(true)
     const onUsernameBlur = () => setUsernameFocused(false)
 
-    const verifyUsernameIsNew = async (uname) => {
+    // Validation
+    const isInvalidUsername = useMemo(() => 
+        !username || username.trim().length < VALIDATION_RULES.MIN_USERNAME_LENGTH, [username])
+
+    // Username verification
+    const verifyUsernameIsNew = useCallback(async (uname) => {
         setIsLoadingUsername(true)
-        let data = await getUserIdByUsername(uname)
+        const data = await getUserIdByUsername(uname)
         if (data?.user_id) {
             setIsUsernameTaken(true)
         }
         setIsLoadingUsername(false)
         return !data?.user_id
-    }
+    }, [getUserIdByUsername])
 
-    const isInvalidUsername = useMemo(() => {
-        return (!username || username.trim().length < 3)
-    }, [username]);
-
-    useEffect(() => {
-        const getUsers = async () => {
-            try {
-                const responseData = await getAllUsers()
-                setAllUsers(responseData)
-                
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getUsers()
-    }, [ ])
-
-    const refreshUsers = async () => {
+    // Data fetching
+    const fetchUsers = useCallback(async () => {
         try {
             const responseData = await getAllUsers()
             setAllUsers(responseData)
-            
         } catch (error) {
             console.log(error)
         }
-    }
+    }, [getAllUsers])
+
+    const refreshUsers = useCallback(async () => {
+        try {
+            const responseData = await getAllUsers()
+            setAllUsers(responseData)
+        } catch (error) {
+            console.log(error)
+        }
+    }, [getAllUsers])
+
+    // Effects
+    useEffect(() => {
+        fetchUsers()
+    }, [fetchUsers])
 
     useEffect(() => {
         setIsUsernameTaken(false)
         if (!isInvalidUsername && !usernameFocused) {
             verifyUsernameIsNew(username);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [usernameFocused]);
+    }, [usernameFocused, isInvalidUsername, username, verifyUsernameIsNew])
 
+    // Modal handlers
+    const handleCloseModal = () => {
+        setShowAddUserModal(false)
+        setUsername('')
+        setIsUsernameTaken(false)
+    }
     const submitNewUser = async () => {
-        var trimmedUsername = username.trim()
-        let isNewUsername = await verifyUsernameIsNew(trimmedUsername)
+        const trimmedUsername = username.trim()
+        const isNewUsername = await verifyUsernameIsNew(trimmedUsername)
         if (!isNewUsername) {
             setIsUsernameTaken(true)
             return
         }
-        let data = await createUser(trimmedUsername)
+        const data = await createUser(trimmedUsername)
         if (!data?.user_id) throw Error('User not created')
         refreshUsers()
-        setshowAddUserModal(false)
+        handleCloseModal()
     }
 
 
@@ -89,51 +130,59 @@ const Tab = () => {
         const cellValue = user[columnKey];
 
         const handleAdjustDonations = async (tab, value) => {    
-            setAllUsers(allUsers.map(t => t.user_id === tab.user_id ? {...t ,adjusted_donations: parseInt(value) } : t));
-            console.log(tab)
-            console.log(value)
+            setAllUsers(prevUsers => prevUsers.map(t => 
+                t.user_id === tab.user_id ? {...t, adjusted_donations: parseInt(value)} : t
+            ));
         }
 
         const onAdjustDonationInputBlur = async (tab) => {
-            if(tab.adjusted_donations === originalAdjustDonationValue) return
-            let success = await updateUserDonations(tab.user_id, tab.adjusted_donations )
-            if(!success){ setAllUsers(allUsers.map(t => t.user_id === tab.user_id ? {...t ,adjusted_donations: originalAdjustDonationValue } : t)) }
+            if (tab.adjusted_donations === originalAdjustDonationValue) return
+            const success = await updateUserDonations(tab.user_id, tab.adjusted_donations)
+            if (!success) { 
+                setAllUsers(prevUsers => prevUsers.map(t => 
+                    t.user_id === tab.user_id ? {...t, adjusted_donations: originalAdjustDonationValue} : t
+                )) 
+            }
         }
 
         switch (columnKey) {
             case "phone_number":
                 return (
-                <Link to={`tel:${user.phone_number}`}>{user.phone_number}</Link>
-            )
+                    <Link href={`tel:${user.phone_number}`}>{user.phone_number}</Link>
+                )
             case "adjusted_donations":
                 return (   
-                <Input
-                    variant="faded"
-                    type="number"
-                    pattern="\d*"
-                    inputMode="decimal"
-                    min={0}
-                    max={1000}
-                    maxLength={4}
-                    value={user.adjusted_donations}
-                    onFocus={() => setOriginalAdjustDonationValue(user.adjusted_donations)}
-                    onBlur={() => onAdjustDonationInputBlur(user)}
-                    onValueChange={(value) => handleAdjustDonations(user, value)}
-                    startContent={ <FontAwesomeIcon icon={faDollar} /> }
-                  />)
+                    <Input
+                        variant="faded"
+                        type="number"
+                        pattern="\d*"
+                        inputMode="decimal"
+                        min={0}
+                        max={VALIDATION_RULES.MAX_DONATION}
+                        maxLength={VALIDATION_RULES.MAX_INPUT_LENGTH}
+                        value={user.adjusted_donations}
+                        onFocus={() => setOriginalAdjustDonationValue(user.adjusted_donations)}
+                        onBlur={() => onAdjustDonationInputBlur(user)}
+                        onValueChange={(value) => handleAdjustDonations(user, value)}
+                        startContent={<FontAwesomeIcon icon={faDollar} />}
+                    />
+                )
             case "created_at":
                 return convertDate(user.created_at)
             case "updated_at":
-                return convertDate(user.created_at)
+                return convertDate(user.updated_at)
             default:
                 return cellValue
-            }
-    }, [allUsers, originalAdjustDonationValue])
+        }
+    }, [originalAdjustDonationValue, updateUserDonations])
 
-    const filteredTabs = useMemo(() =>{
+    const filteredUsers = useMemo(() => {
         if (filterValue.trim().length === 0) return allUsers
-        return [...allUsers].filter(t => t.username.toLowerCase().includes(filterValue.trim().toLowerCase())
-        )}, [allUsers, filterValue])
+        
+        return allUsers.filter(user => 
+            user.username.toLowerCase().includes(filterValue.trim().toLowerCase())
+        )
+    }, [allUsers, filterValue])
 
     const topContent = useMemo(() => {
         return (
@@ -152,7 +201,7 @@ const Tab = () => {
             </div>
             <div className="flex justify-end flex-grow">
                    <Button isIconOnly size="lg" radius="full" variant="shadow" color="success"
-                   onPress={() => setshowAddUserModal(true)}>
+                   onPress={() => setShowAddUserModal(true)}>
                         <FontAwesomeIcon className="text-2xl text-white" icon={faPlus} />
                     </Button>
                 </div>
@@ -175,13 +224,17 @@ const Tab = () => {
                                 }}
                                 className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
                             <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <TableColumn key="username" scope="col" className="py-3 w-2/12">Name</TableColumn>
-                                <TableColumn key="phone_number" scope="col" className="py-3 w-2/12">Phone</TableColumn>
-                                <TableColumn key="adjusted_donations" scope="col" className="py-3 w-1/12">Donation Adjust</TableColumn>
-                                <TableColumn key="created_at" scope="col" className="py-3 w-1/12">Created</TableColumn>
-                                <TableColumn key="updated_at" scope="col" className="py-3 w-1/12">Updated</TableColumn>
+                                {TABLE_COLUMNS.map(column => (
+                                    <TableColumn 
+                                        key={column.key} 
+                                        scope="col" 
+                                        className={`py-3 ${column.className}`}
+                                    >
+                                        {column.label}
+                                    </TableColumn>
+                                ))}
                             </TableHeader>
-                            <TableBody items={filteredTabs}>
+                            <TableBody items={filteredUsers}>
                                 {(item) => (
                                 <TableRow key={item.username}>
                                     {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
@@ -192,7 +245,7 @@ const Tab = () => {
                     </div>
                 </div>
             </div>
-            <Modal isOpen={showAddUserModal} onClose={() => setshowAddUserModal(false)}>
+            <Modal isOpen={showAddUserModal} onClose={handleCloseModal}>
                 <ModalContent>
                 {(onClose) => (
                     <>
@@ -208,7 +261,7 @@ const Tab = () => {
                                     inputWrapper: "bg-white",
                                     errorMessage: "absolute italic bottom-2 left-4"
                                 }}
-                                maxLength={30}
+                                maxLength={VALIDATION_RULES.MAX_USERNAME_LENGTH}
                                 autoFocus
                                 onFocus={onUsernameFocus}
                                 onBlur={onUsernameBlur}
@@ -231,7 +284,7 @@ const Tab = () => {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="default" variant="bordered" radius="full" onPress={() => setshowAddUserModal(false)}>
+                        <Button color="default" variant="bordered" radius="full" onPress={handleCloseModal}>
                         Close
                         </Button>
                         <Button color="primary" radius="full" onPress={submitNewUser}>
@@ -247,4 +300,4 @@ const Tab = () => {
     )
 }
 
-export default Tab
+export default AdminUsers

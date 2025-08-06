@@ -1,78 +1,120 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh } from '@fortawesome/free-solid-svg-icons'
+import { 
+    faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar, faRefresh 
+} from '@fortawesome/free-solid-svg-icons'
+import {
+    Switch, Spinner, Input, Button, ButtonGroup, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem,
+    Table, TableHeader, TableColumn, TableBody, TableRow, TableCell
+} from "@nextui-org/react";
+
 import ErrorModal from "../components/UIElements/ErrorModal";
 import convertDate from "../Conversions/convertDateTime";
 import { OrderApi } from "../api/orderApi";
 import { BartenderApi } from "../api/bartenderApi"
 
-import {Switch, Spinner, Input, Button, ButtonGroup, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem,
-    Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
-const AdminOrders = props => {
-    const [originalTipValue, setOriginalTipValue] = useState(0)
+// Constants
+const VALIDATION_RULES = {
+    MAX_TIP: 1000,
+    MAX_INPUT_LENGTH: 4
+};
 
-    const [ allOrders, setAllOrders] = useState([])
-    const [ bartenders, setBartenders] = useState([])
-    const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending" })
+const STATUS_OPTIONS = ["paid", "complete"];
+const ROW_LIMIT_OPTIONS = [25, 50, 100, 500];
+
+const TABLE_COLUMNS = [
+    { key: "username", label: "Name", className: "w-2/12" },
+    { key: "drink", label: "Drink", className: "w-1/12" },
+    { key: "quantity", label: "Amt", className: "w-1/12" },
+    { key: "total", label: "Cost", className: "w-1/12" },
+    { key: "tip_amount", label: "Tip", className: "w-1/12" },
+    { key: "total_with_tip", label: "Total", className: "w-1/12" },
+    { key: "created_at", label: "Time", className: "w-1/12", allowsSorting: true },
+    { key: "bartender", label: "Bartender", className: "w-1/12", align: "center" },
+    { key: "is_paid", label: "Paid", className: "w-1/12", align: "center" },
+    { key: "is_completed", label: "Done", className: "w-1/12", align: "center" },
+    { key: "delete", label: "", className: "w-1/12", align: "center" }
+];
+
+const AdminOrders = () => {
+    // API hooks
+    const { getBartenders } = BartenderApi()
+    const { 
+        getOrdersAdmin, 
+        updateOrderTip, 
+        updateOrderCompleted, 
+        updateOrderPaid, 
+        updateOrderBartender, 
+        deleteOrder, 
+        isLoading, 
+        hasError, 
+        clearError 
+    } = OrderApi()
+
+    // Data state
+    const [allOrders, setAllOrders] = useState([])
+    const [bartenders, setBartenders] = useState([])
+    const [originalTipValue, setOriginalTipValue] = useState(0)
+    
+    // UI state
+    const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending"})
     const [filterValue, setFilterValue] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
     const [rowLimitKeys, setRowLimitKeys] = useState(new Set([50]))
-    const selectedRowLimit = useMemo(() => Array.from(rowLimitKeys).join(", ").replaceAll("_", " "), [rowLimitKeys] )
-    const statusOptions = ["paid", "complete"]
-    const rowLimitOptions = [25, 50, 100, 500]
-    const { getBartenders } = BartenderApi()
-    const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, deleteOrder, isLoading, hasError, clearError } = OrderApi()
-    useEffect(() => {
-        const getOrders = async () => {
-            try {
-                const response = await getOrdersAdmin(selectedRowLimit)
-                setAllOrders(response)
-            } catch(err) {
-                console.log(err)
-            }
-        }
-        getOrders()
-    }, [ ])
+    
+    // Computed values
+    const selectedRowLimit = useMemo(() => 
+        Array.from(rowLimitKeys).join(", ").replaceAll("_", " "), [rowLimitKeys])
 
-    useEffect(() => {
-        const getOrders = async () => {
-            try {
-                const response = await getOrdersAdmin(selectedRowLimit)
-                setAllOrders(response)
-            } catch(err) {
-                console.log(err)
-            }
+    // Data fetching functions
+    const fetchOrders = useCallback(async (limit) => {
+        try {
+            const response = await getOrdersAdmin(limit)
+            setAllOrders(response)
+        } catch (err) {
+            console.log(err)
         }
-        getOrders()
-    }, [ rowLimitKeys ])
+    }, [getOrdersAdmin])
 
-    useEffect(() => {
-        const getBar = async () => {
-            try {
-                const response = await getBartenders()
-                setBartenders(response)
-            } catch(err) {
-                console.log(err)
-            }
+    const fetchBartenders = useCallback(async () => {
+        try {
+            const response = await getBartenders()
+            setBartenders(response)
+        } catch (err) {
+            console.log(err)
         }
-        getBar()
-    }, [ ])
+    }, [getBartenders])
 
-    const refreshOrders = async () => {
+    const refreshOrders = useCallback(async () => {
         try {
             const response = await getOrdersAdmin(selectedRowLimit)
             setAllOrders(response)
-        } catch(err) {
+        } catch (err) {
             console.log(err)
         }
-    }
+    }, [getOrdersAdmin, selectedRowLimit])
+
+    // Effects
+    useEffect(() => {
+        fetchOrders(selectedRowLimit)
+    }, [fetchOrders, selectedRowLimit])
+
+    useEffect(() => {
+        fetchOrders(selectedRowLimit)
+    }, [fetchOrders, rowLimitKeys, selectedRowLimit])
+
+    useEffect(() => {
+        fetchBartenders()
+    }, [fetchBartenders])
 
 
+    // Switch Components
     const SwitchIsPaid = ({order, onSwitchFunction}) => {
-        const [isPaid, setIsPaid] = useState(false)
+        const [isPaid, setIsPaid] = useState(order.is_paid)
+        
         useEffect(() => {
             setIsPaid(order.is_paid)
-          }, [])
+        }, [order.is_paid])
           
         const updatePaid = async (order) => {
             let response = null
@@ -81,27 +123,32 @@ const AdminOrders = props => {
             } catch (error) {
                 console.log(error)
             }
-            if(!response?.newValue === null) return
+            if (response?.newValue === null) return
             setIsPaid(response.newValue)
             onSwitchFunction(order, response.newValue)
             console.log(`${order.order_id} isPaid: ${response.newValue}`)
         }
 
         return (
-            <Switch className="w-100" size="sm" color="success" 
-                isDisabled={isLoading} isSelected={isPaid} onValueChange={() => updatePaid(order)}
+            <Switch 
+                className="w-100" 
+                size="sm" 
+                color="success" 
+                isDisabled={isLoading} 
+                isSelected={isPaid} 
+                onValueChange={() => updatePaid(order)}
                 classNames={{base: "w-50"}} 
-                thumbIcon={ <FontAwesomeIcon icon={faDollar} /> }
+                thumbIcon={<FontAwesomeIcon icon={faDollar} />}
             />
         )
     }
 
-
     const SwitchIsCompleted = ({order, onSwitchFunction}) => {
-        const [isCompleted, setIsCompleted] = useState(false)
+        const [isCompleted, setIsCompleted] = useState(order.is_completed)
+        
         useEffect(() => {
-                setIsCompleted(order.is_completed)
-        }, [ order.is_completed ])
+            setIsCompleted(order.is_completed)
+        }, [order.is_completed])
 
         const updateCompleted = async (order) => {
             let response = null
@@ -110,63 +157,86 @@ const AdminOrders = props => {
             } catch (error) {
                 console.log(error)
             }
-            if(!response?.newValue === null) return
+            if (response?.newValue === null) return
             setIsCompleted(response.newValue)
             onSwitchFunction(order, response.newValue)
         }
+        
         return (
-            <Switch className="w-100" size="sm" color="warning" isDisabled={isLoading} isSelected={isCompleted} onValueChange={() => updateCompleted(order)}
-            thumbIcon={({ isSelected, className }) => isSelected ? (<FontAwesomeIcon className={className} icon={faCheck} />) : (<></>) }/>
-            )
+            <Switch 
+                className="w-100" 
+                size="sm" 
+                color="warning" 
+                isDisabled={isLoading} 
+                isSelected={isCompleted} 
+                onValueChange={() => updateCompleted(order)}
+                thumbIcon={({ isSelected, className }) => 
+                    isSelected ? (<FontAwesomeIcon className={className} icon={faCheck} />) : (<></>)
+                }
+            />
+        )
     }
 
-    
+    // Dropdown Components  
     const DropdownBartenders = ({order, onUpdateFunction}) => {
-        const [selectedBartenderKey, setSelectedBartenderKey] = useState(new Set([]))
-        const [selectedBartenderId, setSelectedBartenderId] = useState(null)
-        const selectedBartenderInitials = useMemo(() => bartenders?.find(b=> b.id === selectedBartenderId)?.initials, [selectedBartenderId] )
+        const [selectedBartenderKey, setSelectedBartenderKey] = useState(new Set([order.bartender_id]))
+        const [selectedBartenderId, setSelectedBartenderId] = useState(order.bartender_id)
+        
+        const selectedBartenderInitials = useMemo(() => 
+            bartenders?.find(b => b.id === selectedBartenderId)?.initials, 
+            [selectedBartenderId]
+        )
 
         useEffect(() => {
             setSelectedBartenderKey(new Set([order.bartender_id]))
             setSelectedBartenderId(order.bartender_id)
-        }, [ order.bartender_id ])
+        }, [order.bartender_id])
 
         const updateBartender = async (key, order) => {
             let response = null
             try {
-                var [bartenderId] = key
+                const [bartenderId] = key
                 response = await updateOrderBartender(order.order_id, bartenderId)
             } catch (error) {
                 console.log(error)
             }
-            if(!response?.bartender_id === null) return
-            let newBartenderId = response.bartender_id
+            if (response?.bartender_id === null) return
+            const newBartenderId = response.bartender_id
             setSelectedBartenderKey(new Set([newBartenderId]))
             setSelectedBartenderId(newBartenderId)
             onUpdateFunction(order, newBartenderId)
         }
+        
         return (
             <Dropdown>
                 <DropdownTrigger>
-                    <Button size="sm" 
-                    endContent={<FontAwesomeIcon className={"text-sm " + (selectedBartenderId !== null ? "hidden" : "") } icon={ faChevronDown } />} variant="flat">
+                    <Button 
+                        size="sm" 
+                        endContent={
+                            <FontAwesomeIcon 
+                                className={"text-sm " + (selectedBartenderId !== null ? "hidden" : "")} 
+                                icon={faChevronDown} 
+                            />
+                        } 
+                        variant="flat"
+                    >
                         {selectedBartenderInitials}
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu
-                    aria-label="Limit"
+                    aria-label="Bartender Selection"
                     selectedKeys={selectedBartenderKey}
                     selectionMode="single"
                     onSelectionChange={(key) => updateBartender(key, order)}
                 >
                     {bartenders.map((b) => (
-                    <DropdownItem key={b.id} className="capitalize">
-                        {b.name}
-                    </DropdownItem>
+                        <DropdownItem key={b.id} className="capitalize">
+                            {b.name}
+                        </DropdownItem>
                     ))}
                 </DropdownMenu>
             </Dropdown>
-            )
+        )
     }
 
     const ButtonGroupDelete = ({order, onDeleteFunction}) => {
@@ -175,82 +245,123 @@ const AdminOrders = props => {
         const deleteOrderPress = async (order) => {
             try {
                 await deleteOrder(order.order_id)
+                onDeleteFunction(order.order_id)
             } catch (error) {
                 console.log(error)
-                return
             }
-            onDeleteFunction(order.order_id)
         }
+        
         return (
             <div>
-                {!showConfirmDelete &&
-                <Button isIconOnly size="sm" radius="sm" variant="bordered" color="danger" value={showConfirmDelete} onPress={() => setShowConfirmDelete(true)}>
-                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                </Button>  
-                }
-                {showConfirmDelete &&
-                <ButtonGroup>
-                    <Button size="md" isIconOnly color="danger" value={showConfirmDelete} onPress={() =>  deleteOrderPress(order)}>
-                        <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                    </Button>
-                    <Button  size="md" isIconOnly color="default" value={showConfirmDelete} onPress={() => setShowConfirmDelete(false)}>
-                    <FontAwesomeIcon icon={faX}></FontAwesomeIcon>
+                {!showConfirmDelete && (
+                    <Button 
+                        isIconOnly 
+                        size="sm" 
+                        radius="sm" 
+                        variant="bordered" 
+                        color="danger" 
+                        onPress={() => setShowConfirmDelete(true)}
+                    >
+                        <FontAwesomeIcon icon={faTrash} />
                     </Button>  
-                </ButtonGroup>
-                }
+                )}
+                {showConfirmDelete && (
+                    <ButtonGroup>
+                        <Button 
+                            size="md" 
+                            isIconOnly 
+                            color="danger" 
+                            onPress={() => deleteOrderPress(order)}
+                        >
+                            <FontAwesomeIcon icon={faCheck} />
+                        </Button>
+                        <Button  
+                            size="md" 
+                            isIconOnly 
+                            color="default" 
+                            onPress={() => setShowConfirmDelete(false)}
+                        >
+                            <FontAwesomeIcon icon={faX} />
+                        </Button>  
+                    </ButtonGroup>
+                )}
             </div>
         )
     }
 
+    // Table render function
     const renderCell = useCallback((order, columnKey) => {
         const cellValue = order[columnKey];
 
         const removeRow = (orderId) => {
-            setAllOrders((state) => state.filter(o => o.order_id !== orderId))
+            setAllOrders((prevOrders) => prevOrders.filter(o => o.order_id !== orderId))
         }
-        const handleAdjustTip = async (order, value) => setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o ,tip_amount: parseInt(value) } : o))
+        
+        const handleAdjustTip = (order, value) => {
+            setAllOrders(prevOrders => prevOrders.map(o => 
+                o.order_id === order.order_id ? {...o, tip_amount: parseInt(value)} : o
+            ))
+        }
 
         const handleUpdateBartender = (order, value) => {
-            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , bartender_id: value } : o))
+            setAllOrders(prevOrders => prevOrders.map(o => 
+                o.order_id === order.order_id ? {...o, bartender_id: value} : o
+            ))
         }
 
         const handleAdjustPaid = (order, value) => {
-            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , is_paid: value } : o))
+            setAllOrders(prevOrders => prevOrders.map(o => 
+                o.order_id === order.order_id ? {...o, is_paid: value} : o
+            ))
         }
+        
         const handleAdjustCompleted = (order, value) => {
-            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , is_completed: value } : o))
+            setAllOrders(prevOrders => prevOrders.map(o => 
+                o.order_id === order.order_id ? {...o, is_completed: value} : o
+            ))
         }
 
         const onAdjustDonationInputBlur = async (order) => {
-            if(order.tip_amount === originalTipValue) return
-            let success = await updateOrderTip(order.order_id, order.tip_amount )
-            if(!success){ setAllOrders(allOrders.map(o => o.order_id === order.order_id ? {...o , tip_amount: originalTipValue } : o)) }
+            if (order.tip_amount === originalTipValue) return
+            const success = await updateOrderTip(order.order_id, order.tip_amount)
+            if (!success) { 
+                setAllOrders(prevOrders => prevOrders.map(o => 
+                    o.order_id === order.order_id ? {...o, tip_amount: originalTipValue} : o
+                )) 
+            }
         }
 
         switch (columnKey) {
             case "tip_amount":
-                return (   <Input
-                    variant="faded"
-                    type="number"
-                    pattern="\d*"
-                    inputMode="decimal"
-                    min={0}
-                    max={1000}
-                    maxLength={4}
-                    value={order.tip_amount}
-                    onFocus={() => setOriginalTipValue(order.tip_amount)}
-                    onBlur={() => onAdjustDonationInputBlur(order)}
-                    onValueChange={(value) => handleAdjustTip(order, value)}
-                    startContent={ <FontAwesomeIcon icon={faDollar} /> }
-                  />)
+                return (   
+                    <Input
+                        variant="faded"
+                        type="number"
+                        pattern="\d*"
+                        inputMode="decimal"
+                        min={0}
+                        max={VALIDATION_RULES.MAX_TIP}
+                        maxLength={VALIDATION_RULES.MAX_INPUT_LENGTH}
+                        value={order.tip_amount}
+                        onFocus={() => setOriginalTipValue(order.tip_amount)}
+                        onBlur={() => onAdjustDonationInputBlur(order)}
+                        onValueChange={(value) => handleAdjustTip(order, value)}
+                        startContent={<FontAwesomeIcon icon={faDollar} />}
+                    />
+                )
             case "drink":
-                return (<div><div>{cellValue}</div><div className="text-slate-500 italic">{order.comments}</div></div>)
+                return (
+                    <div>
+                        <div>{cellValue}</div>
+                        <div className="text-slate-500 italic">{order.comments}</div>
+                    </div>
+                )
             case "bartender":
-                    return ( <DropdownBartenders order={order} onUpdateFunction={handleUpdateBartender}/> )
+                return (<DropdownBartenders order={order} onUpdateFunction={handleUpdateBartender}/>)
             case "is_paid":
-                return ( <SwitchIsPaid order={order} onSwitchFunction={handleAdjustPaid}/> )
+                return (<SwitchIsPaid order={order} onSwitchFunction={handleAdjustPaid}/>)
             case "is_completed":
-                return ( <SwitchIsCompleted order={order} onSwitchFunction={handleAdjustCompleted}/> )
+                return (<SwitchIsCompleted order={order} onSwitchFunction={handleAdjustCompleted}/>)
             case "total": 
                 return (<div>${order.total}</div>)
             case "total_with_tip":
@@ -258,27 +369,36 @@ const AdminOrders = props => {
             case "created_at":
                 return convertDate(order.created_at)
             case "delete":
-                return ( <ButtonGroupDelete onDeleteFunction={removeRow} order={order}/> )
+                return (<ButtonGroupDelete onDeleteFunction={removeRow} order={order}/>)
             default:
                 return cellValue;
-            }
-    }, [allOrders, originalTipValue])
+        }
+    }, [originalTipValue, updateOrderTip])
 
+    // Filtering and sorting
     const filteredOrders = useMemo(() => {
         let filterOrders = [...allOrders]
+        
+        // Status filtering
         if (statusFilter !== "all") {
             filterOrders = filterOrders.filter((order) => {
+                const filters = Array.from(statusFilter)
                 let show = true
-                let filters = Array.from(statusFilter)
-                if(!filters.includes('paid')) show = !order.is_paid
-                if(!filters.includes('complete')) show = !order.is_completed
+                if (!filters.includes('paid')) show = show && !order.is_paid
+                if (!filters.includes('complete')) show = show && !order.is_completed
                 return show
             });
         }
 
-        if (filterValue.trim().length === 0) return filterOrders
-        return [...allOrders].filter(o => o.username.toLowerCase().includes(filterValue.trim().toLowerCase())
-        )}, [allOrders, filterValue, statusFilter])
+        // Name filtering
+        if (filterValue.trim().length > 0) {
+            filterOrders = filterOrders.filter(order => 
+                order.username.toLowerCase().includes(filterValue.trim().toLowerCase())
+            )
+        }
+
+        return filterOrders
+    }, [allOrders, filterValue, statusFilter])
 
     const sortedOrders = useMemo(() => {
         return [...filteredOrders].sort((a, b) => {
@@ -320,7 +440,7 @@ const AdminOrders = props => {
                             selectionMode="multiple"
                             onSelectionChange={setStatusFilter}
                         >
-                            {statusOptions.map((status) => (
+                            {STATUS_OPTIONS.map((status) => (
                             <DropdownItem key={status} className="capitalize">
                                 {status}
                             </DropdownItem>
@@ -341,7 +461,7 @@ const AdminOrders = props => {
                             selectionMode="single"
                             onSelectionChange={setRowLimitKeys}
                         >
-                            {rowLimitOptions.map((l) => (
+                            {ROW_LIMIT_OPTIONS.map((l) => (
                             <DropdownItem key={l} className="capitalize">
                                 {l}
                             </DropdownItem>
@@ -357,7 +477,7 @@ const AdminOrders = props => {
                 </div>
             </div>       
         )
-      }, [ filterValue, statusOptions, statusFilter, rowLimitKeys ])
+      }, [filterValue, statusFilter, rowLimitKeys, refreshOrders])
 
     return (
         <>
@@ -383,17 +503,17 @@ const AdminOrders = props => {
                           }}
                         className="w-full text-md text-left rounded-lg">
                             <TableHeader className="text-xs bg-gray-50">
-                                <TableColumn key="username" scope="col" className="w-2/12">Name</TableColumn>
-                                <TableColumn key="drink" scope="col" className=" w-1/12">Drink</TableColumn>
-                                <TableColumn key="quantity" scope="col" className="w-1/12">Amt</TableColumn>
-                                <TableColumn key="total" scope="col" className="w-1/12">Cost</TableColumn>
-                                <TableColumn key="tip_amount" scope="col" className="w-1/12">Tip</TableColumn>
-                                <TableColumn key="total_with_tip" scope="col" className="w-1/12">Total</TableColumn>
-                                <TableColumn allowsSorting key="created_at" scope="col" className="w-1/12">Time</TableColumn>
-                                <TableColumn align="center" key="bartender" scope="col" className="w-1/12">Bartender</TableColumn>
-                                <TableColumn align="center" key="is_paid" scope="col" className="w-1/12">Paid</TableColumn>
-                                <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Done</TableColumn>
-                                <TableColumn align="center" key="delete" scope="col" className="text-center w-1/12"></TableColumn>
+                                {TABLE_COLUMNS.map(column => (
+                                    <TableColumn 
+                                        key={column.key}
+                                        scope="col" 
+                                        className={column.className}
+                                        align={column.align}
+                                        allowsSorting={column.allowsSorting}
+                                    >
+                                        {column.label}
+                                    </TableColumn>
+                                ))}
                             </TableHeader>
                             <TableBody items={sortedOrders}>
                                 {(item) => (
