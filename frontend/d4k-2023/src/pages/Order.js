@@ -140,15 +140,20 @@ const Order = () => {
             const getUser = async () => {
                 try {
                     const userResponse = await getUserById(localStorageUserId)
-                    setUser(userResponse)
-                    setUsername(userResponse.username)
-                    setStoredUsername(userResponse.username)
+                    if(!userResponse.user){
+                        setStoredUsername(null)
+                        setUsername(null)
+                    }else{
+                        setUserId(parseInt(localStorageUserId))
+                        setUser(userResponse.user)
+                        setUsername(userResponse.user.username)
+                        setStoredUsername(userResponse.user.username)
+                    }
                 } catch (error) {
                     console.log(error)
                 }
             }
             getUser()
-            setUserId(parseInt(localStorageUserId))
             
         }
 
@@ -158,8 +163,8 @@ const Order = () => {
         }
 
         const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
-        const isPartyDate = new Date() >= new Date('12/14/2024')
-        setIsOrderingEnabled(isLocal || isPartyDate)
+        
+        setIsOrderingEnabled(false)
 
     }, [])
 

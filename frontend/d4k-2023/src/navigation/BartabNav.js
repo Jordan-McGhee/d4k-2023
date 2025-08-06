@@ -55,7 +55,8 @@ const BartabNav = (props) => {
             const getUser = async () => {
                 try {
                     const userResponse = await getUserById(localStorageUserId)
-                    setUser(userResponse)
+                    if(!userResponse.user) return
+                    setUser(userResponse.user)
                 } catch (error) {
                     console.log(error)
                 }
@@ -132,9 +133,12 @@ const BartabNav = (props) => {
     let orderHistoryList = []
 
     if (tabData) {
-        let orderHistoryObj = tabData.order_history
+        let orderHistory = tabData.tab.order_history
 
-        Object.entries(orderHistoryObj).map(([key, value]) => {
+        orderHistory.split(", ").map((hist) => {
+            let splitArr = hist.split("—")
+            let key = splitArr[0]
+            let value = splitArr[1]
             orderHistoryList.push(
                 <div key={`${key} - ${value}`} className="ml-2 text-xs my-0.5">
                     {`${value} x ${key}`}

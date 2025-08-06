@@ -13,6 +13,7 @@ const userRoutes = require('./routes/user-routes')
 const adminRoutes = require('./routes/admin-routes')
 const analyticsRoutes = require('./routes/analytics-routes')
 const drinkRoutes = require('./routes/drink-routes')
+const twilioRoutes = require('./routes/twilio-routes')
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/admin", adminRoutes)
 app.use("/analytics", analyticsRoutes)
 app.use("/bartenders", bartenderRoutes)
 app.use("/drinks", drinkRoutes)
+app.use("/twilio", twilioRoutes)
 
 // ERROR ROUTE
 // middleware with 4 parameters is treated as a special middleware by express and will only be executed on requests that have an error associated with it

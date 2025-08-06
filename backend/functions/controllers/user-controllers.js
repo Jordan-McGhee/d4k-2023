@@ -102,7 +102,8 @@ const getUserById = async (req, res, next) => {
         logger.error(`Error searching for user_id ${user_id} ${error}`)
         return next(new HttpError(`Error searching for user_id ${user_id}.`, 500))
     }
-    res.status(200).json(response.rows[0])
+    console.log(response.rows[0])
+    res.status(200).json({user: response.rows[0]})
 }
 
 const adjustDonations = async (req, res, next) => {
@@ -204,13 +205,13 @@ const getTab = async (req, res, next) => {
     }
 
     let history = {}
-    if(response.rows[0].order_history){
-        let array = response.rows[0].order_history.split(", ")
 
+    if(response !== null && response.rows > 0 && response.rows[0].order_history !== null){
+        let array = response.rows[0].order_history.split(", ")
         array.forEach(i => {
             let splitArray = i.split('—')
     
-            console.log(splitArray)
+            console.log("split: " + splitArray)
     
             if (history[splitArray[0]]) {
                 history[splitArray[0]] += parseInt(splitArray[1])
@@ -220,6 +221,7 @@ const getTab = async (req, res, next) => {
         })
     }
 
+    console.log("HISTORYYYYYYYYY: " + history)
 
 
     res.status(200).json({ tab: response.rows[0] ? response.rows[0] : {}, order_history: history })

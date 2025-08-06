@@ -158,7 +158,11 @@ const updateCompleted = async (req, res, next) => {
 
 const getOrdersAdmin = async (req, res, next) => {
     let { limit } = req.params
-    let query = `SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE voided_at IS NULL ORDER BY is_completed, created_at ASC LIMIT $1`
+    let query = `SELECT u.username, o.* 
+                FROM orders o 
+                JOIN users u ON u.user_id = o.user_id 
+                WHERE voided_at IS NULL 
+                ORDER BY is_completed, created_at desc LIMIT $1`
     let response
 
     try {
