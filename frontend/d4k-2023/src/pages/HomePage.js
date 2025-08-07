@@ -47,9 +47,8 @@ const HomePage = () => {
             theme: "light"
         });
 
-        let now = new Date()
-        let partyTime = new Date("2023-12-14")
-        if (now < partyTime || true) {
+
+        if (false) {
             notify();
         }
     }, [])
@@ -83,33 +82,31 @@ const HomePage = () => {
 
                 <div>
                     <p className="text-6xl text-emerald-600 my-3 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
-                        <br /><FontAwesomeIcon className="mt-4 title font-extrabold" icon={faChampagneGlasses}></FontAwesomeIcon>
                     </p>
                 </div>
 
-                <p className="text-3xl italic font-fugaz mt-2">Christmas Cocktails <br /> for a Charitable Cause</p>
+                <p className="text-2xl italic font-fugaz mt-2">Christmas Cocktails <br /> for a Charitable Cause</p>
 
-                <p className="text-5xl mt-1 mb-8 font-bold font-bungee flex flex-col tracking-wider">
-                </p>
-                <p className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
+          
+                <p className="text-xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
                     See you all next year!
                 </p>
                 {/* <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
-                    Saturday<span className="my-2">
-                        December 14th</span>
+                    Friday<span className="my-2">
+                        December 5th</span>
                     6PM — Late
                 </p> */}
                 <BuddyLogo />
-                <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
+                {/* <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
                     onPress={() => openInNewTab("https://partiful.com/e/HQP8KHQVUtxTTBQdNYgJ")}>
                     RSVP <FontAwesomeIcon icon={faEnvelope} />
-                </Button>
+                </Button> */}
             </div>
 
             {/* EXPLAINER DIV */}
-            <div className="py-5 mb-5 mt-6">
+            <div className="py-5 mb-5">
 
-                <p className="italic text-3xl my-5 font-bold font-fugaz">Not just another Christmas Party</p>
+                <p className="italic text-3xl my-5 font-bold">Not just another Christmas Party</p>
 
                 <p className="text-2xl my-5">It's a holiday spirited pop up bar serving up <span className="italic font-bold">the best craft cocktails</span> and the worst puns for donations to a great cause</p>
 

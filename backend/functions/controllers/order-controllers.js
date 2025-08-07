@@ -1,6 +1,7 @@
 const HttpError = require("../models/http-error")
 const pool = require("../db")
 const logger = require('firebase-functions/logger')
+const twilioControllers = require("../controllers/twilio-controllers")
 
 const createOrder = async (req, res, next) => {
     const { user_id, drinkTitle, customDrinkTitle, drinkCost, quantity, tip_amount, comments } = req.body
@@ -18,6 +19,7 @@ const createOrder = async (req, res, next) => {
 
         return next(new HttpError(`Error Creating Order: ${error}`), 500)
     }
+    twilioControllers.sendMessage(6787361277, `Order received for ${drinkTitle || customDrinkTitle}.`)
 
     res.status(201).json(newOrder?.rows[0])
 }

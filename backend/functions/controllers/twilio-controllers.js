@@ -1,16 +1,38 @@
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
+const client = require('twilio')(accountSid, authToken, { logLevel: 'debug' });
+const twilioPhone = '+18449703099'
 
 const sendMessage = async (req, res, next) => {
-    const { message } = req.body
-    const { phone_number } = req.body
+    console.log(`REQUEST: ${req}:${res}:${next}`)
+      // Remove non-digit characters
+    const cleanedNumber = req.replace(/\D/g, '');
 
-client.messages
-    .create({
-        to: phone_number
-    })
-    .then(message => console.log(message.sid))
+    // Add '+' prefix if missing (assuming a valid international number)
+    if (!cleanedNumber.startsWith('+')) {
+        phoneNumber = `+1${cleanedNumber}`; // Adjust '1' to the appropriate country code
+    }
+    phoneNumber = `+${cleanedNumber}`;
+
+    const msg = res
+    try{
+        const message = await client.messages.create({
+            to: phoneNumber,
+            from: twilioPhone,
+            body: msg
+        }).then(() => {
+            // Access details about the last request
+            console.log(client.lastRequest.method);
+            console.log(client.lastRequest.url);
+            console.log(client.lastRequest.auth);
+            console.log(client.lastRequest.params);
+            console.log(client.lastRequest.headers);
+            console.log(client.lastRequest.data);
+          });
+    }
+    catch (error) {
+        console.error(error)
+    }
 }
 
 exports.sendMessage = sendMessage

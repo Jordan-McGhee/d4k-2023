@@ -134,7 +134,7 @@ const BartabNav = (props) => {
 
     if (tabData) {
         let orderHistory = tabData.tab.order_history
-
+        if(orderHistory === null) return 
         orderHistory.split(", ").map((hist) => {
             let splitArr = hist.split("—")
             let key = splitArr[0]
