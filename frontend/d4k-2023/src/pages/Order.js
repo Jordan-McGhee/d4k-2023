@@ -76,14 +76,14 @@ const Order = () => {
     const editUsernameInputRef = useRef(null)
 
     // Helper functions
-    const setDonationAmount = (amount) => _setDonationAmount(amount > 0 ? parseInt(amount) : 0)
+    const setDonationAmount = useCallback((amount) => _setDonationAmount(amount > 0 ? parseInt(amount) : 0), [])
     
-    const onUsernameFocus = () => setUsernameFocused(true)
-    const onUsernameBlur = () => setUsernameFocused(false)
-    const onPhoneNumberFocus = () => setPhoneNumberFocused(true)
-    const onPhoneNumberBlur = () => setPhoneNumberFocused(false)
-    const onCustomDrinkDescriptionFocus = () => setCustomDrinkDescriptionFocused(true)
-    const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
+    const onUsernameFocus = useCallback(() => setUsernameFocused(true), [])
+    const onUsernameBlur = useCallback(() => setUsernameFocused(false), [])
+    const onPhoneNumberFocus = useCallback(() => setPhoneNumberFocused(true), [])
+    const onPhoneNumberBlur = useCallback(() => setPhoneNumberFocused(false), [])
+    const onCustomDrinkDescriptionFocus = useCallback(() => setCustomDrinkDescriptionFocused(true), [])
+    const onCustomDrinkDescriptionBlur = useCallback(() => setCustomDrinkDescriptionFocused(false), [])
 
     const verifyUsernameIsNew = useCallback(async (uname) => {
         setIsLoadingUsername(true)
@@ -142,9 +142,9 @@ const Order = () => {
     const isInvalidDonationAmount = useMemo(() => 
         donationAmount < 0 || donationAmount > VALIDATION_RULES.MAX_DONATION, [donationAmount])
 
-    const notify = (error) => {
+    const notify = useCallback((error) => {
         toast.error(`UH OH! ${error}`, { position: toast.POSITION.BOTTOM_CENTER });
-    }
+    }, [])
 
     // Effects
     useEffect(() => {
@@ -159,47 +159,58 @@ const Order = () => {
         getDrinksCall()
     }, [getDrinks])
 
-    useEffect(() => {
-        if (allDrinks.length > 0) {
-            const drinkIdParam = searchParams.get("drinkId")
-            if (drinkIdParam) {
-                updateDrinkState(parseInt(drinkIdParam))
-            }
-        }
-    }, [allDrinks, searchParams, updateDrinkState])
-
-    useEffect(() => {
+    // Memoize the stored user ID to avoid unnecessary re-computations
+    const storedUserId = useMemo(() => {
         const localStorageUserId = localStorage.getItem('userId')
-        console.log(localStorageUserId)
-        
-        if (localStorageUserId) {
-            const getUser = async () => {
-                try {
-                    const userResponse = await getUserById(localStorageUserId)
-                    if (!userResponse.user) {
-                        setStoredUsername(null)
-                        setUsername(null)
-                    } else {
-                        setUserId(parseInt(localStorageUserId))
-                        setUsername(userResponse.user.username)
-                        setStoredUsername(userResponse.user.username)
-                    }
-                } catch (error) {
+        return localStorageUserId ? parseInt(localStorageUserId) : null
+    }, [])
+
+    // Load user from localStorage on mount only - runs once
+    useEffect(() => {
+        if (!storedUserId) return
+
+        let isMounted = true // Cleanup flag to prevent state updates after unmount
+
+        const loadUser = async () => {
+            console.log(storedUserId)
+            try {
+                const userResponse = await getUserById(storedUserId.toString())
+                if (!isMounted) return // Don't update state if component unmounted
+                
+                if (!userResponse.user) {
+                    setStoredUsername(null)
+                    setUsername(null)
+                } else {
+                    setUserId(storedUserId)
+                    setUsername(userResponse.user.username)
+                    setStoredUsername(userResponse.user.username)
+                }
+            } catch (error) {
+                if (isMounted) {
                     console.log(error)
                 }
             }
-            getUser()
         }
+        
+        loadUser()
 
+        return () => {
+            isMounted = false // Cleanup
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [storedUserId]) // Explicitly ignoring getUserById to prevent infinite loop
+
+    // Handle drink ID from URL parameters
+    useEffect(() => {
         const drinkIdParam = searchParams.get("drinkId")
-        if (drinkIdParam) {
+        if (drinkIdParam && allDrinks.length > 0) {
             updateDrinkState(parseInt(drinkIdParam))
         }
-    }, [getUserById, searchParams, updateDrinkState])
+    }, [searchParams, updateDrinkState, allDrinks.length])
 
     useEffect(() => {
         if (showCustomDonation) setDonationAmount(0)
-    }, [showCustomDonation])
+    }, [showCustomDonation, setDonationAmount])
 
     useEffect(() => {
         if (isCustomDrinkSelected && customDrinkDescriptionRef.current) {
@@ -224,42 +235,42 @@ const Order = () => {
         }
     }, [usernameFocused, isInvalidUsername, username, storedUsername, verifyUsernameIsNew])
 
-    const drinkDropdownChanged = (e) => {
+    const drinkDropdownChanged = useCallback((e) => {
         const currentDrinkId = parseInt(e.target.value)
         updateDrinkState(currentDrinkId)
-    }
+    }, [updateDrinkState])
 
-    const incrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity + 1)
-    const decrementDrinkQuantity = () => setDrinkQuantity(drinkQuantity - 1)
+    const incrementDrinkQuantity = useCallback(() => setDrinkQuantity(prev => prev + 1), [])
+    const decrementDrinkQuantity = useCallback(() => setDrinkQuantity(prev => prev - 1), [])
 
-    const donationHandler = amount => {
+    const donationHandler = useCallback(amount => {
         setShowCustomDonation(false)
         setDonationAmount(amount)
-    }
+    }, [setDonationAmount])
 
-    function limitKeyPress(event) {
+    const limitKeyPress = useCallback((event) => {
         let value = event.target.value
         if (value !== undefined && value.length >= 4 && event.key !== "Backspace") {
             event.preventDefault();
         }
-    }
+    }, [])
 
-    const cancelCustomDonation = () => {
+    const cancelCustomDonation = useCallback(() => {
         setShowCustomDonation(false)
         setDonationAmount(0)
-    }
+    }, [setDonationAmount])
 
-    const handleShowEditName = () => {
+    const handleShowEditName = useCallback(() => {
         setShowEditNameInput(true)
         setEditedUsername(username)
-    }
+    }, [username])
 
-    const cancelEditName = () => {
+    const cancelEditName = useCallback(() => {
         setShowEditNameInput(false)
         setEditedUsername(username)
-    }
+    }, [username])
 
-    const handleEditUsername = async () => {
+    const handleEditUsername = useCallback(async () => {
         if (isLoading || storedUsername === editedUsername) return
         setIsLoading(true)
 
@@ -273,9 +284,9 @@ const Order = () => {
             setShowEditNameInput(false)
         }
         setIsLoading(false)
-    }
+    }, [isLoading, storedUsername, editedUsername, verifyUsernameIsNew, updateUsername, userId])
 
-    const submitOrder = async () => {
+    const submitOrder = useCallback(async () => {
         if (isLoading) return
         setIsLoading(true)
 
@@ -324,7 +335,24 @@ const Order = () => {
             console.log(error)
             setIsLoading(false)
         }
-    }
+    }, [
+        isLoading,
+        userId,
+        username,
+        phoneNumber,
+        hasStoredUserId,
+        verifyUsernameIsNew,
+        createUserWithPhone,
+        drinkName,
+        drinkCost,
+        drinkQuantity,
+        donationAmount,
+        comments,
+        customDrinkDescription,
+        createOrder,
+        navigate,
+        notify
+    ])
 
     return (
         <>
@@ -502,11 +530,6 @@ const Order = () => {
                                 listboxWrapper: "max-h-[400px]",
                             }}
                             listboxProps={{
-                                // classNames: {
-                                //     list: ["border-2", "border-black"],
-                                //     base: ["border-2", "border-black"],
-
-                                // },
                                 itemClasses: {
                                     base: [
                                         "rounded-md",

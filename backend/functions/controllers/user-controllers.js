@@ -1,6 +1,7 @@
 const HttpError = require("../models/http-error")
 const pool = require("../db")
 const logger = require('firebase-functions/logger')
+const twilioControllers = require("../controllers/twilio-controllers")
 
 const createUser = async (req, res, next) => {
 
@@ -68,6 +69,8 @@ const createUserWithPhone = async (req, res, next) => {
             logger.error(`Error creating user with phone number: ${error}`)
             return next(new HttpError("Error creating user with phone number.", 500))
         }
+
+        twilioControllers.sendMessage(phoneNumber, `Welcome to D4K, ${username}! We will send order updates to this number.`)
 
         res.status(201).json(response.rows[0])
     }
