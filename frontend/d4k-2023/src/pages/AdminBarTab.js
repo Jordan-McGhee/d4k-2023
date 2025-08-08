@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX } from '@fortawesome/free-solid-svg-icons'
+import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import ErrorModal from "../components/UIElements/ErrorModal"
 import {
     Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Modal, ModalBody, ModalContent, ModalHeader, ModalFooter,
+    Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Dropdown, Checkbox, DropdownTrigger, DropdownMenu, DropdownItem
 } from "@nextui-org/react";
 import { OrderApi } from "../api/orderApi";
 import { UserApi } from "../api/userApi";
@@ -12,14 +12,15 @@ import { UserApi } from "../api/userApi";
 const Tab = () => {
     const [allTabs, setAllTabs] = useState([])
     const [selectedTab, setSelectedTab] = useState({})
+        const [statusFilter, setStatusFilter] = useState("all")
+
     const [showAdjustDonationsModal, setShowAdjustDonationsModal] = useState(false)
-    const [sortDescriptor, setSortDescriptor] = useState({ column: "total_unpaid", direction: "descending" });
+    const [sortDescriptor, setSortDescriptor] = useState({ column: "amount_unpaid", direction: "descending" });
     const [filterValue, setFilterValue] = useState("");
     const { getOrdersAsTabs, isLoading, hasError, clearError } = OrderApi()
     const { closeTab, updateUserDonations, isUserApiLoading } = UserApi()
     const [originalAdjustDonationValue, setOriginalAdjustDonationValue] = useState(0)
-
-
+    const [isShowPaidTabsSelected, setIsShowPaidTabsSelected] = useState(true);
 
     useEffect(() => {
         const getTabs = async () => {
@@ -32,6 +33,10 @@ const Tab = () => {
         }
         getTabs()
     }, [])
+
+     useEffect(() => {
+        console.log(isShowPaidTabsSelected)
+    }, [isShowPaidTabsSelected])
 
     const refreshTabs = useCallback(async () => {
         try {
@@ -123,10 +128,30 @@ const Tab = () => {
     }, [allTabs, originalAdjustDonationValue, refreshTabs, updateUserDonations])
 
     const filteredTabs = useMemo(() => {
-        if (filterValue.trim().length === 0) return allTabs
-        return [...allTabs].filter(t => t.username.toLowerCase().includes(filterValue.trim().toLowerCase())
+        let filterTabs = [...allTabs]
+        filterTabs = filterTabs.filter((t) => {
+            let show = true
+            if(!isShowPaidTabsSelected) show = t.amount_unpaid > 0
+            return show
+        });
+        
+        if (filterValue.trim().length === 0) return filterTabs
+        return [...filterTabs].filter(t => { 
+            return t.username.toLowerCase().includes(filterValue.trim().toLowerCase()
+        )}
         )
-    }, [allTabs, filterValue])
+    }, [allTabs, filterValue, isShowPaidTabsSelected])
+
+
+    const sortedTabs = useMemo(() => {
+        return [...filteredTabs].sort((a, b) => {
+        const first = a[sortDescriptor.column];
+        const second = b[sortDescriptor.column];
+        const cmp = first < second ? -1 : first > second ? 1 : 0;
+    
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
+        });
+    }, [sortDescriptor, filteredTabs]);
 
     const topContent = useMemo(() => {
         return (
@@ -142,8 +167,12 @@ const Tab = () => {
                         onClear={() => setFilterValue("")}
                         onValueChange={setFilterValue}
                     />
+                    <Checkbox isDisabled={false} onValueChange={setIsShowPaidTabsSelected} size="md">
+                        Show Paid Tabs
+                    </Checkbox>
                 </div>
             </div>
+            
         );
     }, [filterValue]);
 
@@ -163,17 +192,17 @@ const Tab = () => {
                             }}
                             className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
                             <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <TableColumn key="username" scope="col" className="py-3 w-2/12">NAME</TableColumn>
+                                <TableColumn key="username" scope="col" className="py-3 w-2/12" allowsSorting>NAME</TableColumn>
                                 <TableColumn key="adjusted_donations" scope="col" className="py-3 w-1/12">Donation Adjust</TableColumn>
                                 <TableColumn key="quantity" scope="col" className="py-3 w-1/12">Quantity</TableColumn>
                                 <TableColumn key="drink_cost_total" scope="col" className="py-3 w-1/12">Drink $</TableColumn>
                                 <TableColumn key="tips_total" scope="col" className="py-3 w-1/12">Order Tips</TableColumn>
                                 <TableColumn key="tab_total" scope="col" className="py-3 w-1/12">Tab Total</TableColumn>
                                 <TableColumn key="amount_paid" scope="col" className="py-3 w-1/12">Total Paid</TableColumn>
-                                <TableColumn key="amount_unpaid" scope="col" className="py-3 w-1/12">Balance Due</TableColumn>
+                                <TableColumn  key="amount_unpaid" scope="col" className="py-3 w-1/12" allowsSorting>Balance Due</TableColumn>
                                 <TableColumn key="close_tab" scope="col" className="py-3 w-1/12">Close Tab</TableColumn>
                             </TableHeader>
-                            <TableBody items={filteredTabs}>
+                            <TableBody items={sortedTabs}>
                                 {(item) => (
                                     <TableRow key={item.username}>
                                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
