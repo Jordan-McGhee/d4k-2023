@@ -764,7 +764,7 @@ const Order = () => {
                             }}
                         />
                         <Checkbox className="text-center italic pt-2 mt-2" isDisabled={false} value={optInSelected} onValueChange={setOptInSelected} size="md">
-                            Opt in to messages
+                            Opt in to order update messages
                         </Checkbox>
                     </CardBody>
                     <CardFooter>
@@ -783,7 +783,7 @@ const Order = () => {
 
                     </CardFooter>
 
-                    <div className="p-2 text-xs text-center">By providing your phone number you agree to receive informational text messages from D4K regarding your order. Frequency will vary. Msg and data rates may apply. Reply STOP to cancel</div>
+                    <div className="p-2 text-xs text-center italic">By providing your phone number you agree to receive informational text messages from D4K regarding your order. Frequency will vary. Msg and data rates may apply. Reply STOP to cancel</div>
                 </Card>
             </form>
         </>
