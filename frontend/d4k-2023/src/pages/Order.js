@@ -155,6 +155,7 @@ const Order = () => {
                         setUsername(userResponse.user.username)
                         setStoredUsername(userResponse.user.username)
                         setPhoneNumber(userResponse.user.phone_number)
+                        setOptInSelected(true)
                     }
                 } catch (error) {
                     console.log(error)
