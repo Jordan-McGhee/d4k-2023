@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import {
     Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter,
-    Spinner, Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Link
+    Spinner, Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Link,
+    Checkbox
 } from "@nextui-org/react"
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -44,6 +45,7 @@ const Order = () => {
     const [comments, setComments] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isLoadingUsername, setIsLoadingUsername] = useState(false)
+    const [isLoadingUserData, setIsLoadingUserData] = useState(false)
     const [searchParams] = useSearchParams();
     const [usernameFocused, setUsernameFocused] = useState(false)
     const [phoneNumberFocused, setPhoneNumberFocused] = useState(false)
@@ -57,6 +59,9 @@ const Order = () => {
     const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
     const [isOrderingEnabled, setIsOrderingEnabled] = useState(false)
     const [showNotPartyTimeModal, setShowNotPartyTimeModal] = useState(false)
+
+    const [optInSelected, setOptInSelected] = useState(false)
+
 
     const customDrinkDescriptionRef = useRef(null);
     const editUsernameInputRef = useRef(null);
@@ -138,6 +143,7 @@ const Order = () => {
         console.log(localStorageUserId)
         if (localStorageUserId) {
             const getUser = async () => {
+                setIsLoadingUserData(true)
                 try {
                     const userResponse = await getUserById(localStorageUserId)
                     if(!userResponse.user){
@@ -148,10 +154,12 @@ const Order = () => {
                         setUser(userResponse.user)
                         setUsername(userResponse.user.username)
                         setStoredUsername(userResponse.user.username)
+                        setPhoneNumber(userResponse.user.phone_number)
                     }
                 } catch (error) {
                     console.log(error)
                 }
+                setIsLoadingUserData(false)
             }
             getUser()
             
@@ -168,24 +176,6 @@ const Order = () => {
 
     }, [])
 
-    // useEffect(() => {
-
-    //     //let storedUsername = localStorage.getItem('storedUsername')
-    //     let storedUserId = localStorage.getItem('userId')
-    //     if (storedUsername && storedUserId) {
-    //         setUsername(storedUsername)
-    //         setUserId(parseInt(storedUserId))
-    //         setStoredUsername(storedUsername)
-    //     }
-    //     let drinkIdParam = searchParams.get("drinkId")
-    //     if (drinkIdParam) {
-    //         updateDrinkState(parseInt(drinkIdParam))
-    //     }
-
-    //     const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
-    //     const isPartyDate = new Date() >= new Date('12/14/2024')
-    //     setIsOrderingEnabled(isLocal || isPartyDate)
-    // }, [])
 
     useEffect(() => {
         if (showCustomDonation) setDonationAmount(0)
@@ -233,7 +223,6 @@ const Order = () => {
         }
         let selectedDrink = allDrinks.find(x => x.drink_id === drinkId)
         console.log(allDrinks)
-        //let selectedDrink = allDrinksJson.find(x => x.id === drinkId)
         setSelectValue(new Set([drinkId.toString()]))
         setSelectedDrinkId(drinkId)
         setDrinkName(selectedDrink?.name ?? "custom")
@@ -295,7 +284,7 @@ const Order = () => {
     }
 
     const submitOrder = async () => {
-        if (isLoading) return
+        if (isLoading || isLoadingUserData) return
         setIsLoading(true)
 
         let currentUserId = userId
@@ -437,6 +426,7 @@ const Order = () => {
                         {!hasStoredUserId &&
                             <div>
                                 <Input
+                                    isDisabled={isLoadingUserData}
                                     className="pb-5"
                                     classNames={{
                                         label: `text-xl group-data-[filled=true]:-translate-y-2 ${isInvalidUsername ? '-translate-y-2.5' : ''}`,
@@ -454,9 +444,9 @@ const Order = () => {
                                     radius="full"
                                     color={(isInvalidUsername && !usernameFocused) || isUsernameTaken ? "danger" : "success"}
                                     label="Your Full Name"
-                                    isInvalid={(isInvalidUsername && !usernameFocused) || isUsernameTaken}
+                                    isInvalid={(isInvalidUsername && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
                                     onValueChange={setUsername}
-                                    errorMessage={(isInvalidUsername && !usernameFocused) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
+                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
                                 />
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {
@@ -473,6 +463,8 @@ const Order = () => {
                                     }
                                     </div>
                                 }
+                            </div>
+                        }
                                 <Input
                                     className="pb-5"
                                     classNames={{
@@ -496,8 +488,6 @@ const Order = () => {
                                     onValueChange={setPhoneNumber}
                                     errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused) ? "We'll need a valid number" : false}
                                 />
-                            </div>
-                        }
 
                         <Select
                             showScrollIndicators
@@ -772,6 +762,9 @@ const Order = () => {
                                 description: "italic",
                             }}
                         />
+                        <Checkbox className="text-center italic pt-2 mt-2" isDisabled={false} value={optInSelected} onValueChange={setOptInSelected} size="md">
+                            Opt in to messages
+                        </Checkbox>
                     </CardBody>
                     <CardFooter>
                         <div className="flex justify-between w-full items-center mb-2">
@@ -788,6 +781,7 @@ const Order = () => {
                         <br></br>
 
                     </CardFooter>
+
                     <div className="p-2 text-xs text-center">By providing your phone number you agree to receive informational text messages from D4K regarding your order. Frequency will vary. Msg and data rates may apply. Reply STOP to cancel</div>
                 </Card>
             </form>
