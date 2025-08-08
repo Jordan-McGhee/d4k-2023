@@ -773,17 +773,22 @@ const Order = () => {
                             }}
                         />
                     </CardBody>
-                    <CardFooter className="flex justify-between w-full items-center -mb-2">
-                        <p className="font-bold text-xl">Total: ${orderTotal}</p>
-                        <Button
-                            className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
-                            onPress={submitOrder}
-                            isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || (isInvalidPhoneNumber && !storedUsername) || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
-                        >
-                            Grab a Drink
-                            <FontAwesomeIcon beat style={{animationDuration:'2s'}} size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
-                        </Button>
+                    <CardFooter>
+                        <div className="flex justify-between w-full items-center mb-2">
+                            <div className="font-bold text-xl">Total: ${orderTotal}</div>
+                            <Button
+                                className=" px-4 py-3 rounded-full bg-gradient-to-tr font-fugaz tracking-wide text-lg from-emerald-900 to-emerald-500 text-white  shadow-lg"
+                                onPress={submitOrder}
+                                isDisabled={isLoading | isLoadingDrinksApi || isInvalidUsername || (isInvalidPhoneNumber && !storedUsername) || isUsernameTaken || showEditNameInput || !selectedDrinkId || selectedDrinkId < 0 || isInvalidCustomDrinkDescription || isInvalidDonationAmount}
+                            >
+                                Grab a Drink
+                                <FontAwesomeIcon beat style={{animationDuration:'2s'}} size="2x" icon={faChampagneGlasses}></FontAwesomeIcon>
+                            </Button>
+                        </div>
+                        <br></br>
+
                     </CardFooter>
+                    <div className="p-2 text-xs text-center">By providing your phone number you agree to receive informational text messages from D4K regarding your order. Frequency will vary. Msg and data rates may apply. Reply STOP to cancel</div>
                 </Card>
             </form>
         </>
