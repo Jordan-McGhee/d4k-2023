@@ -7,7 +7,9 @@ router.post("/", userControllers.createUser)
 
 router.post("/withPhone", userControllers.createUserWithPhone)
 
-router.get("/verify/:username", userControllers.getUserIDByUsername)
+router.get("/verify/:username", userControllers.getUserIdByUsername)
+
+router.get("/verifyphone/:phoneNumber", userControllers.getUserIdByPhoneNumber)
 
 router.patch("/:user_id/adjustDonations", userControllers.adjustDonations)
 
@@ -17,7 +19,9 @@ router.get("/all", userControllers.getAllUsers)
 
 router.get("/:user_id", userControllers.getUserById)
 
-router.patch("/:user_id", userControllers.changeUsername)
+router.patch("/:user_id", userControllers.updateUsername)
+
+router.patch("/updatePhoneNumber/:user_id", userControllers.updatePhoneNumber)
 
 router.get("/:user_id/getTab", userControllers.getTab)
 

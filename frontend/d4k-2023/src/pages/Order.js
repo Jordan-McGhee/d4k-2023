@@ -19,7 +19,7 @@ import icsFile from '../assets/drink4thekidsparty.ics'
 
 const Order = () => {
     let navigate = useNavigate()
-    const { updateUsername, getUserIdByUsername, createUserWithPhone } = UserApi()
+    const { updateUsername, updatePhoneNumber, getUserIdByUsername, getUserIdByPhoneNumber, createUserWithPhone } = UserApi()
     const { createOrder } = OrderApi()
     const { getUserById, isUserApiLoading } = UserApi()
     const { getDrinks, isLoadingDrinksApi } = DrinkApi()
@@ -31,7 +31,9 @@ const Order = () => {
     const [allDrinks, setAllDrinks] = useState([])
     const [userId, setUserId] = useState('')
     const [editedUsername, setEditedUsername] = useState('')
+    const [editedPhoneNumber, setEditedPhoneNumber] = useState('')
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
+    const [isPhoneNumberTaken, setIsPhoneNumberTaken] = useState(false)
     const [drinkName, setDrinkName] = useState(null)
     const [selectedDrinkDescription, setSelectedDrinkDescription] = useState('')
     const [selectedDrinkId, setSelectedDrinkId] = useState(-1)
@@ -42,9 +44,11 @@ const Order = () => {
     const setDonationAmount = (amount) => { _setDonationAmount(amount > 0 ? parseInt(amount) : 0) }
     const [showCustomDonation, setShowCustomDonation] = useState(false)
     const [showEditNameInput, setShowEditNameInput] = useState(false)
+    const [showEditPhoneNumberInput, setShowEditPhoneNumberInput] = useState(false)
     const [comments, setComments] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isLoadingUsername, setIsLoadingUsername] = useState(false)
+    const [isLoadingPhoneNumber, setIsLoadingPhoneNumber] = useState(false)
     const [isLoadingUserData, setIsLoadingUserData] = useState(false)
     const [searchParams] = useSearchParams();
     const [usernameFocused, setUsernameFocused] = useState(false)
@@ -59,12 +63,11 @@ const Order = () => {
     const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
     const [isOrderingEnabled, setIsOrderingEnabled] = useState(false)
     const [showNotPartyTimeModal, setShowNotPartyTimeModal] = useState(false)
-
     const [optInSelected, setOptInSelected] = useState(false)
-
-
+    const [errorMessage, setErrorMessage] = useState(null)
     const customDrinkDescriptionRef = useRef(null);
     const editUsernameInputRef = useRef(null);
+    const editPhoneNumberInputRef = useRef(null);
 
     const customDrinkId = 999
     const isCustomDrinkSelected = useMemo(() => {
@@ -101,6 +104,11 @@ const Order = () => {
         return (!editedUsername || editedUsername.trim().length < 3)
     }, [editedUsername]);
 
+    const isInvalidEditedPhoneNumber = useMemo(() => {
+        let regexp = /[a-zA-Z]/g
+        return (!editedPhoneNumber || editedPhoneNumber.trim().length < 10 || editedPhoneNumber.trim().length > 12 || regexp.test(editedPhoneNumber))
+    }, [editedPhoneNumber]);
+
     const isInvalidDonationAmount = useMemo(() => {
         return donationAmount < 0 || donationAmount > 1000
     }, [donationAmount]);
@@ -122,6 +130,7 @@ const Order = () => {
                 }, {});
 
             } catch (err) {
+                setErrorMessage(`Error fetching drinks: ${err.message}`)
                 console.log(err)
             }
         }
@@ -159,11 +168,11 @@ const Order = () => {
                     }
                 } catch (error) {
                     console.log(error)
+                    setErrorMessage(`Error fetching user: ${error}`)
                 }
                 setIsLoadingUserData(false)
             }
             getUser()
-            
         }
 
         let drinkIdParam = searchParams.get("drinkId")
@@ -266,6 +275,16 @@ const Order = () => {
         setEditedUsername(username)
     }
 
+    const handleShowEditPhoneNumber = () => {
+        setShowEditPhoneNumberInput(true)
+        setEditedPhoneNumber(phoneNumber)
+    }
+
+    const cancelEditPhoneNumber = () => {
+        setShowEditPhoneNumberInput(false)
+        setEditedPhoneNumber(phoneNumber)
+    }
+
     const handleEditUsername = async () => {
         if (isLoading || storedUsername === editedUsername) return
         setIsLoading(true)
@@ -280,6 +299,34 @@ const Order = () => {
             setStoredUsername(editedUsername)
             localStorage.setItem('storedUsername', editedUsername)
             setShowEditNameInput(false)
+        }
+        setIsLoading(false)
+    }
+
+    const verifyPhoneNumberIsNew = async (number) => {
+        setIsLoadingPhoneNumber(true)
+        let data = await getUserIdByPhoneNumber(number)
+        if (data?.user_id) {
+            setIsUsernameTaken(true)
+        }
+        setIsLoadingPhoneNumber(false)
+        return !data?.user_id
+    }
+
+    const handleEditPhoneNumber = async () => {
+        if (isLoading || phoneNumber === editedPhoneNumber) return
+        setIsLoading(true)
+
+        let isNew = await verifyPhoneNumberIsNew(editedPhoneNumber)
+
+        if (isNew) {
+            let data = await updatePhoneNumber(userId, editedPhoneNumber)
+            let userResponse = await getUserById(userId)
+            setUser(userResponse)
+            setPhoneNumber(editedPhoneNumber)
+            //setStoredUsername(editedUsername)
+            //localStorage.setItem('storedUsername', editedUsername)
+            setShowEditPhoneNumberInput(false)
         }
         setIsLoading(false)
     }
@@ -368,6 +415,23 @@ const Order = () => {
                         Order
                     </CardHeader>
                     <CardBody>
+                        {isLoading && <Spinner className="" color="success" />}
+                        {!isLoading && errorMessage && 
+                            <div className="grid items-center">
+                                <div className="text-lg text-center">
+                                    Whoops! We're having trouble... <br />
+                                     Refresh the page in a bit and try again <br/>
+                                     Come to the bar if the issue persists
+                                </div>
+                                <div className="pt-2 text-sm text-red-600 italic text-center mb-4">
+                                {errorMessage}
+                                </div>
+                                <Button
+                                className="h-14 text-center rounded-full bg-emerald-700 text-slate-200 text-xl border-t-2 border-b-2"
+                                onPress={() => window.location.reload()}>Refresh</Button>
+                            </div>}
+                        {!isLoading && errorMessage === null &&
+                        <div>
                         {hasStoredUserId && !showEditNameInput &&
                             <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <br /> <span className="font-bold text-emerald-900">{username}</span>
                                 <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-xl text-emerald-600" icon={faEdit} /></Button> </div>
@@ -489,6 +553,58 @@ const Order = () => {
                                     onValueChange={setPhoneNumber}
                                     errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused) ? "We'll need a valid number" : false}
                                 />
+                        {hasStoredUserId && showEditPhoneNumberInput &&
+                            <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
+                                <Input
+                                    ref={editPhoneNumberInputRef}
+                                    id="editNameInput"
+                                    label="Edit Your Name"
+                                    variant="bordered"
+                                    radius="full"
+                                    maxLength={20}
+                                    color={isInvalidEditedPhoneNumber || isPhoneNumberTaken ? "danger" : "success"}
+                                    value={editedPhoneNumber}
+                                    onValueChange={setEditedPhoneNumber}
+                                    onFocus={onPhoneNumberFocus}
+                                    onBlur={onPhoneNumberBlur}
+                                    isInvalid={isInvalidEditedPhoneNumber || isPhoneNumberTaken}
+                                    errorMessage={isInvalidEditedPhoneNumber ? "We'll need a proper phonenumber, nutcracker"
+                                        : isPhoneNumberTaken ? "This phone number is taken already" : false}
+                                    className="pb-5"
+                                    classNames={{
+                                        label: "text-xl group-data-[filled=true]:-translate-y-4",
+                                        trigger: "min-h-unit-16",
+                                        listboxWrapper: "max-h-[400px]",
+                                        inputWrapper: ["pr-0", "bg-white", "rounded-r-none"],
+                                        errorMessage: "italic ml-4"
+                                    }}
+                                    endContent={
+                                        isLoadingPhoneNumber && <Spinner color="success" />
+                                    }
+                                />
+                                <span className="flex">
+                                    <Button
+                                        classNames={{ base: "rounded-l-none" }}
+                                        size="md"
+                                        className="h-14 bg-rose-700 text-slate-200 text-xl border-t-2 rounded-none border-b-2"
+                                        isIconOnly
+                                        type="button"
+                                        onPress={cancelEditPhoneNumber}
+                                    ><FontAwesomeIcon icon={faClose} />
+                                    </Button>
+                                    <Button
+                                        isDisabled={isInvalidEditedPhoneNumber || isPhoneNumberTaken || phoneNumber === editedPhoneNumber}
+                                        size="md"
+                                        isIconOnly
+                                        radius="full"
+                                        className="h-14 bg-emerald-600 text-slate-200 text-xl border-t-2 border-b-2 rounded-l-none"
+                                        type="button"
+                                        onPress={handleEditPhoneNumber}
+                                    ><FontAwesomeIcon icon={faCheck} />
+                                    </Button>
+                                </span>
+                            </div>
+                        }
 
                         <Select
                             showScrollIndicators
@@ -510,11 +626,6 @@ const Order = () => {
                                 listboxWrapper: "max-h-[400px]",
                             }}
                             listboxProps={{
-                                // classNames: {
-                                //     list: ["border-2", "border-black"],
-                                //     base: ["border-2", "border-black"],
-
-                                // },
                                 itemClasses: {
                                     base: [
                                         "rounded-md",
@@ -766,6 +877,7 @@ const Order = () => {
                         <Checkbox className="text-center italic pt-2 mt-2" isDisabled={false} value={optInSelected} onValueChange={setOptInSelected} size="md">
                             Opt in to order update messages
                         </Checkbox>
+                        </div>}
                     </CardBody>
                     <CardFooter>
                         <div className="flex justify-between w-full items-center mb-2">

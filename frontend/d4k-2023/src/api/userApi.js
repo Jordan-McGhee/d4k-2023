@@ -10,8 +10,17 @@ export const UserApi = () => {
             "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({username: username}))
     }
 
+    const updatePhoneNumber = async (userId, phoneNumber) => {
+    return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/updatePhoneNumber/${userId}`, 
+        "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({phoneNumber: phoneNumber}))
+    }
+
     const getUserIdByUsername = async (username) => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/verify/${username}`, "GET")
+    }
+
+    const getUserIdByPhoneNumber = async (phoneNumber) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/verifyphone/${phoneNumber}`, "GET")
     }
 
     const getUserById = async (userId) => {
@@ -50,7 +59,9 @@ export const UserApi = () => {
 
     return { 
         updateUsername,
+        updatePhoneNumber,
         getUserIdByUsername,
+        getUserIdByPhoneNumber,
         getUserById,
         createUser,
         createUserWithPhone,

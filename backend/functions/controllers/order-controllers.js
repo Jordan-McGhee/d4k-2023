@@ -1,7 +1,13 @@
-const HttpError = require("../models/http-error")
-const pool = require("../db")
-const logger = require('firebase-functions/logger')
-const twilioControllers = require("../controllers/twilio-controllers")
+
+// External dependencies
+const logger = require('firebase-functions/logger');
+
+// Internal dependencies
+const HttpError = require("../models/http-error");
+const pool = require("../db");
+const twilioControllers = require("../controllers/twilio-controllers");
+
+// --- Order Controllers ---
 
 const createOrder = async (req, res, next) => {
     const { user_id, drinkTitle, customDrinkTitle, drinkCost, quantity, tip_amount, comments } = req.body
@@ -24,6 +30,7 @@ const createOrder = async (req, res, next) => {
     res.status(201).json(newOrder?.rows[0])
 }
 
+// Get all active orders
 const getOrders = async (req, res, next) => {
     const query = 'SELECT u.username, o.* FROM orders o JOIN users u ON u.user_id = o.user_id WHERE is_completed != true AND voided_at IS NULL ORDER BY created_at ASC';
 
@@ -38,6 +45,7 @@ const getOrders = async (req, res, next) => {
     }
 }
 
+// Get a single order by ID
 const getOrder = async (req, res, next) => {
     const { order_id } = req.params
 
@@ -65,6 +73,7 @@ const getOrder = async (req, res, next) => {
     }
 }
 
+// Update tip amount for an order
 const updateTip = async (req, res, next) => {
 
     const { order_id } = req.params
@@ -91,6 +100,7 @@ const updateTip = async (req, res, next) => {
 }
 
 
+// Assign bartender to an order
 const updateBartender = async (req, res, next) => {
 
     const { order_id } = req.params
@@ -111,6 +121,7 @@ const updateBartender = async (req, res, next) => {
     res.status(201).json(response.rows[0])
 }
 
+// Toggle paid status for an order
 const updatePaid = async (req, res, next) => {
     // grab ID from url and paidStatus from req body
     const { order_id } = req.params
@@ -134,6 +145,7 @@ const updatePaid = async (req, res, next) => {
     res.status(201).json({ message: `Updated paidStatus of Order ${order_id} to ${paidStatus}`, newValue: paidStatus, response: response.rows[0] })
 }
 
+// Toggle completed status for an order
 const updateCompleted = async (req, res, next) => {
     // similar to updatePaid, except now checking the order's current completed status
     const { order_id } = req.params
@@ -158,6 +170,7 @@ const updateCompleted = async (req, res, next) => {
     res.status(201).json({ message: `Updated completedStatus of Order ${order_id} to ${completedStatus}`, newValue: completedStatus, response: response.rows[0] })
 }
 
+// Get orders for admin view
 const getOrdersAdmin = async (req, res, next) => {
     let { limit } = req.params
     let query = `SELECT u.username, o.* 
@@ -176,6 +189,7 @@ const getOrdersAdmin = async (req, res, next) => {
     res.status(200).json(response.rows)
 }
 
+// Get orders grouped by user
 const getOrdersGrouped = async (req, res, next) => {
     let query = "SELECT * FROM user_totals"
     let response
@@ -190,6 +204,7 @@ const getOrdersGrouped = async (req, res, next) => {
     res.status(200).json(response.rows)
 }
 
+// Get leaderboard data for orders
 const getOrdersLeaderboard = async (req, res, next) => {
     // Grab user_id from query params if given
     const { userId } = req.query;
@@ -259,6 +274,7 @@ const getOrdersLeaderboard = async (req, res, next) => {
 };
 
 
+// Soft delete (void) an order
 const deleteOrder = async (req, res, next) => {
     const { order_id } = req.params
 
@@ -276,6 +292,7 @@ const deleteOrder = async (req, res, next) => {
     res.status(200).json({ message: `Voided order #${order_id}`, response: response })
 }
 
+// Unvoid an order
 const unvoidOrder = async (req, res, next) => {
     const { order_id } = req.params
     let text = "UPDATE orders SET voided_at = NULL, updated_at = NOW() WHERE order_id = $1"
@@ -292,6 +309,7 @@ const unvoidOrder = async (req, res, next) => {
     res.status(200).json({ message: `Unvoided order #${order_id}`, response: response })
 }
 
+// Get detailed leaderboard stats
 const getLeaderboardStats = async (req, res, next) => {
     // responses
     let topUsersResponse, sumResponse, drinkCountResponse, ingredientResponse

@@ -77,7 +77,23 @@ const createUserWithPhone = async (req, res, next) => {
 }
 
 /** check if username is taken already */
-const getUserIDByUsername = async (req, res, next) => {
+const getUserIdByUsername = async (req, res, next) => {
+    const { username } = req.params
+    // check if any case variation of that username exists
+    let query = "SELECT * FROM users WHERE phone_number = $1"
+    let response
+
+    try {
+        response = await pool.query(query, [username])
+    } catch (error) {
+        logger.error(`Error searching for users: ${error}`)
+        return next(new HttpError("Error searching for users.", 500))
+    }
+    res.status(200).json({ user_id: response?.rows[0]?.user_id })
+}
+
+/** check if username is taken already by phone*/
+const getUserIdByPhoneNumber = async (req, res, next) => {
     const { username } = req.params
     // check if any case variation of that username exists
     let query = "SELECT * FROM users WHERE UPPER(username) = UPPER($1)"
@@ -142,7 +158,7 @@ const getAllUsers = async (req, res, next) => {
     res.status(200).json(response.rows)
 }
 
-const changeUsername = async (req, res, next) => {
+const updateUsername = async (req, res, next) => {
     const { user_id } = req.params
     const { username } = req.body
 
@@ -169,6 +185,38 @@ const changeUsername = async (req, res, next) => {
             logger.error(`Error changing User ${user_id}'s name to ${username}. ${error}`)
 
             return next(new HttpError(`Error changing User ${user_id}'s name to ${username}.`, 500))
+        }
+
+        res.status(201).json(response.rows[0])
+    }
+}
+
+const updatePhoneNumber = async (req, res, next) => {
+    const { user_id } = req.params
+    const { phoneNumber } = req.body
+
+    let nameQuery = "SELECT * FROM users WHERE phone_number = $1"
+    let nameQueryResponse
+
+    try {
+        nameQueryResponse = await pool.query(nameQuery, [phoneNumber ])
+    } catch (error) {
+        logger.error(`Error checking if phoneNumber  is available: ${error}`)
+        return next(new HttpError(`Error checking if phoneNumber  is available: ${error}`, 500)
+        )
+    }
+
+    if (nameQueryResponse.rows.length > 0) {
+        res.status(409).json({ user_id: nameQueryResponse.rows[0].user_id })
+    } else {
+        let query = "UPDATE users SET phone_number = $1, updated_at = NOW() WHERE user_id = $2 RETURNING *"
+        let response
+
+        try {
+            response = await pool.query(query, [phoneNumber , user_id])
+        } catch (error) {
+            logger.error(`Error changing User ${user_id}'s phone to ${phoneNumber }. ${error}`)
+            return next(new HttpError(`Error changing User ${user_id}'s phone to ${phoneNumber }.`, 500))
         }
 
         res.status(201).json(response.rows[0])
@@ -248,11 +296,13 @@ const closeTab = async (req, res, next) => {
 
 exports.createUser = createUser
 exports.createUserWithPhone = createUserWithPhone
-exports.getUserIDByUsername = getUserIDByUsername
+exports.getUserIdByUsername = getUserIdByUsername
+exports.getUserIdByPhoneNumber = getUserIdByPhoneNumber
 exports.getUserById = getUserById
 exports.adjustDonations = adjustDonations
 exports.getAllUsers = getAllUsers
-exports.changeUsername = changeUsername
+exports.updateUsername = updateUsername
+exports.updatePhoneNumber = updatePhoneNumber
 exports.changePhotoUrl = changePhotoUrl
 exports.getTab = getTab
 exports.closeTab = closeTab
