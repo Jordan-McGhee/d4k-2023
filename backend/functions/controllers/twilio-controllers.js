@@ -6,14 +6,13 @@ const twilioPhone = '+18449703099'
 const sendMessage = async (req, res, next) => {
     console.log(`REQUEST: ${req}:${res}:${next}`)
       // Remove non-digit characters
-    const cleanedNumber = req.replace(/\D/g, '');
+    var phoneStr = "" + req
+    const cleanedNumber = phoneStr.replace(/\D/g, '');
 
     // Add '+' prefix if missing (assuming a valid international number)
     if (!cleanedNumber.startsWith('+')) {
         phoneNumber = `+1${cleanedNumber}`; // Adjust '1' to the appropriate country code
     }
-    phoneNumber = `+${cleanedNumber}`;
-
     const msg = res
     try{
         const message = await client.messages.create({

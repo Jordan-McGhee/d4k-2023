@@ -25,7 +25,7 @@ const createOrder = async (req, res, next) => {
 
         return next(new HttpError(`Error Creating Order: ${error}`), 500)
     }
-    twilioControllers.sendMessage(6787361277, `Order received for ${drinkTitle || customDrinkTitle}.`)
+    twilioControllers.sendMessage(6787361277, `Order received for ${drinkTitle || customDrinkTitle}`)
 
     res.status(201).json(newOrder?.rows[0])
 }
