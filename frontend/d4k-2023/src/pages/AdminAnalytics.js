@@ -39,12 +39,12 @@ const AdminAnalytics = () => {
         } catch (error) {
             console.error('Error fetching analytics data:', error)
         }
-    }, [getDrinkData, getIngredientData])
+    }, [])
 
     // Effects
     useEffect(() => {
         fetchAnalyticsData()
-    }, [fetchAnalyticsData])
+    }, [])
 
     return (
         <div className="w-full m-auto">

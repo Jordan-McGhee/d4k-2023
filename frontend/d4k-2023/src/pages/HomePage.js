@@ -19,7 +19,7 @@ const HomePage = () => {
             <div className="flex pt-3 justify-center text-center">
                 <Button winterize className="ml-1 bg-emerald-600 text-sm py-3 border rounded-full rounded-r-none font-fugaz text-white" target="_blank"
                     onPress={() => {
-                        openInNewTab("https://partiful.com/e/HQP8KHQVUtxTTBQdNYgJ");
+                        openInNewTab("https://partiful.com/e/k6bxgLhcL5mlVO2gHpSp");
                         closeToast()
                     }}>
                     RSVP <FontAwesomeIcon icon={faEnvelope} />
@@ -48,11 +48,10 @@ const HomePage = () => {
         });
 
 
-        if (false) {
+        if (true) {
             notify();
         }
     }, [])
-
 
     return (
         // WELCOME DIV
@@ -64,7 +63,7 @@ const HomePage = () => {
                             <ModalHeader className="flex flex-col gap-1">Add To ...</ModalHeader>
                             <ModalBody>
                                 <Button color="success" radius="full" variant="shadow"
-                                    onPress={() => openInNewTab("https://www.google.com/calendar/render?action=TEMPLATE&text=Drink4TheKidsParty&dates=20241214T230000Z/20241215T080000Z&details=Christmas%20Cocktails%20for%20a%20Charitable%20Cause%0A6pm%20Saturday%20Dec%2014&location=195%20Arizona%20Ave%20NE&trp=true&sf=true&output=xml#f")}>
+                                    onPress={() => openInNewTab("https://www.google.com/calendar/render?action=TEMPLATE&text=Drink4TheKidsParty&dates=20251213T230000Z/20251213T080000Z&details=Christmas%20Cocktails%20for%20a%20Charitable%20Cause%0A6pm%20Saturday%20Dec%2014&location=195%20Arizona%20Ave%20NE&trp=true&sf=true&output=xml#f")}>
                                     Google Calendar
                                 </Button>
                                 <Button color="success" radius="full" variant="shadow">
@@ -88,19 +87,19 @@ const HomePage = () => {
                 <p className="text-2xl italic font-fugaz mt-2">Christmas Cocktails <br /> for a Charitable Cause</p>
 
           
-                <p className="text-xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
+                {/* <p className="text-xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
                     See you all next year!
-                </p>
-                {/* <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
-                    Friday<span className="my-2">
-                        December 5th</span>
-                    6PM — Late
                 </p> */}
+                <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
+                    Saturday<span className="my-2">
+                        December 13th</span>
+                    6PM — Late
+                </p>
                 <BuddyLogo />
-                {/* <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
-                    onPress={() => openInNewTab("https://partiful.com/e/HQP8KHQVUtxTTBQdNYgJ")}>
+                <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
+                    onPress={() => openInNewTab("https://partiful.com/e/k6bxgLhcL5mlVO2gHpSp")}>
                     RSVP <FontAwesomeIcon icon={faEnvelope} />
-                </Button> */}
+                </Button>
             </div>
 
             {/* EXPLAINER DIV */}
@@ -126,7 +125,6 @@ const HomePage = () => {
             <p className="italic text-3xl my-5 font-bold font-fugaz">Special thanks to our sponsors!</p>
 
             <div className="flex flex-col gap-y-4 text-2xl text-emerald-500 italic">
-                <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/ganji.atl/?hl=en"}>Ganji ATL</a>
                 <a target="_blank" rel="noreferrer" href={"https://www.minhwaspirits.com/"}>Minwha Spirits</a>
                 <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/moxieburger_candlerpark/"}>Moxie - Candler Park</a>
                 <a target="_blank" rel="noreferrer" href={"https://kingcube.com/"}>King Cube Ice</a>
@@ -135,7 +133,6 @@ const HomePage = () => {
 
             <br /><br /><br /><br />
         </div>
-
     )
 }
 

@@ -72,7 +72,7 @@ const AdminUsers = () => {
         }
         setIsLoadingUsername(false)
         return !data?.user_id
-    }, [getUserIdByUsername])
+    }, [])
 
     // Data fetching
     const fetchUsers = useCallback(async () => {
@@ -82,7 +82,7 @@ const AdminUsers = () => {
         } catch (error) {
             console.log(error)
         }
-    }, [getAllUsers])
+    }, [])
 
     const refreshUsers = useCallback(async () => {
         try {
@@ -91,19 +91,19 @@ const AdminUsers = () => {
         } catch (error) {
             console.log(error)
         }
-    }, [getAllUsers])
+    }, [])
 
     // Effects
     useEffect(() => {
         fetchUsers()
-    }, [fetchUsers])
+    }, [])
 
     useEffect(() => {
         setIsUsernameTaken(false)
         if (!isInvalidUsername && !usernameFocused) {
             verifyUsernameIsNew(username);
         }
-    }, [usernameFocused, isInvalidUsername, username, verifyUsernameIsNew])
+    }, [usernameFocused, isInvalidUsername, username])
 
     // Modal handlers
     const handleCloseModal = () => {
