@@ -1,24 +1,12 @@
 
+/* BartabNav - Left positioned menu */
 .menu-left {
     left: 5px;
     bottom: 70px !important;
-  }
-.outer-menu .hamburger.bar-tab {
-   
-    padding: 0.5em 1em;
-    background: rgb(224, 79, 79);
+}
 
-    border-radius: 50%;
-    cursor: pointer;
-    transition: box-shadow 0.4s ease;
-    -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .outer-menu .bar-tab {
+/* Bar Tab Button Base Styles */
+.outer-menu .bar-tab {
     position: absolute;
     top: 0;
     left: 0;
@@ -27,29 +15,21 @@
     height: 65px;
     padding: 0.5em 1em;
     background: rgba(40, 219, 109, 0.75);
+    border-radius: 50%;
     cursor: pointer;
-    transition: box-shadow 0.4s ease;
-    -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
+    transition: box-shadow 0.4s ease, background 0.3s ease;
+    backface-visibility: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-  }
+}
 
-  .outer-menu .bar-tab {
-    padding: 0.5em 1em;
-    background: rgb(224, 79, 79);
+.outer-menu .bar-tab:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
-    cursor: pointer;
-    transition: box-shadow 0.4s ease;
-    -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .outer-menu .bar-tab > div {
+/* Bar Tab Content */
+.outer-menu .bar-tab > div {
     font-weight: bolder;
     position: relative;
     flex: none;
@@ -60,9 +40,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  .outer-menu .bar-tab > div:before,
-  .outer-menu .bar-tab > div:after {
+}
+
+.outer-menu .bar-tab > div:before,
+.outer-menu .bar-tab > div:after {
     content: '';
     position: absolute;
     z-index: 100;
@@ -72,42 +53,62 @@
     height: 2px;
     background: inherit;
     transition: all 0.4s ease;
-  }
-  .outer-menu .bar-tab > div:after {
+}
+
+.outer-menu .bar-tab > div:after {
     top: 10px;
-  }
+}
 
-
-  .outer-menu .checkbox-toggle:checked + .bar-tab > div {
+/* Checked States - Menu Open */
+.outer-menu .checkbox-toggle:checked + .bar-tab > div {
     transform: rotate(135deg);
-    background: #FEFEFE;
-    color:rgb(224, 79, 79)
-  }
-  .outer-menu .checkbox-toggle:checked + .bar-tab > div:before,
-  .outer-menu .checkbox-toggle:checked + .bar-tab > div:after {
+    background: #fefefe;
+    color: rgb(224, 79, 79);
+}
+
+.outer-menu .checkbox-toggle:checked + .bar-tab > div:before,
+.outer-menu .checkbox-toggle:checked + .bar-tab > div:after {
     top: 0;
     transform: rotate(90deg);
-  }
-  .outer-menu .checkbox-toggle:checked + .bar-tab > div:after {
+}
+
+.outer-menu .checkbox-toggle:checked + .bar-tab > div:after {
     opacity: 0;
-  }
-  .outer-menu .checkbox-toggle:checked ~ .menu {
+}
+
+.outer-menu .checkbox-toggle:checked ~ .menu {
     pointer-events: auto;
     visibility: visible;
-  }
-  .outer-menu .checkbox-toggle:checked ~ .menu > div {
+}
+
+.outer-menu .checkbox-toggle:checked ~ .menu > div {
     transform: scale(1.00);
     transition-duration: 0.75s;
-  }
-  .outer-menu .checkbox-toggle:checked ~ .menu > div > div {
+}
+
+.outer-menu .checkbox-toggle:checked ~ .menu > div > div {
     opacity: 1;
     transition: opacity 0.4s ease 0.4s;
-  }
-  .outer-menu .checkbox-toggle:hover + .bar-tab {
-  }
-  .outer-menu .checkbox-toggle:checked:hover + .bar-tab > div {
+}
+
+/* Hover Effects */
+.outer-menu .checkbox-toggle:checked:hover + .bar-tab > div {
     transform: rotate(225deg);
-  }
-  .outer-menu.menu-left .menu > div {
-    background:rgb(224, 79, 79) !important;
-  }
+}
+
+/* Menu Background Override */
+.outer-menu.menu-left .menu > div {
+    background: rgb(224, 79, 79) !important;
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+    .outer-menu .bar-tab,
+    .outer-menu .bar-tab > div,
+    .outer-menu .bar-tab > div:before,
+    .outer-menu .bar-tab > div:after,
+    .outer-menu .checkbox-toggle:checked ~ .menu > div,
+    .outer-menu .checkbox-toggle:checked ~ .menu > div > div {
+        transition: none;
+    }
+}
