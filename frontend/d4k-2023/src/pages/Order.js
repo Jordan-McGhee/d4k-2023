@@ -393,7 +393,7 @@ const Order = () => {
                                 </p>
 
                                 <Link isBlock className="text-center self-center text-xl" underline="always" color="success" href={icsFile} download="d4k-party.ics">
-                                    Saturday<br />December 16<br />6PM — Late
+                                    Saturday<br />December 13<br />6PM — Late
                                 </Link>
                                 <p className="pt-2 text-xl text-center">
                                     Mark your calendar
@@ -553,6 +553,11 @@ const Order = () => {
                                     onValueChange={setPhoneNumber}
                                     errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused) ? "We'll need a valid number" : false}
                                 />
+
+                        {hasStoredUserId && !showEditPhoneNumberInput &&
+                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6"><span className="font-bold text-emerald-900">{phoneNumber}</span>
+                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-xl text-emerald-600" icon={faEdit} /></Button> </div>
+                        }
                         {hasStoredUserId && showEditPhoneNumberInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
                                 <Input

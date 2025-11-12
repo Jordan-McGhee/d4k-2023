@@ -1,3 +1,4 @@
+/* Global Styles */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,36 +6,57 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.venmo{
-  background-image: url("./images/icons/venmo.png");
-}
-.cashapp{
-  background-image: url("./images/icons/cashapp.png");
-}
-.paypal{
-  background-image: url("./images/icons/paypal.png");
-}
-.payment-icon{
-  background-size: 47px 47px;
+
+/* Payment Icons */
+.payment-icon {
+  /* Base payment icon styles */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 47px;
   height: 47px;
+  background-size: 47px 47px;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 2px solid #161616;
   border-radius: 5px;
-  border: 2px solid rgb(22, 22, 22);
-  text-align: center;
-  display: inline-flex;
   font-size: 20px;
   margin: 4px 2px;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.payment-icon-lg{
+.payment-icon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.payment-icon:focus {
+  outline: 2px solid #16a34a;
+  outline-offset: 2px;
+}
+
+/* Payment Icon Variants */
+.payment-icon.venmo {
+  background-image: url("./images/icons/venmo.png");
+}
+
+.payment-icon.cashapp {
+  background-image: url("./images/icons/cashapp.png");
+}
+
+.payment-icon.paypal {
+  background-image: url("./images/icons/paypal.png");
+}
+
+/* Large Payment Icon */
+.payment-icon-lg {
   width: 60px;
   height: 60px;
   background-size: 60px 60px;

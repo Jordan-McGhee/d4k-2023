@@ -75,13 +75,13 @@ const Leaderboard = () => {
     // Initial data fetch
     useEffect(() => {
         fetchLeaderboardData();
-    }, [fetchLeaderboardData]);
+    }, []);
 
     // Auto-refresh leaderboard data
     useEffect(() => {
         const intervalId = setInterval(fetchLeaderboardData, REFRESH_INTERVAL_MS);
         return () => clearInterval(intervalId);
-    }, [fetchLeaderboardData]);
+    }, []);
 
 
     return (
