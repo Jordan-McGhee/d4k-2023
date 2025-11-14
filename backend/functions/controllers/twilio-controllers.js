@@ -28,9 +28,12 @@ const sendMessage = async (req, res, next) => {
             console.log(client.lastRequest.headers);
             console.log(client.lastRequest.data);
           });
+          console.log(message)
+          return '';
     }
     catch (error) {
         console.error(error)
+        return error;
     }
 }
 
