@@ -137,7 +137,7 @@ const BartabNav = () => {
         if (location.hash === "#bartab") {
             setIsChecked(true);
         }
-    }, [location, getTab]);
+    }, [location]);
 
     useLayoutEffect(() => {
         const localStorageUserId = localStorage.getItem('userId');
@@ -153,7 +153,7 @@ const BartabNav = () => {
             };
             getUser();
         }
-    }, [location, getUserById]);
+    }, [location]);
 
     // Handle file upload when file changes
     useEffect(() => {
