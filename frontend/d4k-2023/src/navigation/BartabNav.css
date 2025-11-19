@@ -14,7 +14,7 @@
     width: 65px;
     height: 65px;
     padding: 0.5em 1em;
-    background: rgba(40, 219, 109, 0.75);
+    background: rgba(224, 79, 79, .75);
     border-radius: 50%;
     cursor: pointer;
     transition: box-shadow 0.4s ease, background 0.3s ease;

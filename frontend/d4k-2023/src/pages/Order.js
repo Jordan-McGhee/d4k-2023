@@ -34,7 +34,7 @@ const Order = () => {
     const [editedPhoneNumber, setEditedPhoneNumber] = useState('')
     const [isUsernameTaken, setIsUsernameTaken] = useState(false)
     const [isPhoneNumberTaken, setIsPhoneNumberTaken] = useState(false)
-    const [drinkName, setDrinkName] = useState(null)
+    const [drinkName, setDrinkName] = useState('')
     const [selectedDrinkDescription, setSelectedDrinkDescription] = useState('')
     const [selectedDrinkId, setSelectedDrinkId] = useState(-1)
     const [selectValue, setSelectValue] = useState(new Set([]));
@@ -123,12 +123,6 @@ const Order = () => {
                 const response = await getDrinks()
 
                 setAllDrinks(response)
-
-                const groupedMap = response.reduce(function (rv, x) {
-                    (rv[x.type] = rv[x.type] || []).push(x);
-                    return rv;
-                }, {});
-
             } catch (err) {
                 setErrorMessage(`Error fetching drinks: ${err.message}`)
                 console.log(err)
@@ -156,8 +150,8 @@ const Order = () => {
                 try {
                     const userResponse = await getUserById(localStorageUserId)
                     if(!userResponse.user){
-                        setStoredUsername(null)
-                        setUsername(null)
+                        setStoredUsername('')
+                        setUsername('')
                     }else{
                         setUserId(parseInt(localStorageUserId))
                         setUser(userResponse.user)
@@ -433,8 +427,8 @@ const Order = () => {
                         {!isLoading && errorMessage === null &&
                         <div>
                         {hasStoredUserId && !showEditNameInput &&
-                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6">Welcome back <br /> <span className="font-bold text-emerald-900">{username}</span>
-                                <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-xl text-emerald-600" icon={faEdit} /></Button> </div>
+                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-1">Welcome back <br /> <span className="font-bold text-emerald-900 text-xl">{username}</span>
+                                <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-lg text-emerald-600" icon={faEdit} /></Button> </div>
                         }
                         {hasStoredUserId && showEditNameInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
@@ -530,6 +524,7 @@ const Order = () => {
                                 }
                             </div>
                         }
+                        {!hasStoredUserId &&
                                 <Input
                                     className="pb-5"
                                     classNames={{
@@ -553,17 +548,17 @@ const Order = () => {
                                     onValueChange={setPhoneNumber}
                                     errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused) ? "We'll need a valid number" : false}
                                 />
-
+                        }     
                         {hasStoredUserId && !showEditPhoneNumberInput &&
                             <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6"><span className="font-bold text-emerald-900">{phoneNumber}</span>
-                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-xl text-emerald-600" icon={faEdit} /></Button> </div>
+                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="md" className="text-lg text-emerald-600" icon={faEdit} /></Button> </div>
                         }
                         {hasStoredUserId && showEditPhoneNumberInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
                                 <Input
                                     ref={editPhoneNumberInputRef}
-                                    id="editNameInput"
-                                    label="Edit Your Name"
+                                    id="editNumberInput"
+                                    label="Edit Phone Number"
                                     variant="bordered"
                                     radius="full"
                                     maxLength={20}
@@ -573,7 +568,7 @@ const Order = () => {
                                     onFocus={onPhoneNumberFocus}
                                     onBlur={onPhoneNumberBlur}
                                     isInvalid={isInvalidEditedPhoneNumber || isPhoneNumberTaken}
-                                    errorMessage={isInvalidEditedPhoneNumber ? "We'll need a proper phonenumber, nutcracker"
+                                    errorMessage={isInvalidEditedPhoneNumber ? "We'll need a proper phone, nutcracker"
                                         : isPhoneNumberTaken ? "This phone number is taken already" : false}
                                     className="pb-5"
                                     classNames={{
@@ -670,7 +665,7 @@ const Order = () => {
                                                 <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                                 <span className="text-sm truncate text-default-400">{
                                                     drink.ingredients.map((ingredient, i) => (
-                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
+                                                        <span key={`${drink.drink_id}-${ingredient}`} className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
                                                     ))
                                                 }</span>
                                             </div>
@@ -686,7 +681,7 @@ const Order = () => {
                                                 <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                                 <span className="text-sm truncate text-default-400">{
                                                     drink.ingredients.map((ingredient, i) => (
-                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
+                                                        <span key={`${drink.drink_id}-${ingredient}`} className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
                                                     ))
                                                 }</span>
                                             </div>
@@ -702,7 +697,7 @@ const Order = () => {
                                                 <span className="font-bold">{drink.name} — ${drink.cost}</span>
                                                 <span className="text-sm truncate ">{
                                                     drink.ingredients.map((ingredient, i) => (
-                                                        <span className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
+                                                        <span key={`${drink.drink_id}-${ingredient}`} className="text-xs italic capitalize text-slate-600">{ingredient + (i !== drink.ingredients.length - 1 ? ', ' : '')}</span>
                                                     ))
                                                 }</span>
                                             </div>
@@ -879,9 +874,9 @@ const Order = () => {
                                 description: "italic",
                             }}
                         />
-                        <Checkbox className="text-center italic pt-2 mt-2" isDisabled={false} value={optInSelected} onValueChange={setOptInSelected} size="md">
+                        {/* <Checkbox className="text-center italic pt-2 mt-2" isDisabled={false} value={optInSelected} onValueChange={setOptInSelected} size="md">
                             Opt in to order update messages
-                        </Checkbox>
+                        </Checkbox> */}
                         </div>}
                     </CardBody>
                     <CardFooter>

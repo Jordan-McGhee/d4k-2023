@@ -74,7 +74,7 @@ const createUserWithPhone = async (req, res, next) => {
             return next(new HttpError("Error creating user with phone number.", 500));
         }
 
-        twilioControllers.sendMessage(phoneNumber, `Welcome to D4K, ${username}! We will send order updates to this number.`);
+        twilioControllers.sendMessage(phoneNumber, `Welcome to D4K, ${username}! We will send order updates to this number 🎄 Reply STOP to unsubscribe.`);
 
         res.status(201).json(createResponse.rows[0]);
     }

@@ -14,15 +14,15 @@ import { faCameraRetro, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 const PAYMENT_CONFIG = {
     venmo: {
         baseUrl: 'https://venmo.com/drink4thekids',
-        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 venmo'
+        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 payment-icon venmo'
     },
     paypal: {
         baseUrl: 'https://paypal.me/jacobwwebber',
-        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 paypal'
+        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 payment-icon paypal'
     },
     cashapp: {
         baseUrl: 'https://cash.app/$wakejebber',
-        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 cashapp'
+        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 payment-icon cashapp'
     }
 };
 
@@ -119,7 +119,7 @@ const BartabNav = () => {
             setUploadError("Upload failed. Please try again.");
             setIsUploading(false);
         }
-    }, [file, user, updateUserPhoto]);
+    }, [file, user]);
 
     useLayoutEffect(() => {
         const localStorageUserId = localStorage.getItem('userId');
@@ -160,7 +160,7 @@ const BartabNav = () => {
         if (file) {
             uploadFile();
         }
-    }, [file, uploadFile]);
+    }, [file]);
 
     return (
         <div>
@@ -204,7 +204,9 @@ const BartabNav = () => {
                                                     src={user.photo_url} 
                                                 />
                                             ) : (
+                                                <div>
                                                 <FontAwesomeIcon size="xl" className="text-gray-700" icon={faCameraRetro} />
+                                                <div className="text-xs italic">Upload <br></br>Profile Pic</div></div>
                                             )}
                                         </Button>
                                     </form>
@@ -249,22 +251,22 @@ const BartabNav = () => {
                                 {/* Tab Summary */}
                                 {tabData && (
                                     <div className="space-y-2">
-                                        <p className="text-xl flex justify-between">
+                                        <p className="text-l flex justify-between">
                                             Drinks Ordered:
                                             <span className="uppercase font-bold">
                                                 {tabData.tab.quantity}
                                             </span>
                                         </p>
 
-                                        <p className="text-xl flex justify-between">
+                                        <p className="text-l flex justify-between">
                                             Drinks Total:
                                             <span className="uppercase font-bold">
                                                 ${tabData.tab.drink_cost_total}
                                             </span>
                                         </p>
 
-                                        <p className="text-xl flex justify-between">
-                                            Additional Tip:
+                                        <p className="text-l flex justify-between">
+                                            Additional Donation:
                                             <span className="uppercase font-bold">
                                                 ${tabData.tab.tips_total}
                                             </span>
@@ -278,6 +280,13 @@ const BartabNav = () => {
                                         </p>
                                     </div>
                                 )}
+
+                                
+                                {/* Info Message */}
+                                <div className="flex flex-col items-center text-center text-white my-4 gap-y-2 max-w-72 font-fugaz">
+                                    <FontAwesomeIcon icon={faInfoCircle} className="h-8" />
+                                    <p>Click a link below to donate. Please be patient as we mark your tab as paid. It should update soon!</p>
+                                </div>
 
                                 {/* Payment Links */}
                                 <div>
@@ -316,12 +325,6 @@ const BartabNav = () => {
                                             ${tabData?.tab?.total_donated || 0}
                                         </span>
                                     </div>
-                                </div>
-
-                                {/* Info Message */}
-                                <div className="flex flex-col items-center text-center text-white my-4 gap-y-2 max-w-72 font-fugaz">
-                                    <FontAwesomeIcon icon={faInfoCircle} className="h-8" />
-                                    <p>Please be patient as we mark your tab as paid. It should update soon!</p>
                                 </div>
                             </div>
                         </div>
