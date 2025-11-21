@@ -19,9 +19,8 @@ import icsFile from '../assets/drink4thekidsparty.ics'
 
 const Order = () => {
     let navigate = useNavigate()
-    const { updateUsername, updatePhoneNumber, getUserIdByUsername, getUserIdByPhoneNumber, createUserWithPhone } = UserApi()
+    const { updateUsername, updatePhoneNumber, getUserIdByUsername, getUserIdByPhoneNumber, createUserWithPhone,  getUserById, isUserApiLoading } = UserApi()
     const { createOrder } = OrderApi()
-    const { getUserById, isUserApiLoading } = UserApi()
     const { getDrinks, isLoadingDrinksApi } = DrinkApi()
 
     const [username, setUsername] = useState('')
@@ -197,6 +196,10 @@ const Order = () => {
         setIsUsernameTaken(false)
     }, [editedUsername])
 
+    useEffect(() => {
+        setIsPhoneNumberTaken(false)
+    }, [editedPhoneNumber])
+
     const verifyUsernameIsNew = async (uname) => {
         setIsLoadingUsername(true)
         let data = await getUserIdByUsername(uname)
@@ -301,7 +304,7 @@ const Order = () => {
         setIsLoadingPhoneNumber(true)
         let data = await getUserIdByPhoneNumber(number)
         if (data?.user_id) {
-            setIsUsernameTaken(true)
+            setIsPhoneNumberTaken(true)
         }
         setIsLoadingPhoneNumber(false)
         return !data?.user_id
@@ -412,7 +415,7 @@ const Order = () => {
                         Order
                     </CardHeader>
                     <CardBody>
-                        {isLoading && <Spinner className="" color="success" />}
+                        {isLoading && <Spinner size="lg" color="success" />}
                         {!isLoading && errorMessage && 
                             <div className="grid items-center">
                                 <div className="text-lg text-center">
@@ -488,7 +491,7 @@ const Order = () => {
                         {!hasStoredUserId &&
                             <div>
                                 <Input
-                                    isDisabled={isLoadingUserData}
+                                    isDisabled={isLoadingUserData || isUserApiLoading}
                                     className="pb-5"
                                     classNames={{
                                         label: `text-xl group-data-[filled=true]:-translate-y-2 ${isInvalidUsername ? '-translate-y-2.5' : ''}`,
@@ -504,11 +507,11 @@ const Order = () => {
                                     value={username}
                                     variant="bordered"
                                     radius="full"
-                                    color={(isInvalidUsername && !usernameFocused) || isUsernameTaken ? "danger" : "success"}
+                                    color={(isInvalidUsername && !usernameFocused && !isUserApiLoading) || isUsernameTaken ? "danger" : "success"}
                                     label="Your Full Name"
                                     isInvalid={(isInvalidUsername && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
                                     onValueChange={setUsername}
-                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
+                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
                                 />
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {
@@ -545,16 +548,16 @@ const Order = () => {
                                     value={phoneNumber}
                                     variant="bordered"
                                     radius="full"
-                                    color={(isInvalidPhoneNumber && !phoneNumberFocused) ? "danger" : "success"}
+                                    color={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken ? "danger" : "success"}
                                     label="Your Phone Number"
-                                    isInvalid={(isInvalidPhoneNumber && !phoneNumberFocused)}
+                                    isInvalid={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken}
                                     onValueChange={setPhoneNumber}
-                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused) ? "We'll need a valid number" : false}
+                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) ? "We'll need a valid number" : false}
                                 />
                         }     
                         {hasStoredUserId && !showEditPhoneNumberInput &&
                             <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6"><span className="font-bold text-emerald-900">{phoneNumber}</span>
-                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="md" className="text-lg text-emerald-600" icon={faEdit} /></Button> </div>
+                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon className="text-lg text-emerald-600" icon={faEdit} /></Button> </div>
                         }
                         {hasStoredUserId && showEditPhoneNumberInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
@@ -882,7 +885,7 @@ const Order = () => {
                         </Checkbox> */}
                         </div>}
                     </CardBody>
-                    <CardFooter>
+                    {!isLoading && <CardFooter>
                         <div className="flex justify-between w-full items-center mb-2">
                             <div className="font-bold text-xl">Total: ${orderTotal}</div>
                             <Button
@@ -896,7 +899,7 @@ const Order = () => {
                         </div>
                         <br></br>
 
-                    </CardFooter>
+                    </CardFooter>}
 
                     <div className="p-2 text-xs text-center italic">By providing your phone number you agree to receive informational text messages from D4K regarding your order. Frequency will vary. Msg and data rates may apply. Reply STOP to cancel</div>
                 </Card>
