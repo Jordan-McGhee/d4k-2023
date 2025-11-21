@@ -32,7 +32,7 @@ const createOrder = async (req, res, next) => {
 
     try {
         const result = await pool.query(query, [user_id]);
-        const phone_number = result.rows[0];
+        const phone_number = result.rows[0].phone_number;
         if(phone_number){
             twilioControllers.sendMessage(phone_number, `Order received for ${drinkTitle || customDrinkTitle}`);
         }

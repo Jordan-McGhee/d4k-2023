@@ -84,7 +84,7 @@ const createUserWithPhone = async (req, res, next) => {
 const getUserIdByUsername = async (req, res, next) => {
     const { username } = req.params;
     
-    const query = "SELECT * FROM users WHERE phone_number = $1";
+    const query = "SELECT * FROM users WHERE UPPER(username) = UPPER($1)";
     let response;
 
     try {
@@ -99,13 +99,13 @@ const getUserIdByUsername = async (req, res, next) => {
 
 /** Check if username is taken already by phone */
 const getUserIdByPhoneNumber = async (req, res, next) => {
-    const { username } = req.params;
-    
-    const query = "SELECT * FROM users WHERE UPPER(username) = UPPER($1)";
+    const { phoneNumber } = req.params;
+
+    const query = "SELECT * FROM users WHERE phone_number = $1";
     let response;
 
     try {
-        response = await pool.query(query, [username]);
+        response = await pool.query(query, [phoneNumber]);
     } catch (error) {
         logger.error(`Error searching for users: ${error}`);
         return next(new HttpError("Error searching for users.", 500));
