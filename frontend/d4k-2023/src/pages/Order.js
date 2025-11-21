@@ -314,10 +314,13 @@ const Order = () => {
         let isNew = await verifyPhoneNumberIsNew(editedPhoneNumber)
 
         if (isNew) {
+            try{
             let data = await updatePhoneNumber(userId, editedPhoneNumber)
-            let userResponse = await getUserById(userId)
-            setUser(userResponse)
             setPhoneNumber(editedPhoneNumber)
+            }
+            catch(error){
+            }
+
             //setStoredUsername(editedUsername)
             //localStorage.setItem('storedUsername', editedUsername)
             setShowEditPhoneNumberInput(false)
