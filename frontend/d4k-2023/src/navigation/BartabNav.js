@@ -8,7 +8,7 @@ import { ScrollShadow, Button } from "@nextui-org/react";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../firebase/firebase"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCameraRetro, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { faCameraRetro, faInfoCircle, faUser } from '@fortawesome/free-solid-svg-icons'
 
 // Payment URL configurations
 const PAYMENT_CONFIG = {
@@ -173,7 +173,7 @@ const BartabNav = () => {
                         onChange={(event) => setIsChecked(event.currentTarget.checked)}
                     />
                     <div className="bar-tab border-2 border-white border-solid rounded-full">
-                        <div className="font-fugaz text-white tracking-widest">Pay Tab</div>
+                        <div className="font-fugaz text-white tracking-widest">{totalOwed > 0 ? `Pay Tab` : <FontAwesomeIcon size="2x" icon={faUser}/>}</div>
                     </div>
                     <div className="menu">
                         <div style={{ height: '150%' }}>
@@ -320,7 +320,7 @@ const BartabNav = () => {
                                 {/* Total Donations */}
                                 <div className="pt-4">
                                     <div className="text-lg font-bungee text-center">
-                                        Your Donations:
+                                        Your Donations so far:
                                         <span className="pl-2 text-emerald-400">
                                             ${tabData?.tab?.total_donated || 0}
                                         </span>
