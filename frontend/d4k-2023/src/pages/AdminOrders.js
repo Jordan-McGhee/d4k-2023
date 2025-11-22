@@ -251,6 +251,8 @@ const AdminOrders = props => {
                 return ( <SwitchIsPaid order={order} onSwitchFunction={handleAdjustPaid}/> )
             case "is_completed":
                 return ( <SwitchIsCompleted order={order} onSwitchFunction={handleAdjustCompleted}/> )
+            case "status":
+                return (<div>{order.status}</div>)
             case "total": 
                 return (<div>${order.total}</div>)
             case "total_with_tip":
@@ -385,14 +387,15 @@ const AdminOrders = props => {
                             <TableHeader className="text-xs bg-gray-50">
                                 <TableColumn key="username" scope="col" className="w-2/12">Name</TableColumn>
                                 <TableColumn key="drink" scope="col" className=" w-1/12">Drink</TableColumn>
-                                <TableColumn key="quantity" scope="col" className="w-1/12">Amt</TableColumn>
-                                <TableColumn key="total" scope="col" className="w-1/12">Cost</TableColumn>
-                                <TableColumn key="tip_amount" scope="col" className="w-1/12">Tip</TableColumn>
-                                <TableColumn key="total_with_tip" scope="col" className="w-1/12">Total</TableColumn>
+                                <TableColumn key="quantity" scope="col" className="w-16">Amt</TableColumn>
+                                <TableColumn key="total" scope="col" className="w-16">Cost</TableColumn>
+                                <TableColumn key="tip_amount" scope="col" className="w-24">Tip</TableColumn>
+                                <TableColumn key="total_with_tip" scope="col" className="w-24">Total</TableColumn>
                                 <TableColumn allowsSorting key="created_at" scope="col" className="w-1/12">Time</TableColumn>
                                 <TableColumn align="center" key="bartender" scope="col" className="w-1/12">Bartender</TableColumn>
                                 <TableColumn align="center" key="is_paid" scope="col" className="w-1/12">Paid</TableColumn>
                                 <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Done</TableColumn>
+                                <TableColumn align="center" key="status" scope="col" className="w-1/12">Status</TableColumn>
                                 <TableColumn align="center" key="delete" scope="col" className="text-center w-1/12"></TableColumn>
                             </TableHeader>
                             <TableBody items={sortedOrders}>

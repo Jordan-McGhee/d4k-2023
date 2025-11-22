@@ -2,3 +2,4 @@
 *.cache
 *.log
 *.env
+frontend/d4k-2023/.env
