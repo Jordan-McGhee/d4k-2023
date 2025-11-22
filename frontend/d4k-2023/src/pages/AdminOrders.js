@@ -19,9 +19,10 @@ const AdminOrders = props => {
     const [rowLimitKeys, setRowLimitKeys] = useState(new Set([50]))
     const selectedRowLimit = useMemo(() => Array.from(rowLimitKeys).join(", ").replaceAll("_", " "), [rowLimitKeys] )
     const statusOptions = ["paid", "complete"]
+    const orderStatusOptions = ["pending", "in_progress", "ready", "delivered", "cancelled"]
     const rowLimitOptions = [25, 50, 100, 500]
     const { getBartenders } = BartenderApi()
-    const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, deleteOrder, isLoading, hasError, clearError } = OrderApi()
+    const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, updateOrderStatus, deleteOrder, isLoading, hasError, clearError } = OrderApi()
     useEffect(() => {
         const getOrders = async () => {
             try {
@@ -202,6 +203,53 @@ const AdminOrders = props => {
         )
     }
 
+    const DropdownStatus = ({order, onUpdateFunction}) => {
+        const [selectedStatusKey, setSelectedStatusKey] = useState(new Set([]))
+        const [selectedStatus, setSelectedStatus] = useState(null)
+
+        useEffect(() => {
+            setSelectedStatusKey(new Set([order.status]))
+            setSelectedStatus(order.status)
+        }, [order.status])
+
+        const updateStatus = async (key, order) => {
+            let response = null
+            try {
+                var [status] = key
+                response = await updateOrderStatus(order.order_id, status)
+            } catch (error) {
+                console.log(error)
+            }
+            if(response?.status === null) return
+            let newStatus = response.status
+            setSelectedStatusKey(new Set([newStatus]))
+            setSelectedStatus(newStatus)
+            onUpdateFunction(order, newStatus)
+        }
+        return (
+            <Dropdown>
+                <DropdownTrigger>
+                    <Button size="sm" 
+                    endContent={<FontAwesomeIcon className={"text-sm " + (selectedStatus !== null ? "hidden" : "") } icon={ faChevronDown } />} variant="flat">
+                        {selectedStatus}
+                    </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                    aria-label="Order Status"
+                    selectedKeys={selectedStatusKey}
+                    selectionMode="single"
+                    onSelectionChange={(key) => updateStatus(key, order)}
+                >
+                    {orderStatusOptions.map((status) => (
+                    <DropdownItem key={status} className="capitalize">
+                        {status.replace('_', ' ')}
+                    </DropdownItem>
+                    ))}
+                </DropdownMenu>
+            </Dropdown>
+            )
+    }
+
     const renderCell = useCallback((order, columnKey) => {
         const cellValue = order[columnKey];
 
@@ -219,6 +267,10 @@ const AdminOrders = props => {
         }
         const handleAdjustCompleted = (order, value) => {
             setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , is_completed: value } : o))
+        }
+
+        const handleUpdateStatus = (order, value) => {
+            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , status: value } : o))
         }
 
         const onAdjustDonationInputBlur = async (order) => {
@@ -252,7 +304,7 @@ const AdminOrders = props => {
             case "is_completed":
                 return ( <SwitchIsCompleted order={order} onSwitchFunction={handleAdjustCompleted}/> )
             case "status":
-                return (<div>{order.status}</div>)
+                return ( <DropdownStatus order={order} onUpdateFunction={handleUpdateStatus}/> )
             case "total": 
                 return (<div>${order.total}</div>)
             case "total_with_tip":

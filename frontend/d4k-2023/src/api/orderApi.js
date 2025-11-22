@@ -59,6 +59,11 @@ export const OrderApi = () => {
             "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({ bartender_id: bartenderId }))
     }
 
+    const updateOrderStatus = async (orderId, status) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/${orderId}/updateStatus`,
+            "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({ status }))
+    }
+
     const getNewLeaderboard = async () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/stats`, 'GET', { Accept: 'application/json' })
     }
@@ -72,6 +77,7 @@ export const OrderApi = () => {
         updateOrderPaid,
         updateOrderTip,
         updateOrderBartender,
+        updateOrderStatus,
         getOrdersAdmin,
         getOrdersAsTabs,
         getOrdersLeaderboard,
