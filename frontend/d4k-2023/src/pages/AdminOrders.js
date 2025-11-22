@@ -19,7 +19,8 @@ const AdminOrders = props => {
     const [rowLimitKeys, setRowLimitKeys] = useState(new Set([50]))
     const selectedRowLimit = useMemo(() => Array.from(rowLimitKeys).join(", ").replaceAll("_", " "), [rowLimitKeys] )
     const statusOptions = ["paid", "complete"]
-    const orderStatusOptions = ["pending", "in_progress", "ready", "delivered", "cancelled"]
+    const orderStatusOptions = ["pending", "complete", "delivered"]
+    const orderStatusLookup = {pending: 'red', complete: 'yellow', delivered: 'green'}
     const rowLimitOptions = [25, 50, 100, 500]
     const { getBartenders } = BartenderApi()
     const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, updateOrderStatus, deleteOrder, isLoading, hasError, clearError } = OrderApi()
@@ -230,7 +231,8 @@ const AdminOrders = props => {
             <Dropdown>
                 <DropdownTrigger>
                     <Button size="sm" 
-                    endContent={<FontAwesomeIcon className={"text-sm " + (selectedStatus !== null ? "hidden" : "") } icon={ faChevronDown } />} variant="flat">
+                    className={`bg-${orderStatusLookup[selectedStatus]}-400`}
+                    endContent={<FontAwesomeIcon className={`text-sm text-gray-400` + (selectedStatus !== null ? "hidden" : "") } icon={ faChevronDown } />} variant="flat">
                         {selectedStatus}
                     </Button>
                 </DropdownTrigger>
