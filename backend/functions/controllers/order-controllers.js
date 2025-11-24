@@ -131,6 +131,24 @@ const updateBartender = async (req, res, next) => {
     res.status(201).json(response.rows[0]);
 };
 
+// Update status for an order
+const updateStatus = async (req, res, next) => {
+    const { order_id } = req.params;
+    const { status } = req.body;
+
+    const query = "UPDATE orders SET status = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *";
+    
+    let response;
+    try {
+        response = await pool.query(query, [status, order_id]);
+    } catch (error) {
+        logger.error(`Error updating status on order #${order_id}`, error);
+        return next(new HttpError(`Error updating status on order #${order_id}`, 500));
+    }
+
+    res.status(201).json(response.rows[0]);
+};
+
 // Toggle paid status for an order
 const updatePaid = async (req, res, next) => {
     const { order_id } = req.params;
@@ -186,11 +204,18 @@ const updateCompleted = async (req, res, next) => {
 // Get orders for admin view
 const getOrdersAdmin = async (req, res, next) => {
     const { limit } = req.params;
-    const query = `SELECT u.username, o.* 
+    const { excludeDelivered } = req.query;
+
+    let query = `SELECT u.username, o.* 
                    FROM orders o 
                    JOIN users u ON u.user_id = o.user_id 
-                   WHERE voided_at IS NULL 
-                   ORDER BY is_completed, created_at DESC LIMIT $1`;
+                   WHERE voided_at IS NULL`;
+
+    if (excludeDelivered === 'true') {
+        query += ` AND status != 'delivered'`;
+    }
+
+    query += ` ORDER BY is_completed, created_at DESC LIMIT $1`;
     
     let response;
 
@@ -431,6 +456,7 @@ exports.updateTip = updateTip;
 exports.updatePaid = updatePaid;
 exports.updateCompleted = updateCompleted;
 exports.updateBartender = updateBartender;
+exports.updateStatus = updateStatus;
 exports.getOrdersAdmin = getOrdersAdmin;
 exports.getOrdersGrouped = getOrdersGrouped;
 exports.getOrdersLeaderboard = getOrdersLeaderboard;

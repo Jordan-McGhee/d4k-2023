@@ -23,8 +23,8 @@ export const OrderApi = () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/`)
     }
 
-    const getOrdersAdmin = async (limit) => {
-        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/admin/${limit}`, 'GET', { Accept: 'application/json' })
+    const getOrdersAdmin = async (limit, excludeDelivered = false) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/admin/${limit}?excludeDelivered=${excludeDelivered}`, 'GET', { Accept: 'application/json' })
     }
 
     const getOrdersAsTabs = async () => {

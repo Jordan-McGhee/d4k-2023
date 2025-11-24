@@ -23,6 +23,8 @@ router.patch("/:order_id/updateCompleted", orderControllers.updateCompleted)
 
 router.patch("/:order_id/updateBartender", orderControllers.updateBartender)
 
+router.patch("/:order_id/updateStatus", orderControllers.updateStatus)
+
 router.delete("/:order_id", orderControllers.deleteOrder)
 
 router.patch(`/:order_id/unvoid`, orderControllers.unvoidOrder)

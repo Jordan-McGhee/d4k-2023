@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh, faCheckCircle, faMartiniGlassCitrus, faHourglassHalf } from '@fortawesome/free-solid-svg-icons'
 import ErrorModal from "../components/UIElements/ErrorModal";
 import convertDate from "../Conversions/convertDateTime";
 import { OrderApi } from "../api/orderApi";
@@ -16,30 +16,31 @@ const AdminOrders = props => {
     const [sortDescriptor, setSortDescriptor] = useState({column: "created_at", direction: "descending" })
     const [filterValue, setFilterValue] = useState("")
     const [statusFilter, setStatusFilter] = useState("all")
+    const [excludeDelivered, setExcludeDelivered] = useState(false)
     const [rowLimitKeys, setRowLimitKeys] = useState(new Set([50]))
     const selectedRowLimit = useMemo(() => Array.from(rowLimitKeys).join(", ").replaceAll("_", " "), [rowLimitKeys] )
-    const statusOptions = ["paid", "complete"]
-    const orderStatusOptions = ["pending", "complete", "delivered"]
-    const orderStatusLookup = {pending: 'red', complete: 'yellow', delivered: 'green'}
+    const filterStatusOptions = ["paid", "complete"]
+    const orderStatusOptions = ["pending", "made", "delivered"]
+    const orderStatusLookup = {pending: {color: 'border-red-500', icon: faHourglassHalf}, made: {color: 'border-yellow-500', icon: faMartiniGlassCitrus}, delivered: {color: 'border-emerald-500', icon: faCheckCircle}}
     const rowLimitOptions = [25, 50, 100, 500]
     const { getBartenders } = BartenderApi()
     const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, updateOrderStatus, deleteOrder, isLoading, hasError, clearError } = OrderApi()
     useEffect(() => {
         const getOrders = async () => {
             try {
-                const response = await getOrdersAdmin(selectedRowLimit)
+                const response = await getOrdersAdmin(selectedRowLimit, excludeDelivered)
                 setAllOrders(response)
             } catch(err) {
                 console.log(err)
             }
         }
         getOrders()
-    }, [ ])
+    }, [excludeDelivered])
 
     useEffect(() => {
         const getOrders = async () => {
             try {
-                const response = await getOrdersAdmin(selectedRowLimit)
+                const response = await getOrdersAdmin(selectedRowLimit, excludeDelivered)
                 setAllOrders(response)
             } catch(err) {
                 console.log(err)
@@ -62,7 +63,7 @@ const AdminOrders = props => {
 
     const refreshOrders = async () => {
         try {
-            const response = await getOrdersAdmin(selectedRowLimit)
+            const response = await getOrdersAdmin(selectedRowLimit, excludeDelivered)
             setAllOrders(response)
         } catch(err) {
             console.log(err)
@@ -156,13 +157,13 @@ const AdminOrders = props => {
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu
-                    aria-label="Limit"
+                    aria-label="Select bartender"
                     selectedKeys={selectedBartenderKey}
                     selectionMode="single"
                     onSelectionChange={(key) => updateBartender(key, order)}
                 >
                     {bartenders.map((b) => (
-                    <DropdownItem key={b.id} className="capitalize">
+                    <DropdownItem key={b.id} textValue={b.name} className="capitalize">
                         {b.name}
                     </DropdownItem>
                     ))}
@@ -231,9 +232,9 @@ const AdminOrders = props => {
             <Dropdown>
                 <DropdownTrigger>
                     <Button size="sm" 
-                    className={`bg-${orderStatusLookup[selectedStatus]}-400`}
+                    className={`border-2 ${orderStatusLookup[selectedStatus]?.color}`}
                     endContent={<FontAwesomeIcon className={`text-sm text-gray-400` + (selectedStatus !== null ? "hidden" : "") } icon={ faChevronDown } />} variant="flat">
-                        {selectedStatus}
+                      {selectedStatus && <FontAwesomeIcon icon={orderStatusLookup[selectedStatus]?.icon} />} 
                     </Button>
                 </DropdownTrigger>
                 <DropdownMenu
@@ -244,7 +245,7 @@ const AdminOrders = props => {
                 >
                     {orderStatusOptions.map((status) => (
                     <DropdownItem key={status} className="capitalize">
-                        {status.replace('_', ' ')}
+                        {status} <FontAwesomeIcon icon={orderStatusLookup[status]?.icon} />
                     </DropdownItem>
                     ))}
                 </DropdownMenu>
@@ -376,7 +377,7 @@ const AdminOrders = props => {
                             selectionMode="multiple"
                             onSelectionChange={setStatusFilter}
                         >
-                            {statusOptions.map((status) => (
+                            {filterStatusOptions.map((status) => (
                             <DropdownItem key={status} className="capitalize">
                                 {status}
                             </DropdownItem>
@@ -404,6 +405,9 @@ const AdminOrders = props => {
                             ))}
                         </DropdownMenu>
                     </Dropdown>
+                    <Switch size="sm" isSelected={excludeDelivered} onValueChange={setExcludeDelivered}>
+                        Exclude Delivered
+                    </Switch>
                 </div>
                 <div className="flex justify-end flex-grow">
                    <Button isIconOnly size="lg" radius="full" variant="ghost" color="default"
@@ -413,7 +417,7 @@ const AdminOrders = props => {
                 </div>
             </div>       
         )
-      }, [ filterValue, statusOptions, statusFilter, rowLimitKeys ])
+      }, [ filterValue, filterStatusOptions, statusFilter, rowLimitKeys ])
 
     return (
         <>
