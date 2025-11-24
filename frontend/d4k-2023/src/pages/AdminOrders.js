@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh, faCheckCircle, faMartiniGlassCitrus, faHourglassHalf } from '@fortawesome/free-solid-svg-icons'
 import ErrorModal from "../components/UIElements/ErrorModal";
@@ -20,11 +21,26 @@ const AdminOrders = props => {
     const [rowLimitKeys, setRowLimitKeys] = useState(new Set([50]))
     const selectedRowLimit = useMemo(() => Array.from(rowLimitKeys).join(", ").replaceAll("_", " "), [rowLimitKeys] )
     const filterStatusOptions = ["paid", "complete"]
-    const orderStatusOptions = ["pending", "made", "delivered"]
+    const orderStatusOptions = [ {key: "pending", display: "Pending"}, {key: "made", display: "Made (Send SMS)"}, {key: "delivered", display: "Delivered"}]
     const orderStatusLookup = {pending: {color: 'border-red-500', icon: faHourglassHalf}, made: {color: 'border-yellow-500', icon: faMartiniGlassCitrus}, delivered: {color: 'border-emerald-500', icon: faCheckCircle}}
     const rowLimitOptions = [25, 50, 100, 500]
     const { getBartenders } = BartenderApi()
     const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, updateOrderStatus, deleteOrder, isLoading, hasError, clearError } = OrderApi()
+
+    const displayErrorToast = (msg) => {
+        toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        style:{ width: '300px' },
+        theme: "light"
+        });
+    }
+
     useEffect(() => {
         const getOrders = async () => {
             try {
@@ -32,6 +48,7 @@ const AdminOrders = props => {
                 setAllOrders(response)
             } catch(err) {
                 console.log(err)
+                displayErrorToast(`Failed to fetch orders: ${err.message}`)
             }
         }
         getOrders()
@@ -44,6 +61,7 @@ const AdminOrders = props => {
                 setAllOrders(response)
             } catch(err) {
                 console.log(err)
+                displayErrorToast(`Failed to fetch orders: ${err.message}`)
             }
         }
         getOrders()
@@ -56,6 +74,7 @@ const AdminOrders = props => {
                 setBartenders(response)
             } catch(err) {
                 console.log(err)
+                displayErrorToast(`Failed to fetch bartenders: ${err.message}`)
             }
         }
         getBar()
@@ -64,9 +83,11 @@ const AdminOrders = props => {
     const refreshOrders = async () => {
         try {
             const response = await getOrdersAdmin(selectedRowLimit, excludeDelivered)
+                        displayErrorToast(`Refreshed orders:`)
             setAllOrders(response)
         } catch(err) {
             console.log(err)
+            displayErrorToast(`Failed to refresh orders: ${err.message}`)
         }
     }
 
@@ -83,6 +104,7 @@ const AdminOrders = props => {
                 response = await updateOrderPaid(order.order_id, isPaid)
             } catch (error) {
                 console.log(error)
+                displayErrorToast(`Failed to update payment status: ${error.message}`)
             }
             if(!response?.newValue === null) return
             setIsPaid(response.newValue)
@@ -112,6 +134,7 @@ const AdminOrders = props => {
                 response = await updateOrderCompleted(order.order_id, isCompleted)
             } catch (error) {
                 console.log(error)
+                displayErrorToast(`Failed to update completion status: ${error.message}`)
             }
             if(!response?.newValue === null) return
             setIsCompleted(response.newValue)
@@ -141,6 +164,7 @@ const AdminOrders = props => {
                 response = await updateOrderBartender(order.order_id, bartenderId)
             } catch (error) {
                 console.log(error)
+                displayErrorToast(`Failed to update bartender: ${error.message}`)
             }
             if(!response?.bartender_id === null) return
             let newBartenderId = response.bartender_id
@@ -180,6 +204,7 @@ const AdminOrders = props => {
                 await deleteOrder(order.order_id)
             } catch (error) {
                 console.log(error)
+                displayErrorToast(`Failed to delete order: ${error.message}`)
                 return
             }
             onDeleteFunction(order.order_id)
@@ -221,6 +246,7 @@ const AdminOrders = props => {
                 response = await updateOrderStatus(order.order_id, status)
             } catch (error) {
                 console.log(error)
+                displayErrorToast(`Failed to update order status: ${error.message}`)
             }
             if(response?.status === null) return
             let newStatus = response.status
@@ -244,8 +270,8 @@ const AdminOrders = props => {
                     onSelectionChange={(key) => updateStatus(key, order)}
                 >
                     {orderStatusOptions.map((status) => (
-                    <DropdownItem key={status} className="capitalize">
-                        {status} <FontAwesomeIcon icon={orderStatusLookup[status]?.icon} />
+                    <DropdownItem key={status.key} className="capitalize">
+                        {status.display} <FontAwesomeIcon icon={orderStatusLookup[status]?.icon} />
                     </DropdownItem>
                     ))}
                 </DropdownMenu>
@@ -279,7 +305,10 @@ const AdminOrders = props => {
         const onAdjustDonationInputBlur = async (order) => {
             if(order.tip_amount === originalTipValue) return
             let success = await updateOrderTip(order.order_id, order.tip_amount )
-            if(!success){ setAllOrders(allOrders.map(o => o.order_id === order.order_id ? {...o , tip_amount: originalTipValue } : o)) }
+            if(!success){ 
+                setAllOrders(allOrders.map(o => o.order_id === order.order_id ? {...o , tip_amount: originalTipValue } : o))
+                displayErrorToast("Failed to update tip amount")
+            }
         }
 
         switch (columnKey) {
@@ -308,6 +337,8 @@ const AdminOrders = props => {
                 return ( <SwitchIsCompleted order={order} onSwitchFunction={handleAdjustCompleted}/> )
             case "status":
                 return ( <DropdownStatus order={order} onUpdateFunction={handleUpdateStatus}/> )
+            case "text_message_sent":
+                return order.text_message_sent ? <FontAwesomeIcon icon={faCheck} className="text-green-600" /> : null
             case "total": 
                 return (<div>${order.total}</div>)
             case "total_with_tip":
@@ -453,7 +484,8 @@ const AdminOrders = props => {
                                 <TableColumn align="center" key="bartender" scope="col" className="w-1/12">Bartender</TableColumn>
                                 <TableColumn align="center" key="is_paid" scope="col" className="w-1/12">Paid</TableColumn>
                                 <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Done</TableColumn>
-                                <TableColumn align="center" key="status" scope="col" className="w-1/12">Status</TableColumn>
+                                <TableColumn align="center" key="status" scope="col" className="w-16">Status</TableColumn>
+                                <TableColumn align="center" key="text_message_sent" scope="col" className="w-16">SMS Sent</TableColumn>
                                 <TableColumn align="center" key="delete" scope="col" className="text-center w-1/12"></TableColumn>
                             </TableHeader>
                             <TableBody items={sortedOrders}>

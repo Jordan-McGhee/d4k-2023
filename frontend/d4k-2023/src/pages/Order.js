@@ -511,7 +511,7 @@ const Order = () => {
                                     label="Your Full Name"
                                     isInvalid={(isInvalidUsername && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
                                     onValueChange={setUsername}
-                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? "We'll need your name, nutcracker" : isUsernameTaken ? "This name is already taken" : false}
+                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? "We'll need your name, nutcracker. First & Last please." : isUsernameTaken ? "This name is already taken" : false}
                                 />
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {

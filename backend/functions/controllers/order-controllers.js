@@ -50,7 +50,7 @@ const getOrders = async (req, res, next) => {
     const query = `SELECT u.username, o.* 
                    FROM orders o 
                    JOIN users u ON u.user_id = o.user_id 
-                   WHERE is_completed != true AND voided_at IS NULL 
+                   WHERE is_completed != true AND status != 'delivered' AND voided_at IS NULL 
                    ORDER BY created_at ASC`;
 
     try {
@@ -146,6 +146,21 @@ const updateStatus = async (req, res, next) => {
         return next(new HttpError(`Error updating status on order #${order_id}`, 500));
     }
 
+    if(status === 'made'){
+        try {
+            const result = await pool.query(query, [user_id]);
+            const phone_number = result.rows[0].phone_number;
+            if(phone_number && !result.rows[0].text_message_sent){
+                twilioControllers.sendMessage(phone_number, `Your order for ${drinkTitle || customDrinkTitle} is ready! Come to the bar for pick up.`);
+                    const smsQuery = "UPDATE orders SET text_message_sent = TRUE WHERE order_id = $1 RETURNING *";
+                    var updateSmsResponse = await pool.query(smsQuery[order_id])
+            }
+        } catch (error) {
+            logger.error(`Error sending text to user ${user_id}`, error);
+            return next(new HttpError(`Error getting orders: ${error}`, 500));
+        }
+    }
+
     res.status(201).json(response.rows[0]);
 };
 
@@ -215,7 +230,7 @@ const getOrdersAdmin = async (req, res, next) => {
         query += ` AND status != 'delivered'`;
     }
 
-    query += ` ORDER BY is_completed, created_at DESC LIMIT $1`;
+    query += ` ORDER BY is_completed, status = pending, created_at DESC LIMIT $1`;
     
     let response;
 
