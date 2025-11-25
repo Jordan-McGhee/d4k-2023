@@ -125,6 +125,7 @@ const Menu = () => {
                 </div>
             ) : (
                 <main className="mt-10 pt-10">
+                    <div className="text-lg font-fugaz text-emerald-600 text-center">UNDER CONSTRUCTION</div>
                     {/* Dynamic Menu Sections */}
                     {MENU_CATEGORIES.map((category) => (
                         <section 

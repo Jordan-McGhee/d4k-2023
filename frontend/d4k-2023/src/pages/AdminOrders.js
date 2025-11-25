@@ -22,7 +22,7 @@ const AdminOrders = props => {
     const selectedRowLimit = useMemo(() => Array.from(rowLimitKeys).join(", ").replaceAll("_", " "), [rowLimitKeys] )
     const filterStatusOptions = ["paid", "complete"]
     const orderStatusOptions = [ {key: "pending", display: "Pending"}, {key: "made", display: "Made (Send SMS)"}, {key: "delivered", display: "Delivered"}]
-    const orderStatusLookup = {pending: {color: 'border-red-500', icon: faHourglassHalf}, made: {color: 'border-yellow-500', icon: faMartiniGlassCitrus}, delivered: {color: 'border-emerald-500', icon: faCheckCircle}}
+    const orderStatusLookup = {pending: {color: 'border-orange-500', icon: faHourglassHalf}, made: {color: 'border-yellow-500', icon: faMartiniGlassCitrus}, delivered: {color: 'border-emerald-500', icon: faCheckCircle}}
     const rowLimitOptions = [25, 50, 100, 500]
     const { getBartenders } = BartenderApi()
     const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, updateOrderStatus, deleteOrder, isLoading, hasError, clearError } = OrderApi()
@@ -252,7 +252,7 @@ const AdminOrders = props => {
             let newStatus = response.status
             setSelectedStatusKey(new Set([newStatus]))
             setSelectedStatus(newStatus)
-            onUpdateFunction(order, newStatus)
+            onUpdateFunction(order, response)
         }
         return (
             <Dropdown>
@@ -271,7 +271,7 @@ const AdminOrders = props => {
                 >
                     {orderStatusOptions.map((status) => (
                     <DropdownItem key={status.key} className="capitalize">
-                        {status.display} <FontAwesomeIcon icon={orderStatusLookup[status]?.icon} />
+                        <FontAwesomeIcon icon={orderStatusLookup[status.key]?.icon} /> {status.display} 
                     </DropdownItem>
                     ))}
                 </DropdownMenu>
@@ -299,7 +299,7 @@ const AdminOrders = props => {
         }
 
         const handleUpdateStatus = (order, value) => {
-            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , status: value } : o))
+            setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , status: value.status, text_message_sent: value.text_message_sent } : o))
         }
 
         const onAdjustDonationInputBlur = async (order) => {

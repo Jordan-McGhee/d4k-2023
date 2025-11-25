@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import {
     Button, Select, SelectItem, SelectSection, Textarea, Input, Card, CardHeader, CardBody, CardFooter,
-    Spinner, Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Link,
-    Checkbox
+    Spinner, Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Link
 } from "@nextui-org/react"
 import { useNavigate, createSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -433,8 +432,8 @@ const Order = () => {
                         {!isLoading && errorMessage === null &&
                         <div>
                         {hasStoredUserId && !showEditNameInput &&
-                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-1">Welcome back <br /> <span className="font-bold text-emerald-900 text-xl">{username}</span>
-                                <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="lg" className="text-lg text-emerald-600" icon={faEdit} /></Button> </div>
+                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-1">Welcome back <br /> <span className="font-bold font-mono text-emerald-900 text-xl">{username}</span>
+                                <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="md" className="text-emerald-600" icon={faEdit} /></Button> </div>
                         }
                         {hasStoredUserId && showEditNameInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
@@ -498,7 +497,7 @@ const Order = () => {
                                         trigger: "min-h-unit-16",
                                         listboxWrapper: "max-h-[400px]",
                                         inputWrapper: "bg-white",
-                                        errorMessage: `${username ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-sm" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-sm"}`
+                                        errorMessage: `${username ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
                                     }}
                                     maxLength={30}
                                     autoFocus
@@ -511,7 +510,7 @@ const Order = () => {
                                     label="Your Full Name"
                                     isInvalid={(isInvalidUsername && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
                                     onValueChange={setUsername}
-                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? "We'll need your name, nutcracker. First & Last please." : isUsernameTaken ? "This name is already taken" : false}
+                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? "We'll need your full name, nutcracker." : isUsernameTaken ? "This name is already taken" : false}
                                 />
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {
@@ -538,7 +537,7 @@ const Order = () => {
                                         trigger: "min-h-unit-16",
                                         listboxWrapper: "max-h-[400px]",
                                         inputWrapper: "bg-white",
-                                        errorMessage: `${phoneNumber ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-sm" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-sm"}`
+                                        errorMessage: `${phoneNumber ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
                                     }}
                                     maxLength={15}
                                     type="tel"
@@ -556,8 +555,8 @@ const Order = () => {
                                 />
                         }     
                         {hasStoredUserId && !showEditPhoneNumberInput &&
-                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6"><span className="font-bold text-emerald-900">{phoneNumber}</span>
-                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon className="text-lg text-emerald-600" icon={faEdit} /></Button> </div>
+                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6"><span className="font-bold font-mono text-emerald-900">{phoneNumber}</span>
+                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="md" className="text-emerald-600" icon={faEdit} /></Button> </div>
                         }
                         {hasStoredUserId && showEditPhoneNumberInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">

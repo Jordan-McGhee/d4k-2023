@@ -26,22 +26,21 @@ const createOrder = async (req, res, next) => {
         return next(new HttpError(`Error Creating Order: ${error}`, 500));
     }
 
-    const query = `SELECT u.phone_number
-                   FROM users u
-                   WHERE user_id = $1`;
+    // const query = `SELECT u.phone_number
+    //                FROM users u
+    //                WHERE user_id = $1`;
 
-    try {
-        const result = await pool.query(query, [user_id]);
-        const phone_number = result.rows[0].phone_number;
-        if(phone_number){
-            twilioControllers.sendMessage(phone_number, `Order received for ${drinkTitle || customDrinkTitle}`);
-        }
-    } catch (error) {
-        logger.error(`Error sending text to user ${user_id}`, error);
-        return next(new HttpError(`Error getting orders: ${error}`, 500));
-    }
+    // try {
+    //     const result = await pool.query(query, [user_id]);
+    //     const phone_number = result.rows[0].phone_number;
+    //     if(phone_number){
+    //         twilioControllers.sendMessage(phone_number, `Order received for ${drinkTitle || customDrinkTitle}`);
+    //     }
+    // } catch (error) {
+    //     logger.error(`Error sending text to user ${user_id}`, error);
+    //     return next(new HttpError(`Error getting orders: ${error}`, 500));
+    // }
     
-
     res.status(201).json(newOrder?.rows[0]);
 };
 
@@ -138,22 +137,27 @@ const updateStatus = async (req, res, next) => {
 
     const query = "UPDATE orders SET status = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *";
     
-    let response;
+    let orderResponse;
     try {
-        response = await pool.query(query, [status, order_id]);
+        orderResponse = await pool.query(query, [status, order_id]);
     } catch (error) {
         logger.error(`Error updating status on order #${order_id}`, error);
         return next(new HttpError(`Error updating status on order #${order_id}`, 500));
     }
 
+    let order = orderResponse.rows[0];
+
     if(status === 'made'){
         try {
-            const result = await pool.query(query, [user_id]);
-            const phone_number = result.rows[0].phone_number;
-            if(phone_number && !result.rows[0].text_message_sent){
-                twilioControllers.sendMessage(phone_number, `Your order for ${drinkTitle || customDrinkTitle} is ready! Come to the bar for pick up.`);
+            const phoneQuery = `SELECT u.phone_number FROM users u WHERE user_id = $1`;
+            const userResponse = await pool.query(phoneQuery, [order.user_id]);
+            const phone_number = userResponse.rows[0]?.phone_number;
+            // only send a text if one hasn't already for this order
+            if(phone_number && !order.text_message_sent){
+                twilioControllers.sendMessage(phone_number, `Your order for ${order.drink}${order.quantity > 1 ? ` x${order.quantity}` : ''} is ready! Come to the bar for pick up 🎅`);
                     const smsQuery = "UPDATE orders SET text_message_sent = TRUE WHERE order_id = $1 RETURNING *";
-                    var updateSmsResponse = await pool.query(smsQuery[order_id])
+                    var orderSmsResponse = await pool.query(smsQuery, [order_id])
+                    order = orderSmsResponse.rows[0]
             }
         } catch (error) {
             logger.error(`Error sending text to user ${user_id}`, error);
@@ -161,7 +165,7 @@ const updateStatus = async (req, res, next) => {
         }
     }
 
-    res.status(201).json(response.rows[0]);
+    res.status(201).json(order);
 };
 
 // Toggle paid status for an order
@@ -230,7 +234,7 @@ const getOrdersAdmin = async (req, res, next) => {
         query += ` AND status != 'delivered'`;
     }
 
-    query += ` ORDER BY is_completed, status = pending, created_at DESC LIMIT $1`;
+    query += ` ORDER BY is_completed, status = 'pending', created_at DESC LIMIT $1`;
     
     let response;
 
