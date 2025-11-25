@@ -135,33 +135,46 @@ const updateStatus = async (req, res, next) => {
     const { order_id } = req.params;
     const { status } = req.body;
 
-    const query = "UPDATE orders SET status = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *";
-    
-    let orderResponse;
-    try {
-        orderResponse = await pool.query(query, [status, order_id]);
-    } catch (error) {
-        logger.error(`Error updating status on order #${order_id}`, error);
-        return next(new HttpError(`Error updating status on order #${order_id}`, 500));
-    }
-
-    let order = orderResponse.rows[0];
+    let order;
 
     if(status === 'made'){
         try {
-            const phoneQuery = `SELECT u.phone_number FROM users u WHERE user_id = $1`;
-            const userResponse = await pool.query(phoneQuery, [order.user_id]);
-            const phone_number = userResponse.rows[0]?.phone_number;
+            const query = `
+                SELECT o.text_message_sent, o.drink, o.quantity, u.phone_number 
+                FROM orders o 
+                JOIN users u ON o.user_id = u.user_id 
+                WHERE o.order_id = $1
+            `;
+            const combinedResponse = await pool.query(query, [order_id]);
+            const orderData = combinedResponse.rows[0];
+            const phone_number = orderData?.phone_number;
+            
             // only send a text if one hasn't already for this order
-            if(phone_number && !order.text_message_sent){
-                twilioControllers.sendMessage(phone_number, `Your order for ${order.drink}${order.quantity > 1 ? ` x${order.quantity}` : ''} is ready! Come to the bar for pick up 🎅`);
-                    const smsQuery = "UPDATE orders SET text_message_sent = TRUE WHERE order_id = $1 RETURNING *";
-                    var orderSmsResponse = await pool.query(smsQuery, [order_id])
-                    order = orderSmsResponse.rows[0]
+            if(phone_number && !orderData.text_message_sent){
+                twilioControllers.sendMessage(phone_number, `Your order for ${orderData.drink}${orderData.quantity > 1 ? ` x${orderData.quantity}` : ''} is ready! Come to the bar for pick up 🎅`);
+                // Update status AND text_message_sent in a single query
+                const query = "UPDATE orders SET status = $1, text_message_sent = TRUE, updated_at = NOW() WHERE order_id = $2 RETURNING *";
+                const orderResponse = await pool.query(query, [status, order_id]);
+                order = orderResponse.rows[0];
+            } else {
+                // Just update status if no text to send
+                const query = "UPDATE orders SET status = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *";
+                const orderResponse = await pool.query(query, [status, order_id]);
+                order = orderResponse.rows[0];
             }
         } catch (error) {
-            logger.error(`Error sending text to user ${user_id}`, error);
-            return next(new HttpError(`Error getting orders: ${error}`, 500));
+            logger.error(`Error sending text to user for order ${order_id}: ${error}`, error);
+            return next(new HttpError(`Error updating order status: ${error}`, 500));
+        }
+    } else {
+        // For non-'made' statuses, single update query
+        const query = "UPDATE orders SET status = $1, updated_at = NOW() WHERE order_id = $2 RETURNING *";
+        try {
+            const orderResponse = await pool.query(query, [status, order_id]);
+            order = orderResponse.rows[0];
+        } catch (error) {
+            logger.error(`Error updating status on order #${order_id}`, error);
+            return next(new HttpError(`Error updating status on order #${order_id}: ${error}`, 500));
         }
     }
 

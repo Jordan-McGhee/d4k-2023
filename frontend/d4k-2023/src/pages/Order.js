@@ -323,8 +323,6 @@ const Order = () => {
             catch(error){
             }
 
-            //setStoredUsername(editedUsername)
-            //localStorage.setItem('storedUsername', editedUsername)
             setShowEditPhoneNumberInput(false)
         }
         setIsLoading(false)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh, faCheckCircle, faMartiniGlassCitrus, faHourglassHalf } from '@fortawesome/free-solid-svg-icons'
@@ -25,7 +25,7 @@ const AdminOrders = props => {
     const orderStatusLookup = {pending: {color: 'border-orange-500', icon: faHourglassHalf}, made: {color: 'border-yellow-500', icon: faMartiniGlassCitrus}, delivered: {color: 'border-emerald-500', icon: faCheckCircle}}
     const rowLimitOptions = [25, 50, 100, 500]
     const { getBartenders } = BartenderApi()
-    const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, updateOrderStatus, deleteOrder, isLoading, hasError, clearError } = OrderApi()
+    const { getOrdersAdmin, updateOrderTip, updateOrderCompleted, updateOrderPaid, updateOrderBartender, updateOrderStatus, deleteOrder, isLoadingOrderApi, hasError, clearError } = OrderApi()
 
     const displayErrorToast = (msg) => {
         toast.error(msg, {
@@ -52,20 +52,7 @@ const AdminOrders = props => {
             }
         }
         getOrders()
-    }, [excludeDelivered])
-
-    useEffect(() => {
-        const getOrders = async () => {
-            try {
-                const response = await getOrdersAdmin(selectedRowLimit, excludeDelivered)
-                setAllOrders(response)
-            } catch(err) {
-                console.log(err)
-                displayErrorToast(`Failed to fetch orders: ${err.message}`)
-            }
-        }
-        getOrders()
-    }, [ rowLimitKeys ])
+    }, [excludeDelivered, rowLimitKeys])
 
     useEffect(() => {
         const getBar = async () => {
@@ -83,7 +70,6 @@ const AdminOrders = props => {
     const refreshOrders = async () => {
         try {
             const response = await getOrdersAdmin(selectedRowLimit, excludeDelivered)
-                        displayErrorToast(`Refreshed orders:`)
             setAllOrders(response)
         } catch(err) {
             console.log(err)
@@ -92,13 +78,13 @@ const AdminOrders = props => {
     }
 
 
-    const SwitchIsPaid = ({order, onSwitchFunction}) => {
+    const SwitchIsPaid = memo(({order, onSwitchFunction}) => {
         const [isPaid, setIsPaid] = useState(false)
         useEffect(() => {
             setIsPaid(order.is_paid)
-          }, [])
+          }, [order.is_paid])
           
-        const updatePaid = async (order) => {
+        const updatePaid = useCallback(async (order) => {
             let response = null
             try {
                 response = await updateOrderPaid(order.order_id, isPaid)
@@ -110,25 +96,25 @@ const AdminOrders = props => {
             setIsPaid(response.newValue)
             onSwitchFunction(order, response.newValue)
             console.log(`${order.order_id} isPaid: ${response.newValue}`)
-        }
+        }, [isPaid, onSwitchFunction])
 
         return (
             <Switch className="w-100" size="sm" color="success" 
-                isDisabled={isLoading} isSelected={isPaid} onValueChange={() => updatePaid(order)}
+                isDisabled={isLoadingOrderApi} isSelected={isPaid} onValueChange={() => updatePaid(order)}
                 classNames={{base: "w-50"}} 
                 thumbIcon={ <FontAwesomeIcon icon={faDollar} /> }
             />
         )
-    }
+    })
+    SwitchIsPaid.displayName = "SwitchIsPaid"
 
-
-    const SwitchIsCompleted = ({order, onSwitchFunction}) => {
+    const SwitchIsCompleted = memo(({order, onSwitchFunction}) => {
         const [isCompleted, setIsCompleted] = useState(false)
         useEffect(() => {
                 setIsCompleted(order.is_completed)
         }, [ order.is_completed ])
 
-        const updateCompleted = async (order) => {
+        const updateCompleted = useCallback(async (order) => {
             let response = null
             try {
                 response = await updateOrderCompleted(order.order_id, isCompleted)
@@ -139,25 +125,27 @@ const AdminOrders = props => {
             if(!response?.newValue === null) return
             setIsCompleted(response.newValue)
             onSwitchFunction(order, response.newValue)
-        }
+        }, [isCompleted, onSwitchFunction])
+        
         return (
-            <Switch className="w-100" size="sm" color="warning" isDisabled={isLoading} isSelected={isCompleted} onValueChange={() => updateCompleted(order)}
+            <Switch className="w-100" size="sm" color="warning" isDisabled={isLoadingOrderApi} isSelected={isCompleted} onValueChange={() => updateCompleted(order)}
             thumbIcon={({ isSelected, className }) => isSelected ? (<FontAwesomeIcon className={className} icon={faCheck} />) : (<></>) }/>
             )
-    }
+    })
+    SwitchIsCompleted.displayName = "SwitchIsCompleted"
 
     
-    const DropdownBartenders = ({order, onUpdateFunction}) => {
+    const DropdownBartenders = memo(({order, onUpdateFunction}) => {
         const [selectedBartenderKey, setSelectedBartenderKey] = useState(new Set([]))
         const [selectedBartenderId, setSelectedBartenderId] = useState(null)
-        const selectedBartenderInitials = useMemo(() => bartenders?.find(b=> b.id === selectedBartenderId)?.initials, [selectedBartenderId] )
+        const selectedBartenderInitials = useMemo(() => bartenders?.find(b=> b.id === selectedBartenderId)?.initials, [selectedBartenderId, bartenders] )
 
         useEffect(() => {
             setSelectedBartenderKey(new Set([order.bartender_id]))
             setSelectedBartenderId(order.bartender_id)
         }, [ order.bartender_id ])
 
-        const updateBartender = async (key, order) => {
+        const updateBartender = useCallback(async (key, order) => {
             let response = null
             try {
                 var [bartenderId] = key
@@ -171,7 +159,8 @@ const AdminOrders = props => {
             setSelectedBartenderKey(new Set([newBartenderId]))
             setSelectedBartenderId(newBartenderId)
             onUpdateFunction(order, newBartenderId)
-        }
+        }, [onUpdateFunction])
+        
         return (
             <Dropdown>
                 <DropdownTrigger>
@@ -194,12 +183,13 @@ const AdminOrders = props => {
                 </DropdownMenu>
             </Dropdown>
             )
-    }
+    })
+    DropdownBartenders.displayName = "DropdownBartenders"
 
-    const ButtonGroupDelete = ({order, onDeleteFunction}) => {
+    const ButtonGroupDelete = memo(({order, onDeleteFunction}) => {
         const [showConfirmDelete, setShowConfirmDelete] = useState(false)
    
-        const deleteOrderPress = async (order) => {
+        const deleteOrderPress = useCallback(async (order) => {
             try {
                 await deleteOrder(order.order_id)
             } catch (error) {
@@ -208,7 +198,8 @@ const AdminOrders = props => {
                 return
             }
             onDeleteFunction(order.order_id)
-        }
+        }, [onDeleteFunction])
+        
         return (
             <div>
                 {!showConfirmDelete &&
@@ -228,9 +219,10 @@ const AdminOrders = props => {
                 }
             </div>
         )
-    }
+    })
+    ButtonGroupDelete.displayName = "ButtonGroupDelete"
 
-    const DropdownStatus = ({order, onUpdateFunction}) => {
+    const DropdownStatus = memo(({order, onUpdateFunction}) => {
         const [selectedStatusKey, setSelectedStatusKey] = useState(new Set([]))
         const [selectedStatus, setSelectedStatus] = useState(null)
 
@@ -239,7 +231,7 @@ const AdminOrders = props => {
             setSelectedStatus(order.status)
         }, [order.status])
 
-        const updateStatus = async (key, order) => {
+        const updateStatus = useCallback(async (key, order) => {
             let response = null
             try {
                 var [status] = key
@@ -253,7 +245,7 @@ const AdminOrders = props => {
             setSelectedStatusKey(new Set([newStatus]))
             setSelectedStatus(newStatus)
             onUpdateFunction(order, response)
-        }
+        }, [onUpdateFunction])
         return (
             <Dropdown>
                 <DropdownTrigger>
@@ -277,7 +269,8 @@ const AdminOrders = props => {
                 </DropdownMenu>
             </Dropdown>
             )
-    }
+    })
+    DropdownStatus.displayName = "DropdownStatus"
 
     const renderCell = useCallback((order, columnKey) => {
         const cellValue = order[columnKey];
@@ -290,14 +283,12 @@ const AdminOrders = props => {
         const handleUpdateBartender = (order, value) => {
             setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , bartender_id: value } : o))
         }
-
         const handleAdjustPaid = (order, value) => {
             setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , is_paid: value } : o))
         }
         const handleAdjustCompleted = (order, value) => {
             setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , is_completed: value } : o))
         }
-
         const handleUpdateStatus = (order, value) => {
             setAllOrders(a => a.map(o => o.order_id === order.order_id ? {...o , status: value.status, text_message_sent: value.text_message_sent } : o))
         }
@@ -455,7 +446,7 @@ const AdminOrders = props => {
             <div className="w-full m-auto">
                 <ErrorModal error = { hasError } onClear = { clearError } />
 
-                {isLoading && <Spinner 
+                {isLoadingOrderApi && <Spinner 
                                 color="success"
                                 className="fixed top-2/4"
                                 style={{left:'calc(50% - 40px)', zIndex:100}}
