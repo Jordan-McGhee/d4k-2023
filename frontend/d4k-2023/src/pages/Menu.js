@@ -34,7 +34,7 @@ const Menu = () => {
 
     // Set meta tags for menu page link preview
     useMetaTags({
-        title: 'D4K - Menu - Christmas Charity Party',
+        title: 'D4K - Christmas Charity Bar Menu',
         description: 'Browse our craft cocktails, mocktails, shots, and build your own drink for our Christmas charity event.',
         image: './images/d4klogo2025.jpg',
         url: window.location.href
