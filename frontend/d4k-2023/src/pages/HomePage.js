@@ -47,10 +47,14 @@ const HomePage = () => {
             theme: "light"
         });
 
-
         if (true) {
             notify();
         }
+
+        // Cleanup: close all toasts when component unmounts (user navigates away)
+        return () => {
+            toast.dismiss();
+        };
     }, [])
 
     return (
@@ -127,8 +131,8 @@ const HomePage = () => {
             <div className="flex flex-col gap-y-4 text-2xl text-emerald-500 italic">
                 <a target="_blank" rel="noreferrer" href={"https://www.minhwaspirits.com/"}>Minwha Spirits</a>
                 <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/moxieburger_candlerpark/"}>Moxie - Candler Park</a>
+                <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/moxieburger_candlerpark/"}>Moxie - Candler Park</a>
                 <a target="_blank" rel="noreferrer" href={"https://kingcube.com/"}>King Cube Ice</a>
-                <a target="_blank" rel="noreferrer" href={"https://www.zaxbys.com/"}>Zaxby's</a>
             </div>
 
             <br /><br /><br /><br />

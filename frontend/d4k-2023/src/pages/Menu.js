@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { Button, Spinner } from "@nextui-org/react";
 import MenuList from "../components/menu/MenuList";
 import MenuItem from "../components/menu/MenuItem";
+import { useMetaTags } from "../hooks/useMetaTags";
 
 import { DrinkApi } from "../api/drinkApi";
 
@@ -30,6 +31,14 @@ const Menu = () => {
     const [allDrinks, setAllDrinks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Set meta tags for menu page link preview
+    useMetaTags({
+        title: 'D4K - Menu - Christmas Charity Party',
+        description: 'Browse our craft cocktails, mocktails, shots, and build your own drink for our Christmas charity event.',
+        image: './images/d4klogo2025.jpg',
+        url: window.location.href
+    });
 
     // Memoized categorized drinks to avoid re-filtering on every render
     const categorizedDrinks = useMemo(() => {
