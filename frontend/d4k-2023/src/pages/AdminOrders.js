@@ -272,6 +272,19 @@ const AdminOrders = props => {
     })
     DropdownStatus.displayName = "DropdownStatus"
 
+    const getRowBorderColor = (status) => {
+        switch(status) {
+            case 'pending':
+                return 'border-l-4 border-orange-500'
+            case 'made':
+                return 'border-l-4 border-yellow-500'
+            case 'delivered':
+                return 'border-l-4 border-emerald-500'
+            default:
+                return ''
+        }
+    }
+
     const renderCell = useCallback((order, columnKey) => {
         const cellValue = order[columnKey];
 
@@ -474,14 +487,14 @@ const AdminOrders = props => {
                                 <TableColumn allowsSorting key="created_at" scope="col" className="w-1/12">Time</TableColumn>
                                 <TableColumn align="center" key="bartender" scope="col" className="w-1/12">Bartender</TableColumn>
                                 <TableColumn align="center" key="is_paid" scope="col" className="w-1/12">Paid</TableColumn>
-                                <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Done</TableColumn>
+                                {/* <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Done</TableColumn> */}
                                 <TableColumn align="center" key="status" scope="col" className="w-16">Status</TableColumn>
                                 <TableColumn align="center" key="text_message_sent" scope="col" className="w-16">SMS Sent</TableColumn>
                                 <TableColumn align="center" key="delete" scope="col" className="text-center w-1/12"></TableColumn>
                             </TableHeader>
                             <TableBody items={sortedOrders}>
                                 {(item) => (
-                                <TableRow key={item.order_id}>
+                                <TableRow key={item.order_id} className={getRowBorderColor(item.status)}>
                                     {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                                 </TableRow>
                                 )}

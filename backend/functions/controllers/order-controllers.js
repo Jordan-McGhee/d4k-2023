@@ -247,7 +247,7 @@ const getOrdersAdmin = async (req, res, next) => {
         query += ` AND status != 'delivered'`;
     }
 
-    query += ` ORDER BY is_completed, status = 'pending', created_at DESC LIMIT $1`;
+    query += ` ORDER BY is_completed, status = 'delivered', created_at DESC LIMIT $1`;
     
     let response;
 
