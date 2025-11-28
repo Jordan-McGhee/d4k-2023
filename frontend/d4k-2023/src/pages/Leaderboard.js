@@ -49,18 +49,16 @@ const Leaderboard = () => {
 
     // check for local storage user id
     useEffect(() => {
-        const storedID = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (storedID) {
-            setStoredUserID(parseInt(storedID, 10));
-        }
+
     }, []);
 
     // Fetch leaderboard data
     const fetchLeaderboardData = useCallback(async () => {
-        if (storedUserID === null) return;
-        
+        const storedID = localStorage.getItem(LOCAL_STORAGE_KEY);
+        let storedUserId = parseInt(storedID, 10);
+       
         try {
-            const data = await getOrdersLeaderboard(storedUserID);
+            const data = await getOrdersLeaderboard(storedUserId);
             setLeaderboardData({
                 topUsers: data.topUsers || [],
                 total: data.sumTotal,
@@ -70,7 +68,7 @@ const Leaderboard = () => {
         } catch (error) {
             console.error('Error fetching leaderboard data:', error);
         }
-    }, [storedUserID, getOrdersLeaderboard]);
+    }, [getOrdersLeaderboard]);
 
     // Initial data fetch
     useEffect(() => {
@@ -106,7 +104,7 @@ const Leaderboard = () => {
                             topUsers={leaderboardData.topUsers} 
                             user={leaderboardData.userRank} 
                             total={leaderboardData.total} 
-                            partyMetrics={leaderboardData.partyMetrics} 
+                            partyMetrics={leaderboardData.partyMetrics}     
                         />
                     </div>
                     <div className="hidden lg:block">

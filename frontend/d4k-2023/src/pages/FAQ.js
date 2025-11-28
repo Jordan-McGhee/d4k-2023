@@ -52,16 +52,17 @@ const FAQ = () => {
                     <span className={styles.companyMatch}>
                         We will triple your donation with a company match!
                     </span>
-                    <br />
-                    Visit the{' '}
-                    <Link 
-                        className={styles.highlightText} 
-                        href="/leaderboard" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Leaderboard
-                    </Link>{' '}
+                    <div className="flex justify-center my-4">
+                        Visit the {' '}
+                        <Link 
+                            className={styles.highlightText + ' ml-1'} 
+                            href="/leaderboard" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                             Leaderboard
+                        </Link>{' '}
+                    </div>
                     to see the top donors.
                 </>
             )
@@ -92,11 +93,28 @@ const FAQ = () => {
             question: 'Where is parking?',
             content: (
                 <>
-                    We recommend uber if drinking. However, if you want to drive, there will be some 
-                    street parking available.{' '}
                     <span className={styles.warningText}>
-                        We highly recommend carpooling, drinking responsibly, and having a designated driver.
+                        We highly recommend{' '}
+                        <Link 
+                            href="https://www.uber.com" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                        >
+                            Uber
+                        </Link>
+                        {' '}or{' '}
+                        <Link 
+                            href="https://www.lyft.com" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                        >
+                            Lyft. 
+                        </Link>
                     </span>
+                    There is limited stree parking available, so consider carpooling and a DD. <b>Please drink responsibly.</b>
+
                     <div className="mt-4">
                         <Button 
                             size="md" 
@@ -121,16 +139,17 @@ const FAQ = () => {
             content: (
                 <>
                     <div className={styles.boldText}>ABSOLUTELY</div>
-                    You can put a custom drink order in on the{' '}
-                    <Link 
-                        className={styles.highlightText} 
-                        href="/order?drinkId=999" 
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Order Page
-                    </Link>
-                    <br />
+                    <div className="justify-center my-4">
+                        You can put a custom drink order in on the{' '}
+                        <Link 
+                            className={styles.highlightText} 
+                            href="/order?drinkId=999" 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Order Page
+                        </Link>
+                    </div>
                     And tell us what you'd like our bartenders to whip up!
                 </>
             )
@@ -153,7 +172,7 @@ const FAQ = () => {
         }
     ];
     return (
-        <main className="max-w-2xl mx-auto mb-16 px-4">
+        <main className="max-w-2xl mx-auto mb-16 px-1">
             {/* Page Header */}
             <header className="flex items-center justify-center pb-4 text-4xl font-bungee text-emerald-600">
                 <h1 className="flex items-center">

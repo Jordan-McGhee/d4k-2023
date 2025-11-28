@@ -32,14 +32,6 @@ const Menu = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Set meta tags for menu page link preview
-    useMetaTags({
-        title: 'D4K - Christmas Charity Bar Menu',
-        description: 'Browse our craft cocktails, mocktails, shots, and build your own drink for our Christmas charity event.',
-        image: './images/d4klogo2025.jpg',
-        url: window.location.href
-    });
-
     // Memoized categorized drinks to avoid re-filtering on every render
     const categorizedDrinks = useMemo(() => {
         if (!allDrinks.length) return {};
