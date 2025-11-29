@@ -109,16 +109,21 @@ const HomePage = () => {
             {/* EXPLAINER DIV */}
             <div className="py-5 mb-5">
 
-                <p className="italic text-3xl my-5 font-bold">Not just another Christmas Party</p>
+                <p className="text-3xl my-5 font-bungee font-bold tracking-wide">Not just another Christmas Party</p>
 
-                <p className="text-2xl my-5">It's a holiday spirited pop up bar serving up <span className="italic font-bold">the best craft cocktails</span> and the worst puns for donations to a great cause</p>
+                <p className="text-2xl my-5">It's a <span className="font-fugaz font-bold text-emerald-600">holiday spirited pop up bar</span> serving up <span className="italic font-bold text-emerald-600">the best craft cocktails</span> for a great cause<span className="font-fugaz font-bold"></span></p>
 
-                <div className="text-3xl font-bold font-fugaz">all donations are <span className="font-extrabold text-4xl">TRIPLED</span></div><div className="text-2xl">with a match and go to <br />
-                    <a className="text-emerald-500" target="_blank" href="https://nicholashouse.org/" rel="noreferrer">Nicholas House Family Homeless Shelter</a> &
-                    <a className="text-emerald-500" target="_blank" href="https://www.maketruechange.org/" rel="noreferrer"> True Change</a> </div>
+                <div className="my-6">
+                    <div className="text-3xl font-bungee font-bold tracking-wide mb-2">Every donation gets <span className="text-4xl text-emerald-600">tripled</span></div>
+                    <div className="text-lg font-fugaz mb-4">with a company match</div>
+                    <div className="text-2xl">All proceeds go to <br />
+                        <a className="font-fugaz font-bold text-emerald-600 hover:underline" target="_blank" href="https://nicholashouse.org/" rel="noreferrer">Nicholas House Family Homeless Shelter</a> <span className="font-bold">&</span>
+                        <a className="font-fugaz font-bold text-emerald-600 hover:underline" target="_blank" href="https://www.maketruechange.org/" rel="noreferrer"> True Change</a>
+                    </div>
+                </div>
                 <br />
                 <Button
-                    className="uk-button bg-emerald-600 text-slate-200 font-fugaz"
+                    className="uk-button bg-emerald-600 text-slate-200 font-fugaz font-bold"
                     radius="full" as={Link} href="/FAQ" >
                     Read More
                 </Button>
@@ -130,7 +135,6 @@ const HomePage = () => {
 
             <div className="flex flex-col gap-y-4 text-2xl text-emerald-500 italic">
                 <a target="_blank" rel="noreferrer" href={"https://www.minhwaspirits.com/"}>Minwha Spirits</a>
-                <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/moxieburger_candlerpark/"}>Moxie - Candler Park</a>
                 <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/moxieburger_candlerpark/"}>Moxie - Candler Park</a>
                 <a target="_blank" rel="noreferrer" href={"https://kingcube.com/"}>King Cube Ice</a>
             </div>

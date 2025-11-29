@@ -285,7 +285,7 @@ const BartabNav = () => {
                                 {/* Info Message */}
                                 <div className="flex flex-col items-center text-center text-white my-4 gap-y-2 max-w-72 font-fugaz">
                                     <FontAwesomeIcon icon={faInfoCircle} className="h-8" />
-                                    <p>Click a link below to donate. Please be patient as we mark your tab as paid. It should update soon!</p>
+                                    <p>Click a link below to donate. Please be patient as we mark your tab as paid. Visit the bar to request an update</p>
                                 </div>
 
                                 {/* Payment Links */}

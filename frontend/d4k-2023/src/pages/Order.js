@@ -90,7 +90,7 @@ const Order = () => {
 
 
     const isInvalidUsername = useMemo(() => {
-        return (!username || username.trim().length < 3 || !username.includes(' '))
+        return (!username || username.trim().length < 7)
     }, [username]);
 
     const isInvalidPhoneNumber = useMemo(() => {
@@ -99,7 +99,7 @@ const Order = () => {
     }, [phoneNumber]);
 
     const isInvalidEditedUsername = useMemo(() => {
-        return (!editedUsername || editedUsername.trim().length < 3 || !editedUsername.includes(' '))
+        return (!editedUsername || editedUsername.trim().length < 7)
     }, [editedUsername]);
 
     const isInvalidEditedPhoneNumber = useMemo(() => {
@@ -448,7 +448,7 @@ const Order = () => {
                                     onFocus={onUsernameFocus}
                                     onBlur={onUsernameBlur}
                                     isInvalid={isInvalidEditedUsername || isUsernameTaken}
-                                    errorMessage={isInvalidEditedUsername ? (!editedUsername.includes(' ') ? "Please provide first and last name" : "We'll need a proper name, nutcracker") : isUsernameTaken ? "This user already exists" : false}
+                                    errorMessage={isInvalidEditedUsername ? "We'll need a full name, nutcracker" : isUsernameTaken ? "This user already exists" : false}
                                     className="pb-5"
                                     classNames={{
                                         label: "text-xl group-data-[filled=true]:-translate-y-4",
