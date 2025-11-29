@@ -49,7 +49,7 @@ const getOrders = async (req, res, next) => {
     const query = `SELECT u.username, o.* 
                    FROM orders o 
                    JOIN users u ON u.user_id = o.user_id 
-                   WHERE is_completed != true AND status != 'delivered' AND voided_at IS NULL 
+                   WHERE is_completed != true AND status = 'pending' AND voided_at IS NULL 
                    ORDER BY created_at ASC`;
 
     try {

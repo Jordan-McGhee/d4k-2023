@@ -36,23 +36,23 @@ const ShotCard = props => {
                 {hasMoreNaughty ? (
                     <>
                         <div className="w-full grid grid-cols-7 items-center gap-x-4 mb-4">
-                            <p className="col-span-2 uppercase text-2xl font-bold text-rose-600">Naughty</p>
+                            <p className="col-span-2 uppercase text-2xl font-bold text-slate-600">Naughty</p>
                             <div
-                                className="h-8 col-span-4 bg-rose-600"
+                                className="h-8 col-span-4 bg-slate-400"
                                 style={{ width: '100%' }}
                             />
-                            <p className="text-4xl col-span-1 text-rose-600 font-black">
+                            <p className="text-4xl col-span-1 text-slate-600 font-black">
                                 {naughty ? naughty.total_orders : 0}
                             </p>
                         </div>
 
                         <div className="w-full grid grid-cols-7 items-center gap-x-4">
-                            <p className="col-span-2 uppercase text-2xl font-bold text-emerald-600">Nice</p>
+                            <p className="col-span-2 uppercase text-2xl font-bold text-slate-500">Nice</p>
                             <div
-                                className="h-8 col-span-4 bg-emerald-600"
+                                className="h-8 col-span-4 bg-slate-300"
                                 style={{ width: `${percentage}%` }}
                             />
-                            <p className="text-4xl col-span-1 text-emerald-600 font-black">
+                            <p className="text-4xl col-span-1 text-slate-500 font-black">
                                 {nice ? nice.total_orders : 0}
                             </p>
                         </div>
@@ -60,23 +60,23 @@ const ShotCard = props => {
                 ) : (
                     <>
                         <div className="w-full grid grid-cols-7 items-center gap-x-4 mb-4">
-                            <p className="col-span-2 uppercase text-2xl font-bold text-emerald-600">Nice</p>
+                            <p className="col-span-2 uppercase text-2xl font-bold text-slate-500">Nice</p>
                             <div
-                                className="h-8 col-span-4 bg-emerald-600"
+                                className="h-8 col-span-4 bg-slate-300"
                                 style={{ width: '100%' }}
                             />
-                            <p className="text-4xl col-span-1 text-emerald-600 font-black">
+                            <p className="text-4xl col-span-1 text-slate-500 font-black">
                                 {nice ? nice.total_orders : 0}
                             </p>
                         </div>
 
                         <div className="w-full grid grid-cols-7 items-center gap-x-4">
-                            <p className="col-span-2 uppercase text-2xl font-bold text-rose-600">Naughty</p>
+                            <p className="col-span-2 uppercase text-2xl font-bold text-slate-600">Naughty</p>
                             <div
-                                className="h-8 col-span-4 bg-rose-600"
+                                className="h-8 col-span-4 bg-slate-400"
                                 style={{ width: `${percentage}%` }}
                             />
-                            <p className="text-4xl col-span-1 text-rose-600 font-black">
+                            <p className="text-4xl col-span-1 text-slate-600 font-black">
                                 {naughty ? naughty.total_orders : 0}
                             </p>
                         </div>
@@ -89,8 +89,8 @@ const ShotCard = props => {
     return (
         <div className="w-full">
             <div className="flex items-center justify-center gap-x-4 mb-4">
-                <FontAwesomeIcon className="h-12 text-emerald-600" icon={faGlassWhiskey} />
-                <p className="text-5xl font-bold text-emerald-600 uppercase">Shot Count</p>
+                <FontAwesomeIcon className="h-12 text-slate-600" icon={faGlassWhiskey} />
+                <p className="text-5xl font-bold text-slate-700 uppercase">Shot Count</p>
             </div>
 
             <div className="bg-slate-100/60 p-8 w-full rounded-2xl">
@@ -139,7 +139,7 @@ const StatCarousel = props => {
     return (
         <div className="w-full">
             {/* title */}
-            <p className="text-5xl font-bold text-emerald-600 uppercase text-center mb-4">{titles[currentIndex]}</p>
+            <p className="text-5xl font-bold text-slate-700 uppercase text-center mb-4">{titles[currentIndex]}</p>
 
             {/* ranking */}
             <ul className="bg-slate-100/60 p-8 w-full flex flex-col gap-y-8 rounded-2xl">
@@ -148,7 +148,7 @@ const StatCarousel = props => {
                         <li className="grid grid-cols-7 items-center" key={`${item.name}, Rank: ${i + 1}`}>
 
                             {/* rank */}
-                            <div className={`text-white bg-emerald-600 rounded-full p-3 col-span-1`}>
+                            <div className={`text-white bg-slate-600 rounded-full p-3 col-span-1`}>
                                 <p className="text-3xl text-center font-black  italic">{i + 1}</p>
                             </div>
 
@@ -187,8 +187,8 @@ const LastYearStats = () => {
         <div className=" w-full">
             {/* title */}
             <div className="flex items-center justify-center gap-x-4 mb-4">
-                <FontAwesomeIcon className="h-12 text-emerald-600" icon={faGlassCheers} />
-                <p className="text-5xl font-bold text-emerald-600 uppercase">2023 D4K Stats</p>
+                <FontAwesomeIcon className="h-12 text-slate-600" icon={faGlassCheers} />
+                <p className="text-5xl font-bold text-slate-700 uppercase">2023 D4K Stats</p>
             </div>
 
             <div className="bg-slate-100/60 p-8 w-full flex flex-wrap justify-between gap-4 rounded-2xl">

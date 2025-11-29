@@ -26,7 +26,7 @@ const NewLeaderboard = () => {
     const [ingredientCount, setIngredientCount] = useState({})
     const [shotCount, setShotCount] = useState({})
     const [drinkTotals, setDrinkTotals] = useState([])
-
+    const [isInitialLoad, setIsInitialLoad] = useState(true)
 
     const fetchLeaderboard = async () => {
         try {
@@ -45,7 +45,7 @@ const NewLeaderboard = () => {
 
     // fetch data
     useEffect(() => {
-        const fetchLeaderboard = async () => {
+        const initialFetch = async () => {
             try {
                 const data = await getNewLeaderboard()
                 setTopUsers(data.topUsers)
@@ -57,10 +57,12 @@ const NewLeaderboard = () => {
                 setDrinkTotals([data.drinkQuantity, data.shotQuantity])
             } catch (error) {
                 console.log(error)
+            } finally {
+                setIsInitialLoad(false)
             }
         }
 
-        fetchLeaderboard()
+        initialFetch()
 
         // console.log(topTen, total, drinkCount, ingredientCount, shotCount)
     }, [])
@@ -80,7 +82,7 @@ const NewLeaderboard = () => {
             <ErrorModal error={hasError} onClear={clearError} />
 
             {
-                isLoadingOrderApi ?
+                isInitialLoad && isLoadingOrderApi ?
                     <Spinner
                         color="success"
                         className="fixed top-1/4"

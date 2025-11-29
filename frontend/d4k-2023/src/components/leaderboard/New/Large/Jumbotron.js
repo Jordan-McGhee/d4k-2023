@@ -18,13 +18,13 @@ const Jumbotron = props => {
 
     return (
 
-        <div className="bg-cover w-full h-screen" style={{ backgroundImage: `url(${bgImageOriginal})`, padding: 0, margin: 0 }}>
+        <div className="bg-gradient-to-b from-blue-200 via-blue-100 to-slate-50 w-full h-screen" style={{ padding: 0, margin: 0 }}>
             <div className="w-[95%] mx-auto">
 
                 {/* title */}
                 <div className="flex items-center justify-center gap-x-4 mx-auto pt-8 uppercase italic text-8xl font-bold">
-                    <p className="text-rose-600">Drink 4 the kids</p>
-                    <p className="text-emerald-600">Leaderboard</p>
+                    <p className="text-slate-600">Drink 4 the kids</p>
+                    <p className="text-slate-700">Leaderboard</p>
                 </div>
 
 

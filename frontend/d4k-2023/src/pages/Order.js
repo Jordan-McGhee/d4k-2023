@@ -90,16 +90,16 @@ const Order = () => {
 
 
     const isInvalidUsername = useMemo(() => {
-        return (!username || username.trim().length < 3)
+        return (!username || username.trim().length < 3 || !username.includes(' '))
     }, [username]);
 
     const isInvalidPhoneNumber = useMemo(() => {
         let regexp = /[a-zA-Z]/g
-        return (!phoneNumber || phoneNumber.trim().length < 10 || phoneNumber.trim().length > 12 || regexp.test(phoneNumber)) 
+        return (!phoneNumber || phoneNumber.trim().length !== 10 || regexp.test(phoneNumber)) 
     }, [phoneNumber]);
 
     const isInvalidEditedUsername = useMemo(() => {
-        return (!editedUsername || editedUsername.trim().length < 3)
+        return (!editedUsername || editedUsername.trim().length < 3 || !editedUsername.includes(' '))
     }, [editedUsername]);
 
     const isInvalidEditedPhoneNumber = useMemo(() => {
@@ -448,8 +448,7 @@ const Order = () => {
                                     onFocus={onUsernameFocus}
                                     onBlur={onUsernameBlur}
                                     isInvalid={isInvalidEditedUsername || isUsernameTaken}
-                                    errorMessage={isInvalidEditedUsername ? "We'll need a proper name, nutcracker"
-                                        : isUsernameTaken ? "This user already exists" : false}
+                                    errorMessage={isInvalidEditedUsername ? (!editedUsername.includes(' ') ? "Please provide first and last name" : "We'll need a proper name, nutcracker") : isUsernameTaken ? "This user already exists" : false}
                                     className="pb-5"
                                     classNames={{
                                         label: "text-xl group-data-[filled=true]:-translate-y-4",
@@ -508,7 +507,7 @@ const Order = () => {
                                     label="Your Full Name"
                                     isInvalid={(isInvalidUsername && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
                                     onValueChange={setUsername}
-                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? "We'll need your full name, nutcracker." : isUsernameTaken ? "This name is already taken" : false}
+                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? (!username.includes(' ') ? "Please provide first and last name" : "We'll need your full name, nutcracker.") : isUsernameTaken ? "This name is already taken" : false}
                                 />
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {

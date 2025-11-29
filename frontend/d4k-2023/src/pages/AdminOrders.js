@@ -308,6 +308,9 @@ const AdminOrders = props => {
 
         const onAdjustDonationInputBlur = async (order) => {
             if(order.tip_amount === originalTipValue) return
+            if(isNaN(order.tip_amount)){
+               order.tip_amount = 0;
+            }
             let success = await updateOrderTip(order.order_id, order.tip_amount )
             if(!success){ 
                 setAllOrders(allOrders.map(o => o.order_id === order.order_id ? {...o , tip_amount: originalTipValue } : o))
