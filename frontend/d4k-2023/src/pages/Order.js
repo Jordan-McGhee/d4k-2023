@@ -407,9 +407,16 @@ const Order = () => {
             </Modal>
 
             <form className="max-w-md m-auto">
-                <Card className=" bg-slate-200 mb-5 pb-5">
-                    <CardHeader className="pb-0 text-4xl font-bungee text-center justify-center text-emerald-700">
+                <Card className="bg-slate-200 mb-5 pb-5">
+                    <CardHeader className="pb-0 text-4xl font-bungee text-center justify-center text-emerald-700 flex flex-col items-center">
                         Order
+                        {user?.photo_url && (
+                            <img 
+                                alt="Profile" 
+                                className="w-16 h-16 object-cover rounded-full mb-2 border-2 border-emerald-700" 
+                                src={user.photo_url} 
+                            />
+                        )}
                     </CardHeader>
                     <CardBody>
                         {isLoading && <Spinner size="lg" color="success" />}
@@ -430,8 +437,11 @@ const Order = () => {
                         {!isLoading && errorMessage === null &&
                         <div>
                         {hasStoredUserId && !showEditNameInput &&
-                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-1">Welcome back <br /> <span className="font-bold font-mono text-emerald-900 text-xl">{username}</span>
-                                <Button className="bg-transparent" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="md" className="text-emerald-600" icon={faEdit} /></Button> </div>
+                            <div className="text-xl text-center block font-fugaz tracking-wide">Welcome back <br /> <span className="font-bold font-mono text-emerald-700 text-xl">{username}</span>
+                                <Button className="bg-transparent absolute pb-5" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly>
+                                    <FontAwesomeIcon size="md" className="text-gray-600" icon={faEdit} />
+                                </Button> 
+                            </div>
                         }
                         {hasStoredUserId && showEditNameInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
@@ -441,7 +451,7 @@ const Order = () => {
                                     label="Edit Your Name"
                                     variant="bordered"
                                     radius="full"
-                                    maxLength={20}
+                                    maxLength={25}
                                     color={isInvalidEditedUsername || isUsernameTaken ? "danger" : "success"}
                                     value={editedUsername}
                                     onValueChange={setEditedUsername}
@@ -536,7 +546,7 @@ const Order = () => {
                                         inputWrapper: "bg-white",
                                         errorMessage: `${phoneNumber ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
                                     }}
-                                    maxLength={15}
+                                    maxLength={10}
                                     type="tel"
                                     name="phone"
                                     onFocus={onPhoneNumberFocus}
@@ -552,8 +562,11 @@ const Order = () => {
                                 />
                         }     
                         {hasStoredUserId && !showEditPhoneNumberInput &&
-                            <div className="text-xl text-center mr-4 block font-fugaz tracking-wide mb-6"><span className="font-bold font-mono text-emerald-900">{phoneNumber}</span>
-                                <Button className="bg-transparent" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly><FontAwesomeIcon size="md" className="text-emerald-600" icon={faEdit} /></Button> </div>
+                            <div className="text-lg text-center mr-2 block font-fugaz tracking-wide mb-6"><span className="font-bold font-mono text-emerald-700">{phoneNumber}</span>
+                                <Button className="bg-transparent absolute pb-5" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly>
+                                    <FontAwesomeIcon size="md" className="text-gray-600" icon={faEdit} />
+                                </Button> 
+                            </div>
                         }
                         {hasStoredUserId && showEditPhoneNumberInput &&
                             <div className="flex justify-between duration-200 ease-out transition animate-slideIn">
@@ -563,7 +576,7 @@ const Order = () => {
                                     label="Edit Phone Number"
                                     variant="bordered"
                                     radius="full"
-                                    maxLength={20}
+                                    maxLength={10}
                                     color={isInvalidEditedPhoneNumber || isPhoneNumberTaken ? "danger" : "success"}
                                     value={editedPhoneNumber}
                                     onValueChange={setEditedPhoneNumber}

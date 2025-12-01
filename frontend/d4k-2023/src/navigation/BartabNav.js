@@ -320,7 +320,7 @@ const BartabNav = () => {
                                 {/* Total Donations */}
                                 <div className="pt-4">
                                     <div className="text-lg font-bungee text-center">
-                                        Your Donations so far:
+                                        Total Donations so far:
                                         <span className="pl-2 text-emerald-400">
                                             ${tabData?.tab?.total_donated || 0}
                                         </span>

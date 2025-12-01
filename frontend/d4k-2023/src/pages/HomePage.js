@@ -113,7 +113,7 @@ const HomePage = () => {
 
                 <p className="text-2xl my-5">It's a <span className="font-fugaz font-bold text-emerald-600">holiday spirited pop up bar</span> serving up <span className="italic font-bold text-emerald-600">the best craft cocktails</span> for a great cause<span className="font-fugaz font-bold"></span></p>
 
-                <div className="my-6">
+                <div className="my-4">
                     <div className="text-3xl font-bungee font-bold tracking-wide mb-2">Every donation gets <span className="text-4xl text-emerald-600">tripled</span></div>
                     <div className="text-lg font-fugaz mb-4">with a company match</div>
                     <div className="text-2xl">All proceeds go to <br />
@@ -133,10 +133,11 @@ const HomePage = () => {
             {/* SPONSOR DIV */}
             <p className="italic text-3xl my-5 font-bold font-fugaz">Special thanks to our sponsors!</p>
 
-            <div className="flex flex-col gap-y-4 text-2xl text-emerald-500 italic">
+            <div className="flex flex-col gap-y-2 text-xl text-emerald-500 italic">
                 <a target="_blank" rel="noreferrer" href={"https://www.minhwaspirits.com/"}>Minwha Spirits</a>
                 <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/moxieburger_candlerpark/"}>Moxie - Candler Park</a>
                 <a target="_blank" rel="noreferrer" href={"https://kingcube.com/"}>King Cube Ice</a>
+                <a target="_blank" rel="noreferrer" href={"https://mondaynightbrewing.com/"}>Monday Night Brewing</a>
             </div>
 
             <br /><br /><br /><br />

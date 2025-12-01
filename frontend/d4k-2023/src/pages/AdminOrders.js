@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh, faCheckCircle, faMartiniGlassCitrus, faHourglassHalf } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faMagnifyingGlass, faTrash, faX, faChevronDown, faDollar,  faRefresh, faCheckCircle, faMartiniGlassCitrus, faHourglassHalf, faSms } from '@fortawesome/free-solid-svg-icons'
 import ErrorModal from "../components/UIElements/ErrorModal";
 import convertDate from "../Conversions/convertDateTime";
 import { OrderApi } from "../api/orderApi";
@@ -481,19 +481,19 @@ const AdminOrders = props => {
                           }}
                         className="w-full text-md text-left rounded-lg">
                             <TableHeader className="text-xs bg-gray-50">
-                                <TableColumn key="username" scope="col" className="w-2/12">Name</TableColumn>
-                                <TableColumn key="drink" scope="col" className=" w-1/12">Drink</TableColumn>
+                                <TableColumn key="username" scope="col" className="">Name</TableColumn>
+                                <TableColumn key="drink" scope="col" className="">Drink</TableColumn>
                                 <TableColumn key="quantity" scope="col" className="w-16">Amt</TableColumn>
                                 <TableColumn key="total" scope="col" className="w-16">Cost</TableColumn>
-                                <TableColumn key="tip_amount" scope="col" className="w-24">Tip</TableColumn>
-                                <TableColumn key="total_with_tip" scope="col" className="w-24">Total</TableColumn>
+                                <TableColumn key="tip_amount" scope="col" className="w-12">Tip</TableColumn>
+                                <TableColumn key="total_with_tip" scope="col" className="w-12">Total</TableColumn>
                                 <TableColumn allowsSorting key="created_at" scope="col" className="w-1/12">Time</TableColumn>
                                 <TableColumn align="center" key="bartender" scope="col" className="w-1/12">Bartender</TableColumn>
                                 <TableColumn align="center" key="is_paid" scope="col" className="w-1/12">Paid</TableColumn>
                                 {/* <TableColumn align="center" key="is_completed" scope="col" className="w-1/12">Done</TableColumn> */}
-                                <TableColumn align="center" key="status" scope="col" className="w-16">Status</TableColumn>
-                                <TableColumn align="center" key="text_message_sent" scope="col" className="w-16">SMS Sent</TableColumn>
-                                <TableColumn align="center" key="delete" scope="col" className="text-center w-1/12"></TableColumn>
+                                <TableColumn align="center" key="status" scope="col" className="w-10">Status</TableColumn>
+                                <TableColumn align="center" key="text_message_sent" scope="col" className="w-10"><FontAwesomeIcon icon={faSms} className="mr-1" /> Notified</TableColumn>
+                                <TableColumn align="center" key="delete" scope="col" className="text-center w-10"></TableColumn>
                             </TableHeader>
                             <TableBody items={sortedOrders}>
                                 {(item) => (
