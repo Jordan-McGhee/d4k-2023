@@ -242,6 +242,23 @@ const changePhotoUrl = async (req, res, next) => {
     res.status(201).json(response.rows[0]);
 };
 
+const updatePaymentAccount = async (req, res, next) => {
+    const { user_id } = req.params;
+    const { payment_account } = req.body;
+
+    const query = "UPDATE users SET payment_account = $1, tab_update_requested = TRUE, updated_at = NOW() WHERE user_id = $2 RETURNING *";
+
+    let response;
+    try {
+        response = await pool.query(query, [payment_account, user_id]);
+    } catch (error) {
+        logger.error(`Error updating payment account for user #${user_id}`, error);
+        return next(new HttpError(`Error updating payment account for user #${user_id}`, 500));
+    }
+
+    res.status(201).json(response.rows[0]);
+};
+
 const getTab = async (req, res, next) => {
     const { user_id } = req.params;
     const text = `SELECT t.user_id, t.username, t.quantity, t.drink_cost_total, t.tips_total, t.tab_total, t.order_history, u.amount_paid + u.adjusted_donations as total_donated
@@ -291,6 +308,15 @@ const closeTab = async (req, res, next) => {
         return next(new HttpError(`Error setting User #${user_id}'s orders to paid. ${error}`, 500));
     }
 
+    // Reset tab_update_requested flag after successfully marking orders as paid
+    const updateUserQuery = "UPDATE users SET tab_update_requested = FALSE, updated_at = NOW() WHERE user_id = $1";
+    try {
+        await pool.query(updateUserQuery, [user_id]);
+    } catch (error) {
+        logger.error(`Error resetting tab_update_requested for user #${user_id}. ${error}`);
+        return next(new HttpError(`Error resetting tab_update_requested for user #${user_id}. ${error}`, 500));
+    }
+
     res.status(201).json({ 
         message: `Set User #${user_id}'s ${response.rowCount} orders to paid`, 
         response: response.rows 
@@ -307,5 +333,6 @@ exports.getAllUsers = getAllUsers;
 exports.updateUsername = updateUsername;
 exports.updatePhoneNumber = updatePhoneNumber;
 exports.changePhotoUrl = changePhotoUrl;
+exports.updatePaymentAccount = updatePaymentAccount;
 exports.getTab = getTab;
 exports.closeTab = closeTab;

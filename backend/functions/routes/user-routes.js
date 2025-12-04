@@ -15,6 +15,8 @@ router.patch("/:user_id/adjustDonations", userControllers.adjustDonations)
 
 router.patch("/:user_id/changePhotoUrl", userControllers.changePhotoUrl)
 
+router.patch("/:user_id/updatePaymentAccount", userControllers.updatePaymentAccount)
+
 router.get("/all", userControllers.getAllUsers)
 
 router.get("/:user_id", userControllers.getUserById)

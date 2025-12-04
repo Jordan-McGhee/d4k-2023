@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX, faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faCashRegister, faCheck, faMagnifyingGlass, faDollar, faX, faBell } from '@fortawesome/free-solid-svg-icons'
 import ErrorModal from "../components/UIElements/ErrorModal"
 import {
     Spinner, Input, Button, ButtonGroup, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-    Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Dropdown, Checkbox, DropdownTrigger, DropdownMenu, DropdownItem
+    Modal, ModalBody, ModalContent, ModalHeader, ModalFooter,  Checkbox
 } from "@nextui-org/react";
 import { OrderApi } from "../api/orderApi";
 import { UserApi } from "../api/userApi";
@@ -20,7 +20,7 @@ const Tab = () => {
     const { getOrdersAsTabs, isLoading, hasError, clearError } = OrderApi()
     const { closeTab, updateUserDonations, isUserApiLoading } = UserApi()
     const [originalAdjustDonationValue, setOriginalAdjustDonationValue] = useState(0)
-    const [isShowPaidTabsSelected, setIsShowPaidTabsSelected] = useState(true);
+    const [isShowPaidTabsSelected, setIsShowPaidTabsSelected] = useState(false);
 
     useEffect(() => {
         const getTabs = async () => {
@@ -120,6 +120,8 @@ const Tab = () => {
                 return (<div className={`font-bold ${cellValue > 0 ? 'text-green-600' : 'text-black'}`}>${cellValue}</div>)
             case "amount_unpaid":
                 return (<div className={`font-bold ${cellValue > 0 ? 'text-red-500' : 'text-black'}`}>${cellValue}</div>)
+            case "tab_update_requested":
+                return tab.tab_update_requested ? <FontAwesomeIcon icon={faBell} className="text-green-600" /> : null
             case "close_tab":
                 return (<ButtonCloseTab userTab={tab} onCloseTabFunction={refreshTabs} />)
             default:
@@ -137,16 +139,24 @@ const Tab = () => {
         
         if (filterValue.trim().length === 0) return filterTabs
         return [...filterTabs].filter(t => { 
-            return t.username.toLowerCase().includes(filterValue.trim().toLowerCase()
-        )}
+            return t.username.toLowerCase().includes(filterValue.trim().toLowerCase()) || 
+                   (t.payment_account && t.payment_account.toLowerCase().includes(filterValue.trim().toLowerCase()))
+        }
         )
     }, [allTabs, filterValue, isShowPaidTabsSelected])
 
 
     const sortedTabs = useMemo(() => {
         return [...filteredTabs].sort((a, b) => {
-        const first = a[sortDescriptor.column];
-        const second = b[sortDescriptor.column];
+        let first = a[sortDescriptor.column];
+        let second = b[sortDescriptor.column];
+        
+        // Handle boolean values - convert to numbers for comparison
+        if (typeof first === 'boolean' && typeof second === 'boolean') {
+            first = first ? 1 : 0;
+            second = second ? 1 : 0;
+        }
+        
         const cmp = first < second ? -1 : first > second ? 1 : 0;
     
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
@@ -192,15 +202,17 @@ const Tab = () => {
                             }}
                             className="w-full text-md text-left text-gray-500 dark:text-gray-400 rounded-lg">
                             <TableHeader className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                <TableColumn key="username" scope="col" className="py-3 w-2/12" allowsSorting>NAME</TableColumn>
-                                <TableColumn key="adjusted_donations" scope="col" className="py-3 w-1/12">Donation Adjust</TableColumn>
-                                <TableColumn key="quantity" scope="col" className="py-3 w-1/12">Quantity</TableColumn>
-                                <TableColumn key="drink_cost_total" scope="col" className="py-3 w-1/12">Drink $</TableColumn>
-                                <TableColumn key="tips_total" scope="col" className="py-3 w-1/12">Order Tips</TableColumn>
-                                <TableColumn key="tab_total" scope="col" className="py-3 w-1/12">Tab Total</TableColumn>
+                                <TableColumn key="username" scope="col" className="py-3 " allowsSorting>Name</TableColumn>
+                                <TableColumn key="payment_account" scope="col" className="py-3">Account</TableColumn>
+                                <TableColumn key="adjusted_donations" scope="col" className="py-3 w-20">Donation Adjust</TableColumn>
+                                <TableColumn key="quantity" scope="col" className="py-3 w-10">Quantity</TableColumn>
+                                <TableColumn key="drink_cost_total" scope="col" className="py-3 w-20">Drink $</TableColumn>
+                                <TableColumn key="tips_total" scope="col" className="py-3 w-10">Order Tips</TableColumn>
+                                <TableColumn key="tab_total" scope="col" className="py-3 w-10">Tab Total</TableColumn>
                                 <TableColumn key="amount_paid" scope="col" className="py-3 w-1/12">Total Paid</TableColumn>
                                 <TableColumn  key="amount_unpaid" scope="col" className="py-3 w-1/12" allowsSorting>Balance Due</TableColumn>
-                                <TableColumn key="close_tab" scope="col" className="py-3 w-1/12">Close Tab</TableColumn>
+                                <TableColumn key="tab_update_requested" scope="col" className="py-3 w-20" allowsSorting>Update Requested</TableColumn>
+                                <TableColumn key="close_tab" scope="col" className="py-3 w-20">Close Tab</TableColumn>
                             </TableHeader>
                             <TableBody items={sortedTabs}>
                                 {(item) => (

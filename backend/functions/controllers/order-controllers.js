@@ -25,21 +25,6 @@ const createOrder = async (req, res, next) => {
         logger.error('Error creating order', error);
         return next(new HttpError(`Error Creating Order: ${error}`, 500));
     }
-
-    // const query = `SELECT u.phone_number
-    //                FROM users u
-    //                WHERE user_id = $1`;
-
-    // try {
-    //     const result = await pool.query(query, [user_id]);
-    //     const phone_number = result.rows[0].phone_number;
-    //     if(phone_number){
-    //         twilioControllers.sendMessage(phone_number, `Order received for ${drinkTitle || customDrinkTitle}`);
-    //     }
-    // } catch (error) {
-    //     logger.error(`Error sending text to user ${user_id}`, error);
-    //     return next(new HttpError(`Error getting orders: ${error}`, 500));
-    // }
     
     res.status(201).json(newOrder?.rows[0]);
 };

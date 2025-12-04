@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./BartabNav.css"
 import "./MobileNav.css"
 import { UserApi } from "../api/userApi";
-import { ScrollShadow, Button } from "@nextui-org/react";
+import { ScrollShadow, Button, Input } from "@nextui-org/react";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../firebase/firebase"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -35,10 +35,13 @@ const BartabNav = () => {
     const [file, setFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadError, setUploadError] = useState(null);
+    const [showTabUpdateRequest, setShowTabUpdateRequest] = useState(false);
+    const [paymentAccount, setPaymentAccount] = useState('');
     
     const location = useLocation();
-    const { getTab, updateUserPhoto, getUserById } = UserApi();
+    const { getTab, updateUserPhoto, getUserById, updatePaymentAccount } = UserApi();
     const fileInputRef = useRef();
+    const paymentAccountInputRef = useRef();
 
     // Memoized calculations to prevent unnecessary re-renders
     const totalOwed = useMemo(() => tabData?.tab?.tab_total || 0, [tabData]);
@@ -147,6 +150,9 @@ const BartabNav = () => {
                     const userResponse = await getUserById(localStorageUserId);
                     if (!userResponse.user) return;
                     setUser(userResponse.user);
+                    if(userResponse.user.payment_account) {
+                        setPaymentAccount(userResponse.user.payment_account);
+                    }
                 } catch (error) {
                     console.error('Failed to fetch user:', error);
                 }
@@ -162,6 +168,17 @@ const BartabNav = () => {
         }
     }, [file]);
 
+    const handleTabUpdateRequest = () => {
+        // TODO: Add API call to submit tab update request with user info and venmo account
+        console.log('Tab update requested:', {
+            userId: user?.user_id,
+            username: user?.username,
+            venmoAccount: paymentAccount,
+            totalOwed: totalOwed
+        });
+        setPaymentAccount('');
+    };
+
     return (
         <div>
             {user && (
@@ -170,7 +187,12 @@ const BartabNav = () => {
                         id="nav-checkbox" 
                         className="checkbox-toggle" 
                         type="checkbox"
-                        onChange={(event) => setIsChecked(event.currentTarget.checked)}
+                        onChange={(event) => {
+                            setIsChecked(event.currentTarget.checked);
+                            if (!event.currentTarget.checked) {
+                                setShowTabUpdateRequest(false);
+                            }
+                        }}
                     />
                     <div className="bar-tab border-2 border-white border-solid rounded-full">
                         <div className="font-fugaz text-white tracking-widest">{totalOwed > 0 ? `Pay Tab` : <FontAwesomeIcon size="2x" icon={faUser}/>}</div>
@@ -192,7 +214,7 @@ const BartabNav = () => {
                                             radius="full"
                                             size="lg"
                                             isIconOnly 
-                                            className="z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full ml-2"
+                                            className={`z-[1000] float-right bg-white border-2 w-20 h-20 rounded-full ml-2 ${!user.photo_url ? 'animate-pulse shadow-lg shadow-gray-400' : ''}`}
                                             onPress={() => fileInputRef.current?.click()}
                                             isLoading={isUploading}
                                             aria-label={user.photo_url ? "Change profile picture" : "Upload profile picture"}
@@ -285,8 +307,69 @@ const BartabNav = () => {
                                 {/* Info Message */}
                                 <div className="flex flex-col items-center text-center text-white my-4 gap-y-2 max-w-72 font-fugaz">
                                     <FontAwesomeIcon icon={faInfoCircle} className="h-8" />
-                                    <p>Click a link below to donate. Please be patient as we mark your tab as paid. Visit the bar to request an update</p>
+                                    <p>Click a link below to donate. Please be patient as we close your tab. Request an update or visit the bar for faster service.</p>
                                 </div>
+
+                                {/* Request Tab Update */}
+                                {totalOwed > 0 && (
+                                    <div className="flex justify-center my-4">
+                                        {user?.tab_update_requested ? (
+                                            <div className="rounded-full font-bold text-xs text-white bg-transparent border-1 border-gray-100 shadow-md px-4 py-2 flex items-center">
+                                                ✓ Update Requested
+                                            </div>
+                                        ) : !showTabUpdateRequest ? (
+                                            <Button 
+                                                className="rounded-full font-bold text-xs text-white bg-emerald-600 shadow-md hover:bg-blue-600" 
+                                                size="sm" 
+                                                rounded="full"
+                                                onPress={() => {
+                                                    setShowTabUpdateRequest(true);
+                                                    setTimeout(() => paymentAccountInputRef.current?.focus(), 0);
+                                                }}
+                                            >
+                                                Request Update
+                                            </Button>
+                                        ) : (
+                                            <div className="flex w-full justify-center items-center">
+                                                <Input
+                                                    ref={paymentAccountInputRef}
+                                                    placeholder="venmo, paypal, or $cashtag"
+                                                    variant="bordered"
+                                                    radius="full"
+                                                    size="sm"
+                                                    value={paymentAccount}
+                                                    onValueChange={setPaymentAccount}
+                                                    className="w-48"
+                                                    classNames={{
+                                                        input: "text-black",
+                                                        label: "text-sm text-black group-data-[filled=true]:-translate-y-4",
+                                                        trigger: "min-h-unit-16",
+                                                        listboxWrapper: "max-h-[400px]",
+                                                        inputWrapper: ["pr-0", "bg-white", "rounded-r-none"],
+                                                        errorMessage: "italic ml-4"
+                                                    }}
+                                                />
+                                                <Button 
+                                                    radius="full"
+                                                    classNames={{ base: "rounded-l-none" }}
+                                                    className="rounded-l-none font-bold text-xs text-white bg-emerald-600 shadow-md hover:bg-emerald-700" 
+                                                    size="sm"
+                                                    onPress={async () => {
+                                                        try {
+                                                            await updatePaymentAccount(user?.user_id, paymentAccount);
+                                                            setPaymentAccount('');
+                                                            setShowTabUpdateRequest(false);
+                                                        } catch (error) {
+                                                            console.error('Error updating payment account:', error);
+                                                        }
+                                                    }}
+                                                >
+                                                    Submit
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
 
                                 {/* Payment Links */}
                                 <div>

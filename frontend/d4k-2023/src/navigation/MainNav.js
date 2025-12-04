@@ -6,8 +6,6 @@ import { faCandyCane, faCocktail, faGift, faIgloo, faPeopleGroup, faMedal } from
 import { Link, Image, Navbar, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarBrand } from "@nextui-org/react";
 
 const MainNav = (props) => {
-
-    let localStorageUsername = localStorage.getItem('storedUsername')
     const menuItems = [
         {
             title: "Info",

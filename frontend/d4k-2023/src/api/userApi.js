@@ -57,6 +57,11 @@ export const UserApi = () => {
             "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({photo_url: photoUrl}))
     }
 
+    const updatePaymentAccount = async (userId, paymentAccount) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/${userId}/updatePaymentAccount`,
+            "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({ payment_account: paymentAccount }))
+    }
+
     return { 
         updateUsername,
         updatePhoneNumber,
@@ -70,5 +75,6 @@ export const UserApi = () => {
         closeTab,
         updateUserDonations,
         updateUserPhoto,
+        updatePaymentAccount,
         isUserApiLoading: isLoading, hasError, clearError }
 }

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
-    faCheck, faMagnifyingGlass, faDollar, faPlus, faUser 
+    faCheck, faMagnifyingGlass, faDollar, faPlus, faUser, 
+    faBell
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Spinner, Input, Button, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
@@ -24,8 +25,11 @@ const TABLE_COLUMNS = [
     { key: "username", label: "Name", className: "w-2/12" },
     { key: "phone_number", label: "Phone", className: "w-2/12" },
     { key: "adjusted_donations", label: "Donation Adjust", className: "w-1/12" },
+    { key: "payment_account", label: "Account", className: "w-1/12" },
+    { key: "tab_update_requested", label: "Tab Requested", className: "w-1/12" },
     { key: "created_at", label: "Created", className: "w-1/12" },
-    { key: "updated_at", label: "Updated", className: "w-1/12" }
+    { key: "updated_at", label: "Updated", className: "w-1/12" },
+
 ];
 
 const AdminUsers = () => {
@@ -167,6 +171,8 @@ const AdminUsers = () => {
                         startContent={<FontAwesomeIcon icon={faDollar} />}
                     />
                 )
+            case "tab_update_requested":
+                return user.tab_update_requested ? <FontAwesomeIcon icon={faBell} className="text-green-600" /> : null
             case "created_at":
                 return convertDate(user.created_at)
             case "updated_at":

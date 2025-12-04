@@ -171,8 +171,6 @@ const Order = () => {
         if (drinkIdParam) {
             updateDrinkState(parseInt(drinkIdParam))
         }
-
-        const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
         
         setIsOrderingEnabled(false)
 
@@ -216,6 +214,14 @@ const Order = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [usernameFocused]);
+
+    useEffect(() => {
+        setIsPhoneNumberTaken(false)
+        if (!isInvalidPhoneNumber && !phoneNumberFocused) {
+            verifyPhoneNumberIsNew(phoneNumber);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phoneNumberFocused]);
 
     const updateDrinkState = (drinkId) => {
         if (drinkId === null) return
@@ -439,7 +445,7 @@ const Order = () => {
                         {hasStoredUserId && !showEditNameInput &&
                             <div className="text-xl text-center block font-fugaz tracking-wide">Welcome back <br /> <span className="font-bold font-mono text-emerald-700 text-xl">{username}</span>
                                 <Button className="bg-transparent absolute pb-5" value={showEditNameInput} onPress={() => handleShowEditName()} radius="full" variant="flat" isIconOnly>
-                                    <FontAwesomeIcon size="md" className="text-gray-600" icon={faEdit} />
+                                    <FontAwesomeIcon size="sm" className="text-gray-600" icon={faEdit} />
                                 </Button> 
                             </div>
                         }
@@ -504,7 +510,7 @@ const Order = () => {
                                         trigger: "min-h-unit-16",
                                         listboxWrapper: "max-h-[400px]",
                                         inputWrapper: "bg-white",
-                                        errorMessage: `${username ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
+                                        errorMessage: `${username ? "absolute italic ml-3.5 mb-3 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
                                     }}
                                     maxLength={30}
                                     autoFocus
@@ -544,7 +550,7 @@ const Order = () => {
                                         trigger: "min-h-unit-16",
                                         listboxWrapper: "max-h-[400px]",
                                         inputWrapper: "bg-white",
-                                        errorMessage: `${phoneNumber ? "absolute italic -bottom-5 ml-3.5 mb-1.5 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
+                                        errorMessage: `${phoneNumber ? "absolute italic ml-3.5 mb-3 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
                                     }}
                                     maxLength={10}
                                     type="tel"
@@ -558,13 +564,13 @@ const Order = () => {
                                     label="Your Phone Number"
                                     isInvalid={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken}
                                     onValueChange={setPhoneNumber}
-                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) ? "We'll need a valid number" : false}
+                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) ? "We'll need a valid number" : isPhoneNumberTaken ? "This phone number is taken" : false}
                                 />
                         }     
                         {hasStoredUserId && !showEditPhoneNumberInput &&
                             <div className="text-lg text-center mr-2 block font-fugaz tracking-wide mb-6"><span className="font-bold font-mono text-emerald-700">{phoneNumber}</span>
                                 <Button className="bg-transparent absolute pb-5" value={showEditPhoneNumberInput} onPress={() => handleShowEditPhoneNumber()} radius="full" variant="flat" isIconOnly>
-                                    <FontAwesomeIcon size="md" className="text-gray-600" icon={faEdit} />
+                                    <FontAwesomeIcon size="sm" className="text-gray-600" icon={faEdit} />
                                 </Button> 
                             </div>
                         }

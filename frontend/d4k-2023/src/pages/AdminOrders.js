@@ -485,7 +485,7 @@ const AdminOrders = props => {
                                 <TableColumn key="drink" scope="col" className="">Drink</TableColumn>
                                 <TableColumn key="quantity" scope="col" className="w-16">Amt</TableColumn>
                                 <TableColumn key="total" scope="col" className="w-16">Cost</TableColumn>
-                                <TableColumn key="tip_amount" scope="col" className="w-12">Tip</TableColumn>
+                                <TableColumn key="tip_amount" scope="col" className="w-28">Tip</TableColumn>
                                 <TableColumn key="total_with_tip" scope="col" className="w-12">Total</TableColumn>
                                 <TableColumn allowsSorting key="created_at" scope="col" className="w-1/12">Time</TableColumn>
                                 <TableColumn align="center" key="bartender" scope="col" className="w-1/12">Bartender</TableColumn>

@@ -2,7 +2,6 @@ import React from "react";
 import MainNav from "../../navigation/MainNav";
 import MobileNav from "../../navigation/MobileNav";
 import BartabNav from "../../navigation/BartabNav";
-import backgroundImage2 from "../../images/bgmobile2.jpg"
 import { Outlet } from "react-router-dom";
 import { isMobile } from 'react-device-detect';
 import { useLocation } from 'react-router-dom'
