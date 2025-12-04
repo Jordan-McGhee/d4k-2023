@@ -29,4 +29,6 @@ router.get("/:user_id/getTab", userControllers.getTab)
 
 router.post("/:user_id/closeTab", userControllers.closeTab)
 
+router.get("/pending-updates-count", userControllers.getPendingUpdateCount)
+
 module.exports = router

@@ -44,11 +44,30 @@ const IngredientAnalytics = props => {
         seriesType: "bars",
         series: { 1: { type: "steppedArea" } },
         hAxis: {
-          title: "Ingredient"
+          title: "Ingredient",
+          slantedText: true,
+          slantedTextAngle: 45,
+          textStyle: {
+            fontSize: 11
+          }
         },
         vAxis: {
           title: "mL Amount",
+          textStyle: {
+            fontSize: 11
+          }
         },
+        bar: { groupWidth: "60%" },
+        chartArea: { width: "80%", height: "75%", left: 80, bottom: 100 },
+        titleTextStyle: {
+          fontSize: 14
+        },
+        annotations: {
+          textStyle: {
+            fontSize: 10,
+            bold: true
+          }
+        }
       };
 
     return (

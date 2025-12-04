@@ -8,7 +8,7 @@ import { ScrollShadow, Button, Input } from "@nextui-org/react";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../firebase/firebase"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCameraRetro, faInfoCircle, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faBell, faCameraRetro, faInfoCircle, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
 
 // Payment URL configurations
 const PAYMENT_CONFIG = {
@@ -305,9 +305,9 @@ const BartabNav = () => {
 
                                 
                                 {/* Info Message */}
-                                <div className="flex flex-col items-center text-center text-white my-4 gap-y-2 max-w-72 font-fugaz">
+                                <div className="flex flex-col items-center text-center text-sm text-white my-4 gap-y-2 max-w-72">
                                     <FontAwesomeIcon icon={faInfoCircle} className="h-8" />
-                                    <p>Click a link below to donate. Please be patient as we close your tab. Request an update or visit the bar for faster service.</p>
+                                    <p>Click a link below to donate. Please be patient as we close your tab. Request an update or visit the bar for faster results.</p>
                                 </div>
 
                                 {/* Request Tab Update */}
@@ -327,7 +327,7 @@ const BartabNav = () => {
                                                     setTimeout(() => paymentAccountInputRef.current?.focus(), 0);
                                                 }}
                                             >
-                                                Request Update
+                                                Request Update <FontAwesomeIcon icon={faBell}></FontAwesomeIcon>
                                             </Button>
                                         ) : (
                                             <div className="flex w-full justify-center items-center">
@@ -364,7 +364,7 @@ const BartabNav = () => {
                                                         }
                                                     }}
                                                 >
-                                                    Submit
+                                                    Submit <FontAwesomeIcon icon={faPaperPlane} />
                                                 </Button>
                                             </div>
                                         )}

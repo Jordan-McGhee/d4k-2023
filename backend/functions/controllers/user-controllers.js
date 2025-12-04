@@ -256,6 +256,33 @@ const updatePaymentAccount = async (req, res, next) => {
         return next(new HttpError(`Error updating payment account for user #${user_id}`, 500));
     }
 
+    // Fetch the user's tab total to include in SMS notification
+    const tabQuery = "SELECT tab_total FROM tab_totals WHERE user_id = $1";
+    let tabResponse;
+    let tabTotal = 0;
+
+    try {
+        tabResponse = await pool.query(tabQuery, [user_id]);
+        if (tabResponse.rows.length > 0) {
+            tabTotal = tabResponse.rows[0].tab_total;
+        }
+    } catch (error) {
+        logger.warn(`Warning: Could not fetch tab total for user #${user_id}`, error);
+    }
+
+    // Send SMS notification to admin using Twilio controller
+    const username = response.rows[0].username;
+    const smsMessage = `🍹 TAB UPDATE REQUEST\nUser: ${username}\nPayment: ${payment_account}\nTab Total: $${tabTotal}`;
+    const adminPhone = '6787361277';
+
+    try {
+        await twilioControllers.sendMessage(adminPhone, smsMessage);
+        logger.info(`SMS notification sent for user #${user_id}`);
+    } catch (error) {
+        logger.warn(`Warning: Could not send SMS notification for user #${user_id}`, error);
+        // Don't fail the request if SMS fails
+    }
+
     res.status(201).json(response.rows[0]);
 };
 
@@ -323,6 +350,20 @@ const closeTab = async (req, res, next) => {
     });
 };
 
+const getPendingUpdateCount = async (req, res, next) => {
+    const query = "SELECT COUNT(*) as count FROM users WHERE tab_update_requested = TRUE";
+    
+    let response;
+    try {
+        response = await pool.query(query);
+    } catch (error) {
+        logger.error(`Error fetching pending update count. ${error}`);
+        return next(new HttpError(`Error fetching pending update count. ${error}`, 500));
+    }
+
+    res.status(200).json({ count: parseInt(response.rows[0].count) });
+};
+
 exports.createUser = createUser;
 exports.createUserWithPhone = createUserWithPhone;
 exports.getUserIdByUsername = getUserIdByUsername;
@@ -336,3 +377,4 @@ exports.changePhotoUrl = changePhotoUrl;
 exports.updatePaymentAccount = updatePaymentAccount;
 exports.getTab = getTab;
 exports.closeTab = closeTab;
+exports.getPendingUpdateCount = getPendingUpdateCount;

@@ -30,11 +30,30 @@ const OrderAnalytics = props => {
         subtitle: "2023",
         legend: { position: "none" },
         hAxis: {
-          title: "Drink Orders"
+          title: "Drink Orders",
+          slantedText: true,
+          slantedTextAngle: 45,
+          textStyle: {
+            fontSize: 11
+          }
         },
         vAxis: {
           title: "Amount",
+          textStyle: {
+            fontSize: 11
+          }
         },
+        bar: { groupWidth: "60%" },
+        chartArea: { width: "80%", height: "75%", left: 80, bottom: 100 },
+        titleTextStyle: {
+          fontSize: 14
+        },
+        annotations: {
+          textStyle: {
+            fontSize: 10,
+            bold: true
+          }
+        }
       };
 
     return (

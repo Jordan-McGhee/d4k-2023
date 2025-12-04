@@ -465,6 +465,20 @@ const getLeaderboardStats = async (req, res, next) => {
     });
 };
 
+const getNonDeliveredOrderCount = async (req, res, next) => {
+    const query = "SELECT COUNT(*) as count FROM orders WHERE status != 'delivered' AND voided_at IS NULL";
+    
+    let response;
+    try {
+        response = await pool.query(query);
+    } catch (error) {
+        logger.error(`Error fetching non-delivered order count. ${error}`);
+        return next(new HttpError(`Error fetching non-delivered order count. ${error}`, 500));
+    }
+
+    res.status(200).json({ count: parseInt(response.rows[0].count) });
+};
+
 // Export all controller functions
 exports.createOrder = createOrder;
 exports.getOrder = getOrder;
@@ -480,3 +494,4 @@ exports.getOrdersLeaderboard = getOrdersLeaderboard;
 exports.deleteOrder = deleteOrder;
 exports.unvoidOrder = unvoidOrder;
 exports.getLeaderboardStats = getLeaderboardStats;
+exports.getNonDeliveredOrderCount = getNonDeliveredOrderCount;

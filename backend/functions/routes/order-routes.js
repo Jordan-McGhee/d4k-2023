@@ -31,4 +31,6 @@ router.patch(`/:order_id/unvoid`, orderControllers.unvoidOrder)
 
 router.get("/stats", orderControllers.getLeaderboardStats)
 
+router.get("/count/non-delivered", orderControllers.getNonDeliveredOrderCount)
+
 module.exports = router

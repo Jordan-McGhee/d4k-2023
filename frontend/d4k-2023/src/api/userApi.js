@@ -62,6 +62,10 @@ export const UserApi = () => {
             "PATCH", { 'Content-Type': 'application/json' }, JSON.stringify({ payment_account: paymentAccount }))
     }
 
+    const getPendingUpdateCount = async () => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/pending-updates-count`, "GET")
+    }
+
     return { 
         updateUsername,
         updatePhoneNumber,
@@ -76,5 +80,6 @@ export const UserApi = () => {
         updateUserDonations,
         updateUserPhoto,
         updatePaymentAccount,
+        getPendingUpdateCount,
         isUserApiLoading: isLoading, hasError, clearError }
 }

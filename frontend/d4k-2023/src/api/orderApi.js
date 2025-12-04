@@ -68,6 +68,10 @@ export const OrderApi = () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/stats`, 'GET', { Accept: 'application/json' })
     }
 
+    const getNonDeliveredOrderCount = async () => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/order/count/non-delivered`, 'GET', { Accept: 'application/json' })
+    }
+
     return {
         createOrder,
         deleteOrder,
@@ -82,6 +86,7 @@ export const OrderApi = () => {
         getOrdersAsTabs,
         getOrdersLeaderboard,
         getNewLeaderboard,
+        getNonDeliveredOrderCount,
         isLoadingOrderApi: isLoading, hasError, clearError
     }
 }
