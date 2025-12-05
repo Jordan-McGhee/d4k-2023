@@ -14,15 +14,15 @@ import { faBell, faCameraRetro, faInfoCircle, faPaperPlane, faUser } from '@fort
 const PAYMENT_CONFIG = {
     venmo: {
         baseUrl: 'https://venmo.com/drink4thekids',
-        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 payment-icon venmo'
+        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl mx-2 payment-icon venmo'
     },
     paypal: {
         baseUrl: 'https://paypal.me/jacobwwebber',
-        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 mx-2 payment-icon paypal'
+        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl mx-2 payment-icon paypal'
     },
     cashapp: {
         baseUrl: 'https://cash.app/$wakejebber',
-        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl border-2 payment-icon cashapp'
+        className: 'w-16 h-16 bg-cover bg-center bg-no-repeat inline-flex rounded-2xl payment-icon cashapp'
     }
 };
 
@@ -321,11 +321,11 @@ const BartabNav = () => {
                                     <div className="justify-content-center mt-2">
                                         <div className="flex justify-between px-5">
                                             <Link
-                                                className={PAYMENT_CONFIG.paypal.className}
+                                                className={PAYMENT_CONFIG.venmo.className}
                                                 target="_blank"
-                                                to={paymentUrls.paypal || '#'}
+                                                to={paymentUrls.venmo || '#'}
                                                 rel="noopener noreferrer"
-                                                aria-label="Pay with PayPal"
+                                                aria-label="Pay with Venmo"
                                             />
                                             <Link
                                                 className={PAYMENT_CONFIG.cashapp.className}
@@ -333,13 +333,13 @@ const BartabNav = () => {
                                                 to={paymentUrls.cashapp || '#'}
                                                 rel="noopener noreferrer"
                                                 aria-label="Pay with CashApp"
-                                            />
+                                            />                                            
                                             <Link
-                                                className={PAYMENT_CONFIG.venmo.className}
+                                                className={PAYMENT_CONFIG.paypal.className}
                                                 target="_blank"
-                                                to={paymentUrls.venmo || '#'}
+                                                to={paymentUrls.paypal || '#'}
                                                 rel="noopener noreferrer"
-                                                aria-label="Pay with Venmo"
+                                                aria-label="Pay with PayPal"
                                             />
                                         </div>
                                     </div>
@@ -349,9 +349,16 @@ const BartabNav = () => {
                                 {/* Info Message and Request Tab Update */}
                                 {totalOwed > 0 && (
                                     <>
-                                        <div className="flex flex-col items-center text-center text-xs text-gray-200 my-1 gap-y-1 max-w-72 pt-4 p-3">
-                                            <FontAwesomeIcon icon={faInfoCircle} className="h-6" />
-                                            <p className="font-semibold">Already paid? Send us which account you paid with so we can update your tab.</p>
+                                        <div className="flex justify-center">
+                                            <div className="flex flex-col items-center text-center text-xs text-gray-200 my-1 gap-y-1 max-w-72 pt-4 p-3">
+                                                <FontAwesomeIcon icon={faInfoCircle} className="h-6" />
+                                                <p className="font-semibold">
+                                                    {user?.tab_update_requested 
+                                                        ? "Thank you! We will update your tab shortly." 
+                                                        : "Already paid? Send us which account you paid with so we can update your tab."
+                                                    }
+                                                </p>
+                                            </div>
                                         </div>
 
                                         {/* Request Tab Update */}
