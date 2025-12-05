@@ -19,6 +19,8 @@ router.patch("/:user_id/updatePaymentAccount", userControllers.updatePaymentAcco
 
 router.get("/all", userControllers.getAllUsers)
 
+router.get("/pending-updates-count", userControllers.getPendingUpdateCount)
+
 router.get("/:user_id", userControllers.getUserById)
 
 router.patch("/:user_id", userControllers.updateUsername)
@@ -28,7 +30,5 @@ router.patch("/updatePhoneNumber/:user_id", userControllers.updatePhoneNumber)
 router.get("/:user_id/getTab", userControllers.getTab)
 
 router.post("/:user_id/closeTab", userControllers.closeTab)
-
-router.get("/pending-updates-count", userControllers.getPendingUpdateCount)
 
 module.exports = router
