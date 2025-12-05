@@ -246,7 +246,7 @@ const updatePaymentAccount = async (req, res, next) => {
     const { user_id } = req.params;
     const { payment_account } = req.body;
 
-    const query = "UPDATE users SET payment_account = $1, tab_update_requested = TRUE, updated_at = NOW() WHERE user_id = $2 RETURNING *";
+    const query = "UPDATE users SET payment_account = $1, tab_update_requested = TRUE, tab_update_requested_at = NOW(), updated_at = NOW() WHERE user_id = $2 RETURNING *";
 
     let response;
     try {
@@ -336,7 +336,7 @@ const closeTab = async (req, res, next) => {
     }
 
     // Reset tab_update_requested flag after successfully marking orders as paid
-    const updateUserQuery = "UPDATE users SET tab_update_requested = FALSE, updated_at = NOW() WHERE user_id = $1";
+    const updateUserQuery = "UPDATE users SET tab_update_requested = FALSE, tab_update_requested_at = NULL, updated_at = NOW() WHERE user_id = $1";
     try {
         await pool.query(updateUserQuery, [user_id]);
     } catch (error) {

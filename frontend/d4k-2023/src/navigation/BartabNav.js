@@ -37,6 +37,7 @@ const BartabNav = () => {
     const [uploadError, setUploadError] = useState(null);
     const [showTabUpdateRequest, setShowTabUpdateRequest] = useState(false);
     const [paymentAccount, setPaymentAccount] = useState('');
+    const [isSubmittingPaymentAccount, setIsSubmittingPaymentAccount] = useState(false);
     
     const location = useLocation();
     const { getTab, updateUserPhoto, getUserById, updatePaymentAccount } = UserApi();
@@ -272,109 +273,53 @@ const BartabNav = () => {
 
                                 {/* Tab Summary */}
                                 {tabData && (
-                                    <div className="space-y-2">
-                                        <p className="text-l flex justify-between">
+                                    <div className="border-2 border-white rounded-2xl p-3 space-y-2 text-sm">
+                                        <p className="text-l flex justify-between font-semibold">
                                             Drinks Ordered:
                                             <span className="uppercase font-bold">
                                                 {tabData.tab.quantity}
                                             </span>
                                         </p>
 
-                                        <p className="text-l flex justify-between">
+                                        <p className="text-l flex justify-between font-semibold">
                                             Drinks Total:
                                             <span className="uppercase font-bold">
                                                 ${tabData.tab.drink_cost_total}
                                             </span>
                                         </p>
 
-                                        <p className="text-l flex justify-between">
+                                        <p className="text-l flex justify-between font-semibold">
                                             Additional Donation:
                                             <span className="uppercase font-bold">
                                                 ${tabData.tab.tips_total}
                                             </span>
                                         </p>
 
-                                        <p className="text-2xl flex justify-between border-t-2 pt-4">
-                                            Total Due:
-                                            <span className="uppercase font-bold">
+                                        <p className="text-2xl flex justify-between border-t-2 border-white pt-3 mt-2">
+                                            <span className="font-bold text-white">Total Due:</span>
+                                            <span className="uppercase font-bold text-emerald-400">
                                                 ${totalOwed}
                                             </span>
                                         </p>
                                     </div>
                                 )}
-
-                                
-                                {/* Info Message */}
-                                <div className="flex flex-col items-center text-center text-sm text-white my-4 gap-y-2 max-w-72">
-                                    <FontAwesomeIcon icon={faInfoCircle} className="h-8" />
-                                    <p>Click a link below to donate. Please be patient as we close your tab. Request an update or visit the bar for faster results.</p>
+                           {/* Total Donations */}
+                                <div className="pt-4">
+                                    <div className="text-lg font-bungee text-center p-3">
+                                        <span className="text-md font-semibold mb-1 uppercase tracking-wide">Your Donations So Far: </span>
+                                        <span className="text-2xl font-bold">
+                                            ${tabData?.tab?.total_donated || 0}
+                                        </span>
+                                    </div>
                                 </div>
 
-                                {/* Request Tab Update */}
-                                {totalOwed > 0 && (
-                                    <div className="flex justify-center my-4">
-                                        {user?.tab_update_requested ? (
-                                            <div className="rounded-full font-bold text-xs text-white bg-transparent border-1 border-gray-100 shadow-md px-4 py-2 flex items-center">
-                                                ✓ Update Requested
-                                            </div>
-                                        ) : !showTabUpdateRequest ? (
-                                            <Button 
-                                                className="rounded-full font-bold text-xs text-white bg-emerald-600 shadow-md hover:bg-blue-600" 
-                                                size="sm" 
-                                                rounded="full"
-                                                onPress={() => {
-                                                    setShowTabUpdateRequest(true);
-                                                    setTimeout(() => paymentAccountInputRef.current?.focus(), 0);
-                                                }}
-                                            >
-                                                Request Update <FontAwesomeIcon icon={faBell}></FontAwesomeIcon>
-                                            </Button>
-                                        ) : (
-                                            <div className="flex w-full justify-center items-center">
-                                                <Input
-                                                    ref={paymentAccountInputRef}
-                                                    placeholder="venmo, paypal, or $cashtag"
-                                                    variant="bordered"
-                                                    radius="full"
-                                                    size="sm"
-                                                    value={paymentAccount}
-                                                    onValueChange={setPaymentAccount}
-                                                    className="w-48"
-                                                    classNames={{
-                                                        input: "text-black",
-                                                        label: "text-sm text-black group-data-[filled=true]:-translate-y-4",
-                                                        trigger: "min-h-unit-16",
-                                                        listboxWrapper: "max-h-[400px]",
-                                                        inputWrapper: ["pr-0", "bg-white", "rounded-r-none"],
-                                                        errorMessage: "italic ml-4"
-                                                    }}
-                                                />
-                                                <Button 
-                                                    radius="full"
-                                                    classNames={{ base: "rounded-l-none" }}
-                                                    className="rounded-l-none font-bold text-xs text-white bg-emerald-600 shadow-md hover:bg-emerald-700" 
-                                                    size="sm"
-                                                    onPress={async () => {
-                                                        try {
-                                                            await updatePaymentAccount(user?.user_id, paymentAccount);
-                                                            setPaymentAccount('');
-                                                            setShowTabUpdateRequest(false);
-                                                        } catch (error) {
-                                                            console.error('Error updating payment account:', error);
-                                                        }
-                                                    }}
-                                                >
-                                                    Submit <FontAwesomeIcon icon={faPaperPlane} />
-                                                </Button>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-
+                                <div className="flex flex-col items-center text-center font-bungee text-sm text-white mt-6"> 
+                                    Donate on your app of choice
+                                </div>
                                 {/* Payment Links */}
                                 <div>
-                                    <div className="justify-content-center mt-6">
-                                        <div className="flex justify-between">
+                                    <div className="justify-content-center mt-2">
+                                        <div className="flex justify-between px-5">
                                             <Link
                                                 className={PAYMENT_CONFIG.paypal.className}
                                                 target="_blank"
@@ -400,15 +345,77 @@ const BartabNav = () => {
                                     </div>
                                 </div>
 
-                                {/* Total Donations */}
-                                <div className="pt-4">
-                                    <div className="text-lg font-bungee text-center">
-                                        Total Donations so far:
-                                        <span className="pl-2 text-emerald-400">
-                                            ${tabData?.tab?.total_donated || 0}
-                                        </span>
-                                    </div>
-                                </div>
+
+                                {/* Info Message and Request Tab Update */}
+                                {totalOwed > 0 && (
+                                    <>
+                                        <div className="flex flex-col items-center text-center text-xs text-gray-200 my-1 gap-y-1 max-w-72 pt-4 p-3">
+                                            <FontAwesomeIcon icon={faInfoCircle} className="h-6" />
+                                            <p className="font-semibold">Already paid? Send us which account you paid with so we can update your tab.</p>
+                                        </div>
+
+                                        {/* Request Tab Update */}
+                                        <div className="flex justify-center my-1">
+                                            {user?.tab_update_requested ? (
+                                                <div className="rounded-full font-bold text-sm text-white bg-transparent border-2 border-white shadow-md px-4 py-2 flex items-center gap-2">
+                                                    ✓ Update Requested
+                                                </div>
+                                            ) : !showTabUpdateRequest ? (
+                                                <Button 
+                                                    className="rounded-full font-bold text-sm text-white bg-emerald-600 shadow-md hover:bg-emerald-700 border-2 border-white" 
+                                                    size="sm" 
+                                                    rounded="full"
+                                                    onPress={() => {
+                                                        setShowTabUpdateRequest(true);
+                                                        setTimeout(() => paymentAccountInputRef.current?.focus(), 0);
+                                                    }}
+                                                >
+                                                    Request Update <FontAwesomeIcon icon={faBell}></FontAwesomeIcon>
+                                                </Button>
+                                            ) : (
+                                                <div className="flex w-full justify-center items-center ">
+                                                    <Input
+                                                        ref={paymentAccountInputRef}
+                                                        placeholder="Enter venmo, cashapp, or paypal"
+                                                        variant="bordered"
+                                                        size="sm"
+                                                        value={paymentAccount}
+                                                        onValueChange={setPaymentAccount}
+                                                        className="flex-1 rounded-none"
+                                                        classNames={{
+                                                            input: "text-black text-xs font-semibold rounded-none",
+                                                            label: "text-xs text-black group-data-[filled=true]:-translate-y-4",
+                                                            trigger: "min-h-unit-16",
+                                                            listboxWrapper: "max-h-[400px]",
+                                                            inputWrapper: ["bg-white", "rounded-2xl", "rounded-r-none"],
+                                                            errorMessage: "italic ml-4"
+                                                        }}
+                                                    />
+                                                    <Button 
+                                                        className="font-bold text-sm text-white bg-emerald-600 rounded-r-full rounded-l-none shadow-md hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                                        size="sm"
+                                                        isLoading={isSubmittingPaymentAccount}
+                                                        isDisabled={isSubmittingPaymentAccount}
+                                                        onPress={async () => {
+                                                            setIsSubmittingPaymentAccount(true);
+                                                            try {
+                                                                await updatePaymentAccount(user?.user_id, paymentAccount);
+                                                                setPaymentAccount('');
+                                                                setShowTabUpdateRequest(false);
+                                                            } catch (error) {
+                                                                console.error('Error updating payment account:', error);
+                                                            } finally {
+                                                                setIsSubmittingPaymentAccount(false);
+                                                            }
+                                                        }}
+                                                    >
+                                                        Send <FontAwesomeIcon icon={faPaperPlane} className="ml-1" />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
