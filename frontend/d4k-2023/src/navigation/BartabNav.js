@@ -8,7 +8,7 @@ import { ScrollShadow, Button, Input } from "@nextui-org/react";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../firebase/firebase"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBell, faCameraRetro, faInfoCircle, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faBell, faCameraRetro, faInfoCircle, faList, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
 
 // Payment URL configurations
 const PAYMENT_CONFIG = {
@@ -239,28 +239,38 @@ const BartabNav = () => {
                                 </div>
 
                                 {/* Header */}
-                                <div>
-                                    <div className="font-bungee text-3xl">
-                                        <span className="fas fa-cocktail"></span>
-                                        BAR TAB
-                                        <span className="fas fa-glass-whiskey"></span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="font-bungee text-xl mb-4" id="bar-tab-name">
+                                <div className="mt-4 mb-6 pb-4">
+                                    <div className="font-bungee text-2xl" id="bar-tab-name">
                                         {user.username}
+                                    </div>
+                                    <div class="font-bungee">
+                                        <span className="text-sm font-bungee font-semibold mb-1 uppercase tracking-wide">Donations So Far: </span>
+                                        <span className="text-sm font-bold">
+                                            ${tabData?.tab?.total_donated || 0}
+                                        </span>
                                     </div>
                                 </div>
 
-                                {/* Order History */}
+                                {/* Tab Summary */}
+                                {tabData && (
+                                    
+                                    <div className="border-2 border-white rounded-2xl p-3 space-y-1 text-sm mt-6">
+                                        <div>
+                                            <div className="font-bungee text-3xl">
+                                                <span className="fas fa-cocktail"></span>
+                                                BAR TAB
+                                                <span className="fas fa-glass-whiskey"></span>
+                                            </div>
+                                        </div>
+                                                                       {/* Order History */}
                                 {orderHistoryList.length > 0 && (
-                                    <div className="my-4 text-lg">
+                                    <div className="my-1 text-lg">
                                         <Button 
-                                            className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md" 
+                                            className="rounded-full font-bold text-xs text-slate-100 py-0 my-0 bg-red-400 shadow-md h-5" 
                                             size="sm" 
                                             onPress={() => setShowOrderHistory(!showOrderHistory)}
                                         >
-                                            {showOrderHistory ? 'Hide Orders' : 'Show Orders'}
+                                            {showOrderHistory ? 'Hide Orders' : 'Show Orders'} <FontAwesomeIcon icon={faList} className=""></FontAwesomeIcon>
                                         </Button>
 
                                         {showOrderHistory && (
@@ -270,10 +280,6 @@ const BartabNav = () => {
                                         )}
                                     </div>
                                 )}
-
-                                {/* Tab Summary */}
-                                {tabData && (
-                                    <div className="border-2 border-white rounded-2xl p-3 space-y-2 text-sm">
                                         <p className="text-l flex justify-between font-semibold">
                                             Drinks Ordered:
                                             <span className="uppercase font-bold">
@@ -303,15 +309,7 @@ const BartabNav = () => {
                                         </p>
                                     </div>
                                 )}
-                           {/* Total Donations */}
-                                <div className="pt-4">
-                                    <div className="text-lg font-bungee text-center p-3">
-                                        <span className="text-md font-semibold mb-1 uppercase tracking-wide">Your Donations So Far: </span>
-                                        <span className="text-2xl font-bold">
-                                            ${tabData?.tab?.total_donated || 0}
-                                        </span>
-                                    </div>
-                                </div>
+
 
                                 <div className="flex flex-col items-center text-center font-bungee text-sm text-white mt-6"> 
                                     Donate on your app of choice
