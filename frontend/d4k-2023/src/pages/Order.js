@@ -424,6 +424,8 @@ const Order = () => {
                             />
                         )}
                     </CardHeader>
+                       <div className="flex justify-end mb-3">
+                </div>
                     <CardBody>
                         {isLoading && <Spinner size="lg" color="success" />}
                         {!isLoading && errorMessage && 
@@ -504,7 +506,7 @@ const Order = () => {
                             <div>
                                 <Input
                                     isDisabled={isLoadingUserData || isUserApiLoading}
-                                    className="pb-5"
+                                    className={isUsernameTaken ? "pb-7" : "pb-5"}
                                     classNames={{
                                         label: `text-xl group-data-[filled=true]:-translate-y-2 ${isInvalidUsername ? '-translate-y-2.5' : ''}`,
                                         trigger: "min-h-unit-16",
@@ -523,7 +525,7 @@ const Order = () => {
                                     label="Your Full Name"
                                     isInvalid={(isInvalidUsername && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
                                     onValueChange={setUsername}
-                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? (!username.includes(' ') ? "Please provide first and last name" : "We'll need your full name, nutcracker.") : isUsernameTaken ? "This name is already taken" : false}
+                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? (!username.includes(' ') ? "Please provide first and last name" : "We'll need your full name, nutcracker.") : isUsernameTaken ? "This name is taken. Click 'Account Help' to recover your account" : false}
                                 />
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {
@@ -544,7 +546,7 @@ const Order = () => {
                         }
                         {!hasStoredUserId &&
                                 <Input
-                                    className="pb-5"
+                                    className={isPhoneNumberTaken ? "pb-7" : "pb-5"}
                                     classNames={{
                                         label: `text-xl group-data-[filled=true]:-translate-y-2 ${isInvalidPhoneNumber ? '-translate-y-2.5' : ''}`,
                                         trigger: "min-h-unit-16",
@@ -564,7 +566,7 @@ const Order = () => {
                                     label="Your Phone Number"
                                     isInvalid={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken}
                                     onValueChange={setPhoneNumber}
-                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) ? "We'll need a valid number" : isPhoneNumberTaken ? "This phone number is taken" : false}
+                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) ? "We'll need a valid number" : isPhoneNumberTaken ? "Phone number is taken. Click 'Account Help' to recover your account." : false}
                                 />
                         }     
                         {hasStoredUserId && !showEditPhoneNumberInput &&
@@ -917,6 +919,15 @@ const Order = () => {
                     </CardFooter>}
 
                     <div className="p-2 text-xs text-center italic">By providing your phone number you agree to receive informational text messages from D4K regarding your order. Frequency will vary. Msg and data rates may apply. Reply STOP to cancel</div>
+                    {!hasStoredUserId && <Button
+                        isIconOnly
+                        size="sm"
+                        className="fixed bottom-4 left-4 rounded-full bg-emerald-600 h-8 w-20 text-xs text-6 text-white"
+                        onPress={() => navigate('/request-recovery')}
+                        title="Recover your account"
+                    >
+                        Account Help
+                    </Button>}
                 </Card>
             </form>
         </>

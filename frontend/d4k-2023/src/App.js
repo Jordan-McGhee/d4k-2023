@@ -26,6 +26,8 @@ const AdminUsers = React.lazy(() => import("./pages/AdminUsers"))
 const AdminAnalytics = React.lazy(() => import("./pages/AdminAnalytics"))
 const AdminInventory = React.lazy(() => import("./pages/AdminInventory"))
 const NewLeaderboard = React.lazy(() => import("./pages/NewLeaderboard"))
+const Recover = React.lazy(() => import("./pages/Recover"))
+const RequestRecovery = React.lazy(() => import("./pages/RequestRecovery"))
 const NotFound = React.lazy(() => import("./pages/NotFound"))
 
 function App() {
@@ -55,6 +57,10 @@ function App() {
 
       {/* jumbotron */}
       <Route path="/jumbotron" element={<NewLeaderboard />} />
+
+      {/* RECOVERY PAGES */}
+      <Route path="/recover/:token" element={<Recover />} />
+      <Route path="/request-recovery" element={<RequestRecovery />} />
 
       {/* NOT FOUND LAYOUT */}
       <Route element={<NotFoundLayout />}>

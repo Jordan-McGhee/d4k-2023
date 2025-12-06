@@ -246,7 +246,7 @@ const updatePaymentAccount = async (req, res, next) => {
     const { user_id } = req.params;
     const { payment_account } = req.body;
 
-    const query = "UPDATE users SET payment_account = $1, tab_update_requested = TRUE, tab_update_requested_at = NOW(), updated_at = NOW() WHERE user_id = $2 RETURNING *";
+    const query = "UPDATE users SET payment_account = $1, tab_update_requested = TRUE, updated_at = NOW() WHERE user_id = $2 RETURNING *";
 
     let response;
     try {
@@ -336,7 +336,7 @@ const closeTab = async (req, res, next) => {
     }
 
     // Reset tab_update_requested flag after successfully marking orders as paid
-    const updateUserQuery = "UPDATE users SET tab_update_requested = FALSE, tab_update_requested_at = NULL, updated_at = NOW() WHERE user_id = $1";
+    const updateUserQuery = "UPDATE users SET tab_update_requested = FALSE, updated_at = NOW() WHERE user_id = $1";
     try {
         await pool.query(updateUserQuery, [user_id]);
     } catch (error) {
@@ -364,6 +364,76 @@ const getPendingUpdateCount = async (req, res, next) => {
     res.status(200).json({ count: parseInt(response.rows[0].count) });
 };
 
+const crypto = require('crypto');
+
+// Send recovery SMS
+const sendRecoverySms = async (req, res, next) => {
+    const { phone_number } = req.body;
+
+    // Find user by phone number
+    const findUserQuery = "SELECT user_id FROM users WHERE phone_number = $1";
+
+    let user;
+    try {
+        user = await pool.query(findUserQuery, [phone_number]);
+    } catch (error) {
+        logger.error(`Error finding user by phone ${phone_number}`, error);
+        return next(new HttpError(`Error processing recovery request`, 500));
+    }
+
+    // Don't reveal if phone exists (security best practice)
+    if (user.rows.length === 0) {
+        return res.status(200).json({ message: "If a matching account exists, recovery SMS will be sent" });
+    }
+
+    const userId = user.rows[0].user_id;
+    const recoveryToken = crypto.randomBytes(32).toString('hex');
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    // Store token in database
+    const updateQuery = "UPDATE users SET recovery_token = $1, recovery_token_expiry = $2 WHERE user_id = $3";
+
+    try {
+        await pool.query(updateQuery, [recoveryToken, tokenExpiry, userId]);
+    } catch (error) {
+        logger.error(`Error storing recovery token for user #${userId}`, error);
+        return next(new HttpError(`Error processing recovery request`, 500));
+    }
+
+    // Send SMS
+    const frontendUrl = process.env.FRONTEND_URL || 'https://drink4thekids.com';
+    const recoveryUrl = `${frontendUrl}/recover/${recoveryToken}`;
+    const smsMessage = `🍹 Recover your Drink 4 the Kids account:\n${recoveryUrl}\n\nThis link expires in 24 hours.`;
+
+    try {
+        await twilioControllers.sendMessage(phone_number, smsMessage);
+        logger.info(`Recovery SMS sent to ${phone_number}`);
+    } catch (error) {
+        logger.warn(`Warning: Could not send recovery SMS to ${phone_number}`, error);
+        // Don't fail the request if SMS fails
+    }
+
+    res.status(200).json({ message: "If a matching account exists, recovery SMS will be sent" });
+};
+
+// Verify recovery token and return userId
+const verifyRecoveryToken = async (req, res, next) => {
+    const { token } = req.params;
+
+    const query = "SELECT user_id FROM users WHERE recovery_token = $1 AND recovery_token_expiry > NOW()";
+
+    try {
+        const response = await pool.query(query, [token]);
+        if (response.rows.length === 0) {
+            return next(new HttpError(`Invalid or expired recovery token`, 400));
+        }
+        res.status(200).json({ user_id: response.rows[0].user_id });
+    } catch (error) {
+        logger.error(`Error verifying recovery token`, error);
+        return next(new HttpError(`Error verifying recovery token`, 500));
+    }
+};
+
 exports.createUser = createUser;
 exports.createUserWithPhone = createUserWithPhone;
 exports.getUserIdByUsername = getUserIdByUsername;
@@ -378,3 +448,5 @@ exports.updatePaymentAccount = updatePaymentAccount;
 exports.getTab = getTab;
 exports.closeTab = closeTab;
 exports.getPendingUpdateCount = getPendingUpdateCount;
+exports.sendRecoverySms = sendRecoverySms;
+exports.verifyRecoveryToken = verifyRecoveryToken;

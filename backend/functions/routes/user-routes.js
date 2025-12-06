@@ -21,6 +21,10 @@ router.get("/all", userControllers.getAllUsers)
 
 router.get("/pending-updates-count", userControllers.getPendingUpdateCount)
 
+router.post("/recovery/send-sms", userControllers.sendRecoverySms)
+
+router.get("/recovery/verify/:token", userControllers.verifyRecoveryToken)
+
 router.get("/:user_id", userControllers.getUserById)
 
 router.patch("/:user_id", userControllers.updateUsername)

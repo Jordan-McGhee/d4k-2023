@@ -66,6 +66,15 @@ export const UserApi = () => {
         return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/pending-updates-count`, "GET")
     }
 
+    const sendRecoverySms = async (phoneNumber) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/recovery/send-sms`, 
+            "POST", { 'Content-Type': 'application/json' }, JSON.stringify({ phone_number: phoneNumber }))
+    }
+
+    const verifyRecoveryToken = async (token) => {
+        return await sendRequest(`${process.env.REACT_APP_BACKEND_URL}/user/recovery/verify/${token}`, "GET")
+    }
+
     return { 
         updateUsername,
         updatePhoneNumber,
@@ -81,5 +90,7 @@ export const UserApi = () => {
         updateUserPhoto,
         updatePaymentAccount,
         getPendingUpdateCount,
+        sendRecoverySms,
+        verifyRecoveryToken,
         isUserApiLoading: isLoading, hasError, clearError }
 }
