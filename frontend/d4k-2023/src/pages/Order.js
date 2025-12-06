@@ -51,9 +51,17 @@ const Order = () => {
     const [searchParams] = useSearchParams();
     const [usernameFocused, setUsernameFocused] = useState(false)
     const [phoneNumberFocused, setPhoneNumberFocused] = useState(false)
-    const onUsernameFocus = () => setUsernameFocused(true)
+    const [usernameEverFocused, setUsernameEverFocused] = useState(false)
+    const [phoneNumberEverFocused, setPhoneNumberEverFocused] = useState(false)
+    const onUsernameFocus = () => {
+        setUsernameFocused(true)
+        setUsernameEverFocused(true)
+    }
     const onUsernameBlur = () => setUsernameFocused(false)
-    const onPhoneNumberFocus = () => setPhoneNumberFocused(true)
+    const onPhoneNumberFocus = () => {
+        setPhoneNumberFocused(true)
+        setPhoneNumberEverFocused(true)
+    }
     const onPhoneNumberBlur = () => setPhoneNumberFocused(false)
     const [customDrinkDescription, setCustomDrinkDescription] = useState('')
     const [customDrinkDescriptionFocused, setCustomDrinkDescriptionFocused] = useState(false)
@@ -61,6 +69,7 @@ const Order = () => {
     const onCustomDrinkDescriptionBlur = () => setCustomDrinkDescriptionFocused(false)
     const [isOrderingEnabled, setIsOrderingEnabled] = useState(false)
     const [showNotPartyTimeModal, setShowNotPartyTimeModal] = useState(false)
+    const [showAgeModal, setShowAgeModal] = useState(false)
     const [optInSelected, setOptInSelected] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
     const customDrinkDescriptionRef = useRef(null);
@@ -176,6 +185,13 @@ const Order = () => {
 
     }, [])
 
+    useEffect(() => {
+        // Check if age verification has been completed
+        const ageVerified = localStorage.getItem('ageVerificationClicked');
+        if (!ageVerified) {
+            setShowAgeModal(true);
+        }
+    }, [])
 
     useEffect(() => {
         if (showCustomDonation) setDonationAmount(0)
@@ -383,8 +399,42 @@ const Order = () => {
         }
     }
 
+    const handleAgeVerificationYes = () => {
+        localStorage.setItem('ageVerificationClicked', 'true');
+        setShowAgeModal(false);
+    };
+
+    const handleAgeVerificationNo = () => {
+        navigate('/');
+    };
+
     return (
         <>
+            <Modal isOpen={showAgeModal} backdrop="opaque" isDismissable={false} isKeyboardDismissDisabled={true} placement="center">
+                <ModalContent>
+                    <ModalHeader className="flex flex-col gap-1 text-center font-fugaz text-emerald-600">Age Verification</ModalHeader>
+                    <ModalBody>
+                        <p className="text-center text-lg font-semibold">Are you over the age of 21?</p>
+                    </ModalBody>
+                    <ModalFooter className="justify-center gap-4">
+                        <Button 
+                            color="danger" 
+                            variant="light" 
+                            onPress={handleAgeVerificationNo}
+                            className="font-fugaz"
+                        >
+                            No
+                        </Button>
+                        <Button 
+                            color="success" 
+                            onPress={handleAgeVerificationYes}
+                            className="font-fugaz text-white"
+                        >
+                            Yes
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             <Modal placement="center" isOpen={showNotPartyTimeModal} onClose={() => setShowNotPartyTimeModal(false)}>
                 <ModalContent>
                     {(onClose) => (
@@ -512,6 +562,7 @@ const Order = () => {
                                         trigger: "min-h-unit-16",
                                         listboxWrapper: "max-h-[400px]",
                                         inputWrapper: "bg-white",
+                                        input: "placeholder:italic",
                                         errorMessage: `${username ? "absolute italic ml-3.5 mb-3 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
                                     }}
                                     maxLength={30}
@@ -521,11 +572,12 @@ const Order = () => {
                                     value={username}
                                     variant="bordered"
                                     radius="full"
-                                    color={(isInvalidUsername && !usernameFocused && !isUserApiLoading) || isUsernameTaken ? "danger" : "success"}
+                                    color={(isInvalidUsername && usernameEverFocused && !usernameFocused && !isUserApiLoading) || isUsernameTaken ? "danger" : "success"}
                                     label="Your Full Name"
-                                    isInvalid={(isInvalidUsername && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
+                                    placeholder={isInvalidUsername && usernameEverFocused ? "" : "Help us find you at the bar"}
+                                    isInvalid={(isInvalidUsername && usernameEverFocused && !usernameFocused && !isLoadingUserData) || isUsernameTaken}
                                     onValueChange={setUsername}
-                                    errorMessage={(isInvalidUsername && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? (!username.includes(' ') ? "Please provide first and last name" : "We'll need your full name, nutcracker.") : isUsernameTaken ? "This name is taken. Click 'Account Help' to recover your account" : false}
+                                    errorMessage={(isInvalidUsername && usernameEverFocused && !usernameFocused && !isLoadingUserData && !isUserApiLoading) ? (!username.includes(' ') ? "Please provide first and last name" : "We'll need your full name, nutcracker.") : isUsernameTaken ? "This name is taken. Click 'Account Help' to recover your account" : false}
                                 />
                                 {!usernameFocused &&
                                     <div className="absolute right-10 top-9"> {
@@ -552,6 +604,7 @@ const Order = () => {
                                         trigger: "min-h-unit-16",
                                         listboxWrapper: "max-h-[400px]",
                                         inputWrapper: "bg-white",
+                                        input: "placeholder:italic",
                                         errorMessage: `${phoneNumber ? "absolute italic ml-3.5 mb-3 text-xs" : "absolute italic bottom-2 ml-3.5 mb-1.5 text-xs"}`
                                     }}
                                     maxLength={10}
@@ -562,11 +615,12 @@ const Order = () => {
                                     value={phoneNumber}
                                     variant="bordered"
                                     radius="full"
-                                    color={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken ? "danger" : "success"}
+                                    placeholder={isInvalidPhoneNumber && phoneNumberEverFocused ? "" : "We only send you order updates"}
+                                    color={(isInvalidPhoneNumber && phoneNumberEverFocused && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken ? "danger" : "success"}
                                     label="Your Phone Number"
-                                    isInvalid={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken}
+                                    isInvalid={(isInvalidPhoneNumber && phoneNumberEverFocused && !phoneNumberFocused && !isUserApiLoading) || isPhoneNumberTaken}
                                     onValueChange={setPhoneNumber}
-                                    errorMessage={(isInvalidPhoneNumber && !phoneNumberFocused && !isUserApiLoading) ? "We'll need a valid number" : isPhoneNumberTaken ? "Phone number is taken. Click 'Account Help' to recover your account." : false}
+                                    errorMessage={(isInvalidPhoneNumber && phoneNumberEverFocused && !phoneNumberFocused && !isUserApiLoading) ? "We'll need a valid number" : isPhoneNumberTaken ? "Phone number is taken. Click 'Account Help' to recover your account." : false}
                                 />
                         }     
                         {hasStoredUserId && !showEditPhoneNumberInput &&

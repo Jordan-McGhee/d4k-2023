@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import "./MobileNav.css"
 import { NavLink } from "react-router-dom";
@@ -6,6 +6,18 @@ import { faCandyCane, faCocktail, faGift, faIgloo, faPeopleGroup, faMedal } from
 
 const MainNav = (props) => {
     const [isChecked, setIsChecked] = useState(false);
+
+    // Prevent scrolling when menu is open
+    useEffect(() => {
+        if (isChecked) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isChecked]);
     const isLocal = window.location.hostname.includes("localhost") || window.location.hostname.includes(`192.168.86`)
     const isPartyDate = new Date() >= new Date('12/12/2025')
     const showOrderingNav = isLocal || isPartyDate

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import { Button, Spinner } from "@nextui-org/react";
+import { Button, Spinner, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 import MenuList from "../components/menu/MenuList";
 import MenuItem from "../components/menu/MenuItem";
 import { useMetaTags } from "../hooks/useMetaTags";
@@ -27,10 +28,12 @@ const CUSTOM_DRINK_CONFIG = {
 
 const Menu = () => {
     const { getDrinksAdmin } = DrinkApi();
+    const navigate = useNavigate();
 
     const [allDrinks, setAllDrinks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showAgeModal, setShowAgeModal] = useState(false);
 
     // Memoized categorized drinks to avoid re-filtering on every render
     const categorizedDrinks = useMemo(() => {
@@ -67,8 +70,26 @@ const Menu = () => {
         
         getMenu();
     }, []);
+
+    useEffect(() => {
+        // Check if age verification has been completed
+        const ageVerified = localStorage.getItem('ageVerificationClicked');
+        if (!ageVerified) {
+            setShowAgeModal(true);
+        }
+    }, []);
+    
     // Common button styles for navigation
     const navButtonStyles = "bg-emerald-600 text-slate-100 focus:text-emerald-600 focus:bg-gray-300 hover:text-emerald-600 text-lg font-fugaz transition-colors duration-200";
+
+    const handleAgeVerificationYes = () => {
+        localStorage.setItem('ageVerificationClicked', 'true');
+        setShowAgeModal(false);
+    };
+
+    const handleAgeVerificationNo = () => {
+        navigate('/');
+    };
 
     if (error) {
         return (
@@ -89,6 +110,31 @@ const Menu = () => {
 
     return (
         <div className="max-w-md m-auto">
+            <Modal isOpen={showAgeModal} backdrop="opaque" isDismissable={false} isKeyboardDismissDisabled={true} placement="center">
+                <ModalContent>
+                    <ModalHeader className="flex flex-col gap-1 text-center font-bungee text-emerald-600">Age Verification</ModalHeader>
+                    <ModalBody>
+                        <p className="text-center text-lg font-semibold">Are you over the age of 21?</p>
+                    </ModalBody>
+                    <ModalFooter className="justify-center gap-4">
+                        <Button 
+                            color="danger" 
+                            variant="light" 
+                            onPress={handleAgeVerificationNo}
+                            className="font-fugaz"
+                        >
+                            No
+                        </Button>
+                        <Button 
+                            color="success" 
+                            onPress={handleAgeVerificationYes}
+                            className="font-fugaz text-white"
+                        >
+                            Yes
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
             {/* Navigation Header */}
             <nav 
                 className="flex m-auto justify-between text-white fixed top-0 inset-x-0 px-1 py-4 w-full text-sm z-10 backdrop-blur-md bg-slate-500/80 max-w-md border-b-2 border-emerald-500"

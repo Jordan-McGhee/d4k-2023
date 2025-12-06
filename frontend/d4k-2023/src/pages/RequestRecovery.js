@@ -43,7 +43,7 @@ const RequestRecovery = () => {
                         <div className="text-center">
                             <h1 className="text-white text-3xl font-bungee mb-2">Recover Account</h1>
                             <p className="text-gray-300 font-semibold">
-                                Enter your phone number to receive a recovery link via text
+                                Have you already ordered? <br/> Enter your phone number to receive a recovery link via text
                             </p>
                         </div>
 

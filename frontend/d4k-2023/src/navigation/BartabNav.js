@@ -169,6 +169,18 @@ const BartabNav = () => {
         }
     }, [file]);
 
+    // Prevent scrolling when menu is open
+    useEffect(() => {
+        if (isChecked) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isChecked]);
+
     const handleTabUpdateRequest = () => {
         // TODO: Add API call to submit tab update request with user info and venmo account
         console.log('Tab update requested:', {
@@ -243,7 +255,7 @@ const BartabNav = () => {
                                     <div className="font-bungee text-2xl" id="bar-tab-name">
                                         {user.username}
                                     </div>
-                                    <div class="font-bungee">
+                                    <div className="font-bungee">
                                         <span className="text-sm font-bungee font-semibold mb-1 uppercase tracking-wide">Donations So Far: </span>
                                         <span className="text-sm font-bold">
                                             ${tabData?.tab?.total_donated || 0}
