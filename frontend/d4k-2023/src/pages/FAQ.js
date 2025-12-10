@@ -24,15 +24,15 @@ const FAQ = () => {
             question: 'What Charities?',
             content: (
                 <>
-                    The Nicholas House shelters homeless families and assists them in the transition 
-                    from homelessness to self-sufficiency. True Change equips underserved youth with 
+                    The Nicholas House shelters homeless families and assists them in the transition
+                    from homelessness to self-sufficiency. True Change equips underserved youth with
                     tools for character development, emotional intelligence, and career readiness.
                 </>
             ),
             footer: (
-                <Link 
-                    className={styles.highlightText} 
-                    href="https://nicholashouse.org/about-us" 
+                <Link
+                    className={styles.highlightText}
+                    href="https://nicholashouse.org/about-us"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
@@ -44,27 +44,30 @@ const FAQ = () => {
             id: 'donate',
             question: 'How Do We Donate?',
             content: (
-                <>
-                    Order drinks on this site at the party! Press the{' '}
-                    <span className={styles.boldText}>Pay Tab</span> button where you can use 
-                    your preferred payment method to complete your donation.
-                    <br />
-                    <span className={styles.companyMatch}>
+                <div className="flex flex-col space-y-2">
+                    <p>
+                        Order drinks on this site at the party! Press the{' '}
+                        <span className={styles.boldText}>Pay Tab</span> button where you can use
+                        your preferred payment method to complete your donation.
+                    </p>
+                    <p className={styles.companyMatch}>
                         We will triple your donation with a company match!
-                    </span>
+                    </p>
                     <div className="flex justify-center my-4">
-                        Visit the {' '}
-                        <Link 
-                            className={styles.highlightText + ' ml-1'} 
-                            href="/leaderboard" 
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                             Leaderboard
-                        </Link>{' '}
+                        <p>
+                            Visit the
+                            <Link
+                                className={styles.highlightText + ' ml-1'}
+                                href="/leaderboard"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Leaderboard
+                            </Link>{' '}
+                            to see the top donors.
+                        </p>
                     </div>
-                    to see the top donors.
-                </>
+                </div>
             )
         },
         {
@@ -82,9 +85,9 @@ const FAQ = () => {
             question: 'Can I BYOB?',
             content: (
                 <>
-                    Keep it to a minimum.
+                    Please keep it to a minimum.
                     <br />
-                    We encourage you to swing by the bar to get served something worthy of your donations
+                    We encourage you to swing by the bar to get served something worthy of your donations. This is for charity after all!
                 </>
             )
         },
@@ -95,8 +98,8 @@ const FAQ = () => {
                 <>
                     <span className={styles.warningText}>
                         We highly recommend{' '}
-                        <Link 
-                            href="https://www.uber.com" 
+                        <Link
+                            href="https://www.uber.com"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="underline"
@@ -104,25 +107,25 @@ const FAQ = () => {
                             Uber
                         </Link>
                         {' '}or{' '}
-                        <Link 
-                            href="https://www.lyft.com" 
+                        <Link
+                            href="https://www.lyft.com"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="underline"
                         >
-                            Lyft. 
+                            Lyft.
                         </Link>
                     </span>
-                    There is limited stree parking available, so consider carpooling and a DD. <b>Please drink responsibly.</b>
+                    There is limited street parking available, so consider carpooling and a DD. <b>Please drink responsibly.</b>
 
                     <div className="mt-4">
-                        <Button 
-                            size="md" 
+                        <Button
+                            size="md"
                             className="bg-emerald-600 text-sm py-3 border rounded-full font-fugaz text-white hover:bg-emerald-700 transition-colors"
                         >
-                            <Link 
-                                isExternal 
-                                className="text-xl font-bold text-white flex items-center" 
+                            <Link
+                                isExternal
+                                className="text-xl font-bold text-white flex items-center"
                                 href="https://partiful.com/e/HQP8KHQVUtxTTBQdNYgJ"
                             >
                                 RSVP For Address
@@ -139,11 +142,11 @@ const FAQ = () => {
             content: (
                 <>
                     <div className={styles.boldText}>ABSOLUTELY</div>
-                    <div className="justify-center my-4">
+                    <div className="justify-center my-2">
                         You can put a custom drink order in on the{' '}
-                        <Link 
-                            className={styles.highlightText} 
-                            href="/order?drinkId=999" 
+                        <Link
+                            className={styles.highlightText}
+                            href="/order?drinkId=999"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -184,8 +187,8 @@ const FAQ = () => {
             {/* FAQ Cards */}
             <section className="space-y-0" aria-label="Frequently Asked Questions">
                 {faqData.map((faq, index) => (
-                    <Card 
-                        key={faq.id} 
+                    <Card
+                        key={faq.id}
                         className={styles.card}
                         role="article"
                         aria-labelledby={`faq-${faq.id}-header`}

@@ -49,7 +49,14 @@ const Menu = () => {
     const scrollToSection = useCallback((sectionId) => {
         const element = document.getElementById(sectionId);
         if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            const offset = -90; // Adjust this value to set the desired offset
+            const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+            const offsetPosition = elementPosition + offset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
         }
     }, []);
 
@@ -183,7 +190,7 @@ const Menu = () => {
                         >
                             <h2 
                                 id={`${category.id}-heading`}
-                                className="text-center text-4xl mt-4 text-emerald-500 font-extrabold font-fugaz"
+                                className="text-center text-4xl my-4 text-emerald-500 font-extrabold font-fugaz"
                             >
                                 {category.name}
                             </h2>

@@ -84,56 +84,62 @@ const HomePage = () => {
                 {/* <p className="italic font-fugaz text-2x1">Welcome to the 4th Annual</p> */}
 
                 <div>
-                    <p className="text-6xl text-emerald-600 my-3 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
+                    <p className="text-6xl text-emerald-600 mt-8 font-extrabold font-bungee title">DRINK 4 <br></br> THE KIDS
                     </p>
                 </div>
 
-                <p className="text-2xl italic font-fugaz mt-2">Christmas Cocktails <br /> for a Charitable Cause</p>
+                <p className="text-3xl italic font-fugaz mt-4 mb-12">Christmas Cocktails <br /> for a Charitable Cause</p>
 
-          
+
                 {/* <p className="text-xl mt-6 mb-8 font-bold font-bungee flex flex-col tracking-wider">
                     See you all next year!
                 </p> */}
-                <p onClick={onOpen} className="text-3xl mt-6 mb-8 font-bold font-bungee flex flex-col underline tracking-wider">
-                    Saturday<span className="my-2">
-                        December 13th</span>
-                    6PM — Late
+                <p onClick={onOpen} className="my-8 text-3xl font-bold font-bungee flex flex-col tracking-wider">
+                    Saturday<span className="my-4 underline underline-offset-8">December 13th</span>6PM — Late
                 </p>
                 <BuddyLogo />
-                <Button winterize className="mx-1 bg-emerald-600 text-md px-5 py-3 border rounded-full font-fugaz text-white"
+                <Button winterize className="mt-8 bg-emerald-600 text-xl px-8 py-4 border rounded-full font-fugaz text-white"
                     onPress={() => openInNewTab("https://partiful.com/e/k6bxgLhcL5mlVO2gHpSp")}>
-                    RSVP <FontAwesomeIcon icon={faEnvelope} />
+                    RSVP <FontAwesomeIcon icon={faEnvelope} className="mb-1" />
                 </Button>
             </div>
 
             {/* EXPLAINER DIV */}
-            <div className="py-5 mb-5">
+            <div className="py-4">
 
-                <p className="text-3xl my-5 font-bungee font-bold tracking-wide">Not just another Christmas Party</p>
+                <p className="text-3xl my-8 font-bungee font-bold tracking-wide">Not just another Christmas Party</p>
 
-                <p className="text-2xl my-5">It's a <span className="font-fugaz font-bold text-emerald-600">holiday spirited pop up bar</span> serving up <span className="italic font-bold text-emerald-600">the best craft cocktails</span> for a great cause<span className="font-fugaz font-bold"></span></p>
+                <p className="text-2xl my-8">It's a holiday spirited pop up bar serving up the best craft cocktails for <span className="italic font-bold font-fugaz">a great cause</span></p>
 
-                <div className="my-4">
-                    <div className="text-3xl font-bungee font-bold tracking-wide mb-2">Every donation gets <span className="text-4xl text-emerald-600">tripled</span></div>
-                    <div className="text-lg font-fugaz mb-4">with a company match</div>
-                    <div className="text-2xl">All proceeds go to <br />
-                        <a className="font-fugaz font-bold text-emerald-600 hover:underline" target="_blank" href="https://nicholashouse.org/" rel="noreferrer">Nicholas House Family Homeless Shelter</a> <span className="font-bold">&</span>
-                        <a className="font-fugaz font-bold text-emerald-600 hover:underline" target="_blank" href="https://www.maketruechange.org/" rel="noreferrer"> True Change</a>
+                <div className="my-8">
+                    <div className="flex flex-col gap-y-1">
+                        <p className="text-2xl font-bungee font-bold tracking-wide">Every donation gets</p>
+                        <p className="text-7xl text-emerald-600 font-bungee uppercase">tripled</p>
+                        <p className="text-2xl font-fugaz mb-4">with a company match!</p>
                     </div>
+                    <div className="text-3xl mt-8 ">
+                        <p className="text-2xl mb-2">All proceeds go to</p>
+                        <a className="font-fugaz font-bold text-emerald-600 hover:underline" target="_blank" href="https://nicholashouse.org/" rel="noreferrer">Nicholas House Family <br /> Homeless Shelter</a>
+                        <div className="flex gap-x-2 justify-center items-center my-2">
+                            <p className="font-bold">&</p>
+                            <a className="font-fugaz font-bold text-emerald-600 hover:underline" target="_blank" href="https://www.maketruechange.org/" rel="noreferrer"> True Change</a>
+                        </div>
+                    </div>
+
+                    <Button
+                        className="uk-button bg-emerald-600 text-slate-200 font-fugaz font-bold mt-8 text-xl px-6 py-3 "
+                        radius="full" as={Link} href="/FAQ" >
+                        Read More
+                    </Button>
                 </div>
-                <br />
-                <Button
-                    className="uk-button bg-emerald-600 text-slate-200 font-fugaz font-bold"
-                    radius="full" as={Link} href="/FAQ" >
-                    Read More
-                </Button>
+
 
             </div>
 
             {/* SPONSOR DIV */}
-            <p className="italic text-3xl my-5 font-bold font-fugaz">Special thanks to our sponsors!</p>
+            <p className="italic text-3xl font-bold font-fugaz">Special thanks to our sponsors!</p>
 
-            <div className="flex flex-col gap-y-2 text-xl text-emerald-500 italic">
+            <div className="flex flex-col gap-y-4 text-3xl text-emerald-500 italic mt-8">
                 <a target="_blank" rel="noreferrer" href={"https://www.minhwaspirits.com/"}>Minwha Spirits</a>
                 <a target="_blank" rel="noreferrer" href={"https://www.instagram.com/moxieburger_candlerpark/"}>Moxie - Candler Park</a>
                 <a target="_blank" rel="noreferrer" href={"https://kingcube.com/"}>King Cube Ice</a>

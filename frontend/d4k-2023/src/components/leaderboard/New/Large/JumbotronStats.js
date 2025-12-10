@@ -188,7 +188,7 @@ const LastYearStats = () => {
             {/* title */}
             <div className="flex items-center justify-center gap-x-4 mb-4">
                 <FontAwesomeIcon className="h-12 text-slate-600" icon={faGlassCheers} />
-                <p className="text-5xl font-bold text-slate-700 uppercase">2023 D4K Stats</p>
+                <p className="text-5xl font-bold text-slate-700 uppercase">2024 D4K Stats</p>
             </div>
 
             <div className="bg-slate-100/60 p-8 w-full flex flex-wrap justify-between gap-4 rounded-2xl">
@@ -199,7 +199,7 @@ const LastYearStats = () => {
                         <FontAwesomeIcon icon={faMoneyBill1Wave} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-4xl text-gray-800 font-black">$5636</p>
+                        <p className="text-4xl text-gray-800 font-black">$8549</p>
                         <p className="italic -mt-1 text-xl">Money Raised</p>
                     </div>
                 </div>
@@ -210,7 +210,7 @@ const LastYearStats = () => {
                         <FontAwesomeIcon icon={faUserAlt} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-gray-800 text-4xl font-black">90</p>
+                        <p className="text-gray-800 text-4xl font-black">162</p>
                         <p className="italic -mt-1 text-xl">Guests</p>
                     </div>
                 </div>
@@ -221,7 +221,7 @@ const LastYearStats = () => {
                         <FontAwesomeIcon icon={faGlassMartini} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-gray-800 text-4xl font-black">275</p>
+                        <p className="text-gray-800 text-4xl font-black">476</p>
                         <p className="italic -mt-1 text-xl">Drinks Made</p>
                     </div>
                 </div>
@@ -232,7 +232,7 @@ const LastYearStats = () => {
                         <FontAwesomeIcon icon={faGlassWhiskey} className="size-12 object-contain text-gray-800 " />
                     </div>
                     <div className="col-span-2 flex flex-col items-center justify-center">
-                        <p className="text-gray-800 text-4xl font-black">134</p>
+                        <p className="text-gray-800 text-4xl font-black">174</p>
                         <p className="italic -mt-1 text-xl">Shots Made</p>
                     </div>
                 </div>

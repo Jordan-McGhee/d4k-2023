@@ -17,7 +17,7 @@ const MenuList = ({ drinks = [] }) => {
     }
 
     return (
-        <ul className="space-y-0">
+        <ul className="space-y-4">
             {visibleDrinks.map((drink) => (
                 <li key={drink.drink_id}>
                     <MenuItem

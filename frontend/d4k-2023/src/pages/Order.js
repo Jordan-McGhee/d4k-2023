@@ -976,7 +976,7 @@ const Order = () => {
                     {!hasStoredUserId && <Button
                         isIconOnly
                         size="sm"
-                        className="fixed bottom-4 left-4 rounded-full bg-emerald-600 h-8 w-20 text-xs text-6 text-white"
+                        className="fixed bottom-4 left-4 rounded-full bg-emerald-600 h-10 w-fit px-6 text-xs text-6 text-white"
                         onPress={() => navigate('/request-recovery')}
                         title="Recover your account"
                     >

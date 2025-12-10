@@ -18,7 +18,7 @@ const Jumbotron = props => {
 
     return (
 
-        <div className="bg-gradient-to-b from-blue-200 via-blue-100 to-slate-50 w-full h-screen" style={{ padding: 0, margin: 0 }}>
+        <div className="bg-gradient-to-b from-blue-200 via-blue-100 to-slate-50 w-full h-100vh" style={{ padding: 0, margin: 0 }}>
             <div className="w-[95%] mx-auto">
 
                 {/* title */}
