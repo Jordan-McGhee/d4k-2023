@@ -455,8 +455,8 @@ const getLeaderboardStats = async (req, res, next) => {
     res.status(200).json({
         message: "Retrieved leaderboard data!",
         topUsers: topUsersResponse.rows,
-        totalUsers: topUsersResponse.rows[0].total_users,
-        sumTotal: sumResponse?.rows[0]?.d4k_total,
+        totalUsers: topUsersResponse.rows[0]?.total_users || 0,
+        sumTotal: sumResponse?.rows[0]?.d4k_total || 0,
         drinkCount: drinksResponse,
         drinkQuantity: drinkQuantity,
         shots: shotsResponse,
