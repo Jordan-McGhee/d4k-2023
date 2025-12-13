@@ -341,7 +341,7 @@ const getOrdersLeaderboard = async (req, res, next) => {
         topUsers: topUsersResponse.rows,
         userRank: userRankResponse ? userRankResponse.rows[0] : null,
         sumTotal: sumResponse?.rows[0]?.d4k_total,
-        totalUsers: topUsersResponse ? topUsersResponse.rows[0].total_users : 0,
+        totalUsers: topUsersResponse ? topUsersResponse.rows[0]?.total_users || 0 : 0,
         drinkQuantity: drinkQuantity,
         shotQuantity: shotQuantity
     });
