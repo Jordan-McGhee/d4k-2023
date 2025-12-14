@@ -3,7 +3,7 @@ import React from "react";
 const MobileProgressBar = props => {
 
     const currentTotal = props.total
-    const goal = 4000
+    const goal = 7000
     const percentage = Math.floor((currentTotal / goal) * 100)
 
     return (
